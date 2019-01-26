@@ -1,0 +1,1 @@
+define('router', [], function(){ return {}; })

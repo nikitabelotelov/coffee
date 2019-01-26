@@ -1,0 +1,1 @@
+define('lib/.builder/module',[],function(){return {};});

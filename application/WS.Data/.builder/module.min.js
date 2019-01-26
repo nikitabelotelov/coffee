@@ -1,0 +1,1 @@
+define('WS.Data/.builder/module',[],function(){return {};});
