@@ -5,17 +5,17 @@ const root = process.cwd(),
    app = express(),
    resourcesPath = path.join('', 'application');
 
-EXIT_CODES = {
-   OK: 0,
-   UPDATE: 1,
-   ERROR: 2
-}
-
 const global = (function() {
    return this || (0, eval)('this');
 })();
 
 const indexFile = fs.readFileSync(path.join(root, 'application', 'Coffee', 'index.html'), 'utf8');
+
+EXIT_CODES = {
+   OK: 0,
+   UPDATE: 1,
+   ERROR: 2
+};
 
 const requirejs = require(path.join(root, 'node_modules', 'sbis3-ws', 'WS.Core', 'ext', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
