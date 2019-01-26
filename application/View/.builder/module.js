@@ -1,0 +1,1 @@
+define('View/.builder/module',[],function(){return {};});
