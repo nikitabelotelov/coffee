@@ -1,0 +1,1 @@
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/Ext/jquery/3.3.1/jquery-min.js

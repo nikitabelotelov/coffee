@@ -1,0 +1,1 @@
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/res/xsl/default-item-transform.xsl

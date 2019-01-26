@@ -1,0 +1,68 @@
+{
+  "cache": "%cd%/builder-ui/builder-json-cache",
+  "output": "%cd%/application",
+  "logs": "%cd%/builder-ui/logs",
+  "typescript": true,
+  "less": true,
+  "contents": true,
+  "deprecatedWebPageTemplates": true,
+  "htmlWml": true,
+  "themes": true,
+
+  "minimize": false,
+  "wml": false,
+  "сustomPack": false,
+  "dependenciesGraph": false,
+
+  "modules": [
+    {
+      "name": "Router",
+      "path": "%cd%/Router"
+    },
+    {
+      "name": "Core",
+      "path": "%cd%/node_modules/sbis3-ws/Core"
+    },
+    {
+      "name": "WS.Core",
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core"
+    },
+    {
+      "name": "Lib",
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib"
+    },
+    {
+      "name": "Ext",
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib/Ext"
+    },
+    {
+      "name": "Transport",
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/transport"
+    },
+    {
+      "name": "View",
+      "path": "%cd%/node_modules/sbis3-ws/View"
+    },
+    {
+      "name": "WS.Data",
+      "path": "%cd%/node_modules/ws-data/WS.Data"
+    },
+    {
+      "name": "Types",
+      "path": "%cd%/node_modules/saby-types/Types"
+    },
+    {
+      "name": "Vdom",
+      "path": "%cd%/node_modules/sbis3-ws/Vdom"
+    },
+    {
+      "name": "UI",
+      "path": "%cd%/node_modules/saby-ui/UI"
+    },
+    {
+      "name": "Coffee",
+      "path": "%cd%/Coffee"
+    }
+
+  ]
+}

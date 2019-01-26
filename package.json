@@ -1,0 +1,70 @@
+{
+   "name": "Router",
+   "version": "19.100.0",
+   "repository": {
+      "type": "git",
+      "url": "git@platform-git.sbis.ru:saby/router.git"
+   },
+   "files": [
+      "Router/*"
+   ],
+   "scripts": {
+      "prepare": "saby-typescript --install --tsconfig=tsconfig.base.json",
+      "build": "node build-app",
+      "compile": "tsc",
+      "start": "node node_modules/saby-units/cli/server",
+      "test": "saby-units --isolated",
+      "test:node": "saby-units --isolated --report",
+      "test:node-coverage": "saby-units --isolated --report --coverage",
+      "test:browser": "saby-units --browser --report",
+      "test:browser-coverage": "saby-units --browser --report --coverage",
+      "require-min": "node node_modules/uglify-js/bin/uglifyjs --compress --mangle -o ws/ext/requirejs/require-min.js -- ws/ext/requirejs/require.js",
+      "lint": "node ./node_modules/eslint/bin/eslint --ext .js --ext .es --color --no-eslintrc -c=.eslintrc.json -f=stylish .",
+      "lint:fix": "node ./node_modules/eslint/bin/eslint --ext .js --ext .es --color --no-eslintrc -c=.eslintrc.json -f=stylish --fix ."
+   },
+   "saby-units": {
+      "moduleType": "amd",
+      "root": "application",
+      "tests": "RouterTest",
+      "url": {
+         "port": 1023
+      }
+   },
+   "nyc": {
+      "include": [
+         "Router/**/*.js"
+      ],
+      "reporter": [
+         "text",
+         "html"
+      ],
+      "cache": false,
+      "eager": true,
+      "report-dir": "./artifacts/coverage"
+   },
+   "dependencies": {
+      "wss": "^3.3.4"
+   },
+   "devDependencies": {
+      "@tensor-corp/eslint-config": "^2.0.3",
+      "body-parser": "^1.18.3",
+      "cookie-parser": "^1.4.3",
+      "eslint": "^5.6.1",
+      "express": "^4.16.3",
+      "humanize": "0.0.9",
+      "less": "^2.7.3",
+      "merge": "1.2.0",
+      "minimatch": "^3.0.3",
+      "postcss": "^6.0.23",
+      "progress": "^2.0.0",
+      "requirejs": "2.1.18",
+      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.200",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.200",
+      "serve-static": "1.11.x",
+      "saby-types": "git+https://github.com/saby/Types.git#rc-19.200",
+      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.200",
+      "saby-units": "git+https://github.com/saby/Units.git#rc-19.200",
+      "ws-data": "git+http://git.sbis.ru/ws/data.git#rc-19.200",
+      "saby-ui": "https://github.com/saby/UI.git#rc-19.200"
+   }
+}
