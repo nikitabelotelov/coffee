@@ -1,1 +1,0 @@
-contents={"buildMode":"release","htmlNames":{},"modules":{"WS.Core":{}}}

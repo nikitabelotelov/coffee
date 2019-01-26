@@ -1,5 +1,0 @@
-key = contextInput+"_for_"+itCount;
-itCount++;
-
-var processed = [/*#PROCESSED#*/];
-out = out.concat(processed);

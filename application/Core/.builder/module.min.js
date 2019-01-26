@@ -1,1 +1,0 @@
-define('Core/.builder/module',[],function(){return {};});

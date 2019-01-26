@@ -1,18 +1,16 @@
-/// <amd-module name="Coffee/Settings" />
+/// <amd-module name="Coffee/BlockPage" />
 
 // @ts-ignore
 import {Control} from 'UI/Index';
 // @ts-ignore
-import template = require('wml!Coffee/Settings/Settings');
-
-import "css!Coffee/Settings/Settings";
+import template = require('wml!Coffee/BlockPage/BlockPage');
 
 type Setting = {
     title: String;
     template: String;
 }
 
-class Settings extends Control {
+class BlockPage extends Control {
     public _template: Function = template;
     public checkUpdate(): void {
         fetch("").then(() => {
@@ -24,4 +22,4 @@ class Settings extends Control {
 }
 
 
-export = Settings;
+export = BlockPage;

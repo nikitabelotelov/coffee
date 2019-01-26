@@ -1,1 +1,0 @@
-define('Vdom/.builder/module',[],function(){return {};});
