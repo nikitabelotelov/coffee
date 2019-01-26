@@ -1,0 +1,11 @@
+.idea
+.history
+.DS_Store
+*.log
+/builder-ui
+/builderCfg.json
+/package-lock.json
+
+Router/*.js
+.nyc_output/
+artifacts/
