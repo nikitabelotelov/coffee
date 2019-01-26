@@ -40,10 +40,6 @@ require(['Core/core-init'], () => {
    console.log('core init failed');
 });
 
-app.get('/cdn*', (req, res) => {
-   res.redirect('http://dev-cdn.wasaby.io' + req.url.slice(4));
-});
-
 app.get('/Coffee/*', (req, res) => {
    res.send(indexFile);
 });
