@@ -1,4 +1,1 @@
-/**
- * Created by ps.borisov on 04.07.2016.
- */
-define('WS/css/styles/RichContentStyles', [], function() {return [];});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/css/styles/RichContentStyles.js

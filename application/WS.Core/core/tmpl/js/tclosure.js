@@ -1,9 +1,1 @@
-define('Core/tmpl/js/tclosure',
-   [
-      'View/Executor/TClosure'
-   ],
-   function (
-      closure
-   ) {
-   return closure;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/tclosure.js

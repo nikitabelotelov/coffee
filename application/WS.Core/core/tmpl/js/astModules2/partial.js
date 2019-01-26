@@ -1,7 +1,1 @@
-define('Core/tmpl/js/astModules2/partial',
-   [
-      'View/Builder/Tmpl/modules/partial'
-   ], function partialLoader(partial) {
-      'use strict';
-      return partial;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/partial.js

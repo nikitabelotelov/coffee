@@ -1,9 +1,1 @@
-/**
- * Интерфейс компонента, обладающего свойством Items.
- * @see SBIS3.CONTROLS/OperationsPanel
- * @see Deprecated/Controls/TabControl/TabControl
- */
-define('Lib/Mixins/HasItemsMixin', function() {
-    return /** @lends Lib/Mixins/HasItemsMixin.prototype */ {
-    };
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/Mixins/HasItemsMixin.js

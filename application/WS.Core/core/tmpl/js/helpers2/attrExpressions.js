@@ -1,5 +1,1 @@
-define('Core/tmpl/js/helpers2/attrExpressions', [
-   'View/Executor/Expressions'
-], function (Expressions) {
-   return Expressions.Attr;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/attrExpressions.js

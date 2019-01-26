@@ -1,7 +1,1 @@
-[
-   {
-      "include": ["Router/*"],
-      "exclude": ["Router/ServerRouting"],
-      "output": "spa-router.package.js"
-   }
-]
+E:/Workspace/repos/Coffee/Router/Router.package.json

@@ -1,5 +1,1 @@
-define('Core/tmpl/js/configResolver', [
-   'View/Executor/Utils'
-], function(Utils) {
-   return Utils.ConfigResolver;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/configResolver.js

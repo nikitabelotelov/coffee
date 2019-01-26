@@ -1,5 +1,1 @@
-define('Core/vdom/Synchronizer/resources/SwipeController', [
-   'Vdom/Vdom'
-], function (Vdom) {
-   return Vdom.SwipeController;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Synchronizer/resources/SwipeController.js

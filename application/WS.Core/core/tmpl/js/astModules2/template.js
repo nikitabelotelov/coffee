@@ -1,7 +1,1 @@
-define('Core/tmpl/js/astModules2/template',
-   [
-      'View/Builder/Tmpl/modules/template'
-   ], function templateLoader(templateM) {
-      'use strict';
-      return templateM;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/template.js

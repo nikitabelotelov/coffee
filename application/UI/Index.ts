@@ -1,6 +1,1 @@
-/// <amd-module name="UI/Index" />
-import Control from 'UI/_index/Control';
-
-export = {
-   Control
-};
+E:/Workspace/repos/Coffee/node_modules/saby-ui/UI/Index.ts

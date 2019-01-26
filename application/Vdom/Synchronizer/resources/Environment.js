@@ -1,4 +1,1 @@
-define('Vdom/Synchronizer/resources/Environment', ['Vdom/Vdom'], function(Vdom) {
-   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/Environment', 'Vdom.Environment');
-   return Vdom.Environment;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/Environment.js

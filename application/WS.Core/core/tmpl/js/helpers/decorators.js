@@ -1,7 +1,1 @@
-define('Core/tmpl/js/helpers/decorators', [
-      'View/decorators'
-   ],
-   function decoratorsLoader(decorators) {
-      'use strict';
-      return decorators;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers/decorators.js

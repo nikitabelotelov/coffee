@@ -1,5 +1,1 @@
-define('Core/vdom/Synchronizer/resources/SyntheticEvent', [
-   'Vdom/Vdom'
-], function (Vdom) {
-   return Vdom.SyntheticEvent;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Synchronizer/resources/SyntheticEvent.js

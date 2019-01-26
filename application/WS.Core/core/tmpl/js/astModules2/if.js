@@ -1,7 +1,1 @@
-define('Core/tmpl/js/astModules2/if',
-   [
-      'View/Builder/Tmpl/modules/if'
-   ], function ifLoader(ifM) {
-      'use strict';
-      return ifM;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/if.js

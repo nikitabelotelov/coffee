@@ -1,6 +1,1 @@
-define('Core/tmpl/js/helpers/straightFromFileAMD', [
-   'View/Builder/Tmpl/modules/utils/loader'
-], function straightFromFileLoader(loader) {
-   'use strict';
-   return loader;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers/straightFromFileAMD.js

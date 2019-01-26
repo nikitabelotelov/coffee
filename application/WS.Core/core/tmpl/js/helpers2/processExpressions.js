@@ -1,7 +1,1 @@
-define('Core/tmpl/js/helpers2/processExpressions',
-   [
-      'View/Builder/Tmpl/expressions/process'
-   ], function processExpressionsCaller(processM) {
-      'use strict';
-      return processM;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/processExpressions.js

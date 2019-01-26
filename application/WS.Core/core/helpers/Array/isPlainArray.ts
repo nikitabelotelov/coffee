@@ -1,5 +1,1 @@
-/// <amd-module name="Core/helpers/Array/isPlainArray" />
-
-export = function isPlainArray(arr) {
-   return Array.isArray(arr);
-}
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/helpers/Array/isPlainArray.ts

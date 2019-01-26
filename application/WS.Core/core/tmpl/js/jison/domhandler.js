@@ -1,5 +1,1 @@
-define('Core/tmpl/js/jison/domhandler', [
-   'View/Builder/Tmpl/handlers/third-party/dom'
-], function (dom) {
-   return dom;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/jison/domhandler.js

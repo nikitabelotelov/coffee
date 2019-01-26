@@ -1,3 +1,1 @@
-define('Core/core-ready', ['Core/Deferred'], function(Deferred) {
-   return new Deferred();
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/core-ready.js

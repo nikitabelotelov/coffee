@@ -1,4 +1,1 @@
-/// <amd-module name="Core/helpers/Number/randomId" />
-export = function(prefix) {
-   return (prefix || 'ws-') + Math.random().toString(36).substr(2) + (+new Date());
-}
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/helpers/Number/randomId.ts

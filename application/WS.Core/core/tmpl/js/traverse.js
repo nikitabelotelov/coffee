@@ -1,9 +1,1 @@
-/**
- * Parsing step
- * Traversing/parsing AST-html tree
- */
-define('Core/tmpl/js/traverse', [
-      'View/Builder/Tmpl/traverse'
-   ], function traverseLoader(traverse) {
-      return traverse;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/traverse.js

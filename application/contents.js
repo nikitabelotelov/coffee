@@ -1,4 +1,4 @@
 contents = {
-   "buildMode": "release",
+   "buildMode": "",
    "modules": {}
 };

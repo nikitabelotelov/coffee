@@ -1,5 +1,1 @@
-define('Core/vdom/Utils/DefaultOpenerFinder', [
-   'Vdom/Vdom'
-], function (Vdom) {
-   return Vdom.DefaultOpenerFinder;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Utils/DefaultOpenerFinder.js

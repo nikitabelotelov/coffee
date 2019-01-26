@@ -1,1 +1,1 @@
-<ws:partial template="{{pageClassLoaded}}" scope="{{ _options.templateOptions }}"/>
+E:/Workspace/repos/Coffee/Coffee/PageLoader.wml

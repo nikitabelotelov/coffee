@@ -1,7 +1,1 @@
-define('Transport/ReaderUnifiedSBIS', [
-   'Deprecated/ReaderUnifiedSBIS',
-   'Core/deprecated'
-], function(ReaderUnifiedSBIS, deprecated) {
-   deprecated.showInfoLog('Transport/ReaderUnifiedSBIS помечен как deprecated и будет удален в 3.18.');
-   return ReaderUnifiedSBIS;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/ReaderUnifiedSBIS.js

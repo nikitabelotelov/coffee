@@ -1,8 +1,1 @@
-define('Core/tmpl/js/astModules2/for',
-   [
-      'View/Builder/Tmpl/modules/for'
-   ],
-   function (forM) {
-      'use strict';
-      return forM;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/for.js

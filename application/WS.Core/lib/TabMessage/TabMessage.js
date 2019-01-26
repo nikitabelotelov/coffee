@@ -1,5 +1,1 @@
-define("Lib/TabMessage/TabMessage", ["require", "exports", "Lib/Tab/Message", "Core/IoC"], function (require, exports, TabMessage, IoC) {
-    "use strict";
-    IoC.resolve('ILogger').log("Lib/TabMessage/TabMessage", 'module has been moved to "Lib/Tab/Message"');
-    return TabMessage;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/TabMessage/TabMessage.js

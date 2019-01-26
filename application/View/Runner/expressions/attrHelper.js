@@ -1,11 +1,1 @@
-define('View/Runner/expressions/attrHelper', [
-   'View/Executor/Expressions',
-   'Core/IoC'
-], function(Expressions, IoC) {
-   IoC.resolve('ILogger').warn(
-      'View/Executor/Expressions',
-      '"View/Runner/expressions/attrHelper" wrapper is deprecated and will be removed. ' +
-      'Require "View/Executor/Expressions" and use Expressions.AttrHelper from it instead.'
-   );
-   return Expressions.AttrHelper;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Runner/expressions/attrHelper.js

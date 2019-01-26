@@ -1,5 +1,1 @@
-define('Core/vdom/Synchronizer/resources/VdomMarkup', [
-   'Vdom/Vdom'
-], function (Vdom) {
-   return Vdom.VdomMarkup;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Synchronizer/resources/VdomMarkup.js

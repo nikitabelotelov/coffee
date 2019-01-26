@@ -1,10 +1,1 @@
-define('Core/core-base', [
-   'Core/core-extend',
-   'Core/core-merge',
-   'Core/EventBus',
-   'Core/Context',
-   'Transport/HTTPError',
-   'Core/WindowManager'
-], function() {
-   return {};
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/core-base.js

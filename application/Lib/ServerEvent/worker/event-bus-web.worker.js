@@ -1,5 +1,1 @@
-/**
- * Относительные пути, потому что ws может лежать в поддиректории
- */
-importScripts("./define.worker.js", "event-bus.worker.js");
-self.addEventListener('message', exports1["messageHandler"]);
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/ServerEvent/worker/event-bus-web.worker.js

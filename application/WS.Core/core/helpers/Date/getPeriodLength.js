@@ -1,7 +1,1 @@
-define('Core/helpers/Date/getPeriodLength', function() {
-
-   return function (start, end) {
-      var oneDay = 24*60*60*1000;
-      return Math.round(Math.abs((start.getTime() - end.getTime())/(oneDay))) + 1;
-   };
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/helpers/Date/getPeriodLength.js

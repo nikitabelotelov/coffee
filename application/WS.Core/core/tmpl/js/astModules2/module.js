@@ -1,7 +1,1 @@
-define('Core/tmpl/js/astModules2/module',
-   [
-      'View/Builder/Tmpl/modules/control'
-   ], function moduleLoader(moduleM) {
-      'use strict';
-      return moduleM;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/module.js

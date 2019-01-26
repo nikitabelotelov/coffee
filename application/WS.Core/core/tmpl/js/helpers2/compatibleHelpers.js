@@ -1,5 +1,1 @@
-define('Core/tmpl/js/helpers2/compatibleHelpers', [
-   'View/Executor/Utils'
-], function(Utils) {
-   return Utils.Compatible;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/compatibleHelpers.js

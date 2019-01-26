@@ -1,5 +1,1 @@
-define('Core/tmpl/js/helpers2/challengeModuleValues', [
-   'View/Builder/Tmpl/modules/utils/conditional'
-], function (conditional) {
-   return conditional;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/challengeModuleValues.js

@@ -1,4 +1,1 @@
-define("Transport/XHR/ErrorText", ["require", "exports", "Transport/Errors"], function (require, exports, Errors_1) {
-    "use strict";
-    return Errors_1.ERROR_TEXT;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/XHR/ErrorText.js

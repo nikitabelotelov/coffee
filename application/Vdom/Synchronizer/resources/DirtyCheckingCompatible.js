@@ -1,4 +1,1 @@
-define('Vdom/Synchronizer/resources/DirtyCheckingCompatible', ['Vdom/Vdom'], function(Vdom) {
-   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/DirtyCheckingCompatible', 'Vdom.DirtyCheckingCompatible');
-   return Vdom.DirtyCheckingCompatible;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/DirtyCheckingCompatible.js

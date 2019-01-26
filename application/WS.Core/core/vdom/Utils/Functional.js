@@ -1,5 +1,1 @@
-define('Core/vdom/Utils/Functional', [
-   'Vdom/Vdom'
-], function (Vdom) {
-   return Vdom.Functional;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Utils/Functional.js

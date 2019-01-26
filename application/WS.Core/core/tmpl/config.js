@@ -1,7 +1,1 @@
-define('Core/tmpl/config', [
-   'View/config'
-], function (
-   config
-) {
-   return config;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/config.js

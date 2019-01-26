@@ -1,8 +1,1 @@
-<Router.Controller>
-   <Router.Route mask="page/:pageId">
-      <Coffee.PageLoader default="Info">
-         <ws:templateOptions
-            settings="{{settingsData}}"/>
-      </Coffee.PageLoader>
-   </Router.Route>
-</Router.Controller>
+E:/Workspace/repos/Coffee/Coffee/Main.wml

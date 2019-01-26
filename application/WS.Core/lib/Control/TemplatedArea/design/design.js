@@ -1,9 +1,1 @@
-define('Lib/Control/TemplatedArea/design/design', [], function() {
-   return {
-      options: [
-         {
-            action: 'resize'
-         }
-      ]
-   };
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/Control/TemplatedArea/design/design.js

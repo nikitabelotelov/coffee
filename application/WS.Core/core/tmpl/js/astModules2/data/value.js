@@ -1,7 +1,1 @@
-define('Core/tmpl/js/astModules2/data/value',
-   [
-      'View/Builder/Tmpl/modules/data/value'
-   ], function boolLoader(value) {
-      'use strict';
-      return value;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/data/value.js

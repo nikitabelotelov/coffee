@@ -1,8 +1,1 @@
-define('Core/tmpl/js/helpers2/functionTemplateGenerator', [
-      'View/Builder/Tmpl/modules/utils/functionTemplateGenerator'
-   ],
-   function (ftg) {
-      'use string';
-      return ftg;
-   }
-);
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/functionTemplateGenerator.js

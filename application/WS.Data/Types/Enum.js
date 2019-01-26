@@ -1,5 +1,1 @@
-/* global define */
-define('WS.Data/Types/Enum', ['WS.Data/Type/Enum'], function(Enum) {
-   'use strict';
-   return Enum;
-});
+E:/Workspace/repos/Coffee/node_modules/ws-data/WS.Data/Types/Enum.js

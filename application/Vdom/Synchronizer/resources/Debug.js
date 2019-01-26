@@ -1,4 +1,1 @@
-define('Vdom/Synchronizer/resources/Debug', ['Vdom/Vdom'], function(Vdom) {
-   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/Debug', 'Vdom.Debug');
-   return Vdom.Debug;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/Debug.js

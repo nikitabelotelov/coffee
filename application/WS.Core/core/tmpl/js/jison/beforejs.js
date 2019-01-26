@@ -1,6 +1,1 @@
-define('Core/tmpl/js/jison/beforejs', [
-    'View/Builder/Tmpl/expressions/third-party/parser'
-   ],
-   function (parser) {
-   return parser;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/jison/beforejs.js

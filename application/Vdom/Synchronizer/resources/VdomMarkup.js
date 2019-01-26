@@ -1,4 +1,1 @@
-define('Vdom/Synchronizer/resources/VdomMarkup', ['Vdom/Vdom'], function(Vdom) {
-   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/VdomMarkup', 'Vdom.VdomMarkup');
-   return Vdom.VdomMarkup;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/VdomMarkup.js

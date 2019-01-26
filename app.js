@@ -5,10 +5,15 @@ const root = process.cwd(),
    app = express(),
    resourcesPath = path.join('', 'application');
 
+EXIT_CODES = {
+   OK: 0,
+   UPDATE: 1,
+   ERROR: 2
+}
+
 const global = (function() {
    return this || (0, eval)('this');
 })();
-
 
 const indexFile = fs.readFileSync(path.join(root, 'application', 'Coffee', 'index.html'), 'utf8');
 
@@ -25,11 +30,10 @@ const config = createConfig(path.join(root, 'application'),
 global.require = global.requirejs = require = requirejs;
 requirejs.config(config);
 
-
 app.use(express.static(resourcesPath));
 
 const port = process.env.PORT || 777;
-app.listen(port);
+var expressServer = app.listen(port);
 console.log('app available on port ' + port);
 
 console.log('start init');
@@ -44,21 +48,29 @@ app.get('/Coffee/*', (req, res) => {
    res.send(indexFile);
 });
 
-
 // websockets
 
 const {createServer} = require('wss')
 
-createServer(function connectionListener(ws) {
-   setInterval(() => {
+var INTERVALS = [];
+
+const wss = createServer(function connectionListener(ws) {
+   setIntervalWrapper(() => {
       getCurrentData().then((data) => {
          ws.send(JSON.stringify(data));
       });
    }, 2000);
+   // Send alive-message every 2 seconds
+   setIntervalWrapper(function aliveSender() {
+      ws.send(JSON.stringify({type: "alive"}));
+   }, 2000);
+   ws.on('close', () => {
+      stopAllIntervals();
+   });
 }).listen(8080, function() {
    const {address, port} = this.address() // this is the http[s].Server
    console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
-})
+});
 
 function handleMessage(data) {
    switch (data.type) {
@@ -86,3 +98,26 @@ function getCurrentData() {
    });
 }
 
+app.get('/Update', (req, res) => {
+   console.log('Update request!');
+   res.end();
+   process.exitCode = EXIT_CODES.UPDATE;
+   stopServers();
+   stopAllIntervals();
+});
+
+function setIntervalWrapper(callback, time) {
+   INTERVALS.push(setInterval(callback, time));
+}
+
+function stopAllIntervals() {
+   for (var i = 0; i < INTERVALS.length; i++) {
+      clearInterval(INTERVALS[i]);
+   }
+}
+
+function stopServers() {
+   // closeAllClientConnections(wss);
+   wss.close();
+   expressServer.close();
+}

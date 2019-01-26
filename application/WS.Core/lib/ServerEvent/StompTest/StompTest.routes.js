@@ -1,7 +1,1 @@
-module.exports = function () {
-   return {
-      '/ws/lib/ServerEventBus/stomp_test.html': function (req, res) {
-        res.render('Lib/ServerEvent/StompTest/StompTest', {});
-      }
-   }
-};
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/ServerEvent/StompTest/StompTest.routes.js

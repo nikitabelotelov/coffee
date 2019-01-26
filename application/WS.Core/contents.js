@@ -1,1 +1,1 @@
-contents={"buildMode":"release","htmlNames":{},"modules":{"WS.Core":{}}}
+contents={"buildMode":"debug","htmlNames":{},"modules":{"WS.Core":{}}}

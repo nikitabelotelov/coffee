@@ -5,8 +5,9 @@ define('Coffee/Settings', [
     'tslib',
     'UI/Index',
     'wml!Coffee/Settings/Settings',
+    'Coffee/Data/DataStore',
     'css!Coffee/Settings/Settings'
-], function (require, exports, tslib_1, Index_1, template) {
+], function (require, exports, tslib_1, Index_1, template, DataStore_1) {
     'use strict';
     var Settings = /** @class */
     function (_super) {
@@ -14,21 +15,19 @@ define('Coffee/Settings', [
         function Settings() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this._template = template;
-            return _this;    // public checkUpdate(): void {
-                             //    fetch("").then(() => {
-                             //
-                             //    }, () => {
-                             //
-                             //    })
-                             // };
+            return _this;
         }
-        // public checkUpdate(): void {
-        //    fetch("").then(() => {
-        //
-        //    }, () => {
-        //
-        //    })
-        // };
+        Settings.prototype.checkUpdate = function () {
+            DataStore_1.DataStore.closeConnection();
+            setTimeout(function () {
+                fetch('/Update').then(function () {
+                    console.log('Update started');
+                }, function () {
+                    console.error('Update failed');
+                });
+            }, 2000);
+        };
+        ;
         return Settings;
     }(Index_1.Control);
     return Settings;

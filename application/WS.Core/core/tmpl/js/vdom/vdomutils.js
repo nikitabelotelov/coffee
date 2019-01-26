@@ -1,5 +1,1 @@
-define('Core/tmpl/js/vdom/vdomutils', [
-   'View/Executor/Utils'
-], function(Utils) {
-  return Utils.Vdom;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/vdom/vdomutils.js

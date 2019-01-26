@@ -1,4 +1,1 @@
-define('Vdom/Utils/Focus', ['Vdom/Vdom'], function(Vdom) {
-   Vdom.logDeprecatedWrapper('Vdom/Utils/Focus', 'Vdom.Focus');
-   return Vdom.Focus;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Utils/Focus.js

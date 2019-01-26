@@ -1,5 +1,1 @@
-key = contextInput+"_for_"+itCount;
-itCount++;
-
-var processed = [/*#PROCESSED#*/];
-out = out.concat(processed);
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Builder/Tmpl/modules/templates/forProcessedBlock.jstpl

@@ -1,12 +1,1 @@
-define('Transport/URL/getUrl', function() {
-   'use strict';
-
-   return function() {
-      var req = process && process.domain && process.domain.req;
-      return req
-         ? req.originalUrl
-         : location
-            ? location.href
-            : '';
-   };
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/URL/getUrl.js

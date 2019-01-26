@@ -1,4 +1,1 @@
-define('Vdom/Utils/Monad', ['Vdom/Vdom'], function(Vdom) {
-   Vdom.logDeprecatedWrapper('Vdom/Utils/Monad', 'Vdom.Monad');
-   return Vdom.Monad;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Utils/Monad.js

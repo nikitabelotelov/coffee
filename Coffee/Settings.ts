@@ -4,6 +4,7 @@
 import {Control} from 'UI/Index';
 // @ts-ignore
 import template = require('wml!Coffee/Settings/Settings');
+import {DataStore} from "./Data/DataStore";
 
 import "css!Coffee/Settings/Settings";
 
@@ -14,13 +15,16 @@ type Setting = {
 
 class Settings extends Control {
    public _template: Function = template;
-   // public checkUpdate(): void {
-   //    fetch("").then(() => {
-   //
-   //    }, () => {
-   //
-   //    })
-   // };
+   public checkUpdate(): void {
+      DataStore.closeConnection();
+      setTimeout(() => {
+         fetch("/Update").then(() => {
+            console.log("Update started");
+         }, () => {
+            console.error("Update failed");
+         });
+      }, 2000);
+   };
 }
 
 

@@ -1,6 +1,1 @@
-if(!String.prototype.startsWith) {
-   String.prototype.startsWith = function(s) {
-      s = '' + s;
-      return this.substr(0, s.length) === s;
-   };
-}
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/polyfill/String/startsWith.js

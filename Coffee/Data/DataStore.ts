@@ -15,11 +15,11 @@ let SettingsStruct = {
 let DataStore = {
     socket: null,
     messageHandlers: new Array<Function>(),
-    parseDataStructure(rawData, dataStruct): any {
+    _parseDataStructure(rawData, dataStruct): any {
         let result = {};
-        for(let groupName in dataStruct) {
+        for (let groupName in dataStruct) {
             result[groupName] = {};
-            for(let fieldName in dataStruct[groupName]) {
+            for (let fieldName in dataStruct[groupName]) {
                 result[groupName][fieldName] = rawData[fieldName];
             }
         }
@@ -41,7 +41,7 @@ let DataStore = {
                 console.log('Код: ' + event.code + ' причина: ' + event.reason);
             };
             this.socket.onmessage = (event) => {
-                this.handleMessage(event.data);
+                this._handleMessage(event.data);
                 console.log("Получены данные " + event.data);
             };
             this.socket.onerror = (error) => {
@@ -53,19 +53,22 @@ let DataStore = {
     onSettingsUpdated(callback: Function) {
         this.messageHandlers["settingsUpdated"] = callback;
     },
-    handleMessage(message): any {
+    _handleMessage(message): any {
         let result = JSON.parse(message);
         let data = result.data;
         if (result.type) {
-            switch(result.type) {
+            switch (result.type) {
                 case "settingsUpdated":
-                    data = this.parseDataStructure(data, SettingsStruct);
+                    data = this._parseDataStructure(data, SettingsStruct);
                 default:
-                    if(this.messageHandlers[result.type]) {
+                    if (this.messageHandlers[result.type]) {
                         this.messageHandlers[result.type].call(this, data);
                     }
             }
         }
+    },
+    closeConnection(): void {
+        this.socket.close();
     }
 };
 

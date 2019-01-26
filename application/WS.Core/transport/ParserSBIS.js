@@ -1,7 +1,1 @@
-define('Transport/ParserSBIS', [
-   'Deprecated/ParserSBIS',
-   'Core/deprecated'
-], function(ParserSBIS, deprecated) {
-   deprecated.showInfoLog('Transport/ParserSBIS помечен как deprecated и будет удален в 3.18.');
-   return ParserSBIS;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/ParserSBIS.js

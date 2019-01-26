@@ -1,7 +1,1 @@
-define('Transport/RecordSet',[
-   'Deprecated/RecordSet',
-   'Core/deprecated'
-], function(RecordSet, deprecated) {
-   deprecated.showInfoLog('Transport/RecordSet помечен как deprecated и будет удален в 3.18. Используйте Types/collection:RecordSet.');
-   return RecordSet;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/RecordSet.js

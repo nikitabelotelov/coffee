@@ -19,7 +19,7 @@ define('Coffee/Data/DataStore', [
     var DataStore = {
         socket: null,
         messageHandlers: new Array(),
-        parseDataStructure: function (rawData, dataStruct) {
+        _parseDataStructure: function (rawData, dataStruct) {
             var result = {};
             for (var groupName in dataStruct) {
                 result[groupName] = {};
@@ -47,7 +47,7 @@ define('Coffee/Data/DataStore', [
                     console.log('Код: ' + event.code + ' причина: ' + event.reason);
                 };
                 _this.socket.onmessage = function (event) {
-                    _this.handleMessage(event.data);
+                    _this._handleMessage(event.data);
                     console.log('Получены данные ' + event.data);
                 };
                 _this.socket.onerror = function (error) {
@@ -59,19 +59,22 @@ define('Coffee/Data/DataStore', [
         onSettingsUpdated: function (callback) {
             this.messageHandlers['settingsUpdated'] = callback;
         },
-        handleMessage: function (message) {
+        _handleMessage: function (message) {
             var result = JSON.parse(message);
             var data = result.data;
             if (result.type) {
                 switch (result.type) {
                 case 'settingsUpdated':
-                    data = this.parseDataStructure(data, SettingsStruct);
+                    data = this._parseDataStructure(data, SettingsStruct);
                 default:
                     if (this.messageHandlers[result.type]) {
                         this.messageHandlers[result.type].call(this, data);
                     }
                 }
             }
+        },
+        closeConnection: function () {
+            this.socket.close();
         }
     };
     exports.DataStore = DataStore;

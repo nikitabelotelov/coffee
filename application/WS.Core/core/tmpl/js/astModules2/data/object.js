@@ -1,7 +1,1 @@
-define('Core/tmpl/js/astModules2/data/object',
-   [
-      'View/Builder/Tmpl/modules/data/object'
-   ], function objectLoader(objectM) {
-      'use strict';
-      return objectM;
-   });
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/data/object.js

@@ -1,5 +1,1 @@
-define('Core/vdom/Utils/Monad', [
-   'Vdom/Vdom'
-], function (Vdom) {
-   return Vdom.Monad;
-});
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Utils/Monad.js

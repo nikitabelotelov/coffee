@@ -1,6 +1,1 @@
-<ws:if data="{{_options.content}}">
-   <ws:partial template="{{_options.content}}" scope="{{ _urlOptions }}" />
-</ws:if>
-<ws:else>
-   <span></span>
-</ws:else>
+E:/Workspace/repos/Coffee/Router/Route.wml

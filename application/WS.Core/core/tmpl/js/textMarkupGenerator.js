@@ -1,6 +1,1 @@
-define('Core/tmpl/js/textMarkupGenerator', [
-   'View/Executor/Markup'
-], function(Markup) {
-   return Markup.GeneratorText;
-});
-
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/textMarkupGenerator.js

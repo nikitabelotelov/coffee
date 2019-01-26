@@ -1,13 +1,1 @@
-/*#DELETE IT START#*/
-if (typeof context === "undefined") {
-   var context = arguments[2];
-}
-if (typeof thelpers === "undefined") {
-   eval("var thelpers = null;");
-   thelpers = (function(){return this || (0, eval)('this')})().requirejs("View/Executor/TClosure");
-}
-/*#DELETE IT END#*/
-var templateCount = 0;
-var forCounter = 0;
-var currentPropertyName="/*#HTML_PROPERTY_NAME#*/";
-/*#GENERATED_STRING#*/
+E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Builder/Tmpl/modules/templates/templateStringTemplate.jstpl
