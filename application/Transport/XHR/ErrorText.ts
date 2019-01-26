@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/XHR/ErrorText.ts
+/// <amd-module name="Transport/XHR/ErrorText" />
+import {ERROR_TEXT} from 'Transport/Errors';
+
+export  = ERROR_TEXT;

@@ -1,1 +1,10 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/ServerEvent/worker-connect/messages/Sw.ts
+/// <amd-module name="Lib/ServerEvent/worker-connect/messages/Sw" />
+
+declare class SwMessage {
+    public type: "connect" | "error" | "message" | "close" | "ready" | "handshake" | 'websocket.close'
+    public message: any;
+    public headers: any;
+    public command: any;
+}
+
+export = SwMessage;

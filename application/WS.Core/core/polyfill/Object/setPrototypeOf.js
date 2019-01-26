@@ -1,1 +1,10 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/polyfill/Object/setPrototypeOf.js
+if (!Object.setPrototypeOf) {
+    Object.defineProperty(Object, 'setPrototypeOf', {
+        value: function setPrototypeOf(object, proto) {
+            object.__proto__ = proto;
+            return object;
+        },
+        writable: true,
+        configurable: true
+    });
+}

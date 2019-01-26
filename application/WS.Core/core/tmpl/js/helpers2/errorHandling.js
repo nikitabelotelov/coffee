@@ -1,1 +1,6 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/errorHandling.js
+define('Core/tmpl/js/helpers2/errorHandling', [
+   'View/Builder/Tmpl/handlers/error'
+], function errorHandlingDefine(errorM) {
+   'use strict';
+   return errorM;
+});

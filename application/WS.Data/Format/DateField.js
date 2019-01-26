@@ -1,1 +1,14 @@
-E:/Workspace/repos/Coffee/node_modules/ws-data/WS.Data/Format/DateField.js
+/* global define */
+define('WS.Data/Format/DateField', [
+   'Types/entity',
+   'Types/util'
+], function(
+   type,
+   util
+) {
+   'use strict';
+
+   util.logger.error('WS.Data/Format/DateField', 'Module is deprecated and will be removed in 19.200. Use Types/entity:format.DateField instead.');
+
+   return type.format.DateField;
+});

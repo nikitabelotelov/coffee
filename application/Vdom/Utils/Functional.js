@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Utils/Functional.js
+define('Vdom/Utils/Functional', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Utils/Functional', 'Vdom.Functional');
+   return Vdom.Functional;
+});

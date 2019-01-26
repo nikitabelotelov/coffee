@@ -1,1 +1,1 @@
-contents={"buildMode":"debug","htmlNames":{},"modules":{"Router":{}}}
+contents={"buildMode":"release","htmlNames":{},"modules":{"Router":{}}}

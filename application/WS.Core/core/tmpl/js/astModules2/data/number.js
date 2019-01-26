@@ -1,1 +1,7 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/data/number.js
+define('Core/tmpl/js/astModules2/data/number',
+   [
+      'View/Builder/Tmpl/modules/data/number'
+   ], function numberLoader(numberM) {
+      'use strict';
+      return numberM;
+   });

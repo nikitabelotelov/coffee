@@ -1,1 +1,3 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/TrickyAccessNotifier.js
+define('Core/TrickyAccessNotifier', function () {
+   return {};
+});

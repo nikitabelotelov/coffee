@@ -1,1 +1,8 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/URL/getHostName.js
+define('Transport/URL/getHostName', function() {
+   'use strict';
+
+   return function() {
+      var req = process && process.domain && process.domain.req;
+      return req ? req.hostname : location.hostname;
+   };
+});

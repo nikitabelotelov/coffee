@@ -1,1 +1,14 @@
-E:/Workspace/repos/Coffee/node_modules/ws-data/WS.Data/Type/descriptor.js
+/* global define */
+define('WS.Data/Type/descriptor', [
+   'Types/entity',
+   'Types/util'
+], function(
+   type,
+   util
+) {
+   'use strict';
+
+   util.logger.error('WS.Data/Type/descriptor', 'Module is deprecated and will be removed in 19.200. Use Types/entity:descriptor instead.');
+
+   return type.descriptor;
+});

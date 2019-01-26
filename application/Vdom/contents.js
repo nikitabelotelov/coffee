@@ -1,1 +1,1 @@
-contents={"buildMode":"debug","htmlNames":{},"modules":{"Vdom":{}}}
+contents={"buildMode":"release","htmlNames":{},"modules":{"Vdom":{}}}

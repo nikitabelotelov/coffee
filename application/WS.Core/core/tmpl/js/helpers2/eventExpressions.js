@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/eventExpressions.js
+define('Core/tmpl/js/helpers2/eventExpressions', [
+   ''
+], function () {
+   return '';
+});

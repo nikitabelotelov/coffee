@@ -1,1 +1,21 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/View.package.json
+[{
+  "include": [
+    "View/Builder/*",
+    "View/Builder"
+  ],
+  "output": "builder.package.js"
+}, {
+  "include": [
+    "View/Runner",
+    "View/Runner/Vdom/third-party/inferno",
+    "View/config",
+    "View/_Request/*",
+    "View/Request",
+    "View/Logger",
+    "View/Executor/Expressions",
+    "View/Executor/Markup",
+    "View/Executor/TClosure",
+    "View/Executor/Utils"
+  ],
+  "output": "runner.package.js"
+}]

@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/runDelayedRebuild.js
+define('Vdom/Synchronizer/resources/runDelayedRebuild', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/runDelayedRebuild', 'Vdom.runDelayedRebuild');
+   return Vdom.runDelayedRebuild;
+});

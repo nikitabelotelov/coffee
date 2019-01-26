@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/ParserUtilities.js
+define('Core/ParserUtilities', ['Core/markup/ParserUtilities'], function(ParserUtilitiesImpl){
+   //MOVE_TO ШИПИН (оставить что-то одно)
+   return ParserUtilitiesImpl;
+});

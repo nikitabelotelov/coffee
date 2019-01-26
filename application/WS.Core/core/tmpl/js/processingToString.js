@@ -1,1 +1,6 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/processingToString.js
+/**
+ * Created by dv.zuev on 25.12.2017.
+ */
+define('Core/tmpl/js/processingToString', [], function(){
+   return {};
+});

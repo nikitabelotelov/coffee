@@ -1,1 +1,9 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/Mixins/HasTabsMixin.js
+/**
+ * Интерфейс компонента, обладающего свойством Tabs.
+ * @see Deprecated/Controls/TabButtons/TabButtons
+ * @see Deprecated/Controls/Tabs/Tabs
+ */
+define('Lib/Mixins/HasTabsMixin', function() {
+    return /** @lends Lib/Mixins/HasTabsMixin.prototype */ {
+    };
+});

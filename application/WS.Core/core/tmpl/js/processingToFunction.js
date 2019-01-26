@@ -1,1 +1,6 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/processingToFunction.js
+define('Core/tmpl/js/processingToFunction', [
+   'View/Builder/Tmpl/function'
+], function processingModule(processing) {
+   'use strict';
+   return processing;
+});

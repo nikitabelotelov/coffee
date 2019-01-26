@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Synchronizer/resources/DirtyCheckingCompatible.js
+define('Core/vdom/Synchronizer/resources/DirtyCheckingCompatible', [
+   'Vdom/Vdom'
+], function (Vdom) {
+   return Vdom.DirtyCheckingCompatible;
+});

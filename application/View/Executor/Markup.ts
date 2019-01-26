@@ -1,1 +1,13 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Executor/Markup.ts
+/// <amd-module name="View/Executor/Markup" />
+
+import Generator from './_Markup/Generator';
+import GeneratorText from './_Markup/Text/Generator';
+import GeneratorVdom from './_Markup/Vdom/Generator';
+import FunctionHeaderTemplate from './_Markup/Text/FunctionHeaderTemplate';
+
+export {
+   Generator,
+   GeneratorText,
+   GeneratorVdom,
+   FunctionHeaderTemplate
+};

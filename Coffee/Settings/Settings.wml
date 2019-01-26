@@ -19,4 +19,5 @@
          </div>
       </Router.Route>
    </div>
+   <Router.Link href="page/:pageId" zhopa=""><div on:click="checkUpdate()">Check update</div></Router.Link>
 </div>

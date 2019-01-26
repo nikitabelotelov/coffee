@@ -1,1 +1,6 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers/processStatement.js
+define('Core/tmpl/js/helpers/processStatement', [
+   'View/Builder/Tmpl/expressions/statement'
+], function (statement) {
+   'use strict';
+   return statement;
+});

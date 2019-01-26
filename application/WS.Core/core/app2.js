@@ -1,1 +1,16 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/app2.js
+define('Core/app2', [
+   'Core/app-start',
+   'Core/app-init'
+], function(appStart, appInit) {
+   'use strict';
+   return function(deps) {
+      appInit();
+      if(deps && deps.length) {
+         require(deps, function() {
+            appStart();
+         });
+      } else {
+         appStart();
+      }
+   };
+});

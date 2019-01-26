@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Utils/DefaultOpenerFinder.js
+define('Vdom/Utils/DefaultOpenerFinder', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Utils/DefaultOpenerFinder', 'Vdom.DefaultOpenerFinder');
+   return Vdom.DefaultOpenerFinder;
+});

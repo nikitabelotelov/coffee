@@ -1,1 +1,9 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/ext/requirejs/plugins/remote.js
+define('remote', function() {
+   'use strict';
+
+   return {
+      load: function () {
+         throw new Error('Plugin "remote" is no longer exits. Please require module without plugin.');
+      }
+   }
+});

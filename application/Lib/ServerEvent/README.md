@@ -1,1 +1,2 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/ServerEvent/README.md
+В директории worker находятся не сжимаемые файлы, которые не должны сжиматься в один файл,
+для доступа воркеру по прямому адресу.

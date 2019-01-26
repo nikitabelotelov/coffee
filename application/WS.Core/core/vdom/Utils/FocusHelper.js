@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Utils/FocusHelper.js
+define('Core/vdom/Utils/FocusHelper', [
+   'View/Executor/Expressions'
+], function (Expressions) {
+   return Expressions.Focus;
+});

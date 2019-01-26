@@ -1,1 +1,9 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Builder/Tmpl/handlers/log.js
+define('View/Builder/Tmpl/handlers/log', ['Core/IoC'], function errorHandlingDefine(IoC) {
+   'use strict';
+   return {
+      generateErrorMessage: function (filename) {
+         return 'Template ' + filename + ' failed to generate html.';
+      },
+      IoC: IoC
+   };
+});

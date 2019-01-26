@@ -1,1 +1,3 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/ext/raphael/GRaphael.js
+define('WS/ext/raphael/GRaphael', ['/cdn/g.raphael/0.5-p1/g.raphael.js'], function(GRaphael) {
+    return GRaphael;
+});

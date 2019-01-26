@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/markupGenerator.js
+define('Core/tmpl/js/markupGenerator', [
+   'View/Executor/Markup'
+], function(Markup) {
+   return Markup.Generator;
+});

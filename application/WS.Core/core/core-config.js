@@ -1,1 +1,13 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/core-config.js
+define('Core/core-config', [
+   'Core/core-config-min'
+], function() {
+
+   /**
+    * Код конфигурирования ядра и запуска загрузки минимально необходимого набора компонентов
+    *
+    * ВНИМАНИЕ!!!
+    * Пожалуйста, не добавляйте ничего после него. Все классы и т.п. должны быть выше этих строк.
+    */
+
+   "use strict";
+});

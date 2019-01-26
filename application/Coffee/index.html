@@ -1,1 +1,34 @@
-E:/Workspace/repos/Coffee/Coffee/index.html
+<!doctype html>
+<html lang="ru" xml="ru" xmlns="http://www.w3.org/1999/xhtml">
+<head tabindex="0">
+   <meta name="viewport" content="width=480"/>
+   <meta charset="utf-8"/>
+   <script key="ws-config"> window.wsConfig = {
+      wsRoot: '/WS.Core/',
+      resourceRoot: '/',
+      appRoot: '/',
+      RUMEnabled: '',
+      pageName: '',
+      userConfigSupport: true,
+      staticDomains: [],
+      defaultServiceUrl: '/service/',
+      compatible: false,
+      lite: true,
+      product: ''
+   };
+   window.buildnumber = '';  </script>
+</head>
+<body fixCompatible="1"
+      class="ws-is-windows-7 ws-is-desktop-platform ws-fix-emoji controls-default-bg ws-is-no-touch controls-DragNDrop"
+      id="body" tabindex="0">
+<script key="bundles" type="text/javascript" src="/bundles.js"></script>
+<script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p4/require-min.js"></script>
+<script key="contents" type="text/javascript" src="/contents.js"></script>
+<script key="config" type="text/javascript" src="/WS.Core/ext/requirejs/config.js"></script>
+<div id="root"></div>
+<script key="init_script"> require(['Coffee/Main'], function (Main) {
+   Main.createControl(Main, {}, document.getElementById("root"));
+});
+</script>
+</body>
+</html>

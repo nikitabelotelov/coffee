@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/eventSubscriber.js
+define('Core/tmpl/js/helpers2/eventSubscriber', [
+   'View/Executor/Expressions'
+], function eventSubscriber(Expressions) {
+   return Expressions.Subscriber;
+});

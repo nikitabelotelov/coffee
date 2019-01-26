@@ -1,1 +1,7 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/else.js
+define('Core/tmpl/js/astModules2/else',
+   [
+      'View/Builder/Tmpl/modules/else'
+   ], function elseLoader(elseM) {
+      'use strict';
+      return elseM;
+   });

@@ -1,1 +1,8 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/TabMessage/TabMessage.ts
+/// <amd-module name="Lib/TabMessage/TabMessage" />
+import TabMessage = require("Lib/Tab/Message");
+import IoC = require("Core/IoC");
+
+IoC.resolve('ILogger').log("Lib/TabMessage/TabMessage", 'module has been moved to "Lib/Tab/Message"');
+
+export = TabMessage;
+

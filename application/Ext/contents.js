@@ -1,1 +1,1 @@
-contents={"buildMode":"debug","htmlNames":{},"modules":{"Ext":{}}}
+contents={"buildMode":"release","htmlNames":{},"modules":{"Ext":{}}}

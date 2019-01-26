@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/SwipeController.js
+define('Vdom/Synchronizer/resources/SwipeController', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/SwipeController', 'Vdom.SwipeController');
+   return Vdom.SwipeController;
+});

@@ -1,1 +1,10 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Runner.js
+define('View/Runner', [
+   'View/Executor/TClosure'
+], function (
+   tclosure
+) {
+   'use strict';
+   return {
+     Run: tclosure
+   };
+});

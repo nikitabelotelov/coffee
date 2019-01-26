@@ -1,1 +1,11 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Builder.js
+define('View/Builder', [
+   'View/Builder/Tmpl'
+], function (
+   Tmpl
+) {
+   'use strict';
+
+   return {
+      Tmpl: Tmpl
+   };
+});

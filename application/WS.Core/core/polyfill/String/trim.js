@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/polyfill/String/trim.js
+if(!String.prototype.trim) {
+   String.prototype.trim = function() {
+      return this.replace(/^\s+|\s+$/g, '');
+   };
+}

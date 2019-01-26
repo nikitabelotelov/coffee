@@ -1,1 +1,1 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Builder/Tmpl/modules/templates/templateObjectHtmlTemplateNew.jstpl
+{func: (function() { var scope = Object.create(data); scope.viewController = viewController; var bindFn = /*#FUNC#*/.bind(scope); bindFn.toJSON = function () { return "TEMPLATEFUNCTOJSON="+/*#FUNCTOSTR#*/.toString();};return bindFn;})(),internal: /*#DIRTY#*/}

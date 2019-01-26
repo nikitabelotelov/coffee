@@ -1,1 +1,7 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/ReaderSBIS.js
+define('Transport/ReaderSBIS', [
+   'Deprecated/ReaderSBIS',
+   'Core/deprecated'
+], function(ReaderSBIS, deprecated) {
+   deprecated.showInfoLog('Transport/ReaderSBIS помечен как deprecated и будет удален в 3.18.');
+   return ReaderSBIS;
+});

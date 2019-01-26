@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers/requireFileAMD.js
+define('Core/tmpl/js/helpers/requireFileAMD', [
+   'View/Builder/Tmpl/modules/utils/requireType'
+], function requireFileAMDCall(requireType) {
+   return requireType;
+});

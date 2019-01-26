@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/ws-data/WS.Data/Types/Flags.js
+/* global define */
+define('WS.Data/Types/Flags', ['WS.Data/Type/Flags'], function(Flags) {
+   'use strict';
+   return Flags;
+});

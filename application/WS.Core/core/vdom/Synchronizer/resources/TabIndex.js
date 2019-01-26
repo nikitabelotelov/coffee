@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Synchronizer/resources/TabIndex.js
+define('Core/vdom/Synchronizer/resources/TabIndex', [
+   'Vdom/Vdom'
+], function (Vdom) {
+   return Vdom.TabIndex;
+});

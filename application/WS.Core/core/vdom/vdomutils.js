@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/vdomutils.js
+define('Core/vdom/vdomutils', [
+   'View/Executor/Utils'
+], function (Utils) {
+   return Utils.Vdom;
+});

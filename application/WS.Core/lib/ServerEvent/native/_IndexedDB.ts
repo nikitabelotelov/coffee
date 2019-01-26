@@ -1,1 +1,6 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/ServerEvent/native/_IndexedDB.ts
+/// <amd-module name="Lib/ServerEvent/native/_IndexedDB" />
+export { Writer } from './_IndexedDB/Writer';
+export { Reader } from './_IndexedDB/Reader';
+export { AdapterStomp } from './_IndexedDB/AdapterStomp';
+export { AdapterEvent, IMessage } from './_IndexedDB/AdapterEvent';
+export { Connector } from './_IndexedDB/Connector';

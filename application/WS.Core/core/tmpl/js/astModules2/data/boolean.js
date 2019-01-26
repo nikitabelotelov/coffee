@@ -1,1 +1,7 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/astModules2/data/boolean.js
+define('Core/tmpl/js/astModules2/data/boolean',
+   [
+      'View/Builder/Tmpl/modules/data/boolean'
+   ], function boolLoader(booleanM) {
+      'use strict';
+      return booleanM;
+   });

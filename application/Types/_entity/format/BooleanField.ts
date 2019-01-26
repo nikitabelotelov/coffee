@@ -1,1 +1,25 @@
-E:/Workspace/repos/Coffee/node_modules/saby-types/Types/_entity/format/BooleanField.ts
+/// <amd-module name="Types/_entity/format/BooleanField" />
+/**
+ * Формат логического поля.
+ *
+ * Создадим поле логического типа:
+ * <pre>
+ *    var field = {
+ *       name: 'foo',
+ *       type: 'boolean'
+ *    };
+ * </pre>
+ * @class Types/Format/BooleanField
+ * @extends Types/Format/Field
+ * @public
+ * @author Мальцев А.А.
+ */
+
+import Field from './Field';
+
+export default class BooleanField extends Field /** @lends Types/Format/BooleanField.prototype */{
+}
+
+BooleanField.prototype['[Types/_entity/format/BooleanField]'] = true;
+BooleanField.prototype._moduleName = 'Types/entity:format.BooleanField';
+BooleanField.prototype._typeName = 'Boolean';

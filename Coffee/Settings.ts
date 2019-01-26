@@ -12,10 +12,16 @@ type Setting = {
    template: String;
 }
 
-
-
 class Settings extends Control {
    public _template: Function = template;
+   public checkUpdate(): void {
+      fetch("").then(() => {
+
+      }, () => {
+
+      })
+   };
 }
+
 
 export = Settings;

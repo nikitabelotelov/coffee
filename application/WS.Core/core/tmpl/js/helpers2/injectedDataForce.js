@@ -1,1 +1,7 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/helpers2/injectedDataForce.js
+define('Core/tmpl/js/helpers2/injectedDataForce',
+   [
+      'View/Builder/Tmpl/modules/data'
+   ], function injectedDataForceLoader(data) {
+      'use strict';
+      return data;
+   });

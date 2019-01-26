@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/Synchronizer.js
+define('Vdom/Synchronizer/Synchronizer', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/Synchronizer', 'Vdom.Synchronizer');
+   return Vdom.Synchronizer;
+});

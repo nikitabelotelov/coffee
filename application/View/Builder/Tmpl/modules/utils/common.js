@@ -1,1 +1,3 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/View/Builder/Tmpl/modules/utils/common.js
+define('View/Builder/Tmpl/modules/utils/common', ['View/Executor/Utils'], function utilsLoader(Utils) {
+   return Utils.Common;
+});

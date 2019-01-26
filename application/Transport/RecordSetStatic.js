@@ -1,1 +1,7 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/transport/RecordSetStatic.js
+define('Transport/RecordSetStatic', [
+   'Deprecated/RecordSetStatic',
+   'Core/deprecated'
+], function(RecordSetStatic, deprecated) {
+   deprecated.showInfoLog('Transport/RecordSetStatic помечен как deprecated и будет удален в 3.18.');
+   return RecordSetStatic;
+});

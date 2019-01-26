@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/TabIndex.js
+define('Vdom/Synchronizer/resources/TabIndex', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/TabIndex', 'Vdom.TabIndex');
+   return Vdom.TabIndex;
+});

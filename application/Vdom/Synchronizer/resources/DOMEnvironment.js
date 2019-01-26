@@ -1,1 +1,4 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/Vdom/Synchronizer/resources/DOMEnvironment.js
+define('Vdom/Synchronizer/resources/DOMEnvironment', ['Vdom/Vdom'], function(Vdom) {
+   Vdom.logDeprecatedWrapper('Vdom/Synchronizer/resources/DOMEnvironment', 'Vdom.DOMEnvironment');
+   return Vdom.DOMEnvironment;
+});

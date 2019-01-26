@@ -1,1 +1,12 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/lib/Tab/Transport/Fake.js
+define("Lib/Tab/Transport/Fake", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var FakeTransport = /** @class */ (function () {
+        function FakeTransport(channel) {
+        }
+        FakeTransport.prototype.notify = function (message, data) { };
+        FakeTransport.prototype.destroy = function () { };
+        return FakeTransport;
+    }());
+    exports.FakeTransport = FakeTransport;
+});

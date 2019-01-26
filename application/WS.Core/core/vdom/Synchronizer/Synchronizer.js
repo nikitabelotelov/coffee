@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/vdom/Synchronizer/Synchronizer.js
+define('Core/vdom/Synchronizer/Synchronizer', [
+   'Vdom/Vdom'
+], function (Vdom) {
+   return Vdom.Synchronizer;
+});

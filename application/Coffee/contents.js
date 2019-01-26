@@ -1,1 +1,1 @@
-contents={"buildMode":"debug","htmlNames":{},"modules":{"Coffee":{}}}
+contents={"buildMode":"release","htmlNames":{},"modules":{"Coffee":{}}}

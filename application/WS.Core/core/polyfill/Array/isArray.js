@@ -1,1 +1,9 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/polyfill/Array/isArray.js
+if (!Array.isArray) {
+   Array.isArray = function (arr) {
+      return !!(
+      arr && typeof(arr) === 'object' &&
+      Object.prototype.toString.call(arr) === '[object Array]' &&
+      Object.getPrototypeOf(arr) === Array.prototype
+      );
+   };
+}

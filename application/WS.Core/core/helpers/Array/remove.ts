@@ -1,1 +1,9 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/helpers/Array/remove.ts
+/// <amd-module name="Core/helpers/Array/remove" />
+
+export = function remove(arr, index, count) {
+   const resCount = count || 1;
+   if (!(arr instanceof Array)) {
+      throw new TypeError('Incorrect type of the first arguments. Array expected');
+   }
+   return arr.splice(index, resCount);
+}

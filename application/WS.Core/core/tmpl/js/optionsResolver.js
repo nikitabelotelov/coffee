@@ -1,1 +1,5 @@
-E:/Workspace/repos/Coffee/node_modules/sbis3-ws/WS.Core/core/tmpl/js/optionsResolver.js
+define('Core/tmpl/js/optionsResolver', [
+   'View/Executor/Utils'
+   ], function (Utils) {
+   return Utils.OptionsResolver;
+});
