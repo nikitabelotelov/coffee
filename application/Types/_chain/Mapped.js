@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Mapped" />
 /**
  * Преобразующее звено цепочки.
- * @class Types/Chain/Mapped
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Mapped
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,17 +17,17 @@ define('Types/_chain/Mapped', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Mapped = /** @class */
     function (_super) {
-        tslib_1.__extends(Mapped, _super);    /** @lends Types/Chain/Mapped.prototype */
+        tslib_1.__extends(Mapped, _super);    /** @lends Types/_chain/Mapped.prototype */
                                               /**
          * Конструктор преобразующего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {Function(*, Number): *} callback Функция, возвращающая новый элемент.
          * @param {Object} [callbackContext] Контекст вызова callback
          */
-        /** @lends Types/Chain/Mapped.prototype */
+        /** @lends Types/_chain/Mapped.prototype */
         /**
          * Конструктор преобразующего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {Function(*, Number): *} callback Функция, возвращающая новый элемент.
          * @param {Object} [callbackContext] Контекст вызова callback
          */

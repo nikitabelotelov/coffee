@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/AbstractStrategy" />
 /**
  * Абстрактная стратегия получения элементов проекции
- * @class Types/Display/ItemsStrategy/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/AbstractStrategy', [
@@ -98,38 +98,38 @@ define('Types/_display/itemsStrategy/AbstractStrategy', [
               //region Protected members
               /**
          * Возвращает исходную коллекцию
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          * @protected
          */
         //endregion
         //region Protected members
         /**
          * Возвращает исходную коллекцию
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          * @protected
          */
         Abstract.prototype._getCollection = function () {
             return this._options.display.getCollection();
         };    /**
          * Возвращает энумератор коллекции
-         * @return {Types/Collection/IEnumerator}
+         * @return {Types/_collection/IEnumerator}
          * @protected
          */
         /**
          * Возвращает энумератор коллекции
-         * @return {Types/Collection/IEnumerator}
+         * @return {Types/_collection/IEnumerator}
          * @protected
          */
         Abstract.prototype._getCollectionEnumerator = function () {
             return this._getCollection().getEnumerator(this._options.localize);
         };    /**
          * Возвращает элементы проекции
-         * @return Array.<Types/Display/CollectionItem>
+         * @return Array.<Types/_display/CollectionItem>
          * @protected
          */
         /**
          * Возвращает элементы проекции
-         * @return Array.<Types/Display/CollectionItem>
+         * @return Array.<Types/_display/CollectionItem>
          * @protected
          */
         Abstract.prototype._getItems = function () {
@@ -169,12 +169,12 @@ define('Types/_display/itemsStrategy/AbstractStrategy', [
             return this._sourceItems = items;
         };    /**
          * Создает элемент проекции
-         * @return Types/Display/CollectionItem
+         * @return Types/_display/CollectionItem
          * @protected
          */
         /**
          * Создает элемент проекции
-         * @return Types/Display/CollectionItem
+         * @return Types/_display/CollectionItem
          * @protected
          */
         Abstract.prototype._createItem = function (contents) {

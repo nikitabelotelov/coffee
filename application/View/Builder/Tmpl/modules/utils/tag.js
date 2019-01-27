@@ -223,7 +223,7 @@ define('View/Builder/Tmpl/modules/utils/tag', [
                name.value = tag.attribs['data-component'];
             } else if (common.isLibraryModuleString(nameVal)) {
                name.libPath = common.splitModule(nameVal);
-               name.value = name.libPath.library + ':' + name.libPath.module;
+               name.value = name.libPath.fullName;
                name.type = 'ws-module';
             } else {
                name.value = splitWs ? splitWs(nameVal) : nameVal;

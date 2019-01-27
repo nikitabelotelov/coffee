@@ -2,10 +2,10 @@
 /**
  * Абстрактная проекция данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Display/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
+ * @class Types/_display/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -39,8 +39,8 @@ define('Types/_display/Abstract', [
     var displaysCounter = [];
     var Abstract = /** @class */
     function (_super) {
-        tslib_1.__extends(Abstract, _super);    /** @lends Types/Display/Abstract.prototype */
-        /** @lends Types/Display/Abstract.prototype */
+        tslib_1.__extends(Abstract, _super);    /** @lends Types/_display/Abstract.prototype */
+        /** @lends Types/_display/Abstract.prototype */
         function Abstract(options) {
             var _this = _super.call(this, options) || this;
             entity_1.OptionsToPropertyMixin.call(_this, options);
@@ -53,19 +53,19 @@ define('Types/_display/Abstract', [
         };    //region Statics
               /**
          * Возвращает проекцию по умолчанию
-         * @param {Types/Collection/IEnumerable} collection Объект, для которого требуется получить проекцию
+         * @param {Types/_collection/IEnumerable} collection Объект, для которого требуется получить проекцию
          * @param {Object} [options] Опции конструктора проекции
          * @param {Boolean} [single=false] Возвращать singleton для каждой collection
-         * @return {Types/Display/Abstract}
+         * @return {Types/_display/Abstract}
          * @static
          */
         //region Statics
         /**
          * Возвращает проекцию по умолчанию
-         * @param {Types/Collection/IEnumerable} collection Объект, для которого требуется получить проекцию
+         * @param {Types/_collection/IEnumerable} collection Объект, для которого требуется получить проекцию
          * @param {Object} [options] Опции конструктора проекции
          * @param {Boolean} [single=false] Возвращать singleton для каждой collection
-         * @return {Types/Display/Abstract}
+         * @return {Types/_display/Abstract}
          * @static
          */
         Abstract.getDefaultDisplay = function (collection, options, single) {
@@ -87,7 +87,7 @@ define('Types/_display/Abstract', [
                 } else if (collection instanceof Array) {
                     instance = di_1.create('Types/display:Collection', options);
                 } else {
-                    throw new TypeError('Argument "collection" should implement Types/Collection/IEnumerable or be an instance of Array, but "' + collection + '" given.');
+                    throw new TypeError('Argument "collection" should implement Types/_collection/IEnumerable or be an instance of Array, but "' + collection + '" given.');
                 }
                 if (single) {
                     displaysToCollections.push(collection);
@@ -101,13 +101,13 @@ define('Types/_display/Abstract', [
             }
         };    /**
          * Освобождает проекцию, которую запрашивали через getDefaultDisplay как singleton
-         * @param {Types/Display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
+         * @param {Types/_display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
          * @return {Boolean} Ссылка на проекцию была освобождена
          * @static
          */
         /**
          * Освобождает проекцию, которую запрашивали через getDefaultDisplay как singleton
-         * @param {Types/Display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
+         * @param {Types/_display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
          * @return {Boolean} Ссылка на проекцию была освобождена
          * @static
          */
@@ -126,8 +126,8 @@ define('Types/_display/Abstract', [
             return true;
         };
         return Abstract;
-    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.ObservableMixin)    /** @lends Types/Display/Abstract.prototype */);
-    /** @lends Types/Display/Abstract.prototype */
+    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.ObservableMixin)    /** @lends Types/_display/Abstract.prototype */);
+    /** @lends Types/_display/Abstract.prototype */
     exports.default = Abstract;
     Abstract.prototype['[Types/_display/Abstract]'] = true;    // Deprecated
     // Deprecated

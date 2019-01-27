@@ -2,14 +2,14 @@
 /**
  * Базовый источник данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Base
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/IData
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Source/OptionsMixin
- * @mixes Types/Source/LazyMixin
- * @mixes Types/Source/DataMixin
+ * @class Types/_source/Base
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/IData
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_source/OptionsMixin
+ * @mixes Types/_source/LazyMixin
+ * @mixes Types/_source/DataMixin
  * @ignoreOptions options.writable
  * @public
  * @author Мальцев А.А.
@@ -48,7 +48,7 @@ define('Types/_source/Base', [
          * @deprecated
          */
         Base.extend = function (mixinsList, classExtender) {
-            util_1.logger.error('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+            util_1.logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
             return coreExtend(this, mixinsList, classExtender);
         };
         ;

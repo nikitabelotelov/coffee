@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/itemsStrategy/MaterializedPath" />
 /**
  * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
- * @class Types/Display/ItemsStrategy/MaterializedPath
- * @extends Types/Display/ItemsStrategy/Abstract
+ * @class Types/_display/ItemsStrategy/MaterializedPath
+ * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/MaterializedPath', [
@@ -16,8 +16,8 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var MaterializedPath = /** @class */
     function (_super) {
-        tslib_1.__extends(MaterializedPath, _super);    /** @lends Types/Display/ItemsStrategy/MaterializedPath.prototype */
-        /** @lends Types/Display/ItemsStrategy/MaterializedPath.prototype */
+        tslib_1.__extends(MaterializedPath, _super);    /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */
+        /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */
         function MaterializedPath(options) {
             var _this = _super.call(this, options) || this;    /**
              * Соответствие "индекс в коллекции" - "путь"
@@ -90,7 +90,7 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
               //region Protected
               /**
          * Возвращает путь до элемента с порядковым номером
-         * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Коллекция
+         * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
          * @param {Number} index Порядковый номер
          * @return {Array.<Number>}
          * @protected
@@ -99,7 +99,7 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
         //region Protected
         /**
          * Возвращает путь до элемента с порядковым номером
-         * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Коллекция
+         * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
          * @param {Number} index Порядковый номер
          * @return {Array.<Number>}
          * @protected
@@ -139,7 +139,7 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
                         item = enumerator.moveNext() ? enumerator.getCurrent() : undefined;
                         isLast = item === undefined;
                     } else {
-                        throw new TypeError('Unsupported object type: only Array, Types/Collection/IList or Types/Collection/IEnumerable are supported.');
+                        throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or Types/_collection/IEnumerable are supported.');
                     }
                     if (isLast) {
                         break;
@@ -166,14 +166,14 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
             return path;
         };    /**
          * Возвращает элемент, находящийся по указанному пути
-         * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Коллекция
+         * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
          * @param {Array.<Number>} path Путь до элемента
          * @return {*}
          * @protected
          */
         /**
          * Возвращает элемент, находящийся по указанному пути
-         * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Коллекция
+         * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
          * @param {Array.<Number>} path Путь до элемента
          * @return {*}
          * @protected
@@ -193,14 +193,14 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
          * Возвращает родителя элемента с указанными порядковым номером и путем
          * @param {Number} index Порядковый номер элемента
          * @param {Array.<Number>} path Путь до элемента
-         * @return {Types/Display/CollectionItem} Родитель элемента
+         * @return {Types/_display/CollectionItem} Родитель элемента
          * @protected
          */
         /**
          * Возвращает родителя элемента с указанными порядковым номером и путем
          * @param {Number} index Порядковый номер элемента
          * @param {Array.<Number>} path Путь до элемента
-         * @return {Types/Display/CollectionItem} Родитель элемента
+         * @return {Types/_display/CollectionItem} Родитель элемента
          * @protected
          */
         MaterializedPath.prototype._getParent = function (index, path) {
@@ -220,14 +220,14 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
             }
         };    /**
          * Возвращает элемент по индексу в родителе
-         * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Родитель
+         * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Родитель
          * @param {Number} at Индекс элемента
          * @return {*}
          * @protected
          */
         /**
          * Возвращает элемент по индексу в родителе
-         * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Родитель
+         * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Родитель
          * @param {Number} at Индекс элемента
          * @return {*}
          * @protected
@@ -254,7 +254,7 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
                     index++;
                 }
             } else {
-                throw new TypeError('Unsupported object type: only Array, Types/Collection/IList or Types/Collection/IEnumerable are supported.');
+                throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or Types/_collection/IEnumerable are supported.');
             }
             if (item === undefined) {
                 throw new ReferenceError('Item at ' + at + ' is out of range.');
@@ -264,7 +264,7 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
               //region Statics
               /**
          * Создает индекс сортировки по материализованному пути - от корневой вершины вглубь до конечных вершин
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Array.<Number>} current Текущий индекс сортировки
          * @param {Object} options Опции
          * @return {Array.<Number>}
@@ -273,7 +273,7 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
         //region Statics
         /**
          * Создает индекс сортировки по материализованному пути - от корневой вершины вглубь до конечных вершин
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Array.<Number>} current Текущий индекс сортировки
          * @param {Object} options Опции
          * @return {Array.<Number>}
@@ -325,8 +325,8 @@ define('Types/_display/itemsStrategy/MaterializedPath', [
             });
         };
         return MaterializedPath;
-    }(AbstractStrategy_1.default    /** @lends Types/Display/ItemsStrategy/MaterializedPath.prototype */);
-    /** @lends Types/Display/ItemsStrategy/MaterializedPath.prototype */
+    }(AbstractStrategy_1.default    /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */);
+    /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */
     exports.default = MaterializedPath;
     MaterializedPath.prototype._moduleName = 'Types/display:itemsStrategy.MaterializedPath';
     MaterializedPath.prototype['[Types/_display/itemsStrategy/MaterializedPath]'] = true;

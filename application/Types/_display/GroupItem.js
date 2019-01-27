@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/GroupItem" />
 /**
  * Группа элементов
- * @class Types/Display/GroupItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/GroupItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_display/GroupItem', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var GroupItem = /** @class */
     function (_super) {
-        tslib_1.__extends(GroupItem, _super);    /** @lends Types/Display/GroupItem.prototype */
-        /** @lends Types/Display/GroupItem.prototype */
+        tslib_1.__extends(GroupItem, _super);    /** @lends Types/_display/GroupItem.prototype */
+        /** @lends Types/_display/GroupItem.prototype */
         function GroupItem(options) {
             var _this = _super.call(this, options) || this;
             _this._$expanded = !!_this._$expanded;
@@ -61,8 +61,8 @@ define('Types/_display/GroupItem', [
             this.setExpanded(!this.isExpanded());
         };
         return GroupItem;
-    }(CollectionItem_1.default    /** @lends Types/Display/GroupItem.prototype */);
-    /** @lends Types/Display/GroupItem.prototype */
+    }(CollectionItem_1.default    /** @lends Types/_display/GroupItem.prototype */);
+    /** @lends Types/_display/GroupItem.prototype */
     exports.default = GroupItem;
     GroupItem.prototype._moduleName = 'Types/display:GroupItem';
     GroupItem.prototype['[Types/_display/GroupItem]'] = true;    // @ts-ignore

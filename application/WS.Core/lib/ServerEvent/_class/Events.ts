@@ -4,8 +4,11 @@ const STR_DISABLE = 'disableservereventbus';
 const STR_LATE_MAIN = 'detectlatermain';
 
 class FakeEvent implements Event {
-    constructor(type) {
+    constructor(type, options={}) {
         this.type = type;
+        for (const key in options) {
+            this[key] = options[key];
+        }
     }
     /**
      * Returns true or false depending on how event was initialized. True if event goes through its target's ancestors in reverse tree order, and false otherwise.
@@ -66,6 +69,39 @@ class FakeEvent implements Event {
     readonly NONE: number;
 }
 
+class FakeMessageEvent extends FakeEvent implements MessageEvent {
+    /**
+     * Returns the data of the message.
+     */
+    readonly data: any;
+    /**
+     * Returns the last event ID string, for
+     * server-sent events.
+     */
+    readonly lastEventId: string;
+    /**
+     * Returns the origin of the message, for server-sent events and
+     * cross-document messaging.
+     */
+    readonly origin: string;
+    /**
+     * Returns the MessagePort array sent with the message, for cross-document
+     * messaging and channel messaging.
+     */
+    readonly ports: ReadonlyArray<MessagePort>;
+    /**
+     * Returns the WindowProxy of the source window, for cross-document
+     * messaging, and the MessagePort being attached, in the connect event fired at
+     * SharedWorkerGlobalScope objects.
+     */
+    readonly source: MessageEventSource | null;
+}
+
+/**
+ * Create Event
+ * @param type EventType
+ * @returns {Event}
+ */
 export function create(type): Event {
     try {
         return new Event(type);
@@ -75,6 +111,25 @@ export function create(type): Event {
         }
         // For Internet Explorer 11:
         let event = document.createEvent('Event');
+        event.initEvent(type, false, false);
+        return event;
+    }
+}
+
+/**
+ * Create MessageEvent
+ * @param type EventType
+ * @returns {MessageEvent}
+ */
+export function createME(type, options = {}): MessageEvent {
+    try {
+        return new MessageEvent(type, options);
+    } catch (e) {
+        if (typeof document === 'undefined') {
+            return new FakeMessageEvent(type);
+        }
+        // For Internet Explorer 11:
+        let event = document.createEvent('MessageEvent');
         event.initEvent(type, false, false);
         return event;
     }

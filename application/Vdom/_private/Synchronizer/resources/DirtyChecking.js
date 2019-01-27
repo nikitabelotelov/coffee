@@ -243,15 +243,17 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
             // Создаем виртуальную ноду для не-compound контрола
             var invisible = vnode && vnode.invisible,
                 // подмешиваем сериализованное состояние к прикладным опциям
-                optionsWithState = serializedState ? shallowMerge(userOptions, serializedState) : userOptions, optionsVersions, contextVersions, control, params, context, instCompat;
+                optionsWithState = serializedState ? shallowMerge(userOptions, serializedState) : userOptions, optionsVersions, contextVersions, control, params, context, instCompat, defaultOptions;
             if (typeof controlClass_ === 'function') {
                 // создаем инстанс компонента
                 instCompat = Utils_1.Compatible.createInstanceCompatible(controlCnstr, optionsWithState, internalOptions);
                 control = instCompat.instance;
                 optionsWithState = instCompat.resolvedOptions;
+                defaultOptions = instCompat.defaultOptions;
             } else {
                 // инстанс уже есть, работаем с его опциями
                 control = controlClass_;
+                defaultOptions = Utils_1.OptionsResolver.getDefaultOptions(controlClass_);
                 if (isJs.compat) {
                     optionsWithState = Utils_1.Compatible.combineOptionsIfCompatible(controlCnstr.prototype, optionsWithState, internalOptions);
                     if (control._setInternalOptions) {
@@ -278,7 +280,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                 id: control._instId || 0,
                 parent: parentNode,
                 key: key,
-                defaultOptions: params && params.defaultOptions,
+                defaultOptions: defaultOptions,
                 markup: invisible ? Utils_1.Vdom.textNode('') : undefined,
                 fullMarkup: undefined,
                 childrenNodes: ARR_EMPTY,
@@ -638,7 +640,8 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                                     environment.setRebuildIgnoreId(childControlNode.id);
                                     Utils_1.OptionsResolver.resolveInheritOptions(childControlNode.controlClass, childControlNode, newOptions);
                                     childControl.saveInheritOptions(childControlNode.inheritOptions);
-                                    resolvedContext = Expressions_2.ContextResolver.resolveContext(childControlNode.controlClass, newChildNodeContext, childControlNode.control);    // Forbid force update in the time between _beforeUpdate and _afterUpdate
+                                    resolvedContext = Expressions_2.ContextResolver.resolveContext(childControlNode.controlClass, newChildNodeContext, childControlNode.control);
+                                    Utils_1.OptionsResolver.resolveOptions(childControlNode.controlClass, childControlNode.defaultOptions, newOptions, childControlNode.parent.control._moduleName);    // Forbid force update in the time between _beforeUpdate and _afterUpdate
                                     // Forbid force update in the time between _beforeUpdate and _afterUpdate
                                     childControl._beforeUpdate && childControl._beforeUpdate(newOptions, resolvedContext);
                                     childControl._options = newOptions;

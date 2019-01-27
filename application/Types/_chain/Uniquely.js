@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Uniquely" />
 /**
  * Звено цепочки, обеспечивающее уникальность.
- * @class Types/Chain/Uniquely
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Uniquely
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,16 +17,16 @@ define('Types/_chain/Uniquely', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Uniquely = /** @class */
     function (_super) {
-        tslib_1.__extends(Uniquely, _super);    /** @lends Types/Chain/Uniquely.prototype */
+        tslib_1.__extends(Uniquely, _super);    /** @lends Types/_chain/Uniquely.prototype */
                                                 /**
          * Конструктор звена цепочки, обеспечивающего уникальность.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {function(*): String|Number} [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
          */
-        /** @lends Types/Chain/Uniquely.prototype */
+        /** @lends Types/_chain/Uniquely.prototype */
         /**
          * Конструктор звена цепочки, обеспечивающего уникальность.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {function(*): String|Number} [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
          */
         function Uniquely(source, idExtractor) {

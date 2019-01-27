@@ -9,8 +9,8 @@
  *       type: 'identity'
  *    };
  * </pre>
- * @class Types/Format/IdentityField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/IdentityField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -24,8 +24,8 @@ define('Types/_entity/format/IdentityField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var IdentityField = /** @class */
     function (_super) {
-        tslib_1.__extends(IdentityField, _super);    /** @lends Types/Format/IdentityField.prototype */
-        /** @lends Types/Format/IdentityField.prototype */
+        tslib_1.__extends(IdentityField, _super);    /** @lends Types/_entity/format/IdentityField.prototype */
+        /** @lends Types/_entity/format/IdentityField.prototype */
         function IdentityField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -42,8 +42,8 @@ define('Types/_entity/format/IdentityField', [
             return this._separator;
         };
         return IdentityField;
-    }(Field_1.default    /** @lends Types/Format/IdentityField.prototype */);
-    /** @lends Types/Format/IdentityField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/IdentityField.prototype */);
+    /** @lends Types/_entity/format/IdentityField.prototype */
     exports.default = IdentityField;
     IdentityField.prototype['[Types/_entity/format/IdentityField]'] = true;
     IdentityField.prototype._moduleName = 'Types/entity:format.IdentityField';

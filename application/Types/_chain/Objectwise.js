@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Objectwise" />
 /**
  * Цепочка по объекту.
- * @class Types/Chain/Object
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Object
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_chain/Objectwise', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Objectwise = /** @class */
     function (_super) {
-        tslib_1.__extends(Objectwise, _super);    /** @lends Types/Chain/Object.prototype */
-        /** @lends Types/Chain/Object.prototype */
+        tslib_1.__extends(Objectwise, _super);    /** @lends Types/_chain/Object.prototype */
+        /** @lends Types/_chain/Object.prototype */
         function Objectwise(source) {
             var _this = this;
             if (!(source instanceof Object)) {

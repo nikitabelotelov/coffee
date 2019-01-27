@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_display/IItemsStrategy" />
 /**
  * Интерфейс стратегии получения элементов проекции.
- * @interface Types/Display/IItemsStrategy
+ * @interface Types/_display/IItemsStrategy
  * @public
  * @author Мальцев А.А.
  */

@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_collection/Enum" />
 /**
- * Тип данных "перечисляемое".
- * @class Types/Type/Enum
- * @extends Types/Type/Dictionary
- * @implements Types/Type/IEnum
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * Enumerable type. It's an enumerable collection of keys and values one of which can be selected or not.
+ * @class Types/_collectionEnum
+ * @extends Types/_collectionDictionary
+ * @implements Types/_collectionIEnum
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -108,13 +108,13 @@ define('Types/_collection/Enum', [
         };    //endregion
               //region Protected methods
               /**
-         * Приводит индекс у типу Number
+         * Converts key to the Number type
          * @protected
          */
         //endregion
         //region Protected methods
         /**
-         * Приводит индекс у типу Number
+         * Converts key to the Number type
          * @protected
          */
         Enum.prototype._checkIndex = function () {
@@ -123,15 +123,15 @@ define('Types/_collection/Enum', [
             }
             this._$index = parseInt(String(this._$index), 10);
         };    /**
-         * Уведомляет об изменении
-         * @param {Number} index Индекс нового значения
-         * @param {String} value Новое значение
+         * Triggers a change event
+         * @param {Number} index Key of selected item
+         * @param {String} value Value of selected item
          * @protected
          */
         /**
-         * Уведомляет об изменении
-         * @param {Number} index Индекс нового значения
-         * @param {String} value Новое значение
+         * Triggers a change event
+         * @param {Number} index Key of selected item
+         * @param {String} value Value of selected item
          * @protected
          */
         Enum.prototype._notifyChange = function (index, value) {

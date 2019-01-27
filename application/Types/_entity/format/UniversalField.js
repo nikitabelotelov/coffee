@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/format/UniversalField" />
 /**
  * Универсальное поле.
- * @class Types/Format/UniversalField
+ * @class Types/_entity/format/UniversalField
  * @author Мальцев А.А.
  */
 define('Types/_entity/format/UniversalField', [
@@ -10,7 +10,7 @@ define('Types/_entity/format/UniversalField', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var UniversalField    /** @lends Types/Format/UniversalField.prototype */ = /** @lends Types/Format/UniversalField.prototype */
+    var UniversalField    /** @lends Types/_entity/format/UniversalField.prototype */ = /** @lends Types/_entity/format/UniversalField.prototype */
     /** @class */
     function () {
         function UniversalField() {

@@ -1,6 +1,5 @@
-define("Lib/ServerEvent/native/SockjsEmulator", ["require", "exports"], function (require, exports) {
+define("Lib/ServerEvent/native/SockjsEmulator", ["require", "exports", "Lib/ServerEvent/_class/Events"], function (require, exports, EventClass) {
     "use strict";
-    /// <amd-module name="Lib/ServerEvent/native/SockjsEmulator" />
     /**
      * @link https://github.com/sockjs/sockjs-client/blob/master/lib/utils/browser-crypto.js
      */
@@ -182,7 +181,7 @@ define("Lib/ServerEvent/native/SockjsEmulator", ["require", "exports"], function
                         if (!data_1[1]) {
                             return;
                         }
-                        value.call(_this, new MessageEvent('websocket', {
+                        value.call(_this, EventClass.createME('websocket', {
                             data: data_1[1],
                             origin: ev.origin,
                             source: ev.source

@@ -44,6 +44,10 @@
       "path": "%cd%/node_modules/sbis3-ws/View"
     },
     {
+      "name": "Inferno",
+      "path": "%cd%/node_modules/sbis3-ws/Inferno"
+    },
+    {
       "name": "WS.Data",
       "path": "%cd%/node_modules/ws-data/WS.Data"
     },

@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Zipped" />
 /**
  * Объединяющее звено цепочки.
- * @class Types/Chain/Zipped
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Zipped
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,17 +17,17 @@ define('Types/_chain/Zipped', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Zipped = /** @class */
     function (_super) {
-        tslib_1.__extends(Zipped, _super);    /** @lends Types/Chain/Zipped.prototype */
+        tslib_1.__extends(Zipped, _super);    /** @lends Types/_chain/Zipped.prototype */
                                               /**
          * Конструктор объединяющего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
-         * @param {Array.<Array>|Array.<Types/Collection/IEnumerable>} items Коллекции для объединения.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
+         * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
          */
-        /** @lends Types/Chain/Zipped.prototype */
+        /** @lends Types/_chain/Zipped.prototype */
         /**
          * Конструктор объединяющего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
-         * @param {Array.<Array>|Array.<Types/Collection/IEnumerable>} items Коллекции для объединения.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
+         * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
          */
         function Zipped(source, items) {
             var _this = _super.call(this, source) || this;

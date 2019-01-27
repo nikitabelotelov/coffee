@@ -4,6 +4,7 @@ import { IAdapterStorage, IQuery } from "./IAdapterStorage";
 
 /**
  * @class Lib/ServerEvent/native/_IndexedDB/Reader
+ * @author Санников К.А
  */
 export class Reader<T=Object>
 {

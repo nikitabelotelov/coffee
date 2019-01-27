@@ -2,7 +2,7 @@
 /**
  * Интерфейс источника данных, поддерживающиего абстракцию работы с данными.
  *
- * @interface Types/Source/IData
+ * @interface Types/_source/IData
  * @public
  * @author Мальцев А.А.
  */

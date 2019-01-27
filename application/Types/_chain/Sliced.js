@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Sliced" />
 /**
  * Вырезающее звено цепочки.
- * @class Types/Chain/Sliced
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Sliced
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,17 +17,17 @@ define('Types/_chain/Sliced', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Sliced = /** @class */
     function (_super) {
-        tslib_1.__extends(Sliced, _super);    /** @lends Types/Chain/Sliced.prototype */
+        tslib_1.__extends(Sliced, _super);    /** @lends Types/_chain/Sliced.prototype */
                                               /**
          * Конструктор вырезающего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {Number} begin Индекс, по которому начинать извлечение
          * @param {Number} end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
          */
-        /** @lends Types/Chain/Sliced.prototype */
+        /** @lends Types/_chain/Sliced.prototype */
         /**
          * Конструктор вырезающего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {Number} begin Индекс, по которому начинать извлечение
          * @param {Number} end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
          */

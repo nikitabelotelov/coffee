@@ -10,8 +10,8 @@
  *       kind: 'integer'
  *    };
  * </pre>
- * @class Types/Format/ArrayField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/ArrayField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -25,8 +25,8 @@ define('Types/_entity/format/ArrayField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var ArrayField = /** @class */
     function (_super) {
-        tslib_1.__extends(ArrayField, _super);    /** @lends Types/Format/ArrayField.prototype */
-        /** @lends Types/Format/ArrayField.prototype */
+        tslib_1.__extends(ArrayField, _super);    /** @lends Types/_entity/format/ArrayField.prototype */
+        /** @lends Types/_entity/format/ArrayField.prototype */
         function ArrayField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -45,8 +45,8 @@ define('Types/_entity/format/ArrayField', [
             return this._$kind;
         };
         return ArrayField;
-    }(Field_1.default    /** @lends Types/Format/ArrayField.prototype */);
-    /** @lends Types/Format/ArrayField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/ArrayField.prototype */);
+    /** @lends Types/_entity/format/ArrayField.prototype */
     exports.default = ArrayField;
     ArrayField.prototype['[Types/_entity/format/ArrayField]'] = true;
     ArrayField.prototype._moduleName = 'Types/entity:format.ArrayField';

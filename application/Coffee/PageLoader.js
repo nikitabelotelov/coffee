@@ -3,9 +3,9 @@ define('Coffee/PageLoader', [
     'require',
     'exports',
     'tslib',
-    'UI/Index',
+    'UI/Base',
     'wml!Coffee/PageLoader'
-], function (require, exports, tslib_1, Index_1, template) {
+], function (require, exports, tslib_1, Base_1, template) {
     'use strict';
     var PageLoader = /** @class */
     function (_super) {
@@ -40,6 +40,6 @@ define('Coffee/PageLoader', [
             }
         };
         return PageLoader;
-    }(Index_1.Control);
+    }(Base_1.Control);
     return PageLoader;
 });

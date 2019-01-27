@@ -5,6 +5,7 @@
  */
 // @ts-ignore
 import * as detection from 'Core/detection';
+import * as Tabindex from '../Synchronizer/resources/TabIndex';
 
 /**
  * Moves focus to a specific HTML element
@@ -19,10 +20,10 @@ export function focus(element) {
          try {
             element.setActive();
          } catch (e) {
-            element.focus();
+            Tabindex.focus(element);
          }
       } else {
-         element.focus();
+         Tabindex.focus(element);
       }
    }
 }

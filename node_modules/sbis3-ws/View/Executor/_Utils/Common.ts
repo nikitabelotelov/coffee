@@ -35,7 +35,7 @@ var
             library = _deps && _deps[libPath.library] || requireIfDefined(libPath.library);
 
          // if the library was found, return the requested module from it
-         return library && library[libPath.module];
+         return library && extractLibraryModule(library, libPath.module);
       }
       return null;
    },
@@ -619,12 +619,29 @@ export function isLibraryModule(cfg) {
 
 export function splitModule(string) {
    var
-      moduleName = string.indexOf('ws:') === 0 ? splitWs(string) : string,
-      moduleSplit = moduleName.split(':');
+      fullName = string.indexOf('ws:') === 0 ? splitWs(string) : string,
+      librarySplit = fullName.split(':', 2),
+      libraryName = librarySplit[0],
+      moduleName = librarySplit[1] && librarySplit[1].replace(/\//g, '.'),
+      modulePath = moduleName.split('.');
+
    return {
-      library: moduleSplit[0],
-      module: moduleSplit[1]
+      library: libraryName,
+      module: modulePath,
+      fullName: `${libraryName}:${moduleName}`
    };
+}
+
+export function extractLibraryModule(library, modulePath) {
+   let mod = library;
+   modulePath.forEach(function (part) {
+      if (mod && mod[part]) {
+         mod = mod[part];
+      } else {
+         throw new Error('Module "' + modulePath.join('.') + '" does not exist in the specified library');
+      }
+   });
+   return mod;
 }
 
 export function splitOptional(string) {

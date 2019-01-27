@@ -1,5 +1,7 @@
 /// <amd-module name="Lib/ServerEvent/native/_IndexedDB/IAdapterStorage" />
-
+/**
+ * @author Санников К.А
+ */
 export interface IQuery {
     /**
      * Возвращаем функцию фильтрации

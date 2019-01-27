@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/PageLoader" />
 
 // @ts-ignore
-import {Control} from 'UI/Index';
+import {Control} from 'UI/Base';
 // @ts-ignore
 import template = require('wml!Coffee/PageLoader');
 

@@ -766,7 +766,7 @@ GeneratorCompatible.createWsControl = function createWsControl(tpl, scope, attri
       id,
       varStorage = null,
       cnstr = data.controlClass,
-      resultingFn = cnstr && getTemplate(cnstr),
+      resultingFn = cnstr && cnstr.prototype && getTemplate(cnstr),
       decOptions;
 
    if (!cnstr && !resultingFn) {

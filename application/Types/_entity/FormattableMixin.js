@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/FormattableMixin" />
 /**
  * Миксин, предоставляющий поведение владения форматом полей и доступа к их значениям в сырых данных через адаптер.
- * @mixin Types/Entity/FormattableMixin
+ * @mixin Types/_entity/FormattableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -18,14 +18,14 @@ define('Types/_entity/FormattableMixin', [
     var defaultAdapter = 'Types/entity:adapter.Json';    /**
      * Строит формат, объединяя частичный формат и формат, построенный по сырым данным
      * @param {Object>} sliceFormat Частичное описание формата
-     * @param {Types/Format/Format>} rawDataFormat Формат из сырых данных
-     * @return {Types/Format/Format}
+     * @param {Types/_entity/format/Format>} rawDataFormat Формат из сырых данных
+     * @return {Types/_entity/format/Format}
      */
     /**
      * Строит формат, объединяя частичный формат и формат, построенный по сырым данным
      * @param {Object>} sliceFormat Частичное описание формата
-     * @param {Types/Format/Format>} rawDataFormat Формат из сырых данных
-     * @return {Types/Format/Format}
+     * @param {Types/_entity/format/Format>} rawDataFormat Формат из сырых данных
+     * @return {Types/_entity/format/Format}
      */
     function buildFormatFromObject(sliceFormat, rawDataFormat) {
         var field;
@@ -52,11 +52,11 @@ define('Types/_entity/FormattableMixin', [
         return rawDataFormat;
     }    /**
      * Строит формат полей сырым данным
-     * @return {Types/Format/Format}
+     * @return {Types/_entity/format/Format}
      */
     /**
      * Строит формат полей сырым данным
-     * @return {Types/Format/Format}
+     * @return {Types/_entity/format/Format}
      */
     function buildFormatByRawData() {
         var Format = di_1.resolve('Types/collection:format.Format');
@@ -97,14 +97,14 @@ define('Types/_entity/FormattableMixin', [
             });
         }
     }
-    var FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */
+    var FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */
     {
         '[Types/_entity/FormattableMixin]': true,
         //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
         '[WS.Data/Entity/FormattableMixin]': true,
         /**
          * @cfg {Object} Данные в "сыром" виде.
-         * @name Types/Entity/FormattableMixin#rawData
+         * @name Types/_entity/FormattableMixin#rawData
          * @see getRawData
          * @see setRawData
          * @remark
@@ -113,7 +113,7 @@ define('Types/_entity/FormattableMixin', [
          * @example
          * Создадим новую запись с данными сотрудника:
          * <pre>
-         *    require(['Types/Entity/Record'], function (Record) {
+         *    require(['Types/_entity/Record'], function (Record) {
          *       var user = new Record({
          *          rawData: {
          *             id: 1,
@@ -129,8 +129,8 @@ define('Types/_entity/FormattableMixin', [
          * </pre>
          * Создадим рекордсет с персонажами фильма:
          * <pre>
-         *    require(['Types/Collection/RecordSet'], function (RecordSet) {
-         *       var characters = new RecordSet({
+         *    require(['Types/collection'], function (collection) {
+         *       var characters = new collection.RecordSet({
          *          rawData: [{
          *             id: 1,
          *             firstName: 'John',
@@ -161,36 +161,20 @@ define('Types/_entity/FormattableMixin', [
         // {Object} При работе с сырыми данными использовать режим Copy-On-Write.
         _$cow: false,
         /**
-         * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с данными, по умолчанию {@link Types/Adapter/Json}.
-         * @name Types/Entity/FormattableMixin#adapter
+         * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с данными, по умолчанию {@link Types/_entity/adapter/Json}.
+         * @name Types/_entity/FormattableMixin#adapter
          * @see getAdapter
-         * @see Types/Adapter/Json
-         * @see Types/Di
+         * @see Types/_entity/adapter/Json
+         * @see Types/di
          * @remark
          * Адаптер должен быть предназначен для формата, в котором получены сырые данные {@link rawData}.
          * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
          * @example
-         * Создадим запись с адаптером для данных в формате БЛ СБИС, внедренным в виде названия зарегистрированной зависимости:
+         * Создадим запись с адаптером для данных в формате БЛ СБИС:
          * <pre>
-         *    require(['Types/Entity/Record', 'Types/Adapter/Sbis'], function (Record) {
-         *       var user = new Record({
-         *          adapter: 'Types/entity:adapter.Sbis',
-         *          format: [
-         *             {name: 'login', type: 'string'},
-         *             {name: 'email', type: 'string'}
-         *          ]
-         *       });
-         *       user.set({
-         *          login: 'root',
-         *          email: 'root@server.name'
-         *       });
-         *    });
-         * </pre>
-         * Создадим запись с адаптером для данных в формате БЛ СБИС, внедренным в виде готового экземпляра:
-         * <pre>
-         *    require(['Types/Entity/Record', 'Types/Adapter/Sbis'], function (Record, SbisAdapter) {
-         *       var user = new Record({
-         *          adapter: new SbisAdapter(),
+         *    require(['Types/entity'], function (entity) {
+         *       var user = new entity.Record({
+         *          adapter: new entity.adapter.Sbis(),
          *          format: [
          *             {name: 'login', type: 'string'},
          *             {name: 'email', type: 'string'}
@@ -205,19 +189,19 @@ define('Types/_entity/FormattableMixin', [
          */
         _$adapter: defaultAdapter,
         /**
-         * @cfg {Types/Format/Format|Array.<Types/Format/FieldsFactory/FieldDeclaration.typedef>|Object.<String,String>|Object.<String,Function>|Object.<String,Types/Format/FieldsFactory/FieldDeclaration.typedef>|Object.<String,Types/Format/Field>} Формат всех полей (если задан массивом или экземпляром {@link Types/Format/Format Format}), либо формат отдельных полей (если задан объектом).
-         * @name Types/Entity/FormattableMixin#format
+         * @cfg {Types/_entity/format/Format|Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>|Object.<String,String>|Object.<String,Function>|Object.<String,Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>|Object.<String,Types/_entity/format/Field>} Формат всех полей (если задан массивом или экземпляром {@link Types/_entity/format/Format Format}), либо формат отдельных полей (если задан объектом).
+         * @name Types/_entity/FormattableMixin#format
          * @see getFormat
          * @remark Правила {@link getFormat формирования формата} в зависимости от типа значения опции:
          * <ul>
          * <li>если формат явно не задан, то он будет построен по сырым данным;
          * <li>если формат задан для части полей (Object), то он будет построен по сырым данным; для полей с совпадающими именами формат будет заменен на явно указанный, формат полей с несовпадающими именами будет добавлен в конец;
-         * <li>если формат задан для всех полей (Array или Types/Format/Format), то будет использован именно он, независимо от набора полей в сырых данных.
+         * <li>если формат задан для всех полей (Array или Types/_entity/format/Format), то будет использован именно он, независимо от набора полей в сырых данных.
          * @example
          * Создадим запись с указанием формата полей, внедренным в декларативном виде:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var user = new Record({
+         *    require(['Types/entity'], function(entity) {
+         *       var user = new entity.Record({
          *          format: [{
          *             name: 'id',
          *             type: 'integer'
@@ -234,34 +218,33 @@ define('Types/_entity/FormattableMixin', [
          * </pre>
          * Создадим рекордсет с указанием формата полей, внедренным в виде готового экземпляра:
          * <pre>
-         *    //My.Format.User.module.js
-         *    define('My.Format.User', [
-         *       'Types/Format/Format',
-         *       'Types/Format/IntegerField',
-         *       'Types/Format/StringField'
-         *    ], function(Format, IntegerField, StringField) {
-         *       var format = new Format();
-         *       format.add(new IntegerField({name: 'id'}));
-         *       format.add(new StringField({name: 'login'}));
-         *       format.add(new StringField({name: 'email'}));
+         *    //My/Format/User.js
+         *    define('My/Format/User', [
+         *       'Types/collection',
+         *       'Types/entity'
+         *    ], function(collection, entity) {
+         *       var format = new collection.format.Format();
+         *       format.add(new entity.format.IntegerField({name: 'id'}));
+         *       format.add(new entity.format.StringField({name: 'login'}));
+         *       format.add(new entity.format.StringField({name: 'email'}));
          *
          *       return format;
          *    });
          *
-         *    //Users.js
+         *    ///My/Models/Users.js
          *    require([
-         *       'Types/Collection/RecordSet',
-         *       'My.Format.User'
-         *    ], function (RecordSet, userFormat) {
-         *       var users = new RecordSet({
+         *       'Types/collection',
+         *       'My/Format/User'
+         *    ], function (collection, userFormat) {
+         *       var users = new collection.RecordSet({
          *          format: userFormat
          *       });
          *    });
          * </pre>
          * Создадим запись, для которой зададим формат полей 'id' и 'amount', внедренный в декларативном виде:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var user = new Record({
+         *    require(['Types/entity'], function(entity) {
+         *       var user = new entity.Record({
          *          rawData: {
          *             id: 256,
          *             login: 'dr.strange',
@@ -277,11 +260,10 @@ define('Types/_entity/FormattableMixin', [
          * Создадим запись, для которой зададим формат поля 'amount', внедренный в виде готового экземпляра:
          * <pre>
          *    require([
-         *       'Types/Entity/Record',
-         *       'Types/Format/MoneyField'
-         *    ], function(Record, MoneyField) {
-         *       var amountField = new MoneyField({precision: 4}),
-         *          user = new Record({
+         *       'Types/entity'
+         *    ], function(entity) {
+         *       var amountField = new entity.format.MoneyField({precision: 4}),
+         *          user = new entity.Record({
          *             format: {
          *                amount: amountField
          *             }]
@@ -290,8 +272,8 @@ define('Types/_entity/FormattableMixin', [
          * </pre>
          * Укажем тип Number для поля "Идентификатор" и тип Date для поля "Время последнего входа" учетной записи пользователя:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var user = new Record({
+         *    require(['Types/entity'], function(entity) {
+         *       var user = new entity.Record({
          *          format: {
          *             id: Number,
          *             lastLogin: Date
@@ -301,89 +283,78 @@ define('Types/_entity/FormattableMixin', [
          * </pre>
          * Внедрим рекордсет со своей моделью в одно из полей записи:
          * <pre>
-         *    //ActivityModel.js
-         *    require('MyApplication/Models/ActivityModel', [
-         *       'Types/Entity/Model'
-         *    ], function(Model) {
-         *       return Model.extend({
-         *          //...
-         *       });
-         *    });
-         *
-         *    //ActivityRecordSet.js
-         *    require('MyApplication/ViewModels/ActivityRecordSet', [
-         *       'Types/Collection/RecordSet'
-         *       'MyApplication/Models/ActivityModel'
-         *    ], function(RecordSet, ActivityModel) {
-         *       return RecordSet.extend({
-         *          _$model: ActivityModel
-         *       });
-         *    });
-         *
-         *    //ActivityController.js
-         *    require('MyApplication/Controllers/ActivityController', [
-         *       'Types/Entity/Record'
-         *       'MyApplication/ViewModels/ActivityRecordSet'
-         *    ], function(Record, ActivityRecordSet) {
-         *       var user = new Record({
-         *          format: {
-         *             activity: ActivityRecordSet
-         *          }
-         *       });
+         *    //MyApplication/Models/ActivityModel.js
+         *    import {Model} from 'Types/entity';
+         *    export default class ActivityModel extends Model{
          *       //...
+         *    }
+         *
+         *    //MyApplication/Models/ActivityRecordSet.js
+         *    import ActivityModel from './ActivityModel';
+         *    import {RecordSet} from 'Types/collection';
+         *    export default class ActivityRecordSet extends RecordSet {
+         *       _$model: ActivityModel
+         *    }
+         *
+         *    //MyApplication/Controllers/ActivityController.js
+         *    import ActivityRecordSet from '../Models/ActivityRecordSet';
+         *    import {Record} from 'Types/entity';
+         *    const user = new Record({
+         *       format: {
+         *          activity: ActivityRecordSet
+         *       }
          *    });
          * </pre>
          * Создадим запись заказа в магазине с полем типа "рекордсет", содержащим список позиций. Сырые данные будут в формате БЛ СБИС:
          * <pre>
          *    require([
-         *       'Types/Entity/Record',
-         *       'Types/Collection/RecordSet',
-         *       'Types/Adapter/Sbis'
-         *    ], function (Record, RecordSet) {
-         *       var order = new Record({
-         *             adapter: 'Types/entity:adapter.Sbis',
-         *             format:[{
-         *                name: 'id',
-         *                type: 'integer',
-         *                defaultValue: 0
-         *             }, {
-         *                name: 'items',
-         *                type: 'recordset'
-         *             }]
-         *          }),
-         *          orderItems = new RecordSet({
-         *             adapter: 'Types/entity:adapter.Sbis',
-         *             format: [{
-         *                name: 'goods_id',
-         *                type: 'integer',
-         *                defaultValue: 0
-         *             },{
-         *                name: 'price',
-         *                type: 'real',
-         *                defaultValue: 0
-         *             },{
-         *               name: 'count',
-         *               type: 'integer',
-         *               defaultValue: 0
-         *             }]
-         *          });
+         *       'Types/entity',
+         *       'Types/collection'
+         *    ], function (entity, collection) {
+         *       var order = new entity.Record({
+         *          adapter: new entity.adapter.Sbis(),
+         *          format:[{
+         *             name: 'id',
+         *             type: 'integer',
+         *             defaultValue: 0
+         *          }, {
+         *             name: 'items',
+         *             type: 'recordset'
+         *          }]
+         *       });
+         *       var orderItems = new RecordSet({
+         *          adapter: new entity.adapter.Sbis(),
+         *          format: [{
+         *             name: 'goods_id',
+         *             type: 'integer',
+         *             defaultValue: 0
+         *          }, {
+         *             name: 'price',
+         *             type: 'real',
+         *             defaultValue: 0
+         *          }, {
+         *            name: 'count',
+         *            type: 'integer',
+         *            defaultValue: 0
+         *          }]
+         *       });
          *
          *       order.set('items', orderItems);
          *    });
          * </pre>
-         * Формат поля для массива значений смотрите в описании {@link Types/Format/ArrayField}.
+         * Формат поля для массива значений смотрите в описании {@link Types/_entity/format/ArrayField}.
          */
         _$format: null,
         /**
-         * @member {Types/Format/Format} Формат полей (собранный из опции format или в результате манипуляций)
+         * @member {Types/_entity/format/Format} Формат полей (собранный из опции format или в результате манипуляций)
          */
         _format: null,
         /**
-         * @member {Types/Format/Format} Клон формата полей (для кэшеирования результата getFormat())
+         * @member {Types/_entity/format/Format} Клон формата полей (для кэшеирования результата getFormat())
          */
         _formatClone: null,
         /**
-         * @member {Types/Adapter/ITable|Types/Adapter/IRecord} Адаптер для данных в "сыром" виде
+         * @member {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord} Адаптер для данных в "сыром" виде
          */
         _rawDataAdapter: null,
         /**
@@ -397,7 +368,7 @@ define('Types/_entity/FormattableMixin', [
             }
             buildRawData.call(this);
         },
-        //region Types/Entity/SerializableMixin
+        //region Types/_entity/SerializableMixin
         _getSerializableState: function (state) {
             state.$options.rawData = this._getRawData();
             return state;
@@ -406,7 +377,7 @@ define('Types/_entity/FormattableMixin', [
             return function () {
             };
         },
-        //endregion Types/Entity/SerializableMixin
+        //endregion Types/_entity/SerializableMixin
         //region Public methods
         /**
          * Возвращает данные в "сыром" виде. Если данные являются объектом, то возвращается его дубликат.
@@ -416,11 +387,11 @@ define('Types/_entity/FormattableMixin', [
          * @example
          * Получим сырые данные статьи:
          * <pre>
-         *    require(['Types/Entity/Record'], function (Record) {
-         *       var data = {id: 1, title: 'Article 1'},
-         *          article = new Record({
-         *             rawData: data
-         *        });
+         *    require(['Types/entity'], function (entity) {
+         *       var data = {id: 1, title: 'Article 1'};
+         *       var article = new entity.Record({
+         *          rawData: data
+         *       });
          *
          *       console.log(article.getRawData());// {id: 1, title: 'Article 1'}
          *       console.log(article.getRawData() === data);// false
@@ -439,8 +410,8 @@ define('Types/_entity/FormattableMixin', [
          * @example
          * Установим сырые данные статьи:
          * <pre>
-         *    require(['Types/Entity/Record'], function (Record) {
-         *       var article = new Record();
+         *    require(['Types/entity'], function (entity) {
+         *       var article = new entity.Record();
          *       article.setRawData({id: 1, title: 'Article 1'});
          *       console.log(article.get('title'));// Article 1
          *    });
@@ -454,14 +425,14 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Возвращает адаптер для работы с данными в "сыром" виде.
-         * @return {Types/Adapter/IAdapter}
+         * @return {Types/_entity/adapter/IAdapter}
          * @see adapter
          * @example
          * Проверим, что по умолчанию используется адаптер для формата JSON:
          * <pre>
-         *    require(['Types/Entity/Record', 'Types/Adapter/Json'], function (Record, JsonAdapter) {
-         *       var article = new Record();
-         *       console.log(article.getAdapter() instanceof JsonAdapter);// true
+         *    require(['Types/entity'], function (entity) {
+         *       var article = new entity.Record();
+         *       console.log(article.getAdapter() instanceof entity.adapter.Json);// true
          *    });
          * </pre>
          */
@@ -474,19 +445,19 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Возвращает формат полей (в режиме только для чтения)
-         * @return {Types/Format/Format}
+         * @return {Types/_entity/format/Format}
          * @see format
          * @example
          * Получим формат, сконструированный из декларативного описания:
          * <pre>
-         *    require(['Types/Entity/Record'], function (Record) {
-         *       var article = new Record({
-         *             format: [
-         *                {name: 'id', type: 'integer'},
-         *                {name: 'title', type: 'string'}
-         *             ]
-         *          }),
-         *          format = article.getFormat();
+         *    require(['Types/entity'], function (entity) {
+         *       var article = new entity.Record({
+         *          format: [
+         *             {name: 'id', type: 'integer'},
+         *             {name: 'title', type: 'string'}
+         *           ]
+         *       });
+         *       var format = article.getFormat();
          *
          *       console.log(format.at(0).getName());// 'id'
          *       console.log(format.at(1).getName());// 'title'
@@ -494,14 +465,14 @@ define('Types/_entity/FormattableMixin', [
          * </pre>
          * Получим формат, сконструированный из сырых данных:
          * <pre>
-         *    require(['Types/Entity/Record'], function (Record) {
-         *       var article = new Record({
-         *             rawData: {
-         *                id: 1,
-         *                title: 'What About Livingstone'
-         *             }
-         *          }),
-         *          format = article.getFormat();
+         *    require(['Types/entity'], function (entity) {
+         *       var article = new entity.Record({
+         *          rawData: {
+         *             id: 1,
+         *             title: 'What About Livingstone'
+         *          }
+         *       });
+         *       var format = article.getFormat();
          *
          *       console.log(format.at(0).getName());// 'id'
          *       console.log(format.at(1).getName());// 'title'
@@ -522,15 +493,15 @@ define('Types/_entity/FormattableMixin', [
          * @remark
          * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
          * Если поле с таким форматом уже есть, генерирует исключение.
-         * @param {Types/Format/Field|Types/Format/FieldsFactory/FieldDeclaration.typedef} format Формат поля.
+         * @param {Types/_entity/format/Field|Types/_entity/format/FieldsFactory/FieldDeclaration.typedef} format Формат поля.
          * @param {Number} [at] Позиция поля.
          * @see format
          * @see removeField
          * @example
          * Добавим поля в виде декларативного описания:
          * <pre>
-         *    require(['Types/Entity/Record'], function (Record) {
-         *       var record = new Record();
+         *    require(['Types/entity'], function (entity) {
+         *       var record = new entity.Record();
          *       record.addField({name: 'login', type: 'string'});
          *       record.addField({name: 'amount', type: 'money', precision: 3});
          *    });
@@ -538,13 +509,12 @@ define('Types/_entity/FormattableMixin', [
          * Добавим поля в виде экземпляров:
          * <pre>
          *    require([
-         *       'Types/Collection/RecordSet',
-         *       'Types/Format/StringField',
-         *       'Types/Format/MoneyField'
-         *    ], function (RecordSet, StringField, MoneyField) {
-         *       var recordset = new RecordSet();
-         *       recordset.addField(new StringField({name: 'login'}));
-         *       recordset.addField(new MoneyField({name: 'amount', precision: 3}));
+         *       'Types/collection',
+         *       'Types/entity'
+         *    ], function (collection, entity) {
+         *       var recordset = new collection.RecordSet();
+         *       recordset.addField(new entity.format.StringField({name: 'login'}));
+         *       recordset.addField(new entity.format.MoneyField({name: 'amount', precision: 3}));
          *    });
          * </pre>
          */
@@ -622,7 +592,7 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Возвращает адаптерр для сырых данных
-         * @return {Types/Adapter/IAdapter}
+         * @return {Types/_entity/adapter/IAdapter}
          * @protected
          */
         _getAdapter: function () {
@@ -639,7 +609,7 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Возвращает адаптер для сырых данных заданного вида
-         * @return {Types/Adapter/ITable|Types/Adapter/IRecord}
+         * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
          * @protected
          */
         _getRawDataAdapter: function () {
@@ -650,7 +620,7 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Создает адаптер для сырых данных
-         * @return {Types/Adapter/ITable|Types/Adapter/IRecord}
+         * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
          * @protected
          */
         _createRawDataAdapter: function () {
@@ -674,7 +644,7 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Проверяет совместимость адаптеров
-         * @param {Types/Adapter/IAdapter} foreign Адаптер внешнего объекта
+         * @param {Types/_entity/adapter/IAdapter} foreign Адаптер внешнего объекта
          * @protected
          */
         _checkAdapterCompatibility: function (foreign) {
@@ -716,7 +686,7 @@ define('Types/_entity/FormattableMixin', [
         /**
          * Возвращает формат полей
          * @param {Boolean} [build=false] Принудительно создать, если не задан
-         * @return {Types/Format/Format}
+         * @return {Types/_entity/format/Format}
          * @protected
          */
         _getFormat: function (build) {
@@ -761,8 +731,8 @@ define('Types/_entity/FormattableMixin', [
         /**
          * Возвращает формат поля с указанным названием
          * @param {String} name Название поля
-         * @param {Types/Adapter/ITable|Types/Adapter/IRecord} adapter Адаптер
-         * @return {Types/Format/Field|Types/Format/UniversalField}
+         * @param {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord} adapter Адаптер
+         * @return {Types/_entity/format/Field|Types/_entity/format/UniversalField}
          * @protected
          */
         _getFieldFormat: function (name, adapter) {
@@ -777,7 +747,7 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Возвращает тип значения поля по его формату
-         * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+         * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
          * @return {String|Function}
          * @protected
          */
@@ -792,8 +762,8 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Строит формат поля по описанию
-         * @param {Types/Format/Field|Types/Format/FieldsFactory/FieldDeclaration.typedef} format Описание формата поля
-         * @return {Types/Format/Field}
+         * @param {Types/_entity/format/Field|Types/_entity/format/FieldsFactory/FieldDeclaration.typedef} format Описание формата поля
+         * @return {Types/_entity/format/Field}
          * @protected
          */
         _buildField: function (format) {
@@ -807,9 +777,9 @@ define('Types/_entity/FormattableMixin', [
         },
         /**
          * Строит формат полей по описанию
-         * @param {Types/Format/Format|Array.<Types/Format/FieldsFactory/FieldDeclaration.typedef>|Object} format Описание формата (полное либо частичное)
+         * @param {Types/_entity/format/Format|Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>|Object} format Описание формата (полное либо частичное)
          * @param {Function} fullFormatCallback Метод, возвращающий полный формат
-         * @return {Types/Format/Format}
+         * @return {Types/_entity/format/Format}
          * @static
          * @protected
          */

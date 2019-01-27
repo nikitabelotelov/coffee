@@ -17,7 +17,7 @@ export function resolveDefaultOptions(cfg, defaultOptions) {
    }
 }
 
-export function validateOptions(controlClass, cfg, optionsTypes, parentName) {
+function _validateOptions(controlClass, cfg, optionsTypes, parentName) {
    for (var key in optionsTypes) {
       var result = optionsTypes[key].call(null, cfg[key]);
       if (result instanceof Error) {
@@ -31,15 +31,22 @@ export function validateOptions(controlClass, cfg, optionsTypes, parentName) {
    return true;
 }
 
-export function resolveOptions(controlClass, cfg, parentName) {
-   var defaultOptions = controlClass.getDefaultOptions && controlClass.getDefaultOptions();
-   resolveDefaultOptions(cfg, defaultOptions);
-   if (!constants.isProduction) { // Disable options validation in production-mode to optimize
-      var optionsTypes = controlClass.getOptionTypes && controlClass.getOptionTypes();
-      return validateOptions(controlClass, cfg, optionsTypes, parentName);
-   } else {
-      return true;
-   }
+export function resolveOptions(controlClass, defaultOpts, cfg, parentName) {
+   resolveDefaultOptions(cfg, defaultOpts);
+   return validateOptions(controlClass, cfg, parentName);
+}
+
+export function getDefaultOptions(controlClass) {
+   return controlClass.getDefaultOptions ? controlClass.getDefaultOptions() : {};
+}
+
+export function validateOptions(controlClass, cfg, parentName) {
+    if (!constants.isProduction) { // Disable options validation in production-mode to optimize
+        var optionsTypes = controlClass.getOptionTypes && controlClass.getOptionTypes();
+        return _validateOptions(controlClass, cfg, optionsTypes, parentName);
+    } else {
+        return true;
+    }
 }
 
 export function resolveInheritOptions(controlClass, attrs, controlProperties, fromCreateControl?) {

@@ -1739,6 +1739,17 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
          var  rootDOMNode = environment._rootDOMNode,
             getElementProps = Vdom.TabIndex.getElementProps;
          var next = Vdom.TabIndex.findWithContexts(rootDOMNode, target, isShiftKey, getElementProps);
+         if (next) {
+            // при поиске первого элемента игнорируем vdom-focus-in и vdom-focus-out
+            var startElem = isShiftKey ? 'vdom-focus-out' : 'vdom-focus-in';
+            var finishElem = isShiftKey ? 'vdom-focus-in' : 'vdom-focus-out';
+            if (next.classList.contains(startElem)) {
+               next = Vdom.TabIndex.findWithContexts(rootDOMNode, next, isShiftKey, getElementProps);
+            }
+            if (next.classList.contains(finishElem)) {
+               next = null;
+            }
+         }
 
          // храним состояние о нажатой клавише таба до следующего такта. Нужно, чтобы различать приход фокуса по табу или по клику
          environment._isTabPressed = {

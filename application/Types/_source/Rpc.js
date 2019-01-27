@@ -2,9 +2,9 @@
 /**
  * Источник данных, работающий по технологии RPC.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Rpc
- * @extends Types/Source/Remote
- * @implements Types/Source/IRpc
+ * @class Types/_source/Rpc
+ * @extends Types/_source/Remote
+ * @implements Types/_source/IRpc
  * @public
  * @author Мальцев А.А.
  */

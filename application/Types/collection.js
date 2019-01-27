@@ -56,6 +56,7 @@ define('Types/collection', [
     exports.Flags = Flags_1.default;
     exports.IEnum = IEnum_1.default;
     exports.IFlags = IFlags_1.default;
+    exports.IFlagsValue = IFlags_1.IValue;
     exports.IEnumerable = IEnumerable_1.default;
     exports.EnumeratorCallback = IEnumerable_1.EnumeratorCallback;
     exports.IEnumerator = IEnumerator_1.default;

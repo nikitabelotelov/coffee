@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_collection/Flags" />
 /**
- * Тип данных "флаги".
- * @class Types/Type/Flags
- * @extends Types/Type/Dictionary
- * @implements Types/Type/IFlags
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * Flags type. It's an enumerable collection of keys and values every one of which can be selected or not.
+ * @class Types/_collectionFlags
+ * @extends Types/_collectionDictionary
+ * @implements Types/_collectionIFlags
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -81,6 +81,20 @@ define('Types/_collection/Flags', [
             this._$values[ordinalIndex] = value;
             this._notifyChange(name, index, value);
         };
+        Flags.prototype.fromArray = function (source) {
+            var values = this._$values;
+            var enumerator = this.getEnumerator();
+            var ordinalIndex = 0;
+            var selection = [];
+            while (enumerator.moveNext()) {
+                var value = source[ordinalIndex] === undefined ? null : source[ordinalIndex];
+                values[ordinalIndex] = value;
+                var dictionaryIndex = enumerator.getCurrentIndex();
+                selection[dictionaryIndex] = value;
+                ordinalIndex++;
+            }
+            this._notifyChanges(selection);
+        };
         Flags.prototype.setFalseAll = function () {
             this._setAll(false);
         };
@@ -130,18 +144,18 @@ define('Types/_collection/Flags', [
         };    //endregion
               //region Protected methods
               /**
-         * Возвращает порядковый номер значения в словаре
-         * @param {String} name Значение в словаре
-         * @param {Boolean} [localize=false] Это локализованное значение
+         * Returns an ordinal index of the flag.
+         * @param {String} name Name of the flag
+         * @param {Boolean} [localize=false] Is the localized flag name
          * @return {Number|undefined}
          * @protected
          */
         //endregion
         //region Protected methods
         /**
-         * Возвращает порядковый номер значения в словаре
-         * @param {String} name Значение в словаре
-         * @param {Boolean} [localize=false] Это локализованное значение
+         * Returns an ordinal index of the flag.
+         * @param {String} name Name of the flag
+         * @param {Boolean} [localize=false] Is the localized flag name
          * @return {Number|undefined}
          * @protected
          */
@@ -170,17 +184,17 @@ define('Types/_collection/Flags', [
                 ordinalIndex++;
             }
         };    /**
-         * Уведомляет об изменении
-         * @param {String} name Имя флага
-         * @param {Number} index Изменившийся индекс
-         * @param {String} value Значение в индексе
+         * Triggers a change event
+         * @param {String} name Name of the flag
+         * @param {Number} index Index of the flag
+         * @param {String} value New value of selection of the flag
          * @protected
          */
         /**
-         * Уведомляет об изменении
-         * @param {String} name Имя флага
-         * @param {Number} index Изменившийся индекс
-         * @param {String} value Значение в индексе
+         * Triggers a change event
+         * @param {String} name Name of the flag
+         * @param {Number} index Index of the flag
+         * @param {String} value New value of selection of the flag
          * @protected
          */
         Flags.prototype._notifyChange = function (name, index, value) {
@@ -188,6 +202,19 @@ define('Types/_collection/Flags', [
             data[String(name)] = value;
             this._childChanged(data);
             this._notify('onChange', name, index, value);
+        };    /**
+         * Triggers a mass change event
+         * @param {Array.<Boolean|Null>} values Selection
+         * @protected
+         */
+        /**
+         * Triggers a mass change event
+         * @param {Array.<Boolean|Null>} values Selection
+         * @protected
+         */
+        Flags.prototype._notifyChanges = function (values) {
+            this._childChanged(values);
+            this._notify('onChange', values);
         };
         return Flags;
     }(Dictionary_1.default);

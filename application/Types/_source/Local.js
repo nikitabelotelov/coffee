@@ -2,11 +2,11 @@
 /**
  * Источник данных, работающий локально.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Local
- * @extends Types/Source/Base
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @mixes Types/Source/DataCrudMixin
+ * @class Types/_source/Local
+ * @extends Types/_source/Base
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_source/DataCrudMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -64,9 +64,9 @@ define('Types/_source/Local', [
             _this._reIndex();
             return _this;
         }
-        Object.defineProperty(Local.prototype, '_data', {
+        Object.defineProperty(Local.prototype, 'data', {
             /**
-             * Данные, с которыми работает источник
+             * Data which source work with
              */
             get: function () {
                 return this._getTableAdapter().getData();
@@ -280,7 +280,7 @@ define('Types/_source/Local', [
             var _this = this;
             this._index = {};
             var adapter = this.getAdapter();
-            this._each(this._data, function (item, index) {
+            this._each(this.data, function (item, index) {
                 var key = adapter.forRecord(item).get(_this._$idProperty);
                 _this._index[key] = index;
             });
@@ -336,14 +336,14 @@ define('Types/_source/Local', [
         };    /**
          * Применяет сортировку
          * @param {*} data Данные
-         * @param {Array.<Types/Query/Order>} order Параметры сортировки
+         * @param {Array.<Types/_source/Query#Order>} order Параметры сортировки
          * @return {*}
          * @protected
          */
         /**
          * Применяет сортировку
          * @param {*} data Данные
-         * @param {Array.<Types/Query/Order>} order Параметры сортировки
+         * @param {Array.<Types/_source/Query#Order>} order Параметры сортировки
          * @return {*}
          * @protected
          */

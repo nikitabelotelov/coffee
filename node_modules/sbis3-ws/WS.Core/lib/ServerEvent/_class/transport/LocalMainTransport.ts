@@ -6,7 +6,7 @@ import TabMessage = require('Lib/Tab/Message');
 import LocalStorage = require('Lib/Storage/LocalStorage');
 import * as CONST from 'Lib/ServerEvent/_class/transport/Constants';
 import { LocalPageTransport } from "Lib/ServerEvent/_class/transport/LocalPageTransport";
-import { EVENT_DISABLE_SEB, EVENT_LATER_MAIN_TRANSPORT } from "ws/lib/ServerEvent/_class/Events";
+import { EVENT_DISABLE_SEB, EVENT_LATER_MAIN_TRANSPORT } from "Lib/ServerEvent/_class/Events";
 import { Subscribe } from "Lib/ServerEvent/_class/Subscribe";
 
 export class LocalMainTransport implements SEB.ITrackedTransport {

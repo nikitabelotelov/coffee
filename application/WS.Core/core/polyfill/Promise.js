@@ -29,7 +29,20 @@
          new NativePromise(function(r){ resolve = r; });
          return typeof resolve === 'function';
       })();
-
+   var cDebug;
+   var logExecutionTime = function(fn, ctx, args) {
+      if (typeof cDebug === 'undefined' && typeof window === 'undefined') {
+         var req = global.requirejs;
+         if( req && req.defined('Core/core-debug')) {
+            cDebug = req('Core/core-debug');
+         }
+      }
+      if (typeof cDebug !== 'undefined' && ctx._logCallbackExecutionTime === true) {
+         return cDebug.methodExecutionTime(fn, ctx, args);
+      } else {
+         return fn.apply(ctx, args);
+      }
+   };
 
 //
 // export if necessary
@@ -132,7 +145,7 @@
       {
          settled = FULFILLED;
          try {
-            value = callback(value);
+            value = logExecutionTime(callback, callback, [value]);
          } catch(e) {
             reject(promise, e);
          }
@@ -258,6 +271,7 @@
       state_: PENDING,
       then_: null,
       data_: undefined,
+      _logCallbackExecutionTime: false,
 
       then: function(onFulfillment, onRejection){
          var subscriber = {
@@ -283,6 +297,14 @@
 
       'catch': function(onRejection) {
          return this.then(null, onRejection);
+      },
+
+      /**
+       * установить флаг логгирования данного deferred в сервисе пердставления
+       * @param value значение флага
+       */
+      logCallbackExecutionTime: function(value) {
+         this._logCallbackExecutionTime = !!value;
       }
    };
 
@@ -359,4 +381,3 @@
    };
 
 })(typeof window != 'undefined' ? window : typeof global != 'undefined' ? global : typeof self != 'undefined' ? self : this);
-

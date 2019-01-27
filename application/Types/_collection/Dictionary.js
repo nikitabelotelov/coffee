@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_collection/Dictionary" />
 /**
- * Тип данных словарь.
- * Это абстрактный класс, не предусмотрено создание самостоятельных экземпляров.
- * @class Types/Type/Dictionary
- * @implements Types/Collection/IEnumerable
- * @implements Types/Entity/IEquatable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
+ * An abstract enity which have the dictionary as collection of keys and values.
+ * It's an abstract class and it's can't have instances.
+ * @class Types/_collectionDictionary
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -35,14 +35,14 @@ define('Types/_collection/Dictionary', [
             entity_1.ObservableMixin.prototype.destroy.call(this);
             _super.prototype.destroy.call(this);
         };    /**
-         * Возвращает словарь возможных значений
-         * @param {Boolean} [localize=false] Вернуть локализованный словарь
+         * Returns collection of keys and values
+         * @param {Boolean} [localize=false] Should return localized version
          * @return {Array.<String>|Object.<String>}
          * @protected
          */
         /**
-         * Возвращает словарь возможных значений
-         * @param {Boolean} [localize=false] Вернуть локализованный словарь
+         * Returns collection of keys and values
+         * @param {Boolean} [localize=false] Should return localized version
          * @return {Array.<String>|Object.<String>}
          * @protected
          */
@@ -91,18 +91,18 @@ define('Types/_collection/Dictionary', [
         };    //endregion
               //region Protected methods
               /**
-         * Возвращает индекс значения в словаре
-         * @param {String} name Значение в словаре
-         * @param {Boolean} [localize=false] Это локализованное значение
+         * Returns key of the value in dictionary
+         * @param {String} name Value for lookup
+         * @param {Boolean} [localize=false] Is the localized value
          * @return {Number|String|undefined}
          * @protected
          */
         //endregion
         //region Protected methods
         /**
-         * Возвращает индекс значения в словаре
-         * @param {String} name Значение в словаре
-         * @param {Boolean} [localize=false] Это локализованное значение
+         * Returns key of the value in dictionary
+         * @param {String} name Value for lookup
+         * @param {Boolean} [localize=false] Is the localized value
          * @return {Number|String|undefined}
          * @protected
          */
@@ -115,30 +115,30 @@ define('Types/_collection/Dictionary', [
             }
             return undefined;
         };    /**
-         * Возвращает значение в словаре по индексу
-         * @param {Number|String} index Индекс в словаре
-         * @param {Boolean} [localize=false] Вернуть локализованное значение
+         * Returns value of the key in dictionary
+         * @param {Number|String} index Key for lookup
+         * @param {Boolean} [localize=false] Should return the localized value
          * @return {String}
          * @protected
          */
         /**
-         * Возвращает значение в словаре по индексу
-         * @param {Number|String} index Индекс в словаре
-         * @param {Boolean} [localize=false] Вернуть локализованное значение
+         * Returns value of the key in dictionary
+         * @param {Number|String} index Key for lookup
+         * @param {Boolean} [localize=false] Should return the localized value
          * @return {String}
          * @protected
          */
         Dictionary.prototype._getValue = function (index, localize) {
             return localize && this._$localeDictionary ? this._$localeDictionary[index] : this._$dictionary[index];
         };    /**
-         * Возвращает словарь из формата
-         * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+         * Extracts dictionary from the field format.
+         * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
          * @return {Array}
          * @protected
          */
         /**
-         * Возвращает словарь из формата
-         * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+         * Extracts dictionary from the field format.
+         * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
          * @return {Array}
          * @protected
          */
@@ -148,14 +148,14 @@ define('Types/_collection/Dictionary', [
             }
             return (format.getDictionary ? format.getDictionary() : format.meta && format.meta.dictionary) || [];
         };    /**
-         * Возвращает локализованный словарь из формата
-         * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+         * Extracts dictionary from the field format.
+         * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
          * @return {Array|undefined}
          * @protected
          */
         /**
-         * Возвращает локализованный словарь из формата
-         * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+         * Extracts dictionary from the field format.
+         * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
          * @return {Array|undefined}
          * @protected
          */

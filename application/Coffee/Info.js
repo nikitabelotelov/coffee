@@ -3,10 +3,10 @@ define('Coffee/Info', [
     'require',
     'exports',
     'tslib',
-    'UI/Index',
+    'UI/Base',
     'wml!Coffee/Info',
     'css!Coffee/Info'
-], function (require, exports, tslib_1, Index_1, template) {
+], function (require, exports, tslib_1, Base_1, template) {
     'use strict';
     var Info = /** @class */
     function (_super) {
@@ -17,6 +17,6 @@ define('Coffee/Info', [
             return _this;
         }
         return Info;
-    }(Index_1.Control);
+    }(Base_1.Control);
     return Info;
 });

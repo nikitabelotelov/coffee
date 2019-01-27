@@ -10,8 +10,8 @@
  *       precision: 4
  *    };
  * </pre>
- * @class Types/Format/RealField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/RealField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -25,8 +25,8 @@ define('Types/_entity/format/RealField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var RealField = /** @class */
     function (_super) {
-        tslib_1.__extends(RealField, _super);    /** @lends Types/Format/RealField.prototype */
-        /** @lends Types/Format/RealField.prototype */
+        tslib_1.__extends(RealField, _super);    /** @lends Types/_entity/format/RealField.prototype */
+        /** @lends Types/_entity/format/RealField.prototype */
         function RealField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -61,8 +61,8 @@ define('Types/_entity/format/RealField', [
             this._$precision = value;
         };
         return RealField;
-    }(Field_1.default    /** @lends Types/Format/RealField.prototype */);
-    /** @lends Types/Format/RealField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/RealField.prototype */);
+    /** @lends Types/_entity/format/RealField.prototype */
     exports.default = RealField;
     RealField.prototype['[Types/_entity/format/RealField]'] = true;
     RealField.prototype._moduleName = 'Types/entity:format.RealField';

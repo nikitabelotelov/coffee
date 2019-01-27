@@ -296,7 +296,6 @@ define('Transport/ajax-emulator', [], function () {
         return xhr;
     }
     function wrapXHR(xhr) {
-        responseHeaders = {};
         var responseHeaders,
             fakeXHR = {
                 readyState: 0,

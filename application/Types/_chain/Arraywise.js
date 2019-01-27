@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Arraywise" />
 /**
  * Цепочка по массиву.
- * @class Types/Chain/Array
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Array
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_chain/Arraywise', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Arraywise = /** @class */
     function (_super) {
-        tslib_1.__extends(Arraywise, _super);    /** @lends Types/Chain/Array.prototype */
-        /** @lends Types/Chain/Array.prototype */
+        tslib_1.__extends(Arraywise, _super);    /** @lends Types/_chain/Array.prototype */
+        /** @lends Types/_chain/Array.prototype */
         function Arraywise(source) {
             var _this = this;
             if (!(source instanceof Array)) {

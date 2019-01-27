@@ -1,8 +1,11 @@
 <Router.Controller>
-   <Router.Route mask="page/:pageId">
-      <Coffee.PageLoader default="Info">
-         <ws:templateOptions
-            settings="{{settingsData}}"/>
-      </Coffee.PageLoader>
-   </Router.Route>
+   <div>
+      <Router.Link href="/Coffee/page/Info"><span>На главную</span></Router.Link>
+      <Router.Route mask="page/:pageId">
+         <Coffee.PageLoader default="Info">
+            <ws:templateOptions
+               settings="{{settingsData}}"/>
+         </Coffee.PageLoader>
+      </Router.Route>
+   </div>
 </Router.Controller>

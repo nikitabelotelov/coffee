@@ -93,7 +93,8 @@ define('View/Executor/_Markup/Text/Generator', [
         var doNotSetParent = _options.doNotSetParent;
         _options.doNotSetParent = true;
         var parentName = _options._logicParent && _options._logicParent._moduleName || '';
-        Utils_1.OptionsResolver.resolveOptions(cnstr, _options, parentName);
+        var defaultOpts = Utils_1.OptionsResolver.getDefaultOptions(cnstr);
+        Utils_1.OptionsResolver.resolveOptions(cnstr, defaultOpts, _options, parentName);
         var inst = new cnstr(_options), actualOptions = _options;
         actualOptions.doNotSetParent = doNotSetParent;    /**
          * TODO: удалить это. По идее, VDOM контролы не должны генерировть строку если они в window
@@ -278,7 +279,7 @@ define('View/Executor/_Markup/Text/Generator', [
             '',
             attributes.inheritOptions
         ]);
-        var varStorage = null, cnstr = data.controlClass, resultingFn = cnstr && cnstr.prototype._template;
+        var varStorage = null, cnstr = data.controlClass, resultingFn = cnstr && cnstr.prototype && cnstr.prototype._template;
         if (!cnstr && !resultingFn) {
             return '';
         }

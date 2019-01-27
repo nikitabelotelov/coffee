@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_display/CollectionItem" />
 /**
  * Элемент коллекции
- * @class Types/Display/CollectionItem
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @implements Types/Entity/IInstantiable
- * @mixes Types/Entity/InstantiableMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/CollectionItem
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @implements Types/_entity/IInstantiable
+ * @mixes Types/_entity/InstantiableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -35,7 +35,7 @@ define('Types/_display/CollectionItem', [
         CollectionItem.prototype._getSerializableState = function (state) {
             state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
             if (state.$options.owner) {
-                //save element index if collections implements Types/Collection/IList
+                //save element index if collections implements Types/_collection/IList
                 var collection = state.$options.owner.getCollection();
                 var index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
                 if (index > -1) {
@@ -62,23 +62,23 @@ define('Types/_display/CollectionItem', [
               //region Public
               /**
          * Возвращает коллекцию, которой принадлежит элемент
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          */
         //endregion
         //region Public
         /**
          * Возвращает коллекцию, которой принадлежит элемент
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          */
         CollectionItem.prototype.getOwner = function () {
             return this._$owner;
         };    /**
          * Устанавливает коллекцию, которой принадлежит элемент
-         * @param {Types/Collection/IEnumerable} owner Коллекция, которой принадлежит элемент
+         * @param {Types/_collection/IEnumerable} owner Коллекция, которой принадлежит элемент
          */
         /**
          * Устанавливает коллекцию, которой принадлежит элемент
-         * @param {Types/Collection/IEnumerable} owner Коллекция, которой принадлежит элемент
+         * @param {Types/_collection/IEnumerable} owner Коллекция, которой принадлежит элемент
          */
         CollectionItem.prototype.setOwner = function (owner) {
             this._$owner = owner;
@@ -160,14 +160,14 @@ define('Types/_display/CollectionItem', [
               //region Protected
               /**
          * Возвращает коллекцию проекции
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          * @protected
          */
         //endregion
         //region Protected
         /**
          * Возвращает коллекцию проекции
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          * @protected
          */
         CollectionItem.prototype._getSourceCollection = function () {

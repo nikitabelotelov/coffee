@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_collection/IndexedEnumeratorMixin" />
 /**
  * Миксин, позволящий использовать индексацию элементов в экземплярах,
- * реализующих интерфейс Types/Collection/IEnumerator.
- * @mixin Types/Collection/IndexedEnumeratorMixin
+ * реализующих интерфейс Types/_collection/IEnumerator.
+ * @mixin Types/_collection/IndexedEnumeratorMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -14,7 +14,7 @@ define('Types/_collection/IndexedEnumeratorMixin', [
 ], function (require, exports, util_1, IObservable_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var IndexedEnumeratorMixin = /** @lends Types/Collection/IndexedEnumeratorMixin.prototype */
+    var IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMixin.prototype */
     {
         '[Types/_collection/IndexedEnumeratorMixin]': true,
         /**
@@ -28,7 +28,7 @@ define('Types/_collection/IndexedEnumeratorMixin', [
         // region Public methods
         /**
          * Переиндексирует энумератор
-         * @param {Types/Collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
+         * @param {Types/_collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
          * @param {Number} [start=0] С какой позиции переиндексировать
          * @param {Number} [count=0] Число переиндексируемых элементов
          */
@@ -70,14 +70,14 @@ define('Types/_collection/IndexedEnumeratorMixin', [
         },
         /**
          * Устанавливает коллекцию при изменении которой поисходит переиндексация энумератора
-         * @param {Types/Collection/IBind} collection
+         * @param {Types/_collection/IBind} collection
          */
         setObservableCollection: function (collection) {
             collection.subscribe('onCollectionChange', this._onCollectionChange);
         },
         /**
          * Сбрасывает коллекцию при изменении которой поисходит переиндексация энумератора
-         * @param {Types/Collection/IBind} collection
+         * @param {Types/_collection/IBind} collection
          */
         unsetObservableCollection: function (collection) {
             collection.unsubscribe('onCollectionChange', this._onCollectionChange);
@@ -245,7 +245,7 @@ define('Types/_collection/IndexedEnumeratorMixin', [
             var value = util_1.object.getPropertyValue(item, property);    // FIXME: should figure out when search can be either CollectionItem instance and their contents
             // FIXME: should figure out when search can be either CollectionItem instance and their contents
             if (value === undefined && item instanceof Object && typeof item.getContents === 'function') {
-                // item is instance of Types/Display/CollectionItem
+                // item is instance of Types/_display/CollectionItem
                 value = util_1.object.getPropertyValue(item.getContents(), property);
             }
             if (!Object.prototype.hasOwnProperty.call(index, value)) {

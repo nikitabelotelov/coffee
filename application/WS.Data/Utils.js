@@ -11,8 +11,6 @@ define('WS.Data/Utils', [
 ], function(
    util
 ) {
-   util.logger.error('WS.Data/Utils', 'Module is deprecated and will be removed in 19.200. Use Types/util instead.');
-
    return {
       getItemPropertyValue: util.object.getPropertyValue,
       setItemPropertyValue: util.object.setPropertyValue,

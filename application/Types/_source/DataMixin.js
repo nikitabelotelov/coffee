@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/DataMixin" />
 /**
- * Миксин, позволяющий реализовать интерфейс {@link Types/Source/IData}.
- * @mixin Types/Source/DataMixin
+ * Миксин, позволяющий реализовать интерфейс {@link Types/_source/IData}.
+ * @mixin Types/_source/DataMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -13,68 +13,44 @@ define('Types/_source/DataMixin', [
 ], function (require, exports, entity_1, di_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var DataMixin = /** @lends Types/Source/DataMixin.prototype */
+    var DataMixin = /** @lends Types/_source/DataMixin.prototype */
     {
         '[Types/_source/DataMixin]': true,
         /**
-         * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/Adapter/Json}.
-         * @name Types/Source/DataMixin#adapter
+         * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
+         * @name Types/_source/DataMixin#adapter
          * @see getAdapter
-         * @see Types/Adapter/IAdapter
-         * @see Types/Di
+         * @see Types/_entity/adapter/IAdapter
+         * @see Types/di
          * @example
-         * Адаптер для данных в формате БЛ СБИС, внедренный в виде готового экземпляра:
+         * Адаптер для данных в формате БЛ СБИС:
          * <pre>
          *    require([
-         *       'Types/Source/Provider/SbisBusinessLogic',
-         *       'Types/Source/Memory',
-         *       'Types/Adapter/Sbis'
-         *    ], function (Provider, MemorySource, SbisAdapter) {
-         *       new Provider({
-         *          address: '/service/',
-         *          contract: 'Employee'
+         *       'Types/source',
+         *       'Types/entity'
+         *    ], function (source, entity) {
+         *       new source.SbisService({
+         *          endpoint: 'Employee'
          *       })
          *       .call('getList', {department: 'Management'})
          *       .addCallbacks(function(data) {
-         *          var dataSource = new MemorySource({
-         *             adapter: new SbisAdapter(),
+         *          var dataSource = new source.Memory({
+         *             adapter: new entity.adapter.Sbis(),
          *             data: data
          *          });
          *       }, function(error) {
-         *          console.error('Can\'t call "Employee::getList"', error);
-         *       });
-         *    });
-         * </pre>
-         * Адаптер для данных в формате БЛ СБИС, внедренный в виде названия зарегистрированной зависимости:
-         * <pre>
-         *    require([
-         *       'Types/Source/Provider/SbisBusinessLogic',
-         *       'Types/Source/Memory',
-         *       'Types/Adapter/Sbis'
-         *    ], function (Provider, MemorySource) {
-         *       new Provider({
-         *          address: '/service/',
-         *          contract: 'Employee'
-         *       })
-         *       .call('getList', {department: 'Management'})
-         *       .addCallbacks(function(data) {
-         *          var dataSource = new MemorySource({
-         *             adapter: 'Types/entity:adapter.Sbis',
-         *             data: data
-         *          });
-         *       }, function(error) {
-         *          console.error('Can\'t call "Employee::getList"', error);
+         *          console.error('Can\'t call "Employee.getList()"', error);
          *       });
          *    });
          * </pre>
          */
         _$adapter: 'Types/entity:adapter.Json',
         /**
-         * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/Entity/Model}.
-         * @name Types/Source/DataMixin#model
+         * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
+         * @name Types/_source/DataMixin#model
          * @see getModel
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Конструктор пользовательской модели, внедренный в виде класса:
          * <pre>
@@ -102,11 +78,11 @@ define('Types/_source/DataMixin', [
          */
         _$model: 'Types/entity:Model',
         /**
-         * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/Collection/RecordSet}.
-         * @name Types/Source/DataMixin#listModule
+         * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
+         * @name Types/_source/DataMixin#listModule
          * @see getListModule
-         * @see Types/Collection/RecordSet
-         * @see Types/Di
+         * @see Types/_collection/RecordSet
+         * @see Types/di
          * @example
          * Конструктор рекордсета, внедренный в виде класса:
          * <pre>
@@ -135,9 +111,9 @@ define('Types/_source/DataMixin', [
         _$listModule: 'Types/collection:RecordSet',
         /**
          * @cfg {String} Название свойства записи, содержащего первичный ключ.
-         * @name Types/Source/DataMixin#idProperty
+         * @name Types/_source/DataMixin#idProperty
          * @see getIdProperty
-         * @see Types/Entity/Model#idProperty
+         * @see Types/_entity/Model#idProperty
          * @example
          * Установим свойство 'primaryId' в качестве первичного ключа:
          * <pre>
@@ -208,7 +184,7 @@ define('Types/_source/DataMixin', [
         /**
          * Создает новый экземпляр модели
          * @param {*} data Данные модели
-         * @return {Types/Entity/Model}
+         * @return {Types/_entity/Model}
          * @protected
          */
         _getModelInstance: function (data) {
@@ -222,7 +198,7 @@ define('Types/_source/DataMixin', [
         /**
          * Создает новый экземпляр DataSet
          * @param {Object} cfg Опции конструктора
-         * @return {Types/Source/DataSet}
+         * @return {Types/_source/DataSet}
          * @protected
          */
         _getDataSetInstance: function (cfg) {
@@ -238,7 +214,7 @@ define('Types/_source/DataMixin', [
         /**
          * Оборачивает данные в DataSet
          * @param {Object} data Данные
-         * @return {Types/Source/DataSet}
+         * @return {Types/_source/DataSet}
          * @protected
          */
         _wrapToDataSet: function (data) {

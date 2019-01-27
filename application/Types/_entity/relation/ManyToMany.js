@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_entity/relation/ManyToMany" />
 /**
  * Посредник, реализующий отношения "многие ко многим".
- * @class Types/Mediator/ManyToMany
- * @mixes Types/Entity/DestroyableMixin
+ * @class Types/_entity/relation/ManyToMany
+ * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
 define('Types/_entity/relation/ManyToMany', [
@@ -28,8 +28,8 @@ define('Types/_entity/relation/ManyToMany', [
     }
     var ManyToMany = /** @class */
     function (_super) {
-        tslib_1.__extends(ManyToMany, _super);    /** @lends Types/Mediator/ManyToMany.prototype */
-        /** @lends Types/Mediator/ManyToMany.prototype */
+        tslib_1.__extends(ManyToMany, _super);    /** @lends Types/_entity/relation/ManyToMany.prototype */
+        /** @lends Types/_entity/relation/ManyToMany.prototype */
         function ManyToMany() {
             var _this = _super.call(this) || this;
             _this._hasMany = new shim_1.Map();
@@ -44,17 +44,13 @@ define('Types/_entity/relation/ManyToMany', [
             this._belongsTo = null;
             this._belongsToName = null;
             _super.prototype.destroy.call(this);
-        };    //region Types/Mediator/IMediator
-              //endregion Types/Mediator/IMediator
-              //region Public methods
+        };    //region Public methods
               /**
          * Добавляет отношение между двумя сущностями
          * @param {Object} master Главная сущность
          * @param {Object} slave Зависимая сущность
          * @param {String} [name] Название отношения
          */
-        //region Types/Mediator/IMediator
-        //endregion Types/Mediator/IMediator
         //region Public methods
         /**
          * Добавляет отношение между двумя сущностями
@@ -248,8 +244,8 @@ define('Types/_entity/relation/ManyToMany', [
             }
         };
         return ManyToMany;
-    }(DestroyableMixin_1.default    /** @lends Types/Mediator/ManyToMany.prototype */);
-    /** @lends Types/Mediator/ManyToMany.prototype */
+    }(DestroyableMixin_1.default    /** @lends Types/_entity/relation/ManyToMany.prototype */);
+    /** @lends Types/_entity/relation/ManyToMany.prototype */
     exports.default = ManyToMany;
     ManyToMany.prototype['[Types/_entity/relation/ManyToMany]'] = true;
     ManyToMany.prototype._hasMany = null;

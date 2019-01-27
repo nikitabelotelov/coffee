@@ -31,7 +31,7 @@
  *    });
  *    hdd.getVendor();//Seagate
  * </pre>
- * @class Types/Entity/OptionsToPropertyMixin
+ * @class Types/_entity/OptionsToPropertyMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -57,7 +57,7 @@ define('Types/_entity/OptionsToPropertyMixin', [
             }
         });
     }
-    var OptionsToPropertyMixin    /** @lends Types/Entity/OptionsMixin.prototype */ = /** @lends Types/Entity/OptionsMixin.prototype */
+    var OptionsToPropertyMixin    /** @lends Types/_entity/OptionsMixin.prototype */ = /** @lends Types/_entity/OptionsMixin.prototype */
     /** @class */
     function () {
         /**

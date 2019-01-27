@@ -13,7 +13,7 @@ define('Types/_chain/FlattenedMover', [
     var FlattenedMover = /** @class */
     function () {
         /**
-         * @param {Types/Collection/IEnumerator|Array} parent
+         * @param {Types/_collection/IEnumerator|Array} parent
          */
         function FlattenedMover(parent) {
             if (parent instanceof Array) {

@@ -2,17 +2,17 @@
 /**
  * Рекордсет - список записей, имеющих общий формат полей.
  *
- * Основные аспекты рекордсета (дополнительно к аспектам {@link Types/Collection/ObservableList}):
+ * Основные аспекты рекордсета (дополнительно к аспектам {@link Types/_collection/ObservableList}):
  * <ul>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin}.</li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
  * </ul>
- * Элементами рекордсета могут быть только {@link Types/Entity/Record записи}, причем формат полей всех записей должен совпадать.
+ * Элементами рекордсета могут быть только {@link Types/_entity/Record записи}, причем формат полей всех записей должен совпадать.
  *
  * Создадим рекордсет, в котором в качестве сырых данных используется JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
- *    require(['Types/Collection/RecordSet'], function (RecordSet) {
- *       var characters = new RecordSet({
+ *    require(['Types/collection'], function (collection) {
+ *       var characters = new collection.RecordSet({
  *          rawData: [{
  *             id: 1,
  *             firstName: 'Tom',
@@ -30,12 +30,12 @@
  * Создадим рекордсет, в котором в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
  *    require([
- *       'Types/Collection/RecordSet',
- *       'Types/Source/SbisService'
- *    ], function (RecordSet, SbisService) {
- *       var source = new SbisService({endpoint: 'Employee'});
- *       source.call('list', {department: 'designers'}).addCallback(function(response) {
- *          var designers = new RecordSet({
+ *       'Types/collection',
+ *       'Types/source'
+ *    ], function (collection, source) {
+ *       var ds = new source.SbisService({endpoint: 'Employee'});
+ *       ds.call('list', {department: 'designers'}).addCallback(function(response) {
+ *          var designers = new collection.RecordSet({
  *             rawData: response.getRawData(),
  *             adapter: response.getAdapter()
  *          });
@@ -43,13 +43,13 @@
  *       });
  *    });
  * </pre>
- * @class Types/Collection/RecordSet
- * @extends Types/Collection/ObservableList
- * @implements Types/Entity/IObjectNotify
- * @implements Types/Entity/IInstantiable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/FormattableMixin
- * @mixes Types/Entity/InstantiableMixin
+ * @class Types/_collection/RecordSet
+ * @extends Types/_collection/ObservableList
+ * @implements Types/_entity/IObjectNotify
+ * @implements Types/_entity/IInstantiable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/FormattableMixin
+ * @mixes Types/_entity/InstantiableMixin
  * @ignoreOptions items
  * @author Мальцев А.А.
  * @public
@@ -65,8 +65,8 @@ define('Types/_collection/RecordSet', [
     'Types/entity',
     'Types/di',
     'Types/util',
-    'Core/helpers/Object/isEqual'
-], function (require, exports, tslib_1, IObservable_1, ObservableList_1, Arraywise_1, Indexer_1, entity_1, di_1, util_1, isEqualObject) {
+    'Types/object'
+], function (require, exports, tslib_1, IObservable_1, ObservableList_1, Arraywise_1, Indexer_1, entity_1, di_1, util_1, object_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DEFAULT_MODEL = 'Types/entity:Model';
@@ -84,7 +84,7 @@ define('Types/_collection/RecordSet', [
     function checkNullId(value, idProperty) {
         if (developerMode && idProperty) {
             if (value && value['[Types/_entity/Record]'] && value.get(idProperty) === null) {
-                util_1.logger.info('Types/Collection/RecordSet: Id propery must not be null');
+                util_1.logger.info('Types/_collection/RecordSet: Id propery must not be null');
             } else if (value instanceof RecordSet) {
                 value.each(function (item) {
                     checkNullId(item, idProperty);
@@ -99,7 +99,7 @@ define('Types/_collection/RecordSet', [
             var _this = this;
             if (options) {
                 if ('items' in options) {
-                    util_1.logger.stack('Types/Collection/RecordSet: option "items" give no effect, use "rawData" instead', 1);
+                    util_1.logger.stack('Types/_collection/RecordSet: option "items" give no effect, use "rawData" instead', 1);
                 }
             }
             _this = _super.call(this, options) || this;
@@ -181,18 +181,18 @@ define('Types/_collection/RecordSet', [
                 return false;
             }    //TODO: compare using formats
             //TODO: compare using formats
-            return isEqualObject(this._getRawData(), to.getRawData(true));
+            return object_1.isEqual(this._getRawData(), to.getRawData(true));
         };    //endregion IEquatable
               //region IEnumerable
               /**
          * Возвращает энумератор для перебора записей рекордсета.
-         * Пример использования можно посмотреть в модуле {@link Types/Collection/IEnumerable}.
-         * @param {Types/Entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
-         * @return {Types/Collection/ArrayEnumerator.<Types/Entity/Record>}
+         * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
+         * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+         * @return {Types/_collection/ArrayEnumerator.<Types/_entity/Record>}
          * @example
          * Получим сначала все, а затем - измененные записи:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
+         *    require(['Types/_entity/Record'], function(Record) {
          *       var fruits = new RecordSet({
          *             rawData: [
          *                {name: 'Apple'},
@@ -227,13 +227,13 @@ define('Types/_collection/RecordSet', [
         //region IEnumerable
         /**
          * Возвращает энумератор для перебора записей рекордсета.
-         * Пример использования можно посмотреть в модуле {@link Types/Collection/IEnumerable}.
-         * @param {Types/Entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
-         * @return {Types/Collection/ArrayEnumerator.<Types/Entity/Record>}
+         * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
+         * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+         * @return {Types/_collection/ArrayEnumerator.<Types/_entity/Record>}
          * @example
          * Получим сначала все, а затем - измененные записи:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
+         *    require(['Types/_entity/Record'], function(Record) {
          *       var fruits = new RecordSet({
          *             rawData: [
          *                {name: 'Apple'},
@@ -278,17 +278,17 @@ define('Types/_collection/RecordSet', [
             return enumerator;
         };    /**
          * Перебирает записи рекордсета.
-         * @param {Function(Types/Entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
-         * @param {Types/Entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+         * @param {Function(Types/_entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
+         * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
          * @param {Object} [context] Контекст вызова callback
          * @example
          * Получим сначала все, а затем - измененные записи:
          * <pre>
          *    require([
-         *       'Types/Collection/RecordSet',
-         *       'Types/Entity/Record'
-         *    ], function(RecordSet, Record) {
-         *       var fruits = new RecordSet({
+         *       'Types/collection',
+         *       'Types/entity'
+         *    ], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
          *          rawData: [
          *             {name: 'Apple'},
          *             {name: 'Banana'},
@@ -307,24 +307,24 @@ define('Types/_collection/RecordSet', [
          *
          *       fruits.each(function(fruit) {
          *          console.log(fruit.get('name'));
-         *       }, Record.RecordState.CHANGED);
+         *       }, entity.Record.RecordState.CHANGED);
          *       //output: 'Pineapple', 'Grapefruit'
          *    });
          * </pre>
          */
         /**
          * Перебирает записи рекордсета.
-         * @param {Function(Types/Entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
-         * @param {Types/Entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+         * @param {Function(Types/_entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
+         * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
          * @param {Object} [context] Контекст вызова callback
          * @example
          * Получим сначала все, а затем - измененные записи:
          * <pre>
          *    require([
-         *       'Types/Collection/RecordSet',
-         *       'Types/Entity/Record'
-         *    ], function(RecordSet, Record) {
-         *       var fruits = new RecordSet({
+         *       'Types/collection',
+         *       'Types/entity'
+         *    ], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
          *          rawData: [
          *             {name: 'Apple'},
          *             {name: 'Banana'},
@@ -343,7 +343,7 @@ define('Types/_collection/RecordSet', [
          *
          *       fruits.each(function(fruit) {
          *          console.log(fruit.get('name'));
-         *       }, Record.RecordState.CHANGED);
+         *       }, entity.Record.RecordState.CHANGED);
          *       //output: 'Pineapple', 'Grapefruit'
          *    });
          * </pre>
@@ -387,21 +387,19 @@ define('Types/_collection/RecordSet', [
          * Добавляет запись в рекордсет путем создания новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
          * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
          * При недопустимом at генерируется исключение.
-         * @param {Types/Entity/Record} item Запись, из которой будут извлечены сырые данные.
+         * @param {Types/_entity/Record} item Запись, из которой будут извлечены сырые данные.
          * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
-         * @return {Types/Entity/Record} Добавленная запись.
-         * @see Types/Collection/ObservableList#add
+         * @return {Types/_entity/Record} Добавленная запись.
+         * @see Types/_collection/ObservableList#add
          * @example
          * Добавим запись в рекордсет:
          * <pre>
-         *    require(['Types/Collection/RecordSet', 'Types/Entity/Record'], function(RecordSet, Record) {
-         *       var rs = new RecordSet(),
-         *          source = new Record({
-         *             rawData: {foo: 'bar'}
-         *          }),
-         *          result;
-         *
-         *       result = rs.add(source);
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var rs = new collection.RecordSet();
+         *       var source = new entity.Record({
+         *          rawData: {foo: 'bar'}
+         *       });
+         *       var result = rs.add(source);
          *
          *       console.log(result === source);//false
          *       console.log(result.get('foo') === source.get('foo'));//true
@@ -415,21 +413,19 @@ define('Types/_collection/RecordSet', [
          * Добавляет запись в рекордсет путем создания новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
          * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
          * При недопустимом at генерируется исключение.
-         * @param {Types/Entity/Record} item Запись, из которой будут извлечены сырые данные.
+         * @param {Types/_entity/Record} item Запись, из которой будут извлечены сырые данные.
          * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
-         * @return {Types/Entity/Record} Добавленная запись.
-         * @see Types/Collection/ObservableList#add
+         * @return {Types/_entity/Record} Добавленная запись.
+         * @see Types/_collection/ObservableList#add
          * @example
          * Добавим запись в рекордсет:
          * <pre>
-         *    require(['Types/Collection/RecordSet', 'Types/Entity/Record'], function(RecordSet, Record) {
-         *       var rs = new RecordSet(),
-         *          source = new Record({
-         *             rawData: {foo: 'bar'}
-         *          }),
-         *          result;
-         *
-         *       result = rs.add(source);
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var rs = new collection.RecordSet();
+         *       var source = new entity.Record({
+         *          rawData: {foo: 'bar'}
+         *       });
+         *       var result = rs.add(source);
          *
          *       console.log(result === source);//false
          *       console.log(result.get('foo') === source.get('foo'));//true
@@ -464,33 +460,32 @@ define('Types/_collection/RecordSet', [
          * Заменяет запись в указанной позиции через создание новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
          * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
          * При недопустимом at генерируется исключение.
-         * @param {Types/Entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
+         * @param {Types/_entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
          * @param {Number} at Позиция, в которой будет произведена замена
-         * @return {Array.<Types/Entity/Record>} Добавленная запись
-         * @see Types/Collection/ObservableList#replace
+         * @return {Array.<Types/_entity/Record>} Добавленная запись
+         * @see Types/_collection/ObservableList#replace
          * @example
          * Заменим вторую запись:
          * <pre>
-         *    require(['Types/Collection/RecordSet', 'Types/Entity/Record'], function(RecordSet, Record) {
-         *       var rs = new RecordSet({
-         *             rawData: [{
-         *                id: 1,
-         *                title: 'Water'
-         *             }, {
-         *                id: 2,
-         *                title: 'Ice'
-         *             }]
-         *          }),
-         *          source = new Record({
-         *             rawData: {
-         *                id: 3,
-         *                title: 'Snow'
-         *             }
-         *          }),
-         *          result;
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var rs = new collection.RecordSet({
+         *          rawData: [{
+         *             id: 1,
+         *             title: 'Water'
+         *          }, {
+         *             id: 2,
+         *             title: 'Ice'
+         *          }]
+         *       });
+         *       var source = new entity.Record({
+         *          rawData: {
+         *             id: 3,
+         *             title: 'Snow'
+         *          }
+         *       });
          *
          *       rs.replace(source, 1);
-         *       result = rs.at(1);
+         *       var result = rs.at(1);
          *
          *       console.log(result === source);//false
          *       console.log(result.get('title') === source.get('title'));//true
@@ -504,33 +499,32 @@ define('Types/_collection/RecordSet', [
          * Заменяет запись в указанной позиции через создание новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
          * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
          * При недопустимом at генерируется исключение.
-         * @param {Types/Entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
+         * @param {Types/_entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
          * @param {Number} at Позиция, в которой будет произведена замена
-         * @return {Array.<Types/Entity/Record>} Добавленная запись
-         * @see Types/Collection/ObservableList#replace
+         * @return {Array.<Types/_entity/Record>} Добавленная запись
+         * @see Types/_collection/ObservableList#replace
          * @example
          * Заменим вторую запись:
          * <pre>
-         *    require(['Types/Collection/RecordSet', 'Types/Entity/Record'], function(RecordSet, Record) {
-         *       var rs = new RecordSet({
-         *             rawData: [{
-         *                id: 1,
-         *                title: 'Water'
-         *             }, {
-         *                id: 2,
-         *                title: 'Ice'
-         *             }]
-         *          }),
-         *          source = new Record({
-         *             rawData: {
-         *                id: 3,
-         *                title: 'Snow'
-         *             }
-         *          }),
-         *          result;
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var rs = new collection.RecordSet({
+         *          rawData: [{
+         *             id: 1,
+         *             title: 'Water'
+         *          }, {
+         *             id: 2,
+         *             title: 'Ice'
+         *          }]
+         *       });
+         *       var source = new entity.Record({
+         *          rawData: {
+         *             id: 3,
+         *             title: 'Snow'
+         *          }
+         *       });
          *
          *       rs.replace(source, 1);
-         *       result = rs.at(1);
+         *       var result = rs.at(1);
          *
          *       console.log(result === source);//false
          *       console.log(result.get('title') === source.get('title'));//true
@@ -558,16 +552,16 @@ define('Types/_collection/RecordSet', [
         };    /**
          * Заменяет записи рекордсета копиями записей другой коллекции.
          * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-         * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для замены
-         * @return {Array.<Types/Entity/Record>} Добавленные записи
-         * @see Types/Collection/ObservableList#assign
+         * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для замены
+         * @return {Array.<Types/_entity/Record>} Добавленные записи
+         * @see Types/_collection/ObservableList#assign
          */
         /**
          * Заменяет записи рекордсета копиями записей другой коллекции.
          * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-         * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для замены
-         * @return {Array.<Types/Entity/Record>} Добавленные записи
-         * @see Types/Collection/ObservableList#assign
+         * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для замены
+         * @return {Array.<Types/_entity/Record>} Добавленные записи
+         * @see Types/_collection/ObservableList#assign
          */
         RecordSet.prototype.assign = function (items) {
             if (items === this) {
@@ -602,16 +596,16 @@ define('Types/_collection/RecordSet', [
         };    /**
          * Добавляет копии записей другой коллекции в конец рекордсета.
          * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-         * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для добавления
-         * @return {Array.<Types/Entity/Record>} Добавленные записи
-         * @see Types/Collection/ObservableList#append
+         * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+         * @return {Array.<Types/_entity/Record>} Добавленные записи
+         * @see Types/_collection/ObservableList#append
          */
         /**
          * Добавляет копии записей другой коллекции в конец рекордсета.
          * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-         * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для добавления
-         * @return {Array.<Types/Entity/Record>} Добавленные записи
-         * @see Types/Collection/ObservableList#append
+         * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+         * @return {Array.<Types/_entity/Record>} Добавленные записи
+         * @see Types/_collection/ObservableList#append
          */
         RecordSet.prototype.append = function (items) {
             items = this._itemsToArray(items);
@@ -622,16 +616,16 @@ define('Types/_collection/RecordSet', [
         };    /**
          * Добавляет копии записей другой коллекции в начало рекордсета.
          * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-         * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для добавления
-         * @return {Array.<Types/Entity/Record>} Добавленные записи
-         * @see Types/Collection/ObservableList#prepend
+         * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+         * @return {Array.<Types/_entity/Record>} Добавленные записи
+         * @see Types/_collection/ObservableList#prepend
          */
         /**
          * Добавляет копии записей другой коллекции в начало рекордсета.
          * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-         * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для добавления
-         * @return {Array.<Types/Entity/Record>} Добавленные записи
-         * @see Types/Collection/ObservableList#prepend
+         * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+         * @return {Array.<Types/_entity/Record>} Добавленные записи
+         * @see Types/_collection/ObservableList#prepend
          */
         RecordSet.prototype.prepend = function (items) {
             items = this._itemsToArray(items);
@@ -641,12 +635,12 @@ define('Types/_collection/RecordSet', [
             return items;
         };    /**
          * Возвращает индексатор коллекции
-         * @return {Types/Collection/Indexer}
+         * @return {Types/_collection/Indexer}
          * @protected
          */
         /**
          * Возвращает индексатор коллекции
-         * @return {Types/Collection/Indexer}
+         * @return {Types/_collection/Indexer}
          * @protected
          */
         RecordSet.prototype._getIndexer = function () {
@@ -753,12 +747,12 @@ define('Types/_collection/RecordSet', [
             this._parentChanged(entity_1.Record.prototype.removeFieldAt);
         };    /**
          * Создает адаптер для сырых данных
-         * @return {Types/Adapter/ITable}
+         * @return {Types/_entity/adapter/ITable}
          * @protected
          */
         /**
          * Создает адаптер для сырых данных
-         * @return {Types/Adapter/ITable}
+         * @return {Types/_entity/adapter/ITable}
          * @protected
          */
         RecordSet.prototype._createRawDataAdapter = function () {
@@ -788,8 +782,8 @@ define('Types/_collection/RecordSet', [
          * Возвращает конструктор записей, порождаемых рекордсетом.
          * @return {String|Function}
          * @see model
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Получим конструктор записепй, внедренный в рекордсет в виде названия зарегистрированной зависимости:
          * <pre>
@@ -817,8 +811,8 @@ define('Types/_collection/RecordSet', [
          * Возвращает конструктор записей, порождаемых рекордсетом.
          * @return {String|Function}
          * @see model
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Получим конструктор записепй, внедренный в рекордсет в виде названия зарегистрированной зависимости:
          * <pre>
@@ -855,16 +849,16 @@ define('Types/_collection/RecordSet', [
          * @example
          * Подтвердим измененную запись:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var fruits = new RecordSet({
-         *             rawData: [
-         *                {name: 'Apple'},
-         *                {name: 'Banana'}
-         *             ]
-         *          }),
-         *          RecordState = Record.RecordState,
-         *          apple = fruits.at(0);
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
+         *          rawData: [
+         *             {name: 'Apple'},
+         *             {name: 'Banana'}
+         *          ]
+         *       });
+         *       var RecordState = entity.Record.RecordState;
          *
+         *       var apple = fruits.at(0);
          *       apple.set('name', 'Pineapple');
          *       apple.getState() === RecordState.CHANGED;//true
          *
@@ -874,16 +868,16 @@ define('Types/_collection/RecordSet', [
          * </pre>
          * Подтвердим добавленную запись:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var fruits = new RecordSet({
-         *             rawData: [
-         *                {name: 'Apple'}
-         *             ]
-         *          }),
-         *          RecordState = Record.RecordState,
-         *          banana = new Record({
-         *             rawData: {name: 'Banana'}
-         *          });
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
+         *          rawData: [
+         *             {name: 'Apple'}
+         *          ]
+         *       });
+         *       var RecordState = entity.Record.RecordState;
+         *       var banana = new entity.Record({
+         *          rawData: {name: 'Banana'}
+         *       });
          *
          *       fruits.add(banana);
          *       banana.getState() === RecordState.ADDED;//true
@@ -894,16 +888,16 @@ define('Types/_collection/RecordSet', [
          * </pre>
          * Подтвердим удаленную запись:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var fruits = new RecordSet({
-         *             rawData: [
-         *                {name: 'Apple'},
-         *                {name: 'Banana'}
-         *             ]
-         *          }),
-         *          RecordState = Record.RecordState,
-         *          apple = fruits.at(0);
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
+         *          rawData: [
+         *             {name: 'Apple'},
+         *             {name: 'Banana'}
+         *          ]
+         *       });
+         *       var RecordState = entity.Record.RecordState;
          *
+         *       var apple = fruits.at(0);
          *       apple.setState(RecordState.DELETED);
          *       fruits.getCount();//2
          *       fruits.at(0).get('name');//'Apple'
@@ -928,16 +922,16 @@ define('Types/_collection/RecordSet', [
          * @example
          * Подтвердим измененную запись:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var fruits = new RecordSet({
-         *             rawData: [
-         *                {name: 'Apple'},
-         *                {name: 'Banana'}
-         *             ]
-         *          }),
-         *          RecordState = Record.RecordState,
-         *          apple = fruits.at(0);
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
+         *          rawData: [
+         *             {name: 'Apple'},
+         *             {name: 'Banana'}
+         *          ]
+         *       });
+         *       var RecordState = entity.Record.RecordState;
          *
+         *       var apple = fruits.at(0);
          *       apple.set('name', 'Pineapple');
          *       apple.getState() === RecordState.CHANGED;//true
          *
@@ -947,16 +941,16 @@ define('Types/_collection/RecordSet', [
          * </pre>
          * Подтвердим добавленную запись:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var fruits = new RecordSet({
-         *             rawData: [
-         *                {name: 'Apple'}
-         *             ]
-         *          }),
-         *          RecordState = Record.RecordState,
-         *          banana = new Record({
-         *             rawData: {name: 'Banana'}
-         *          });
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
+         *          rawData: [
+         *             {name: 'Apple'}
+         *          ]
+         *       });
+         *       var RecordState = entity.Record.RecordState;
+         *       var banana = new entity.Record({
+         *          rawData: {name: 'Banana'}
+         *       });
          *
          *       fruits.add(banana);
          *       banana.getState() === RecordState.ADDED;//true
@@ -967,16 +961,16 @@ define('Types/_collection/RecordSet', [
          * </pre>
          * Подтвердим удаленную запись:
          * <pre>
-         *    require(['Types/Entity/Record'], function(Record) {
-         *       var fruits = new RecordSet({
-         *             rawData: [
-         *                {name: 'Apple'},
-         *                {name: 'Banana'}
-         *             ]
-         *          }),
-         *          RecordState = Record.RecordState,
-         *          apple = fruits.at(0);
+         *    require(['Types/collection', 'Types/entity'], function(collection, entity) {
+         *       var fruits = new collection.RecordSet({
+         *          rawData: [
+         *             {name: 'Apple'},
+         *             {name: 'Banana'}
+         *          ]
+         *       });
+         *       var RecordState = entity.Record.RecordState;
          *
+         *       var apple = fruits.at(0);
          *       apple.setState(RecordState.DELETED);
          *       fruits.getCount();//2
          *       fruits.at(0).get('name');//'Apple'
@@ -1101,7 +1095,7 @@ define('Types/_collection/RecordSet', [
          * Возвращает запись по ключу.
          * Если записи с таким ключом нет - возвращает undefined.
          * @param {String|Number} id Значение первичного ключа.
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @example
          * Создадим рекордсет, получим запись по первичному ключу:
          * <pre>
@@ -1122,7 +1116,7 @@ define('Types/_collection/RecordSet', [
          * Возвращает запись по ключу.
          * Если записи с таким ключом нет - возвращает undefined.
          * @param {String|Number} id Значение первичного ключа.
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @example
          * Создадим рекордсет, получим запись по первичному ключу:
          * <pre>
@@ -1212,8 +1206,8 @@ define('Types/_collection/RecordSet', [
          * Устанавливает метаданные RecordSet'а.
          * Подробнее о метаданных смотрите в описании опции {@link metaData}.
          * <ul>
-         * <li>path - путь для хлебных крошек, возвращается как {@link Types/Collection/RecordSet};</li>
-         * <li>results - строка итогов, возвращается как {@link Types/Entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+         * <li>path - путь для хлебных крошек, возвращается как {@link Types/_collection/RecordSet};</li>
+         * <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
          * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
          * </ul>
          * @param {Object} meta Метаданные.
@@ -1224,8 +1218,8 @@ define('Types/_collection/RecordSet', [
          * Устанавливает метаданные RecordSet'а.
          * Подробнее о метаданных смотрите в описании опции {@link metaData}.
          * <ul>
-         * <li>path - путь для хлебных крошек, возвращается как {@link Types/Collection/RecordSet};</li>
-         * <li>results - строка итогов, возвращается как {@link Types/Entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+         * <li>path - путь для хлебных крошек, возвращается как {@link Types/_collection/RecordSet};</li>
+         * <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
          * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
          * </ul>
          * @param {Object} meta Метаданные.
@@ -1251,7 +1245,7 @@ define('Types/_collection/RecordSet', [
             this._notify('onPropertyChange', { metaData: meta });
         };    /**
          * Объединяет два рекордсета.
-         * @param {Types/Collection/RecordSet} recordSet Рекордсет, с которым объединить
+         * @param {Types/_collection/RecordSet} recordSet Рекордсет, с которым объединить
          * @param {MergeOptions} options Опции операций
          * @see assign
          * @see append
@@ -1262,7 +1256,7 @@ define('Types/_collection/RecordSet', [
          */
         /**
          * Объединяет два рекордсета.
-         * @param {Types/Collection/RecordSet} recordSet Рекордсет, с которым объединить
+         * @param {Types/_collection/RecordSet} recordSet Рекордсет, с которым объединить
          * @param {MergeOptions} options Опции операций
          * @see assign
          * @see append
@@ -1357,7 +1351,7 @@ define('Types/_collection/RecordSet', [
               //region Protected methods
               /**
          * Вставляет сырые данные записей в сырые данные рекордсета
-         * @param {Types/Collection/IEnumerable|Array} items Коллекция записей
+         * @param {Types/_collection/IEnumerable|Array} items Коллекция записей
          * @param {Number} [at] Позиция вставки
          * @return {Array}
          * @protected
@@ -1366,7 +1360,7 @@ define('Types/_collection/RecordSet', [
         //region Protected methods
         /**
          * Вставляет сырые данные записей в сырые данные рекордсета
-         * @param {Types/Collection/IEnumerable|Array} items Коллекция записей
+         * @param {Types/_collection/IEnumerable|Array} items Коллекция записей
          * @param {Number} [at] Позиция вставки
          * @return {Array}
          * @protected
@@ -1382,16 +1376,16 @@ define('Types/_collection/RecordSet', [
             return items;
         };    /**
          * Нормализует записи при добавлении в рекордсет: клонирует и приводит к формату рекордсета
-         * @param {Array.<Types/Entity/Record>} items Записи
+         * @param {Array.<Types/_entity/Record>} items Записи
          * @param {RecordState} [state] С каким состояним создать
-         * @return {Array.<Types/Entity/Record>}
+         * @return {Array.<Types/_entity/Record>}
          * @protected
          */
         /**
          * Нормализует записи при добавлении в рекордсет: клонирует и приводит к формату рекордсета
-         * @param {Array.<Types/Entity/Record>} items Записи
+         * @param {Array.<Types/_entity/Record>} items Записи
          * @param {RecordState} [state] С каким состояним создать
-         * @return {Array.<Types/Entity/Record>}
+         * @return {Array.<Types/_entity/Record>}
          * @protected
          */
         RecordSet.prototype._normalizeItems = function (items, state) {
@@ -1419,16 +1413,16 @@ define('Types/_collection/RecordSet', [
             return result;
         };    /**
          * Возращает копию записи с сырыми данными, приведенными к нужному формату
-         * @param {Array.<Types/Entity/Record>} item Запись
-         * @param {Types/Format/Format} format Формат, к которому следует привести данные
-         * @return {Array.<Types/Entity/Record>}
+         * @param {Array.<Types/_entity/Record>} item Запись
+         * @param {Types/_entity/format/Format} format Формат, к которому следует привести данные
+         * @return {Array.<Types/_entity/Record>}
          * @protected
          */
         /**
          * Возращает копию записи с сырыми данными, приведенными к нужному формату
-         * @param {Array.<Types/Entity/Record>} item Запись
-         * @param {Types/Format/Format} format Формат, к которому следует привести данные
-         * @return {Array.<Types/Entity/Record>}
+         * @param {Array.<Types/_entity/Record>} item Запись
+         * @param {Types/_entity/format/Format} format Формат, к которому следует привести данные
+         * @return {Array.<Types/_entity/Record>}
          * @protected
          */
         RecordSet.prototype._normalizeItemData = function (item, format) {
@@ -1466,13 +1460,13 @@ define('Types/_collection/RecordSet', [
         };    /**
          * Создает новый экземпляр модели
          * @param {*} data Данные модели
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @protected
          */
         /**
          * Создает новый экземпляр модели
          * @param {*} data Данные модели
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @protected
          */
         RecordSet.prototype._buildRecord = function (data) {
@@ -1488,13 +1482,13 @@ define('Types/_collection/RecordSet', [
         };    /**
          * Возвращает запись по индексу
          * @param {Number} at Индекс
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @protected
          */
         /**
          * Возвращает запись по индексу
          * @param {Number} at Индекс
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @protected
          */
         RecordSet.prototype._getRecord = function (at) {
@@ -1530,17 +1524,17 @@ define('Types/_collection/RecordSet', [
               //region Statics
               /**
          * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-         * @param {Types/Collection/RecordSet} items Исходный рекордсет
+         * @param {Types/_collection/RecordSet} items Исходный рекордсет
          * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-         * @return {Types/Entity/Record} Патч
+         * @return {Types/_entity/Record} Патч
          */
         //endregion Protected methods
         //region Statics
         /**
          * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-         * @param {Types/Collection/RecordSet} items Исходный рекордсет
+         * @param {Types/_collection/RecordSet} items Исходный рекордсет
          * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-         * @return {Types/Entity/Record} Патч
+         * @return {Types/_entity/Record} Патч
          */
         RecordSet.patch = function (items, names) {
             names = names || [

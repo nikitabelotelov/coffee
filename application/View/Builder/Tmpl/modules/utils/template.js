@@ -87,7 +87,7 @@ define('View/Builder/Tmpl/modules/utils/template',
             // если передана служебная информация, записываем ее в поле "internal"
             // объекта templateCfg - конфигурации шаблона
             if (internalStr) {
-               result += '"internal": ' + internalStr + ', ';
+               result += '"internal": isVdom ? ' + internalStr + ' : {}, ';
             }
 
             result += '}';
@@ -107,7 +107,7 @@ define('View/Builder/Tmpl/modules/utils/template',
             var libPath = common.splitModule(templateName);
             return {
                libPath: libPath,
-               value: libPath.library + ':' + libPath.module,
+               value: libPath.fullName,
                type: 'ws-module',
                simple: true
             };

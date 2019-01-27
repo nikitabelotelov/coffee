@@ -17,6 +17,7 @@ define('Lib/Control/CompoundControl/CompoundControl', [
    'Core/helpers/Hcontrol/getChildContainers',
    'Core/helpers/Hcontrol/replaceContainer',
    'Core/helpers/Hcontrol/makeInstanceCompatible',
+   'Core/library',
    "Lib/Control/AttributeCfgParser/AttributeCfgParser",
    "Lib/Control/Control",
    "i18n!Lib/Control/CompoundControl/CompoundControl",
@@ -41,7 +42,8 @@ define('Lib/Control/CompoundControl/CompoundControl', [
    Utils,
    getChildContainers,
    replaceContainer,
-   makeInstanceCompatible
+   makeInstanceCompatible,
+   Library
 ) {
    /**
     * Модуль "Составной компонент".
@@ -131,7 +133,7 @@ define('Lib/Control/CompoundControl/CompoundControl', [
           * Если контейнер - COMPONENT - значит верстки еще нет и контрол был
           * вставлен в старом стиле
           */
-         if (!inst.isBuildVDom || (inst.isBuildVDom() && !inst._isRendered) || inst.containerIsComponent()) {
+         if (!inst.isBuildVDom || (inst.isBuildVDom() && !inst._isRendered && inst.getContainer().attr('hasmarkup') !== 'true') || inst.containerIsComponent()) {
             /**
              * Установим свойство, которое запрещает оживление внутренних компонентов,
              * пока не установлен родительский контрол
@@ -217,7 +219,8 @@ define('Lib/Control/CompoundControl/CompoundControl', [
          }
 
 
-         Utils.OptionsResolver.resolveOptions(Ctor, cfg, cfg.parent && cfg.parent._moduleName ? cfg.parent._moduleName : "");
+         var defaultOpts = Utils.OptionsResolver.getDefaultOptions(Ctor);
+         Utils.OptionsResolver.resolveOptions(Ctor, defaultOpts, cfg, cfg.parent && cfg.parent._moduleName ? cfg.parent._moduleName : "");
          inst =  new Ctor(cfg);
 
          // текущий контекст мог измениться, и нужно в bindControl передать актуальный
@@ -245,12 +248,23 @@ define('Lib/Control/CompoundControl/CompoundControl', [
       var
          moduleName,
          instance,
-         cnstr;
+         cnstr,
+         parseLib;
       moduleName = (cName ? cName : cfg._moduleName);
       if (globalRequireMap[moduleName]) {
          cnstr = globalRequireMap[moduleName];
       } else {
-         cnstr = require(moduleName);
+         parseLib = Library.parse(moduleName);
+         // Ветка при которой в старых компонентах используются библиотеки
+         // т.е. в data-component попадает строка вида x/y/z:a.b.c
+         if (parseLib.path.length) {
+            cnstr = require(parseLib.name);
+            parseLib.path.forEach(function(property) {
+               cnstr = cnstr[property];
+            });
+         } else {
+            cnstr = require(moduleName);
+         }
          globalRequireMap[moduleName] = cnstr;
       }
 
@@ -286,7 +300,8 @@ define('Lib/Control/CompoundControl/CompoundControl', [
                //он проставится в makeInst методом setParent
                var doNotSetParent = cfg.doNotSetParent;
                cfg.doNotSetParent = true;
-               Utils.OptionsResolver.resolveOptions(cnstr, cfg, cfg.parent && cfg.parent._moduleName ? cfg.parent._moduleName : "");
+               var defaultOpts = Utils.OptionsResolver.getDefaultOptions(cnstr);
+               Utils.OptionsResolver.resolveOptions(cnstr, defaultOpts, cfg, cfg.parent && cfg.parent._moduleName ? cfg.parent._moduleName : "");
 
                if (cnstr.prototype._template) {
                   if (cfg.VDOMReady) {

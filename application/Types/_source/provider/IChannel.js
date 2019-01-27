@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/provider/IChannel" />
 /**
  * Интерфейс канала серверных событий
- * @interface Types/Source/Provider/IChannel
+ * @interface Types/_source/provider/IChannel
  * @public
  * @author Мальцев А.А.
  */

@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/relation/IReceiver" />
 /**
  * Интерфейс сущности, взаимодействующей с посредником
- * @interface Types/Mediator/IReceiver
+ * @interface Types/_entity/relation/IReceiver
  * @author Мальцев А.А.
  */
 define('Types/_entity/relation/IReceiver', [

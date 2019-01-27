@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Reversed" />
 /**
  * Реверсивное звено цепочки.
- * @class Types/Chain/Reversed
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Reversed
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_chain/Reversed', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Reversed = /** @class */
     function (_super) {
-        tslib_1.__extends(Reversed, _super);    /** @lends Types/Chain/Reversed.prototype */
-        /** @lends Types/Chain/Reversed.prototype */
+        tslib_1.__extends(Reversed, _super);    /** @lends Types/_chain/Reversed.prototype */
+        /** @lends Types/_chain/Reversed.prototype */
         function Reversed() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    // region Types/_collection/IEnumerable

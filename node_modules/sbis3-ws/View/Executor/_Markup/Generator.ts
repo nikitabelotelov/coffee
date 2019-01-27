@@ -216,19 +216,23 @@ const Generator = {
                }
             }
             dataComponent = tpl;
+
+            if (controlClass && controlClass.default && controlClass.default.isWasaby) {
+               controlClass = controlClass.default;
+            }
          }
       }
       if (typeof tpl === 'object' && tpl && tpl.library && tpl.module) {
          // module type: { library: <requirable module name>, module: <field to take from the library> }
-         var moduleName = tpl.library + ':' + tpl.module;
+         var moduleName = tpl.library + ':' + tpl.module.join('.');
          if (deps && deps[tpl.library]) {
-            controlClass = deps[tpl.library][tpl.module];
+            controlClass = Common.extractLibraryModule(deps[tpl.library], tpl.module);
          } else if (RequireHelper.defined(tpl.library)) {
-            controlClass = RequireHelper.require(tpl.library)[tpl.module];
+            controlClass = Common.extractLibraryModule(RequireHelper.require(tpl.library), tpl.module);
          } else {
             var mod = cacheModules[tpl.library];
             if (mod) {
-               controlClass = cacheModules[tpl.library][tpl.module];
+               controlClass = Common.extractLibraryModule(cacheModules[tpl.library], tpl.module);
             } else {
                moduleName = undefined;
             }

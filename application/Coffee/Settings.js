@@ -3,11 +3,11 @@ define('Coffee/Settings', [
     'require',
     'exports',
     'tslib',
-    'UI/Index',
+    'UI/Base',
     'wml!Coffee/Settings/Settings',
     'Coffee/Data/DataStore',
     'css!Coffee/Settings/Settings'
-], function (require, exports, tslib_1, Index_1, template, DataStore_1) {
+], function (require, exports, tslib_1, Base_1, template, DataStore_1) {
     'use strict';
     var Settings = /** @class */
     function (_super) {
@@ -29,6 +29,6 @@ define('Coffee/Settings', [
         };
         ;
         return Settings;
-    }(Index_1.Control);
+    }(Base_1.Control);
     return Settings;
 });

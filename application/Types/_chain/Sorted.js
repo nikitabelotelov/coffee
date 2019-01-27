@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Sorted" />
 /**
  * Сортирующее звено цепочки.
- * @class Types/Chain/Sorted
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Sorted
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,16 +17,16 @@ define('Types/_chain/Sorted', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Sorted = /** @class */
     function (_super) {
-        tslib_1.__extends(Sorted, _super);    /** @lends Types/Chain/Sorted.prototype */
+        tslib_1.__extends(Sorted, _super);    /** @lends Types/_chain/Sorted.prototype */
                                               /**
          * Конструктор сортирующего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {function(*, *): Number} [compareFunction] Функция сравнения
          */
-        /** @lends Types/Chain/Sorted.prototype */
+        /** @lends Types/_chain/Sorted.prototype */
         /**
          * Конструктор сортирующего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {function(*, *): Number} [compareFunction] Функция сравнения
          */
         function Sorted(source, compareFunction) {

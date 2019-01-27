@@ -129,7 +129,7 @@ define('Core/Themes/ThemesController', [
          // Make requests to load themes css-files
          for (var key in self.themedCssCommon) {
             (function(key) {
-               var promise = self.cssLoader.loadCssThemed(key, theme);
+               var promise = self.cssLoader.loadCssThemedAsync(key, theme);
                promiseArray.push(promise.then(function(res) {
                   return {
                      name: key,
@@ -178,7 +178,7 @@ define('Core/Themes/ThemesController', [
       // Load css asynchronously
       pushCssAsync: function(name, resolve) {
          var self = this;
-         var mayBeBundle = self.linkResolver.resolveOldLink(name);
+         var mayBeBundle = self.linkResolver.fixOldAndBundles(name);
          if (typeof self.resolvedCss.simple[mayBeBundle] !== 'undefined') {
             // We don't need to load css if it was already loaded or request is in process
             return;
@@ -197,7 +197,7 @@ define('Core/Themes/ThemesController', [
       // Load themed css asynchronously
       pushCssThemedAsyncAllThemes: function(name, resolve) {
          var self = this;
-         var mayBeBundle = self.linkResolver.resolveOldLink(name);
+         var mayBeBundle = self.linkResolver.fixOldAndBundles(name);
          if (typeof self.themedCssCommon[mayBeBundle] !== 'undefined') {
             // We don't need to load css if it wal already loaded or request is in process
             return;

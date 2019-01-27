@@ -76,7 +76,7 @@ define('Core/CompoundContainer', [
          moduleStubs.require([self._childControlName]).addCallback(function(modules) {
             var
                ComponentConstructor = modules[0],
-               childContainer = self._childConfig.element || _private.createChildContainer.call(self); // Clone the options to have an original copy
+               childContainer = (self._childConfig && self._childConfig.element) || _private.createChildContainer.call(self);
 
             self._notifyCompound('onInit');
             self._notifyCompound('onBeforeControlsLoad');

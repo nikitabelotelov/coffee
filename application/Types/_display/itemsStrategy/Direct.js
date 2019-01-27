@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/itemsStrategy/Direct" />
 /**
  * Стратегия получения элементов проекции напрямую по коллекции
- * @class Types/Display/ItemsStrategy/Direct
- * @extends Types/Display/ItemsStrategy/Abstract
+ * @class Types/_display/ItemsStrategy/Direct
+ * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/Direct', [
@@ -18,17 +18,17 @@ define('Types/_display/itemsStrategy/Direct', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Direct = /** @class */
     function (_super) {
-        tslib_1.__extends(Direct, _super);    /** @lends Types/Display/ItemsStrategy/Direct.prototype */
+        tslib_1.__extends(Direct, _super);    /** @lends Types/_display/ItemsStrategy/Direct.prototype */
                                               /**
          * @typedef {Object} Options
-         * @property {Types/Display/Collection} display Проекция
+         * @property {Types/_display/Collection} display Проекция
          * @property {Boolean} unique Признак обеспечения уникальности элементов
          * @property {String} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
          */
-        /** @lends Types/Display/ItemsStrategy/Direct.prototype */
+        /** @lends Types/_display/ItemsStrategy/Direct.prototype */
         /**
          * @typedef {Object} Options
-         * @property {Types/Display/Collection} display Проекция
+         * @property {Types/_display/Collection} display Проекция
          * @property {Boolean} unique Признак обеспечения уникальности элементов
          * @property {String} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
          */
@@ -156,7 +156,7 @@ define('Types/_display/itemsStrategy/Direct', [
               //region Statics
               /**
          * Создает индекс сортировки в том же порядке, что и коллекция
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Array.<Number>} current Текущий индекс сортировки
          * @param {Object} options Опции
          * @return {Array.<Number>}
@@ -165,7 +165,7 @@ define('Types/_display/itemsStrategy/Direct', [
         //region Statics
         /**
          * Создает индекс сортировки в том же порядке, что и коллекция
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Array.<Number>} current Текущий индекс сортировки
          * @param {Object} options Опции
          * @return {Array.<Number>}
@@ -191,8 +191,8 @@ define('Types/_display/itemsStrategy/Direct', [
             return result;
         };
         return Direct;
-    }(AbstractStrategy_1.default    /** @lends Types/Display/ItemsStrategy/Direct.prototype */);
-    /** @lends Types/Display/ItemsStrategy/Direct.prototype */
+    }(AbstractStrategy_1.default    /** @lends Types/_display/ItemsStrategy/Direct.prototype */);
+    /** @lends Types/_display/ItemsStrategy/Direct.prototype */
     exports.default = Direct;
     Direct.prototype._moduleName = 'Types/display:itemsStrategy.Direct';
     Direct.prototype['[Types/_display/itemsStrategy/Direct]'] = true;    // @ts-ignore

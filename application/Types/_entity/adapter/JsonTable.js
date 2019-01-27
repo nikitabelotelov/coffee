@@ -14,11 +14,11 @@
  *    }]);
  *    adapter.at(0);//{id: 1, title: 'Test 1'}
  * </pre>
- * @class Types/Adapter/JsonTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @mixes Types/Adapter/GenericFormatMixin
- * @mixes Types/Adapter/JsonFormatMixin
+ * @class Types/_entity/adapter/JsonTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @mixes Types/_entity/adapter/GenericFormatMixin
+ * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -32,8 +32,8 @@ define('Types/_entity/adapter/JsonTable', [
     'Types/_entity/adapter/JsonRecord',
     'Types/shim',
     'Types/util',
-    'Core/core-merge'
-], function (require, exports, tslib_1, DestroyableMixin_1, GenericFormatMixin_1, JsonFormatMixin_1, JsonRecord_1, shim_1, util_1, coreMerge) {
+    'Types/object'
+], function (require, exports, tslib_1, DestroyableMixin_1, GenericFormatMixin_1, JsonFormatMixin_1, JsonRecord_1, shim_1, util_1, object_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var JsonTable = /** @class */
@@ -52,9 +52,9 @@ define('Types/_entity/adapter/JsonTable', [
             JsonFormatMixin_1.default.constructor.call(_this, data);
             return _this;
         }    //region ITable
-             //region Types/Adapter/JsonFormatMixin
+             //region Types/_entity/adapter/JsonFormatMixin
         //region ITable
-        //region Types/Adapter/JsonFormatMixin
+        //region Types/_entity/adapter/JsonFormatMixin
         JsonTable.prototype.addField = function (format, at) {
             JsonFormatMixin_1.default.addField.call(this, format, at);
             var name = format.getName();
@@ -72,9 +72,9 @@ define('Types/_entity/adapter/JsonTable', [
             for (var i = 0; i < this._data.length; i++) {
                 delete this._data[i][name];
             }
-        };    //endregion Types/Adapter/JsonFormatMixin
+        };    //endregion Types/_entity/adapter/JsonFormatMixin
               //region Public methods
-        //endregion Types/Adapter/JsonFormatMixin
+        //endregion Types/_entity/adapter/JsonFormatMixin
         //region Public methods
         JsonTable.prototype.getFields = function () {
             var count = this.getCount();
@@ -138,15 +138,14 @@ define('Types/_entity/adapter/JsonTable', [
             var extention = this.at(donor);
             var adapter = new JsonRecord_1.default(first);
             var id = adapter.get(idProperty);
-            coreMerge(first, extention);
+            object_1.merge(first, extention);
             adapter.set(idProperty, id);
             this.remove(donor);
         };
         JsonTable.prototype.copy = function (index) {
             this._touchData();
             var source = this.at(index);
-            var clone = {};
-            coreMerge(clone, source, { clone: true });
+            var clone = object_1.merge({}, source);
             this.add(clone, 1 + index);
             return clone;
         };

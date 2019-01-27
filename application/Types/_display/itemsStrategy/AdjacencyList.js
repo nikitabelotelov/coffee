@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/AdjacencyList" />
 /**
  * Стратегия-декоратор получения элементов проекции по списку смежных вершин
- * @class Types/Display/ItemsStrategy/AdjacencyList
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/AdjacencyList
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/AdjacencyList', [
@@ -15,8 +15,8 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
     'Types/entity',
     'Types/util',
     'Types/shim',
-    'Core/helpers/Function/throttle'
-], function (require, exports, tslib_1, GroupItem_1, entity_1, util_1, shim_1, throttle) {
+    'Types/function'
+], function (require, exports, tslib_1, GroupItem_1, entity_1, util_1, shim_1, function_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Свойство, хранящее признак, что список элементов проинициализирован
@@ -32,7 +32,7 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
     /**
      * Выводит предупреждения не чаще, чем раз в 300мс
      */
-    var warning = throttle(util_1.logger.info, 300);    /**
+    var warning = function_1.throttle(util_1.logger.info, 300);    /**
      * Нормализует значение идентификатора
      */
     /**
@@ -83,14 +83,14 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
         return parentToChildren;
     }    /**
      * Создает список "элемент - индекс группы".
-     * @param {Array.<Types/Display/CollectionItem>} sourceItems Массив элементов декорируемой стратегии
-     * @return {Map.<Types/Display/CollectionItem, Number>} Элемент -> индекс группы в sourceItems
+     * @param {Array.<Types/_display/CollectionItem>} sourceItems Массив элементов декорируемой стратегии
+     * @return {Map.<Types/_display/CollectionItem, Number>} Элемент -> индекс группы в sourceItems
      * @static
      */
     /**
      * Создает список "элемент - индекс группы".
-     * @param {Array.<Types/Display/CollectionItem>} sourceItems Массив элементов декорируемой стратегии
-     * @return {Map.<Types/Display/CollectionItem, Number>} Элемент -> индекс группы в sourceItems
+     * @param {Array.<Types/_display/CollectionItem>} sourceItems Массив элементов декорируемой стратегии
+     * @return {Map.<Types/_display/CollectionItem, Number>} Элемент -> индекс группы в sourceItems
      * @static
      */
     function buildGroupsMap(sourceItems) {
@@ -107,9 +107,9 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
     }    /**
      * Создает индекс следования элементов исходной коллекции в древовидной структуре.
      * @param {Object} options Опции
-     * @param {Array.<Types/Display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
+     * @param {Array.<Types/_display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
      * @param {Map.<Number>} options.childrenMap Cписок "родитель - дети".
-     * @param {Array.<Types/Display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
+     * @param {Array.<Types/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
      * @param {Array.<Number>} options.parentsMap Cписок "ребенок - родитель" (заполняется динамически).
      * @param {Array.<String>} options.path Путь до текущиего узла в дереве (заполняется динамически).
      * @param {String} options.idProperty Имя свойства, в котором хранится идентификатор элемента.
@@ -120,9 +120,9 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
     /**
      * Создает индекс следования элементов исходной коллекции в древовидной структуре.
      * @param {Object} options Опции
-     * @param {Array.<Types/Display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
+     * @param {Array.<Types/_display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
      * @param {Map.<Number>} options.childrenMap Cписок "родитель - дети".
-     * @param {Array.<Types/Display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
+     * @param {Array.<Types/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
      * @param {Array.<Number>} options.parentsMap Cписок "ребенок - родитель" (заполняется динамически).
      * @param {Array.<String>} options.path Путь до текущиего узла в дереве (заполняется динамически).
      * @param {String} options.idProperty Имя свойства, в котором хранится идентификатор элемента.
@@ -384,14 +384,14 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
               //region Protected
               /**
          * Возвращает элементы проекции
-         * @return Array.<Types/Display/CollectionItem>
+         * @return Array.<Types/_display/CollectionItem>
          * @protected
          */
         //endregion
         //region Protected
         /**
          * Возвращает элементы проекции
-         * @return Array.<Types/Display/CollectionItem>
+         * @return Array.<Types/_display/CollectionItem>
          * @protected
          */
         AdjacencyList.prototype._getItems = function () {
@@ -503,12 +503,12 @@ define('Types/_display/itemsStrategy/AdjacencyList', [
         };    /**
          * Возращает родителя элемента проекции.
          * @param {Number} index Индекс элемента
-         * @return {Types/Display/CollectionItem} Родитель
+         * @return {Types/_display/CollectionItem} Родитель
          */
         /**
          * Возращает родителя элемента проекции.
          * @param {Number} index Индекс элемента
-         * @return {Types/Display/CollectionItem} Родитель
+         * @return {Types/_display/CollectionItem} Родитель
          */
         AdjacencyList.prototype._getParent = function (index) {
             var parentsMap = this._parentsMap;

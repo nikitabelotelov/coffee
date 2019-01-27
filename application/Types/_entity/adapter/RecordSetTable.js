@@ -1,26 +1,26 @@
 /// <amd-module name="Types/_entity/adapter/RecordSetTable" />
 /**
  * Адаптер для таблицы данных в формате рекордсета.
- * Работает с данными, представленными в виде экземлпяра {@link Types/Collection/RecordSet}.
+ * Работает с данными, представленными в виде экземлпяра {@link Types/_collection/RecordSet}.
  *
  * Создадим адаптер для таблицы:
  * <pre>
- *    requirejs(['Types/Collection/RecordSet', 'Types/Adapter/RecordSetTable'], function(RecordSet, RecordSetTable) {
- *       var ibizasClubs = new RecordSet({
- *             rawData: [
- *                {id: 1, title: 'Amnesia Ibiza'},
- *                {id: 2, title: 'DC-10'},
- *                {id: 3, title: 'Pacha Ibiza'}
- *             ]
- *          }),
- *          clubsAdapter = new RecordSetTable(ibizasClubs);
+ *    requirejs(['Types/collection', 'Types/entity'], function(collection, entity) {
+ *       var ibizasClubs = new collection.RecordSet({
+ *          rawData: [
+ *             {id: 1, title: 'Amnesia Ibiza'},
+ *             {id: 2, title: 'DC-10'},
+ *             {id: 3, title: 'Pacha Ibiza'}
+ *          ]
+ *       });
+ *       var clubsAdapter = new entity.adapter.RecordSet(ibizasClubs);
  *       console.log(clubsAdapter.at(0).get('title'));//'Amnesia Ibiza'
  *    });
  * </pre>
- * @class Types/Adapter/RecordSetTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @mixes Types/Adapter/GenericFormatMixin
+ * @class Types/_entity/adapter/RecordSetTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -39,11 +39,11 @@ define('Types/_entity/adapter/RecordSetTable', [
     function (_super) {
         tslib_1.__extends(RecordSetTable, _super);    /**
          * Конструктор
-         * @param {Types/Collection/RecordSet} data Таблица
+         * @param {Types/_collection/RecordSet} data Таблица
          */
         /**
          * Конструктор
-         * @param {Types/Collection/RecordSet} data Таблица
+         * @param {Types/_collection/RecordSet} data Таблица
          */
         function RecordSetTable(data) {
             var _this = this;

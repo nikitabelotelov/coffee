@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/ObservableMixin" />
 /**
  * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
- * @class Types/Entity/ObservableMixin
+ * @class Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -12,7 +12,7 @@ define('Types/_entity/ObservableMixin', [
 ], function (require, exports, EventBus) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var ObservableMixin    /**@lends Types/Entity/ObservableMixin.prototype */ = /**@lends Types/Entity/ObservableMixin.prototype */
+    var ObservableMixin    /**@lends Types/_entity/ObservableMixin.prototype */ = /**@lends Types/_entity/ObservableMixin.prototype */
     /** @class */
     function () {
         function ObservableMixin(options) {

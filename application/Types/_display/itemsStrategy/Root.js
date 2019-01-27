@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/Root" />
 /**
  * Стратегия-декоратор для формирования корня дерева
- * @class Types/Display/ItemsStrategy/Root
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Root
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/Root', [

@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/User" />
 /**
  * Стратегия-декоратор для пользовательского порядка элементов
- * @class Types/Display/ItemsStrategy/User
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/User
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/User', [
@@ -175,7 +175,7 @@ define('Types/_display/itemsStrategy/User', [
               //region Statics
               /**
          * Создает индекс сортировки в порядке, определенном набором пользовательских обработчиков
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Array.<Number>} current Текущий индекс сортировки
          * @param {Array.<Function>} handlers Пользовательские обработчики для Array.prototype.sort
          * @return {Array.<Number>}
@@ -184,7 +184,7 @@ define('Types/_display/itemsStrategy/User', [
         //region Statics
         /**
          * Создает индекс сортировки в порядке, определенном набором пользовательских обработчиков
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Array.<Number>} current Текущий индекс сортировки
          * @param {Array.<Function>} handlers Пользовательские обработчики для Array.prototype.sort
          * @return {Array.<Number>}

@@ -13,7 +13,7 @@ define('Types/_chain/MappedEnumerator', [
     function () {
         /**
          * Конструктор преобразующего энумератора.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @param {Function(*, Number): *} callback Функция, возвращающая новый элемент.
          * @param {Object} [callbackContext] Контекст вызова callback
          */

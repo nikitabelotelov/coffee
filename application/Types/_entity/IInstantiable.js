@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/IInstantiable" />
 /**
  * Интерфейс получения уникального идентификатора для экземпляра класса
- * @interface Types/Entity/IInstantiable
+ * @interface Types/_entity/IInstantiable
  * @public
  * @author Мальцев А.А.
  */

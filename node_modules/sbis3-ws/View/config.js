@@ -10,7 +10,7 @@ define('View/config', [
          {
             type: 'model_record',
             is: function isModel(ent) {
-               return cInstance.instanceOfModule(ent, 'WS.Data/Entity/Model');
+               return cInstance.instanceOfModule(ent, 'Types/entity:Model');
             },
             calculator: function modelRecordCalculator(prop, root) {
                var val = root.get(prop);

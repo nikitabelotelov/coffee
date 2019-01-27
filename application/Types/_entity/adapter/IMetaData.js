@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/IMetaData" />
 /**
  * Интерфейс адаптера для работы с метаданными
- * @interface Types/Adapter/IMetaData
+ * @interface Types/_entity/adapter/IMetaData
  * @public
  * @author Мальцев А.А.
  */

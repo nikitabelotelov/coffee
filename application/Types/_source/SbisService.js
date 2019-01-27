@@ -4,16 +4,16 @@
  * <br/>
  * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
  * <pre>
- *    require(['Types/Source/SbisService'], function(SbisService) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *          endpoint: 'СообщениеОтКлиента'
  *       });
  *    });
  * </pre>
  * <b>Пример 2</b>. Создадим источник данных для объекта БЛ, используя отдельную точку входа:
  * <pre>
- *    require(['Types/Source/SbisService'], function(SbisService) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *          endpoint: {
  *             address: '/my-service/entry/point/',
  *             contract: 'СообщениеОтКлиента'
@@ -23,8 +23,8 @@
  * </pre>
  * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка записей, а также свой формат записи:
  * <pre>
- *    require(['Types/Source/SbisService'], function(SbisService) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *          endpoint: 'СообщениеОтКлиента',
  *          binding: {
  *             read: 'Прочитать',
@@ -37,8 +37,8 @@
  * </pre>
  * <b>Пример 4</b>. Создадим новую статью:
  * <pre>
- *    require(['Types/Source/SbisService'], function(SbisService) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *          endpoint: 'Статья',
  *          idProperty: 'id'
  *       });
@@ -52,8 +52,8 @@
  * </pre>
  * <b>Пример 5</b>. Прочитаем статью:
  * <pre>
- *    require(['Types/Source/SbisService'], function(SbisService) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *          endpoint: 'Статья',
  *          idProperty: 'id'
  *       });
@@ -67,13 +67,13 @@
  * </pre>
  * <b>Пример 6</b>. Сохраним статью:
  * <pre>
- *    require(['Types/Source/SbisService', 'Types/Entity/Model', , 'Types/Adapter/Sbis'], function(SbisService, Model, SbisAdapter) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source', 'Types/entity'], function(source, entity) {
+ *       var dataSource = new source.SbisService({
  *             endpoint: 'Статья',
  *             idProperty: 'id'
  *          }),
- *          article = new Model({
- *             adapter: new SbisAdapter(),
+ *          article = new entity.Model({
+ *             adapter: new entity.adapter.Sbis(),
  *             format: [
  *                {name: 'id', type: 'integer'},
  *                {name: 'title', type: 'string'}
@@ -95,8 +95,8 @@
  * </pre>
  * <b>Пример 7</b>. Удалим статью:
  * <pre>
- *    require(['Types/Source/SbisService'], function(SbisService) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *          endpoint: 'Статья',
  *          idProperty: 'id'
  *       });
@@ -110,11 +110,11 @@
  * </pre>
  * <b>Пример 8</b>. Прочитаем первые сто статей:
  * <pre>
- *    require(['Types/Source/SbisService', 'Types/Query/Query'], function(SbisService, Query) {
- *       var dataSource = new SbisService({
+ *    require(['Types/source'], function(source) {
+ *       var dataSource = new source.SbisService({
  *             endpoint: 'Статья'
  *          }),
- *          query = new Query();
+ *          query = new source.Query();
  *
  *       query.limit(100);
  *       dataSource.query(query).addCallbacks(function(dataSet) {
@@ -125,8 +125,8 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/SbisService
- * @extends Types/Source/Rpc
+ * @class Types/_source/SbisService
+ * @extends Types/_source/Rpc
  * @public
  * @author Мальцев А.А.
  */
@@ -241,7 +241,7 @@ define('Types/_source/SbisService', [
         return groups;
     }    /**
      * Calls destroy method for some BL-Object
-     * @param {Types/Source/SbisService} instance Экземпляр SbisService
+     * @param {Types/_source/SbisService} instance Экземпляр SbisService
      * @param {Array.<String>} ids Идентификаторы удаляемых записей
      * @param {String} name Имя объекта БЛ
      * @param {Object} meta Дополнительные данные
@@ -249,7 +249,7 @@ define('Types/_source/SbisService', [
      */
     /**
      * Calls destroy method for some BL-Object
-     * @param {Types/Source/SbisService} instance Экземпляр SbisService
+     * @param {Types/_source/SbisService} instance Экземпляр SbisService
      * @param {Array.<String>} ids Идентификаторы удаляемых записей
      * @param {String} name Имя объекта БЛ
      * @param {Object} meta Дополнительные данные
@@ -259,15 +259,15 @@ define('Types/_source/SbisService', [
         return instance._callProvider(instance._$endpoint.contract === name ? instance._$binding.destroy : name + '.' + instance._$binding.destroy, instance._$passing.destroy.call(instance, ids, meta));
     }    /**
      * Строит запись из объекта
-     * @param {Object|Types/Entity/Record} data Данные полей записи
-     * @param {Types/Adapter/IAdapter} adapter Адаптер
-     * @return {Types/Entity/Record|null}
+     * @param {Object|Types/_entity/Record} data Данные полей записи
+     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
+     * @return {Types/_entity/Record|null}
      */
     /**
      * Строит запись из объекта
-     * @param {Object|Types/Entity/Record} data Данные полей записи
-     * @param {Types/Adapter/IAdapter} adapter Адаптер
-     * @return {Types/Entity/Record|null}
+     * @param {Object|Types/_entity/Record} data Данные полей записи
+     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
+     * @return {Types/_entity/Record|null}
      */
     function buildRecord(data, adapter) {
         var Record = di_1.resolve('Types/entity:Record');
@@ -275,17 +275,17 @@ define('Types/_source/SbisService', [
     }
     exports.buildRecord = buildRecord;    /**
      * Строит рекодсет из массива
-     * @param {Array.<Object>|Types/Collection/RecordSet} data Данные рекордсета
-     * @param {Types/Adapter/IAdapter} adapter Адаптер
+     * @param {Array.<Object>|Types/_collection/RecordSet} data Данные рекордсета
+     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
      * @param {String} idProperty
-     * @return {Types/Collection/RecordSet|null}
+     * @return {Types/_collection/RecordSet|null}
      */
     /**
      * Строит рекодсет из массива
-     * @param {Array.<Object>|Types/Collection/RecordSet} data Данные рекордсета
-     * @param {Types/Adapter/IAdapter} adapter Адаптер
+     * @param {Array.<Object>|Types/_collection/RecordSet} data Данные рекордсета
+     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
      * @param {String} idProperty
-     * @return {Types/Collection/RecordSet|null}
+     * @return {Types/_collection/RecordSet|null}
      */
     function buildRecordSet(data, adapter, idProperty) {
         if (data === null) {
@@ -307,12 +307,12 @@ define('Types/_source/SbisService', [
     }
     exports.buildRecordSet = buildRecordSet;    /**
      * Возвращает параметры сортировки
-     * @param {Types/Query/Query} query Запрос
+     * @param {Types/_source/Query} query Запрос
      * @return {Array|null}
      */
     /**
      * Возвращает параметры сортировки
-     * @param {Types/Query/Query} query Запрос
+     * @param {Types/_source/Query} query Запрос
      * @return {Array|null}
      */
     function getSortingParams(query) {
@@ -337,16 +337,16 @@ define('Types/_source/SbisService', [
     }
     exports.getSortingParams = getSortingParams;    /**
      * Возвращает параметры навигации
-     * @param {Types/Query/Query} query Запрос
+     * @param {Types/_source/Query} query Запрос
      * @param {Object} options Опции источника
-     * @param {Types/Adapter/IAdapter} adapter Адаптер
+     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
      * @return {Object|null}
      */
     /**
      * Возвращает параметры навигации
-     * @param {Types/Query/Query} query Запрос
+     * @param {Types/_source/Query} query Запрос
      * @param {Object} options Опции источника
-     * @param {Types/Adapter/IAdapter} adapter Адаптер
+     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
      * @return {Object|null}
      */
     function getPagingParams(query, options, adapter) {
@@ -426,12 +426,12 @@ define('Types/_source/SbisService', [
     }
     exports.getPagingParams = getPagingParams;    /**
      * Возвращает дополнительные параметры
-     * @param {Types/Query/Query} query Запрос
+     * @param {Types/_source/Query} query Запрос
      * @return {Array}
      */
     /**
      * Возвращает дополнительные параметры
-     * @param {Types/Query/Query} query Запрос
+     * @param {Types/_source/Query} query Запрос
      * @return {Array}
      */
     function getAdditionalParams(query) {
@@ -455,7 +455,7 @@ define('Types/_source/SbisService', [
                 meta = arr;
             }
             if (!(meta instanceof Array)) {
-                throw new TypeError('Types/Source/SbisService::getAdditionalParams(): unsupported metadata type: only Array, Types/Entity/Record or Object allowed');
+                throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type: only Array, Types/_entity/Record or Object allowed');
             }
         }
         return meta;
@@ -495,13 +495,13 @@ define('Types/_source/SbisService', [
         return args;
     }    /**
      * Возвращает аргументы метода пакетного обновления рекордсета
-     * @param {Types/Collection/RecordSet} items Обновляемый рекордсет
+     * @param {Types/_collection/RecordSet} items Обновляемый рекордсет
      * @return {Object}
      * @protected
      */
     /**
      * Возвращает аргументы метода пакетного обновления рекордсета
-     * @param {Types/Collection/RecordSet} items Обновляемый рекордсет
+     * @param {Types/_collection/RecordSet} items Обновляемый рекордсет
      * @return {Object}
      * @protected
      */
@@ -562,7 +562,7 @@ define('Types/_source/SbisService', [
         };
     }    /**
      * Calls move method in old style
-     * @param {Types/Source/SbisService} instance Экземпляр SbisService
+     * @param {Types/_source/SbisService} instance Экземпляр SbisService
      * @param {String} from Идентификатор перемещаемой записи
      * @param {String} to Идентификатор целевой записи
      * @param {Object} meta Дополнительные данные
@@ -570,7 +570,7 @@ define('Types/_source/SbisService', [
      */
     /**
      * Calls move method in old style
-     * @param {Types/Source/SbisService} instance Экземпляр SbisService
+     * @param {Types/_source/SbisService} instance Экземпляр SbisService
      * @param {String} from Идентификатор перемещаемой записи
      * @param {String} to Идентификатор целевой записи
      * @param {Object} meta Дополнительные данные
@@ -590,8 +590,8 @@ define('Types/_source/SbisService', [
     }
     var SbisService = /** @class */
     function (_super) {
-        tslib_1.__extends(SbisService, _super);    /** @lends Types/Source/SbisService.prototype */
-        /** @lends Types/Source/SbisService.prototype */
+        tslib_1.__extends(SbisService, _super);    /** @lends Types/_source/SbisService.prototype */
+        /** @lends Types/_source/SbisService.prototype */
         function SbisService(options) {
             var _this = _super.call(this, options) || this;
             if (!_this._$endpoint.moveContract) {
@@ -609,14 +609,14 @@ define('Types/_source/SbisService', [
               //region ICrud
               /**
          * Создает пустую модель через источник данных
-         * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-         * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Entity/Model}, в случае ошибки - Error.
-         * @see Types/Source/ICrud#create
+         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+         * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
+         * @see Types/_source/ICrud#create
          * @example
          * Создадим нового сотрудника:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *        var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *        var dataSource = new source.SbisService({
          *           endpoint: 'Сотрудник',
          *           idProperty: '@Сотрудник'
          *        });
@@ -629,8 +629,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Создадим нового сотрудника по формату:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *        var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *        var dataSource = new source.SbisService({
          *           endpoint: 'Сотрудник',
          *           idProperty: '@Сотрудник',
          *           binding: {
@@ -649,14 +649,14 @@ define('Types/_source/SbisService', [
         //region ICrud
         /**
          * Создает пустую модель через источник данных
-         * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-         * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Entity/Model}, в случае ошибки - Error.
-         * @see Types/Source/ICrud#create
+         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+         * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
+         * @see Types/_source/ICrud#create
          * @example
          * Создадим нового сотрудника:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *        var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *        var dataSource = new source.SbisService({
          *           endpoint: 'Сотрудник',
          *           idProperty: '@Сотрудник'
          *        });
@@ -669,8 +669,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Создадим нового сотрудника по формату:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *        var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *        var dataSource = new source.SbisService({
          *           endpoint: 'Сотрудник',
          *           idProperty: '@Сотрудник',
          *           binding: {
@@ -781,8 +781,8 @@ define('Types/_source/SbisService', [
             configurable: true
         });
         return SbisService;
-    }(Rpc_1.default    /** @lends Types/Source/SbisService.prototype */);
-    /** @lends Types/Source/SbisService.prototype */
+    }(Rpc_1.default    /** @lends Types/_source/SbisService.prototype */);
+    /** @lends Types/_source/SbisService.prototype */
     exports.default = SbisService;
     SbisService.prototype['[Types/_source/SbisService]'] = true;
     SbisService.prototype._moduleName = 'Types/source:SbisService';    // @ts-ignore
@@ -790,12 +790,12 @@ define('Types/_source/SbisService', [
     SbisService.prototype._$binding = {
         /**
          * @cfg {String} Имя метода для создания записи через {@link create}.
-         * @name Types/Source/SbisService#binding.create
+         * @name Types/_source/SbisService#binding.create
          * @example
          * Зададим свою реализацию для метода create:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             create: 'МойМетодСоздать'
@@ -805,8 +805,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Зададим реализацию для метода create на другом объекте БЛ:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             create: 'Персонал.Создать'
@@ -818,12 +818,12 @@ define('Types/_source/SbisService', [
         create: 'Создать',
         /**
          * @cfg {String} Имя метода для чтения записи через {@link read}.
-         * @name Types/Source/SbisService#binding.read
+         * @name Types/_source/SbisService#binding.read
          * @example
          * Зададим свою реализацию для метода read:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             read: 'МойМетодПрочитать'
@@ -833,8 +833,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Зададим реализацию для метода create на другом объекте БЛ:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             read: 'Персонал.Прочитать'
@@ -846,12 +846,12 @@ define('Types/_source/SbisService', [
         read: 'Прочитать',
         /**
          * @cfg {String} Имя метода для обновления записи или рекордсета через {@link update}.
-         * @name Types/Source/SbisService#binding.update
+         * @name Types/_source/SbisService#binding.update
          * @example
          * Зададим свою реализацию для метода update:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             update: 'МойМетодЗаписать'
@@ -861,8 +861,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Зададим реализацию для метода update на другом объекте БЛ:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             update: 'Персонал.Записать'
@@ -880,17 +880,17 @@ define('Types/_source/SbisService', [
          * RecordSet added,
          * Array<Sting|Number> removed
          * Где changed - измененные записи, added - добавленные записи, removed - ключи удаленных записей.
-         * @name Types/Source/SbisService#binding.updateBatch
+         * @name Types/_source/SbisService#binding.updateBatch
          */
         updateBatch: '',
         /**
          * @cfg {String} Имя метода для удаления записи через {@link destroy}.
-         * @name Types/Source/SbisService#binding.destroy
+         * @name Types/_source/SbisService#binding.destroy
          * @example
          * Зададим свою реализацию для метода destroy:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             destroy: 'МойМетодУдалить'
@@ -900,8 +900,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Зададим реализацию для метода destroy на другом объекте БЛ:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             destroy: 'Персонал.Удалить'
@@ -913,12 +913,12 @@ define('Types/_source/SbisService', [
         destroy: 'Удалить',
         /**
          * @cfg {String} Имя метода для получения списка записей через {@link query}.
-         * @name Types/Source/SbisService#binding.query
+         * @name Types/_source/SbisService#binding.query
          * @example
          * Зададим свою реализацию для метода query:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             query: 'МойСписок'
@@ -928,8 +928,8 @@ define('Types/_source/SbisService', [
          * </pre>
          * Зададим реализацию для метода query на другом объекте БЛ:
          * <pre>
-         *    require(['Types/Source/SbisService'], function(SbisService) {
-         *       var dataSource = new SbisService({
+         *    require(['Types/source'], function(source) {
+         *       var dataSource = new source.SbisService({
          *          endpoint: 'Сотрудник',
          *          binding: {
          *             query: 'Персонал.Список'
@@ -941,24 +941,24 @@ define('Types/_source/SbisService', [
         query: 'Список',
         /**
          * @cfg {String} Имя метода для копирования записей через {@link copy}.
-         * @name Types/Source/SbisService#binding.copy
+         * @name Types/_source/SbisService#binding.copy
          */
         copy: 'Копировать',
         /**
          * @cfg {String} Имя метода для объединения записей через {@link merge}.
-         * @name Types/Source/SbisService#binding.merge
+         * @name Types/_source/SbisService#binding.merge
          */
         merge: 'Объединить',
         /**
          * @cfg {String} Имя метода перемещения записи перед указанной через метод {@link move}.
          * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы Прочитать(read) и Записать(Update)
          * они обязательно должны быть у объекта БЛ.
-         * @name Types/Source/SbisService#binding.move
+         * @name Types/_source/SbisService#binding.move
          */
         move: 'Move',
         /**
          * @cfg {String} Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
-         * @name Types/Source/SbisService#binding.format
+         * @name Types/_source/SbisService#binding.format
          */
         format: ''
     };    // @ts-ignore
@@ -966,71 +966,71 @@ define('Types/_source/SbisService', [
     SbisService.prototype._$passing = {
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-         * @name Types/Source/BindingMixin#passing.create
+         * @name Types/_source/BindingMixin#passing.create
          */
         create: passCreate,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-         * @name Types/Source/BindingMixin#passing.read
+         * @name Types/_source/BindingMixin#passing.read
          */
         read: passRead,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-         * @name Types/Source/BindingMixin#passing.update
+         * @name Types/_source/BindingMixin#passing.update
          */
         update: passUpdate,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-         * @name Types/Source/BindingMixin#passing.destroy
+         * @name Types/_source/BindingMixin#passing.destroy
          */
         destroy: passDestroy,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-         * @name Types/Source/BindingMixin#passing.query
+         * @name Types/_source/BindingMixin#passing.query
          */
         query: passQuery,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-         * @name Types/Source/BindingMixin#passing.copy
+         * @name Types/_source/BindingMixin#passing.copy
          */
         copy: passCopy,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-         * @name Types/Source/BindingMixin#passing.merge
+         * @name Types/_source/BindingMixin#passing.merge
          */
         merge: passMerge,
         /**
          * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-         * @name Types/Source/BindingMixin#passing.move
+         * @name Types/_source/BindingMixin#passing.move
          */
         move: passMove
     };    /**
-     * @cfg {String|Function|Types/Adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/Adapter/Sbis}.
-     * @name Types/Source/SbisService#adapter
+     * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
+     * @name Types/_source/SbisService#adapter
      * @see getAdapter
-     * @see Types/Adapter/Sbis
-     * @see Types/Di
+     * @see Types/_entity/adapter/Sbis
+     * @see Types/di
      */
           // @ts-ignore
     /**
-     * @cfg {String|Function|Types/Adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/Adapter/Sbis}.
-     * @name Types/Source/SbisService#adapter
+     * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
+     * @name Types/_source/SbisService#adapter
      * @see getAdapter
-     * @see Types/Adapter/Sbis
-     * @see Types/Di
+     * @see Types/_entity/adapter/Sbis
+     * @see Types/di
      */
     // @ts-ignore
     SbisService.prototype._$adapter = 'Types/entity:adapter.Sbis';    /**
-     * @cfg {String|Function|Types/Source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/Source/Provider/SbisBusinessLogic}.
-     * @name Types/Source/SbisService#provider
-     * @see Types/Source/Rpc#provider
+     * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
+     * @name Types/_source/SbisService#provider
+     * @see Types/_source/Rpc#provider
      * @see getProvider
-     * @see Types/Di
+     * @see Types/di
      * @example
      * Используем провайдер нотификатора:
      * <pre>
-     *    require(['Types/Source/SbisService', 'Plugin/DataSource/Provider/SbisPlugin'], function (SbisService, SbisPluginProvider) {
-     *       var dataSource = new SbisService({
+     *    require(['Types/source', 'Plugin/DataSource/Provider/SbisPlugin'], function (source SbisPluginProvider) {
+     *       var dataSource = new source.SbisService({
      *          endpoint: 'Сотрудник',
      *          provider: new SbisPluginProvider()
      *       });
@@ -1039,16 +1039,16 @@ define('Types/_source/SbisService', [
      */
                                                                       // @ts-ignore
     /**
-     * @cfg {String|Function|Types/Source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/Source/Provider/SbisBusinessLogic}.
-     * @name Types/Source/SbisService#provider
-     * @see Types/Source/Rpc#provider
+     * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
+     * @name Types/_source/SbisService#provider
+     * @see Types/_source/Rpc#provider
      * @see getProvider
-     * @see Types/Di
+     * @see Types/di
      * @example
      * Используем провайдер нотификатора:
      * <pre>
-     *    require(['Types/Source/SbisService', 'Plugin/DataSource/Provider/SbisPlugin'], function (SbisService, SbisPluginProvider) {
-     *       var dataSource = new SbisService({
+     *    require(['Types/source', 'Plugin/DataSource/Provider/SbisPlugin'], function (source SbisPluginProvider) {
+     *       var dataSource = new source.SbisService({
      *          endpoint: 'Сотрудник',
      *          provider: new SbisPluginProvider()
      *       });
@@ -1058,13 +1058,13 @@ define('Types/_source/SbisService', [
     // @ts-ignore
     SbisService.prototype._$provider = 'Types/source:provider.SbisBusinessLogic';    /**
      * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
-     * @name Types/Source/SbisService#orderProperty
+     * @name Types/_source/SbisService#orderProperty
      * @see move
      */
                                                                                      // @ts-ignore
     /**
      * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
-     * @name Types/Source/SbisService#orderProperty
+     * @name Types/_source/SbisService#orderProperty
      * @see move
      */
     // @ts-ignore
@@ -1072,13 +1072,13 @@ define('Types/_source/SbisService', [
     // @ts-ignore
     SbisService.prototype._$options = OptionsMixin_1.default.addOptions(Rpc_1.default, {
         /**
-         * @cfg {String} Название свойства мета-данных {@link Types/Query/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
-         * @name Types/Source/SbisService#options.hasMoreProperty
+         * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
+         * @name Types/_source/SbisService#options.hasMoreProperty
          */
         hasMoreProperty: 'hasMore'
     });    //Also add SBIS adapter to lazy loaded dependencies
     //Also add SBIS adapter to lazy loaded dependencies
-    SbisService.prototype._additionalDependencies = Rpc_1.default.prototype._additionalDependencies.slice();    //SbisService.prototype._additionalDependencies.push('Types/Adapter/Sbis');
-    //SbisService.prototype._additionalDependencies.push('Types/Adapter/Sbis');
+    SbisService.prototype._additionalDependencies = Rpc_1.default.prototype._additionalDependencies.slice();    //SbisService.prototype._additionalDependencies.push('Types/_entity/adapter/Sbis');
+    //SbisService.prototype._additionalDependencies.push('Types/_entity/adapter/Sbis');
     di_1.register('Types/source:SbisService', SbisService, { instantiate: false });
 });

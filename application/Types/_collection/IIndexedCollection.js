@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/IIndexedCollection" />
 /**
  * Интерфейс коллекции с поиском элементов по значению свойств.
- * @interface Types/Collection/IIndexedCollection
+ * @interface Types/_collection/IIndexedCollection
  * @author Мальцев А.А.
  * @public
  */

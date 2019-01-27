@@ -1,75 +1,102 @@
-/**
- * Created by dv.zuev on 17.04.2018.
- */
-define('View/Logger', [
-   'Transport/URL/getQueryParam',
-   'Core/IoC'
-], function(
-   getQueryParam,
-   IoC
-) {
+define('View/Logger', [], function() {
    var
-      loggerStatus = getQueryParam('viewLogger') === 'true',
-      msgLevel = getQueryParam('viewLoggerLevel') || 0,
-      statusOverride = false;
+      viewLoggerRegexp = /[?&]viewLogger=([^&]*)/i,
+      viewLoggerLevelRegexp = /[?&]viewLoggerLevel=([^&]*)/i;
 
-   return {
-      setLoggerStatus: function(status, applyOnServer) {
-         loggerStatus = status;
-         if (!status || applyOnServer) {
-            // setLoggerStatus(false) always disables logger, but
-            // setLoggerStatus(true) only enables logger on server
-            // if applyOnServer is true
-            statusOverride = status;
-         }
-      },
 
-      getLoggerStatus: function() {
-         if (statusOverride) {
-            // statusOverride takes priority
-            return true;
-         }
-         if (typeof window !== 'undefined') {
-            // on client logger can be enabled and disabled normally
-            // by changing loggerStatus
-            return loggerStatus;
-         }
+   function ViewLogger() {
+      this._loggerStatus = this._isLoggedUrl();
+      this._msgLevel = this._getLoggerLevelFromUrl();
+      this._statusOverride = false;
 
-         // on server loggerStatus does not matter, logging depends on viewLogger
-         // query param (if statusOverride is not enabled)
-         return getQueryParam('viewLogger') === 'true';
-      },
+      var global = (function() {
+         return this || (0, eval)('this'); // eslint-disable-line no-eval
+      }());
+      this._console = global ? global.console : null;
+   }
 
-      setMsgLevel: function(level) {
-         msgLevel = level;
-      },
+   ViewLogger.prototype.getLoggerStatus = function() {
+      if (this._statusOverride) {
+         // statusOverride takes priority
+         return true;
+      }
 
-      catchLifeCircleErrors: function catchLifeCircleErrors(hookName, error) {
-         IoC.resolve("ILogger").error("LIFECYCLE ERROR. HOOK NAME: " + hookName, error, error);
-      },
+      if (typeof window !== 'undefined') {
+         // on client logger can be enabled and disabled normally
+         // by changing loggerStatus
+         return this._loggerStatus;
+      }
 
-      /*
-      * msg - array
-      * 0: info
-      * 1: debugging info
-      * 2: debugging additional info
-      * */
-      log: function(process, msg) {
-         if (this.getLoggerStatus()) {
-            for (var i = 0; i <= msgLevel && i < msg.length; i++) {
-               if (msg[i]) {
-                  if (typeof window !== 'undefined') {
-                     /*
-                     * Can't use IoC here
-                     * IoC convert all mesages to string
-                     * */
-                     window['console'].log('View logger [' + process + ']', msg[i]);
-                  } else if (typeof msg[i] === 'string') {
-                     IoC.resolve('ILogger').log('View logger [' + process + ']', msg[i]);
-                  }
-               }
+      // on server loggerStatus does not matter, logging depends on viewLogger
+      // query param (if statusOverride is not enabled)
+      return this._isLoggedUrl();
+   };
+
+   ViewLogger.prototype.setLoggerStatus = function(status, applyOnServer) {
+      this._loggerStatus = status;
+      if (!status || applyOnServer) {
+         // setLoggerStatus(false) always disables logger, but
+         // setLoggerStatus(true) only enables logger on server
+         // if applyOnServer is true
+         this._statusOverride = status;
+      }
+   };
+
+   ViewLogger.prototype.setMsgLevel = function(level) {
+      this._msgLevel = level;
+   };
+
+   ViewLogger.prototype.catchLifeCircleErrors = function(hookName, error) {
+      this._errorToConsole('LIFECYCLE ERROR. HOOK NAME: ' + hookName, error, error);
+   };
+
+   ViewLogger.prototype.log = function(processName, msg) {
+      if (this.getLoggerStatus()) {
+         for (var i = 0; i <= this._msgLevel && i < msg.length; i++) {
+            if (msg[i]) {
+               this._logToConsole('View logger [' + processName + ']', msg[i]);
             }
          }
       }
    };
+
+   ViewLogger.prototype._isLoggedUrl = function() {
+      return this._getQueryParam('viewLogger', viewLoggerRegexp) === 'true';
+   };
+
+   ViewLogger.prototype._getLoggerLevelFromUrl = function() {
+      var level = this._getQueryParam('viewLoggerLevel', viewLoggerLevelRegexp);
+      if (level) {
+         return Number.parseInt(level, 10);
+      }
+      return 0;
+   };
+
+   ViewLogger.prototype._getQueryParam = function(paramName, paramRegexp) {
+      var req = typeof process !== 'undefined' && process.domain && process.domain.req;
+      if (req && req.query) {
+         return req.query[paramName];
+      }
+      if (window && window.location) {
+         var match = window.location.search.match(paramRegexp);
+         return match && match[1];
+      }
+      return null;
+   };
+
+   ViewLogger.prototype._logToConsole = function() {
+      if (this._console && this._console.log) {
+         this._console.log.apply(this._console, arguments);
+      }
+   };
+
+   ViewLogger.prototype._errorToConsole = function() {
+      if (this._console && this._console.error) {
+         this._console.error.apply(this._console, arguments);
+      } else {
+         this._logToConsole.apply(this, arguments);
+      }
+   };
+
+   return new ViewLogger();
 });

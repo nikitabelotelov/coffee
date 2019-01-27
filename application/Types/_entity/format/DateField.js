@@ -9,8 +9,8 @@
  *       type: 'date'
  *    };
  * </pre>
- * @class Types/Format/DateField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/DateField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -25,8 +25,8 @@ define('Types/_entity/format/DateField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var DateField = /** @class */
     function (_super) {
-        tslib_1.__extends(DateField, _super);    /** @lends Types/Format/DateField.prototype */
-        /** @lends Types/Format/DateField.prototype */
+        tslib_1.__extends(DateField, _super);    /** @lends Types/_entity/format/DateField.prototype */
+        /** @lends Types/_entity/format/DateField.prototype */
         function DateField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -38,8 +38,8 @@ define('Types/_entity/format/DateField', [
             return this._$defaultValue;
         };
         return DateField;
-    }(Field_1.default    /** @lends Types/Format/DateField.prototype */);
-    /** @lends Types/Format/DateField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/DateField.prototype */);
+    /** @lends Types/_entity/format/DateField.prototype */
     exports.default = DateField;
     DateField.prototype['[Types/_entity/format/DateField]'] = true;
     DateField.prototype._moduleName = 'Types/entity:format.DateField';

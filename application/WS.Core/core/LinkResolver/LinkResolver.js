@@ -26,8 +26,6 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
          var fullResourcePath = '';
          if (appRoot && !(resourceRoot && ~resourceRoot.indexOf(appRoot))) {
             fullResourcePath += '/' + appRoot + '/';
-         } else if(appRoot) {
-            this.resourceRootFolder = resourceRoot.split(appRoot)[1];
          }
          if (resourceRoot) {
             fullResourcePath += '/' + resourceRoot + '/';
@@ -38,22 +36,29 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
       },
       resolveLinkTemplated: function(url) {
          var res = url;
-         res = this.resolveOldLink(url);
+         res = this.fixOldAndBundles(url);
          if(!~url.indexOf('%')) {
             res = this.originResourceRoot + res;
          }
          return res;
       },
       initPaths: function(reqPaths) {
-         reqPaths = reqPaths || requirejs.s.contexts._.config.paths;
+         var reqPaths = reqPaths || requirejs.s.contexts._.config.paths;
          var paths = {};
          var name;
+         var baseUrl = this.resourceRoot;
+         if(typeof wsConfig !== 'undefined') {
+            // TODO something with this code
+            if(wsConfig._baseUrl && wsConfig._baseUrl.length > this.resourceRoot.length) {
+               baseUrl = wsConfig._baseUrl;
+            }
+         }
          for(var key in reqPaths) {
             name = reqPaths[key];
             if(name.indexOf('/') !== 0) {
                name = '/' + name;
             }
-            name = name.split(this.resourceRootFolder)[1];
+            name = name.split(baseUrl)[1];
             paths[key] = name;
          }
          this.paths = paths;
@@ -72,7 +77,7 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
             return true;
          }
       },
-      resolveOldLink: function(name) {
+      fixOldAndBundles: function(name) {
          var res = name;
          var replaceKey = '';
          for (var key in this.paths) {
@@ -96,7 +101,7 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
             return this.getLinkWithExt(this.resolveLinkTemplated(link), ext);
          }
          var res = link;
-         res = this.resolveOldLink(res);
+         res = this.fixOldAndBundles(res);
          res = this.getLinkWithResourceRoot(res);
          res = this.getLinkWithExt(res, ext, !this.isDebug);
          res = getResourceUrl(res);

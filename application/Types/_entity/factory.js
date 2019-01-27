@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/factory" />
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
- * @class Types/Factory
+ * @class Types/_entity/factory
  * @public
  * @author Мальцев А.А.
  */
@@ -12,10 +12,9 @@ define('Types/_entity/factory', [
     'Types/di',
     'Types/_entity/date/toSql',
     'Types/_entity/date/fromSql',
-    'Core/core-instance',
     'Core/TimeInterval',
     'Core/defaultRenders'
-], function (require, exports, format_1, di_1, toSql_1, fromSql_1, coreInstance, CoreTimeInterval, renders) {
+], function (require, exports, format_1, di_1, toSql_1, fromSql_1, CoreTimeInterval, renders) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * @const {RegExp} Выделяет временную зону в строковом представлении Date
@@ -25,12 +24,12 @@ define('Types/_entity/factory', [
      */
     var SQL_TIME_ZONE = /[+-][0-9]+$/;    /**
      * Возвращает словарь для поля типа "Словарь"
-     * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {Array}
      */
     /**
      * Возвращает словарь для поля типа "Словарь"
-     * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {Array}
      */
     function getDictionary(format) {
@@ -103,12 +102,12 @@ define('Types/_entity/factory', [
         return value;
     }    /**
      * Возвращает название типа поля
-     * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
      * @return {String}
      */
     /**
      * Возвращает название типа поля
-     * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
      * @return {String}
      */
     function getTypeName(format) {
@@ -121,12 +120,12 @@ define('Types/_entity/factory', [
         return ('' + type).toLowerCase();
     }    /**
      * Возвращает признак указания временной зоны для поля типа "Дата и время"
-     * @param {Types/Format/DateTimeField|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/DateTimeField|Types/_entity/format/UniversalField} format Формат поля
      * @return {Number}
      */
     /**
      * Возвращает признак указания временной зоны для поля типа "Дата и время"
-     * @param {Types/Format/DateTimeField|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/DateTimeField|Types/_entity/format/UniversalField} format Формат поля
      * @return {Number}
      */
     function isWithoutTimeZone(format) {
@@ -136,12 +135,12 @@ define('Types/_entity/factory', [
         return format instanceof format_1.DateTimeField ? format.isWithoutTimeZone() : format.meta && format.meta.withoutTimeZone;
     }    /**
      * Возвращает признак "Большие деньги"
-     * @param {Types/Format/MoneyField|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/MoneyField|Types/_entity/format/UniversalField} format Формат поля
      * @return {Boolean}
      */
     /**
      * Возвращает признак "Большие деньги"
-     * @param {Types/Format/MoneyField|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/MoneyField|Types/_entity/format/UniversalField} format Формат поля
      * @return {Boolean}
      */
     function isLargeMoney(format) {
@@ -151,12 +150,12 @@ define('Types/_entity/factory', [
         return format instanceof format_1.MoneyField ? format.isLarge() : format.meta && format.meta.large;
     }    /**
      * Возвращает точность для поля типа "Вещественное число"
-     * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {Number}
      */
     /**
      * Возвращает точность для поля типа "Вещественное число"
-     * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {Number}
      */
     function getPrecision(format) {
@@ -166,24 +165,24 @@ define('Types/_entity/factory', [
         return (format.getPrecision ? format.getPrecision() : format.meta && format.meta.precision) || 0;
     }    /**
      * Возвращает тип элементов для поля типа "Массив"
-     * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {String}
      */
     /**
      * Возвращает тип элементов для поля типа "Массив"
-     * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {String}
      */
     function getKind(format) {
         return (format.getKind ? format.getKind() : format.meta && format.meta.kind) || '';
     }    /**
      * Сериализует поле флагов
-     * @param {Types/Type/Flags} data
+     * @param {Types/_collectionFlags} data
      * @return {Array.<Boolean>}
      */
     /**
      * Сериализует поле флагов
-     * @param {Types/Type/Flags} data
+     * @param {Types/_collectionFlags} data
      * @return {Array.<Boolean>}
      */
     function serializeFlags(data) {
@@ -194,19 +193,19 @@ define('Types/_entity/factory', [
         return d;
     }    /**
      * Конвертирует список записей в рекордсет
-     * @param {Types/Collection/List} list Список
-     * @return {Types/Collection/RecordSet}
+     * @param {Types/_collection/List} list Список
+     * @return {Types/_collection/RecordSet}
      */
     /**
      * Конвертирует список записей в рекордсет
-     * @param {Types/Collection/List} list Список
-     * @return {Types/Collection/RecordSet}
+     * @param {Types/_collection/List} list Список
+     * @return {Types/_collection/RecordSet}
      */
     function convertListToRecordSet(list) {
         var adapter = 'Types/entity:adapter.Json', count = list.getCount(), record, i;
         for (i = 0; i < count; i++) {
-            record = list.at(i);    //Check for Types/Entity/Record
-            //Check for Types/Entity/Record
+            record = list.at(i);    //Check for Types/_entity/Record
+            //Check for Types/_entity/Record
             if (record && record['[Types/_entity/IObject]'] && record['[Types/_entity/FormattableMixin]']) {
                 adapter = record.getAdapter();
                 break;
@@ -354,11 +353,11 @@ define('Types/_entity/factory', [
                     value = value.get();
                 } else if (value['[Types/_collection/IList]'] && type === 'recordset') {
                     value = convertListToRecordSet(value);
-                } else if (coreInstance.instanceOfModule(value, 'Deprecated/Record')) {
+                } else if (value._moduleName === 'Deprecated/Record') {
                     throw new TypeError('Deprecated/Record can\'t be used with "Data"');
-                } else if (coreInstance.instanceOfModule(value, 'Deprecated/RecordSet')) {
+                } else if (value._moduleName === 'Deprecated/RecordSet') {
                     throw new TypeError('Deprecated/RecordSet can\'t be used with "Data"');
-                } else if (coreInstance.instanceOfModule(value, 'Deprecated/Enum')) {
+                } else if (value._moduleName === 'Deprecated/Enum') {
                     throw new TypeError('Deprecated/Enum can\'t be used with "Data"');
                 }
             }

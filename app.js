@@ -17,7 +17,7 @@ EXIT_CODES = {
    ERROR: 2
 };
 
-const requirejs = require(path.join(root, 'node_modules', 'sbis3-ws', 'WS.Core', 'ext', 'requirejs', 'r.js'));
+var requirejs = require(path.join(root, 'node_modules', 'saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
 
 

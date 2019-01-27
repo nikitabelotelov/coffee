@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/Indexer" />
 /**
  * Индексатор коллекции
- * @class Types/Collection/Indexer
+ * @class Types/_collection/Indexer
  * @public
  * @author Мальцев А.А.
  */
@@ -38,7 +38,7 @@ define('Types/_collection/Indexer', [
         }
         return position;
     }
-    var Indexer    /** @lends Types/Collection/Indexer.prototype */ = /** @lends Types/Collection/Indexer.prototype */
+    var Indexer    /** @lends Types/_collection/Indexer.prototype */ = /** @lends Types/_collection/Indexer.prototype */
     /** @class */
     function () {
         /**

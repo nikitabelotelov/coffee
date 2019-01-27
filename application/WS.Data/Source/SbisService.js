@@ -17,7 +17,7 @@ define('WS.Data/Source/SbisService', [
 ) {
    'use strict';
 
-   util.logger.error('WS.Data/Source/SbisService', 'Module is deprecated and will be removed in 19.200. Use Types/source:SbisService instead.');
+   //util.logger.error('WS.Data/Source/SbisService', 'Module is deprecated and will be removed in 19.200. Use Types/source:SbisService instead.');
 
    var SbisService = extend.extend(source.SbisService, {
       '[WS.Data/Source/SbisService]': true,

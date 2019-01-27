@@ -5,11 +5,12 @@ import * as Request from 'View/Request';
 // @ts-ignore
 import * as Logger from 'View/Logger';
 // @ts-ignore
-import * as Inferno from 'View/Runner/Vdom/third-party/inferno';
+import * as Inferno from 'Inferno/third-party/index.min';
 
 import { ContextResolver } from '../Expressions';
 import { resolveInheritOptions } from './OptionsResolver';
 import { isString } from './Common';
+import * as Hydrate from 'Inferno/third-party/hydrate.min';
 
 var
    receivedName = '',
@@ -65,11 +66,11 @@ function getStateReadyOrCall(stateVar, control, vnode, serializer) {
       res;
 
    try {
-      res = data ? control._beforeMount(
+      res = data ? control._beforeMountLimited(
          vnode.controlProperties,
          ctx,
          data
-      ) : control._beforeMount(vnode.controlProperties, ctx);
+      ) : control._beforeMountLimited(vnode.controlProperties, ctx);
    } catch (error) {
       Logger.catchLifeCircleErrors('_beforeMount', error);
    }
@@ -151,7 +152,7 @@ export function isTemplateVNodeType(vnode) {
 export function getReceivedState(controlNode, vnode, srlz) {
    var control = controlNode.control,
       rstate = controlNode.key ? findTopConfig(controlNode.key) : '';
-   if (control._beforeMount) {
+   if (control._beforeMountLimited) {
       return getStateReadyOrCall(rstate, control, vnode, srlz);
    }
 }
@@ -170,4 +171,8 @@ export function render(...args) {
 
 export function createRenderer(...args) {
    return Inferno.createRenderer.apply(Inferno, [].slice.call(arguments));
+}
+
+export function hydrate(...args) {
+   return Hydrate.hydrate.apply(Hydrate, [].slice.call(arguments));
 }

@@ -8,7 +8,7 @@ define('Types/_chain/FilteredEnumerator', [
     function () {
         /**
          * Конструктор фильтрующего энумератора.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @param {Function(*, Number): Boolean} callback Фильтр
          * @param {Object} [callbackContext] Контекст вызова callback
          */

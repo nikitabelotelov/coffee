@@ -163,7 +163,13 @@ define('Transport/XHRTransport', [
                      textError = Errors.ERROR_TEXT.lossOfConnection + " " + site;
                   }
 
-                  var error = new Errors.HTTP(textError, status, self._options.url, xhr.responseText);
+                  var error = new Errors.HTTP({
+                     message: textError,
+                     httpError: status,
+                     url: self._options.url,
+                     payload: xhr.responseText,
+                     xhr: xhr
+                  });
 
                   // Извещаем о HTTP-ошибке
                   ERROR_CHANNEL.notify('onHTTPError', error);

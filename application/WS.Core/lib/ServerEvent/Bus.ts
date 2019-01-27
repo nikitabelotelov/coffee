@@ -8,7 +8,6 @@ import { SEB } from "./interfaces";
 import Deferred = require('Core/Deferred');
 import CoreConst = require('Core/constants');
 import EventBus = require('Core/EventBus');
-import UserInfo = require('Core/UserInfo');
 import LocalStorageNative = require('Core/LocalStorageNative');
 import IoC = require("Core/IoC");
 import * as CONST from "Lib/ServerEvent/_class/Constants";
@@ -18,13 +17,8 @@ import { SubscribeContainer } from "Lib/ServerEvent/_class/SubscribeContainer";
 import { ExclusiveProxy as TransportProxy } from "Lib/ServerEvent/_class/transport/ExclusiveProxy";
 import { EVENT_DISABLE_SEB } from "Lib/ServerEvent/_class/Events";
 import { ConnectWatchDog } from "Lib/ServerEvent/_class/logger/ConnectWatchDog";
-import { Bit as BitSensor } from "Lib/ServerEvent/_class/logger/Bit";
 
 /// region evristic ack
-const TENSOR_ID = '00000003';
-let currentUser: string = UserInfo.getCurrent();
-currentUser = typeof currentUser === "string" ? currentUser : "";
-const isDetectEventBit = currentUser.indexOf(TENSOR_ID) === 0;
 LocalStorageNative.setItem('shared-bus-ack', 'true');
 /// endregion
 
@@ -46,17 +40,12 @@ class AuthError {
 
 class Seb {
     private subscribes = new SubscribeContainer();
-    private initDeferred: Deferred<SEB.ITrackedTransport>;
+    private subsDeferred: Deferred<SEB.ITrackedTransport>;
     private isExclusive = false;
-    /**
-     * Sensor alive sensor
-     * @type {Bit}
-     */
-    private bitSensor;
     private watcher = new Watcher([new ConnectWatchDog()]);
 
     constructor() {
-        this.initDeferred = new Deferred();
+        this.subsDeferred = new Deferred();
         this.subscribe = this.subscribeInit.bind(this);
         this.closeChannel = this.closeChannel.bind(this);
         this.closeTransportBehavior = this.closeTransportBehavior.bind(this);
@@ -94,7 +83,7 @@ class Seb {
     }
 
     private subscribeDeferred(subscribe): void {
-        this.initDeferred.addCallback((transport: TransportProxy) => {
+        this.subsDeferred.addCallback((transport: TransportProxy) => {
             this.subscribeClear(transport, subscribe);
             return transport;
         });
@@ -110,16 +99,17 @@ class Seb {
                 this.watcher
             ).addCallback((tw: TransportProxy) => {
                 this.subscribe = this.subscribeClear.bind(this, tw);
-                if (isDetectEventBit && !this.bitSensor) {
-                    this.bitSensor = new BitSensor(EventBus);
-                }
-                this.initDeferred.callback(tw);
+                this.subsDeferred.callback(tw);
             }).addErrback((err: any) => {
                 if (err.httpError === 404) {
-                    this.initDeferred = undefined;
                     IoC.resolve("ILogger").warn(new AuthError().message);
                     this.subscribe = function () {};
+                    return;
                 }
+                this.subscribe = this.subscribeInit;
+                const oldInitDeferred = this.subsDeferred;
+                this.subsDeferred = new Deferred();
+                oldInitDeferred.dependOn(this.subsDeferred);
                 IoC.resolve("ILogger").warn(`Не удалось подписаться на ${subscribe.getChannelName()}`);
             });
         } catch (e) {
@@ -143,7 +133,7 @@ class Seb {
      * Поднимаем новое соединение и переподписываеся
      */
     private reInit() {
-        this.initDeferred = new Deferred();
+        this.subsDeferred = new Deferred();
         this.subscribe = this.subscribeInit;
 
         let oldSubs = this.subscribes.all();
@@ -157,10 +147,10 @@ class Seb {
      * Запускаем рестарт подключения. Закрываем текущие соединения.
      */
     reconnect() {
-        if (!this.initDeferred) {
+        if (!this.subsDeferred) {
             return this.reInit();
         }
-        this.initDeferred.addCallbacks((tw: SEB.ITrackedTransport) => {
+        this.subsDeferred.addCallbacks((tw: SEB.ITrackedTransport) => {
             this.subscribe = this.subscribeBeforeReconnect.bind(this);
             tw.close();
             return tw;
@@ -174,7 +164,7 @@ class Seb {
      * @param {string} name
      */
     closeChannel(name: string) {
-        this.initDeferred.addCallback((initializer) => {
+        this.subsDeferred.addCallback((initializer) => {
             let removed = this.subscribes.removeByName(name);
             for (let item of removed) {
                 initializer.unsubscribe(item);

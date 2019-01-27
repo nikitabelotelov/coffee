@@ -9,8 +9,8 @@
  *       type: 'integer'
  *    };
  * </pre>
- * @class Types/Format/IntegerField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/IntegerField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -24,14 +24,14 @@ define('Types/_entity/format/IntegerField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var IntegerField = /** @class */
     function (_super) {
-        tslib_1.__extends(IntegerField, _super);    /** @lends Types/Format/IntegerField.prototype */
-        /** @lends Types/Format/IntegerField.prototype */
+        tslib_1.__extends(IntegerField, _super);    /** @lends Types/_entity/format/IntegerField.prototype */
+        /** @lends Types/_entity/format/IntegerField.prototype */
         function IntegerField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         return IntegerField;
-    }(Field_1.default    /** @lends Types/Format/IntegerField.prototype */);
-    /** @lends Types/Format/IntegerField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/IntegerField.prototype */);
+    /** @lends Types/_entity/format/IntegerField.prototype */
     exports.default = IntegerField;
     IntegerField.prototype['[Types/_entity/format/IntegerField]'] = true;
     IntegerField.prototype._moduleName = 'Types/entity:format.IntegerField';

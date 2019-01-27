@@ -1,8 +1,9 @@
 define('Vdom/_private/Utils/Focus', [
     'require',
     'exports',
-    'Core/detection'
-], function (require, exports, detection) {
+    'Core/detection',
+    'Vdom/_private/Synchronizer/resources/TabIndex'
+], function (require, exports, detection, Tabindex) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Moves focus to a specific HTML element
@@ -21,10 +22,10 @@ define('Vdom/_private/Utils/Focus', [
                 try {
                     element.setActive();
                 } catch (e) {
-                    element.focus();
+                    Tabindex.focus(element);
                 }
             } else {
-                element.focus();
+                Tabindex.focus(element);
             }
         }
     }

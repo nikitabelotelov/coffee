@@ -341,6 +341,14 @@ define('Core/WindowManager', [
                if (!self._focusControlled) {
                   var activeWindow = self._findActiveWindow();
                   if (activeWindow) {
+                     // исключительная ситуация, когда в yandex открываем видео, и переключаемся на другую вкладку.
+                     // видео открывается в отдельном окошке, оторванном от страницы. в этой ситуации звать фокусировку не надо
+                     if (isJs.browser.yandex) {
+                        if (activeWindow.getContainer() && !activeWindow.getContainer().closest('body').length) {
+                           return;
+                        }
+                     }
+
                      activeWindow.activateFirstControl();
                   }
                }

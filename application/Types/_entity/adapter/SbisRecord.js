@@ -19,11 +19,11 @@
  *    });
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/SbisRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @implements Types/Entity/ICloneable
- * @mixes Types/Adapter/SbisFormatMixin
+ * @class Types/_entity/adapter/SbisRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.
  */

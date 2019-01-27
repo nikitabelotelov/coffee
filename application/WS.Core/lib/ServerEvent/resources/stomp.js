@@ -363,8 +363,8 @@ define('Lib/ServerEvent/resources/stomp', [], function() {
             return _results;
           };
         })(this);
-        this.ws.onclose = (function(_this) {
-          return function() {
+        var onClose = (function (_this) {
+          return function () {
             var msg;
             msg = "Whoops! Lost connection to " + _this.ws.url;
             if (typeof _this.debug === "function") {
@@ -374,8 +374,9 @@ define('Lib/ServerEvent/resources/stomp', [], function() {
             return typeof errorCallback === "function" ? errorCallback(msg) : void 0;
           };
         })(this);
-        return this.ws.onopen = (function(_this) {
-          return function() {
+
+        var onOpen = (function (_this) {
+          return function () {
             if (typeof _this.debug === "function") {
               _this.debug('Web Socket Opened...');
             }
@@ -384,6 +385,19 @@ define('Lib/ServerEvent/resources/stomp', [], function() {
             return _this._transmit("CONNECT", headers);
           };
         })(this);
+
+        /** fix: https://online.sbis.ru/opendoc.html?guid=3933b74a-0d13-4438-ae2c-ca70ef9b47aa
+                Соединение асинхронное, websocket::onopen может случиться раньше, чем будет подписка */
+        if (this.ws.readyState >= this.ws.OPEN) {
+          onOpen();
+        } else {
+          this.ws.onopen = onOpen;
+        }
+        if (this.ws.readyState >= this.ws.CLOSING) {
+          onClose();
+        } else {
+          this.ws.onclose = onClose;
+        }
       };
 
       Client.prototype.disconnect = function(disconnectCallback, headers) {

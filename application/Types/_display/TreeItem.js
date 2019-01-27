@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/TreeItem" />
 /**
  * Элемент дерева
- * @class Types/Display/TreeItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/TreeItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_display/TreeItem', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var TreeItem = /** @class */
     function (_super) {
-        tslib_1.__extends(TreeItem, _super);    /** @lends Types/Display/TreeItem.prototype */
-        /** @lends Types/Display/TreeItem.prototype */
+        tslib_1.__extends(TreeItem, _super);    /** @lends Types/_display/TreeItem.prototype */
+        /** @lends Types/_display/TreeItem.prototype */
         function TreeItem(options) {
             var _this = _super.call(this, options) || this;
             if (options && !options.hasOwnProperty('hasChildren') && options.hasOwnProperty('loaded')) {
@@ -28,8 +28,8 @@ define('Types/_display/TreeItem', [
             _this._$expanded = !!_this._$expanded;
             _this._$hasChildren = !!_this._$hasChildren;
             return _this;
-        }    //region Types/Entity/SerializableMixin
-        //region Types/Entity/SerializableMixin
+        }    //region Types/_entity/SerializableMixin
+        //region Types/_entity/SerializableMixin
         TreeItem.prototype._getSerializableState = function (state) {
             state = _super.prototype._getSerializableState.call(this, state);    //It's too hard to serialize context related method. It should be restored at class that injects this function.
             //It's too hard to serialize context related method. It should be restored at class that injects this function.
@@ -43,37 +43,37 @@ define('Types/_display/TreeItem', [
             return function () {
                 fromSuper.call(this);
             };
-        };    //endregion Types/Entity/SerializableMixin
+        };    //endregion Types/_entity/SerializableMixin
               //region Public methods
               /**
          * Возвращает родительский узел
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
-        //endregion Types/Entity/SerializableMixin
+        //endregion Types/_entity/SerializableMixin
         //region Public methods
         /**
          * Возвращает родительский узел
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         TreeItem.prototype.getParent = function () {
             return this._$parent;
         };    /**
          * Устанавливает родительский узел
-         * @param {Types/Display/TreeItem} parent Новый родительский узел
+         * @param {Types/_display/TreeItem} parent Новый родительский узел
          */
         /**
          * Устанавливает родительский узел
-         * @param {Types/Display/TreeItem} parent Новый родительский узел
+         * @param {Types/_display/TreeItem} parent Новый родительский узел
          */
         TreeItem.prototype.setParent = function (parent) {
             this._$parent = parent;
         };    /**
          * Возвращает корневой элемент дерева
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         /**
          * Возвращает корневой элемент дерева
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         TreeItem.prototype.getRoot = function () {
             var parent = this.getParent();
@@ -223,8 +223,8 @@ define('Types/_display/TreeItem', [
             }
         };
         return TreeItem;
-    }(CollectionItem_1.default    /** @lends Types/Display/TreeItem.prototype */);
-    /** @lends Types/Display/TreeItem.prototype */
+    }(CollectionItem_1.default    /** @lends Types/_display/TreeItem.prototype */);
+    /** @lends Types/_display/TreeItem.prototype */
     exports.default = TreeItem;
     TreeItem.prototype._moduleName = 'Types/display:TreeItem';
     TreeItem.prototype['[Types/_display/TreeItem]'] = true;    // @ts-ignore

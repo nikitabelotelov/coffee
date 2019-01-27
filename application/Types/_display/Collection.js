@@ -1,13 +1,13 @@
 /// <amd-module name="Types/_display/Collection" />
 /**
  * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную коллекцию.
- * @class Types/Display/Collection
- * @extends Types/Display/Abstract
- * @implements Types/Collection/IEnumerable
- * @implements Types/Collection/IList
- * @implements Types/Display/IBindCollection
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Collection/EventRaisingMixin
+ * @class Types/_display/Collection
+ * @extends Types/_display/Abstract
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_collection/IList
+ * @implements Types/_display/IBindCollection
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_collection/EventRaisingMixin
  * @ignoreMethods notifyItemChange
  * @public
  * @author Мальцев А.А.
@@ -298,14 +298,14 @@ define('Types/_display/Collection', [
               /**
          * Возвращает элемент проекции с указанным идентификатором экземпляра.
          * @param {String} instanceId Идентификатор экземпляра.
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          * @state mutable
          */
         //region mutable
         /**
          * Возвращает элемент проекции с указанным идентификатором экземпляра.
          * @param {String} instanceId Идентификатор экземпляра.
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          * @state mutable
          */
         Collection.prototype.getByInstanceId = function (instanceId) {
@@ -326,38 +326,37 @@ define('Types/_display/Collection', [
             return this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId);
         };    /**
          * Возвращает энумератор для перебора элементов проекции
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          */
         /**
          * Возвращает энумератор для перебора элементов проекции
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          */
         Collection.prototype.getEnumerator = function (localize) {
             return this._getEnumerator();
         };    /**
          * Перебирает все элементы проекции, начиная с первого.
-         * @param {Function(Types/Display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
+         * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
          * @param {Object} [context] Контекст вызова callback
          * @example
          * Сгруппируем персонажей по полу:
          * <pre>
          *    require([
-         *       'Types/Collection/List',
-         *       'Types/Display/Collection',
-         *       'Types/Display/GroupItem'
-         *    ], function(List, CollectionDisplay, GroupItem) {
-         *       var list = new List({
-         *             items: [
-         *                {name: 'Philip J. Fry', gender: 'M'},
-         *                {name: 'Turanga Leela', gender: 'F'},
-         *                {name: 'Professor Farnsworth', gender: 'M'},
-         *                {name: 'Amy Wong', gender: 'F'},
-         *                {name: 'Bender Bending Rodriguez', gender: 'R'}
-         *             ]
-         *          }),
-         *          display = new CollectionDisplay({
-         *             collection: list
-         *          });
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
+         *          items: [
+         *             {name: 'Philip J. Fry', gender: 'M'},
+         *             {name: 'Turanga Leela', gender: 'F'},
+         *             {name: 'Professor Farnsworth', gender: 'M'},
+         *             {name: 'Amy Wong', gender: 'F'},
+         *             {name: 'Bender Bending Rodriguez', gender: 'R'}
+         *          ]
+         *       });
+         *       var display = new display.Collection({
+         *          collection: list
+         *       });
          *
          *       display.setGroup(function(collectionItem, index, item) {
          *          return collectionItem.gender;
@@ -376,28 +375,27 @@ define('Types/_display/Collection', [
          */
         /**
          * Перебирает все элементы проекции, начиная с первого.
-         * @param {Function(Types/Display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
+         * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
          * @param {Object} [context] Контекст вызова callback
          * @example
          * Сгруппируем персонажей по полу:
          * <pre>
          *    require([
-         *       'Types/Collection/List',
-         *       'Types/Display/Collection',
-         *       'Types/Display/GroupItem'
-         *    ], function(List, CollectionDisplay, GroupItem) {
-         *       var list = new List({
-         *             items: [
-         *                {name: 'Philip J. Fry', gender: 'M'},
-         *                {name: 'Turanga Leela', gender: 'F'},
-         *                {name: 'Professor Farnsworth', gender: 'M'},
-         *                {name: 'Amy Wong', gender: 'F'},
-         *                {name: 'Bender Bending Rodriguez', gender: 'R'}
-         *             ]
-         *          }),
-         *          display = new CollectionDisplay({
-         *             collection: list
-         *          });
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
+         *          items: [
+         *             {name: 'Philip J. Fry', gender: 'M'},
+         *             {name: 'Turanga Leela', gender: 'F'},
+         *             {name: 'Professor Farnsworth', gender: 'M'},
+         *             {name: 'Amy Wong', gender: 'F'},
+         *             {name: 'Bender Bending Rodriguez', gender: 'R'}
+         *          ]
+         *       });
+         *       var display = new display.Collection({
+         *          collection: list
+         *       });
          *
          *       display.setGroup(function(collectionItem, index, item) {
          *          return collectionItem.gender;
@@ -538,7 +536,7 @@ define('Types/_display/Collection', [
               //region Access
               /**
          * Возвращает оригинальную коллекцию
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          * @see collection
          */
         // eslint-disable-line no-console
@@ -547,7 +545,7 @@ define('Types/_display/Collection', [
         //region Access
         /**
          * Возвращает оригинальную коллекцию
-         * @return {Types/Collection/IEnumerable}
+         * @return {Types/_collection/IEnumerable}
          * @see collection
          */
         Collection.prototype.getCollection = function () {
@@ -576,23 +574,23 @@ define('Types/_display/Collection', [
             return count;
         };    /**
          * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          */
         /**
          * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          */
         Collection.prototype.getItems = function () {
             return this._getItems().slice();
         };    /**
          * Создает элемент проекции
          * @param {Object} options Значения опций
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         /**
          * Создает элемент проекции
          * @param {Object} options Значения опций
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         Collection.prototype.createItem = function (options) {
             if (!this._itemsFactory) {
@@ -600,13 +598,13 @@ define('Types/_display/Collection', [
             }
             return this._itemsFactory(options);
         };    /**
-         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/Display/CollectionItem#contents}.
-         * @param {Types/Display/CollectionItem} item Элемент коллекции
+         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/_display/CollectionItem#contents}.
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @return {String|undefined}
          */
         /**
-         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/Display/CollectionItem#contents}.
-         * @param {Types/Display/CollectionItem} item Элемент коллекции
+         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/_display/CollectionItem#contents}.
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @return {String|undefined}
          */
         Collection.prototype.getItemUid = function (item) {
@@ -620,12 +618,12 @@ define('Types/_display/Collection', [
             return uid;
         };    /**
          * Рассчитывает идентификатор элемента коллекции.
-         * @param {Types/Display/CollectionItem} item Элемент коллекции
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @return {String}
          */
         /**
          * Рассчитывает идентификатор элемента коллекции.
-         * @param {Types/Display/CollectionItem} item Элемент коллекции
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @return {String}
          */
         Collection.prototype._exctractItemId = function (item) {
@@ -641,13 +639,13 @@ define('Types/_display/Collection', [
             return String(uid);
         };    /**
          * Рассчитывает уникальный идентификатор элемента коллекции.
-         * @param {Types/Display/CollectionItem} item Элемент коллекции
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @param {String} baseId Базовое значение
          * @return {String}
          */
         /**
          * Рассчитывает уникальный идентификатор элемента коллекции.
-         * @param {Types/Display/CollectionItem} item Элемент коллекции
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @param {String} baseId Базовое значение
          * @return {String}
          */
@@ -664,24 +662,24 @@ define('Types/_display/Collection', [
               //region Navigation
               /**
          * Возвращает текущий элемент
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         //endregion Access
         //region Navigation
         /**
          * Возвращает текущий элемент
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         Collection.prototype.getCurrent = function () {
             return this._getCursorEnumerator().getCurrent();
         };    /**
          * Устанавливает текущий элемент
-         * @param {Types/Display/CollectionItem} item Новый текущий элемент
+         * @param {Types/_display/CollectionItem} item Новый текущий элемент
          * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
          */
         /**
          * Устанавливает текущий элемент
-         * @param {Types/Display/CollectionItem} item Новый текущий элемент
+         * @param {Types/_display/CollectionItem} item Новый текущий элемент
          * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
          */
         Collection.prototype.setCurrent = function (item, silent) {
@@ -725,11 +723,11 @@ define('Types/_display/Collection', [
             }
         };    /**
          * Возвращает первый элемент
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         /**
          * Возвращает первый элемент
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         Collection.prototype.getFirst = function () {
             var enumerator = this._getUtilityEnumerator();
@@ -741,11 +739,11 @@ define('Types/_display/Collection', [
             return item;
         };    /**
          * Возвращает последний элемент
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         /**
          * Возвращает последний элемент
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          */
         Collection.prototype.getLast = function () {
             var enumerator = this._getUtilityEnumerator();
@@ -758,25 +756,25 @@ define('Types/_display/Collection', [
             return item;
         };    /**
          * Возвращает следующий элемент относительно item
-         * @param {Types/Display/CollectionItem} item элемент проекции
-         * @return {Types/Display/CollectionItem}
+         * @param {Types/_display/CollectionItem} item элемент проекции
+         * @return {Types/_display/CollectionItem}
          */
         /**
          * Возвращает следующий элемент относительно item
-         * @param {Types/Display/CollectionItem} item элемент проекции
-         * @return {Types/Display/CollectionItem}
+         * @param {Types/_display/CollectionItem} item элемент проекции
+         * @return {Types/_display/CollectionItem}
          */
         Collection.prototype.getNext = function (item) {
             return this._getNearbyItem(this._getUtilityEnumerator(), item, true, true);
         };    /**
          * Возвращает предыдущий элемент относительно item
-         * @param {Types/Display/CollectionItem} index элемент проекции
-         * @return {Types/Display/CollectionItem}
+         * @param {Types/_display/CollectionItem} index элемент проекции
+         * @return {Types/_display/CollectionItem}
          */
         /**
          * Возвращает предыдущий элемент относительно item
-         * @param {Types/Display/CollectionItem} index элемент проекции
-         * @return {Types/Display/CollectionItem}
+         * @param {Types/_display/CollectionItem} index элемент проекции
+         * @return {Types/_display/CollectionItem}
          */
         Collection.prototype.getPrevious = function (item) {
             return this._getNearbyItem(this._getUtilityEnumerator(), item, false, true);
@@ -857,12 +855,12 @@ define('Types/_display/Collection', [
             return this._getSourceIndex(sourceIndex);
         };    /**
          * Возвращает индекс элемента проекции в коллекции
-         * @param {Types/Display/CollectionItem} item Элемент проекции
+         * @param {Types/_display/CollectionItem} item Элемент проекции
          * @return {Number} Индекс элемента проекции в коллекции
          */
         /**
          * Возвращает индекс элемента проекции в коллекции
-         * @param {Types/Display/CollectionItem} item Элемент проекции
+         * @param {Types/_display/CollectionItem} item Элемент проекции
          * @return {Number} Индекс элемента проекции в коллекции
          */
         Collection.prototype.getSourceIndexByItem = function (item) {
@@ -910,12 +908,12 @@ define('Types/_display/Collection', [
         };    /**
          * Возвращает элемент проекции по индексу коллекции.
          * @param {Number} index Индекс элемента в коллекции
-         * @return {Types/Display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
+         * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
          */
         /**
          * Возвращает элемент проекции по индексу коллекции.
          * @param {Number} index Индекс элемента в коллекции
-         * @return {Types/Display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
+         * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
          */
         Collection.prototype.getItemBySourceIndex = function (index) {
             index = this.getIndexBySourceIndex(index);
@@ -923,12 +921,12 @@ define('Types/_display/Collection', [
         };    /**
          * Возвращает элемент проекции для элемента коллекции.
          * @param {*} item Элемент коллекции
-         * @return {Types/Display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
+         * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
          */
         /**
          * Возвращает элемент проекции для элемента коллекции.
          * @param {*} item Элемент коллекции
-         * @return {Types/Display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
+         * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
          */
         Collection.prototype.getItemBySourceItem = function (item) {
             var index = this.getIndexBySourceItem(item);
@@ -937,7 +935,7 @@ define('Types/_display/Collection', [
               //region Changing
               /**
          * Возвращает пользовательские методы фильтрации элементов проекции
-         * @return {Array.<Function(*, Number, Types/Display/CollectionItem, Number): Boolean>}
+         * @return {Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>}
          * @see filter
          * @see setFilter
          * @see addFilter
@@ -947,7 +945,7 @@ define('Types/_display/Collection', [
         //region Changing
         /**
          * Возвращает пользовательские методы фильтрации элементов проекции
-         * @return {Array.<Function(*, Number, Types/Display/CollectionItem, Number): Boolean>}
+         * @return {Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>}
          * @see filter
          * @see setFilter
          * @see addFilter
@@ -957,7 +955,7 @@ define('Types/_display/Collection', [
             return this._$filter.slice();
         };    /**
          * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских фильтров.
-         * @param {...Function(*, Number, Types/Display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @see filter
          * @see getFilter
          * @see addFilter
@@ -966,10 +964,10 @@ define('Types/_display/Collection', [
          * Отберем персонажей женского пола:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection'
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -978,7 +976,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -995,7 +993,7 @@ define('Types/_display/Collection', [
          */
         /**
          * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских фильтров.
-         * @param {...Function(*, Number, Types/Display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @see filter
          * @see getFilter
          * @see addFilter
@@ -1004,10 +1002,10 @@ define('Types/_display/Collection', [
          * Отберем персонажей женского пола:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection'
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1016,7 +1014,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1062,7 +1060,7 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-         * @param {Function(*, Number, Types/Display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
          * @see filter
          * @see getFilter
@@ -1072,10 +1070,10 @@ define('Types/_display/Collection', [
          * Отберем персонажей женского пола:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1084,7 +1082,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1101,7 +1099,7 @@ define('Types/_display/Collection', [
          */
         /**
          * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-         * @param {Function(*, Number, Types/Display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
          * @see filter
          * @see getFilter
@@ -1111,10 +1109,10 @@ define('Types/_display/Collection', [
          * Отберем персонажей женского пола:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1123,7 +1121,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1152,7 +1150,7 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Удаляет пользовательский метод фильтрации элементов проекции.
-         * @param {Function(*, Number, Types/Display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @return {Boolean} Был ли установлен такой метод фильтрации
          * @see filter
          * @see getFilter
@@ -1162,13 +1160,13 @@ define('Types/_display/Collection', [
          * Уберем фильтрацию персонажей по полу:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
+         *       'Types/collection'
+         *       'Types/display'
+         *    ], function(collection, display) {
          *       var filter = function(collectionItem, index, item) {
          *             return collectionItem.gender === 'F';
          *          }),
-         *          list = new List({
+         *          list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1177,7 +1175,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list,
          *             filter: filter
          *          });
@@ -1198,7 +1196,7 @@ define('Types/_display/Collection', [
          */
         /**
          * Удаляет пользовательский метод фильтрации элементов проекции.
-         * @param {Function(*, Number, Types/Display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @return {Boolean} Был ли установлен такой метод фильтрации
          * @see filter
          * @see getFilter
@@ -1208,13 +1206,13 @@ define('Types/_display/Collection', [
          * Уберем фильтрацию персонажей по полу:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
+         *       'Types/collection'
+         *       'Types/display'
+         *    ], function(collection, display) {
          *       var filter = function(collectionItem, index, item) {
          *             return collectionItem.gender === 'F';
          *          }),
-         *          list = new List({
+         *          list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1223,7 +1221,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list,
          *             filter: filter
          *          });
@@ -1268,13 +1266,13 @@ define('Types/_display/Collection', [
             return this._$group;
         };    /**
          * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать этот метод без параметров.
-         * @param {Function(*, Number, Types/Display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
+         * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
          * @see group
          * @see getGroup
          */
         /**
          * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать этот метод без параметров.
-         * @param {Function(*, Number, Types/Display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
+         * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
          * @see group
          * @see getGroup
          */
@@ -1299,15 +1297,15 @@ define('Types/_display/Collection', [
         };    /**
          * Возвращает элементы группы. Учитывается сортировка и фильтрация.
          * @param {String} groupId Идентификатор группы, элементы которой требуется получить
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          * @example
          * Получим персонажей мужского пола:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1316,7 +1314,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1338,15 +1336,15 @@ define('Types/_display/Collection', [
         /**
          * Возвращает элементы группы. Учитывается сортировка и фильтрация.
          * @param {String} groupId Идентификатор группы, элементы которой требуется получить
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          * @example
          * Получим персонажей мужского пола:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1355,7 +1353,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1395,10 +1393,10 @@ define('Types/_display/Collection', [
          * Сгруппируем персонажей по полу:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection'
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1407,7 +1405,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1439,10 +1437,10 @@ define('Types/_display/Collection', [
          * Сгруппируем персонажей по полу:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var list = new List({
+         *       'Types/collection'
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var list = new collection.List({
          *             items: [
          *                {name: 'Philip J. Fry', gender: 'M'},
          *                {name: 'Turanga Leela', gender: 'F'},
@@ -1451,7 +1449,7 @@ define('Types/_display/Collection', [
          *                {name: 'Bender Bending Rodriguez', gender: 'R'}
          *             ]
          *          }),
-         *          display = new CollectionDisplay({
+         *          display = new display.Collection({
          *             collection: list
          *          });
          *
@@ -1511,11 +1509,11 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию по возрастанию значения поля title:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var display = new CollectionDisplay({
-         *          collection: new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
          *             items: [
          *                {id: 1, title: 'foo'},
          *                {id: 2, title: 'bar'}
@@ -1536,11 +1534,11 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию сначала по title, а потом - по id:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var display = new CollectionDisplay({
-         *          collection: new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
          *             items: [
          *                {id: 4, title: 'foo'},
          *                {id: 3, title: 'bar'},
@@ -1550,7 +1548,7 @@ define('Types/_display/Collection', [
          *       });
          *
          *       display.setSort(function(a, b) {
-         *          return a.collectionItem.title > b.collectionItem.title;
+         *          return a.collectionItem.title -> b.collectionItem.title;
          *       }, function(a, b) {
          *          return a.collectionItem.id - b.collectionItem.id;
          *       });
@@ -1573,11 +1571,11 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию по возрастанию значения поля title:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var display = new CollectionDisplay({
-         *          collection: new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
          *             items: [
          *                {id: 1, title: 'foo'},
          *                {id: 2, title: 'bar'}
@@ -1598,11 +1596,11 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию сначала по title, а потом - по id:
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var display = new CollectionDisplay({
-         *          collection: new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
          *             items: [
          *                {id: 4, title: 'foo'},
          *                {id: 3, title: 'bar'},
@@ -1612,7 +1610,7 @@ define('Types/_display/Collection', [
          *       });
          *
          *       display.setSort(function(a, b) {
-         *          return a.collectionItem.title > b.collectionItem.title;
+         *          return a.collectionItem.title -> b.collectionItem.title;
          *       }, function(a, b) {
          *          return a.collectionItem.id - b.collectionItem.id;
          *       });
@@ -1665,11 +1663,11 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию по возрастанию значения поля id
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var display = new CollectionDisplay({
-         *          collection: new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
          *             items: [
          *                {id: 1, title: 'foo'},
          *                {id: 2, title: 'bar'}
@@ -1695,11 +1693,11 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию по возрастанию значения поля id
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
-         *       var display = new CollectionDisplay({
-         *          collection: new List({
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
          *             items: [
          *                {id: 1, title: 'foo'},
          *                {id: 2, title: 'bar'}
@@ -1743,21 +1741,21 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию по возрастанию значения поля id
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
          *       var handler = function(a, b) {
-         *             return a.item.id - b.item.id
-         *          },
-         *          display = new CollectionDisplay({
-         *             collection: new List({
-         *                items: [
-         *                   {id: 1, title: 'foo'},
-         *                   {id: 2, title: 'bar'}
-         *                ]
-         *             }),
-         *             sort: handler
-         *          });
+         *          return a.item.id - b.item.id
+         *       };
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
+         *             items: [
+         *                {id: 1, title: 'foo'},
+         *                {id: 2, title: 'bar'}
+         *             ]
+         *          }),
+         *          sort: handler
+         *       });
          *
          *       //...
          *       display.removeSort(handler);
@@ -1776,21 +1774,21 @@ define('Types/_display/Collection', [
          * Отсортируем коллекцию по возрастанию значения поля id
          * <pre>
          *    require([
-         *       'Types/Collection/List'
-         *       'Types/Display/Collection'
-         *    ], function(List, CollectionDisplay) {
+         *       'Types/collection',
+         *       'Types/display'
+         *    ], function(collection, display) {
          *       var handler = function(a, b) {
-         *             return a.item.id - b.item.id
-         *          },
-         *          display = new CollectionDisplay({
-         *             collection: new List({
-         *                items: [
-         *                   {id: 1, title: 'foo'},
-         *                   {id: 2, title: 'bar'}
-         *                ]
-         *             }),
-         *             sort: handler
-         *          });
+         *          return a.item.id - b.item.id
+         *       };
+         *       var display = new display.Collection({
+         *          collection: new collection.List({
+         *             items: [
+         *                {id: 1, title: 'foo'},
+         *                {id: 2, title: 'bar'}
+         *             ]
+         *          }),
+         *          sort: handler
+         *       });
          *
          *       //...
          *       display.removeSort(handler);
@@ -1853,12 +1851,12 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Уведомляет подписчиков об изменении элемента коллекции
-         * @param {Types/Display/CollectionItem} item Элемент проекции
+         * @param {Types/_display/CollectionItem} item Элемент проекции
          * @param {Object} [properties] Изменившиеся свойства
          */
         /**
          * Уведомляет подписчиков об изменении элемента коллекции
-         * @param {Types/Display/CollectionItem} item Элемент проекции
+         * @param {Types/_display/CollectionItem} item Элемент проекции
          * @param {Object} [properties] Изменившиеся свойства
          */
         Collection.prototype.notifyItemChange = function (item, properties) {
@@ -1933,14 +1931,14 @@ define('Types/_display/Collection', [
               /**
          * Возвращает массив выбранных элементов
          * @remark Метод возвращает выбранные элементы не зависимо от фильтра проекции.
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          */
         //endregion
         //region Multiselectable
         /**
          * Возвращает массив выбранных элементов
          * @remark Метод возвращает выбранные элементы не зависимо от фильтра проекции.
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          */
         Collection.prototype.getSelectedItems = function () {
             var items = this._getItems();
@@ -2146,26 +2144,26 @@ define('Types/_display/Collection', [
               //region Navigation
               /**
          * Возвращает элементы проекции
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          * @protected
          */
         //endregion
         //region Navigation
         /**
          * Возвращает элементы проекции
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @return {Array.<Types/_display/CollectionItem>}
          * @protected
          */
         Collection.prototype._getItems = function () {
             return this._getItemsStrategy().items;
         };    /**
          * Возвращает функцию, создающую элементы проекции
-         * @return {Function(Object):Types/Display/CollectionItem}
+         * @return {Function(Object):Types/_display/CollectionItem}
          * @protected
          */
         /**
          * Возвращает функцию, создающую элементы проекции
-         * @return {Function(Object):Types/Display/CollectionItem}
+         * @return {Function(Object):Types/_display/CollectionItem}
          * @protected
          */
         Collection.prototype._getItemsFactory = function () {
@@ -2175,12 +2173,12 @@ define('Types/_display/Collection', [
             };
         };    /**
          * Возвращает cтратегию получения элементов проекции
-         * @return {Types/Display/ItemsStrategy/Abstract}
+         * @return {Types/_display/ItemsStrategy/Abstract}
          * @protected
          */
         /**
          * Возвращает cтратегию получения элементов проекции
-         * @return {Types/Display/ItemsStrategy/Abstract}
+         * @return {Types/_display/ItemsStrategy/Abstract}
          * @protected
          */
         Collection.prototype._getItemsStrategy = function () {
@@ -2200,12 +2198,12 @@ define('Types/_display/Collection', [
             this._composer = null;
         };    /**
          * Создает компоновщик стратегий
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          * @protected
          */
         /**
          * Создает компоновщик стратегий
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          * @protected
          */
         Collection.prototype._createComposer = function () {
@@ -2220,31 +2218,31 @@ define('Types/_display/Collection', [
         };    /**
          * Возвращает энумератор
          * @param {Boolean} unlink Отвязать от состояния проекции
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         /**
          * Возвращает энумератор
          * @param {Boolean} unlink Отвязать от состояния проекции
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         Collection.prototype._getEnumerator = function (unlink) {
             return this._buildEnumerator(unlink ? this._getItems().slice() : this._getItems.bind(this), unlink ? this._filterMap.slice() : this._filterMap, unlink ? this._sortMap.slice() : this._sortMap);
         };    /**
          * Конструирует энумератор по входным данным
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции
          * @param {Array.<Boolean>} filterMap Фильтр: индекс в коллекции -> прошел фильтр
          * @param {Array.<Number>} sortMap Сортировка: индекс в проекции -> индекс в коллекции
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         /**
          * Конструирует энумератор по входным данным
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции
          * @param {Array.<Boolean>} filterMap Фильтр: индекс в коллекции -> прошел фильтр
          * @param {Array.<Number>} sortMap Сортировка: индекс в проекции -> индекс в коллекции
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         Collection.prototype._buildEnumerator = function (items, filterMap, sortMap) {
@@ -2255,44 +2253,44 @@ define('Types/_display/Collection', [
             });
         };    /**
          * Возвращает служебный энумератор для организации курсора
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         /**
          * Возвращает служебный энумератор для организации курсора
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         Collection.prototype._getCursorEnumerator = function () {
             return this._cursorEnumerator || (this._cursorEnumerator = this._getEnumerator());
         };    /**
          * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         /**
          * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
-         * @return {Types/Display/CollectionEnumerator}
+         * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         Collection.prototype._getUtilityEnumerator = function () {
             return this._utilityEnumerator || (this._utilityEnumerator = this._getEnumerator());
         };    /**
          * Возвращает соседний элемент проекции
-         * @param {Types/Collection/IEnumerator} enumerator Энумератор элементов
-         * @param {Types/Display/CollectionItem} item Элемент проекции относительно которого искать
+         * @param {Types/_collection/IEnumerator} enumerator Энумератор элементов
+         * @param {Types/_display/CollectionItem} item Элемент проекции относительно которого искать
          * @param {Boolean} isNext Следующий или предыдущий элемент
          * @param {Boolean} [skipGroups=false] Пропускать группы
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          * @protected
          */
         /**
          * Возвращает соседний элемент проекции
-         * @param {Types/Collection/IEnumerator} enumerator Энумератор элементов
-         * @param {Types/Display/CollectionItem} item Элемент проекции относительно которого искать
+         * @param {Types/_collection/IEnumerator} enumerator Энумератор элементов
+         * @param {Types/_display/CollectionItem} item Элемент проекции относительно которого искать
          * @param {Boolean} isNext Следующий или предыдущий элемент
          * @param {Boolean} [skipGroups=false] Пропускать группы
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          * @protected
          */
         Collection.prototype._getNearbyItem = function (enumerator, item, isNext, skipGroups) {
@@ -2664,14 +2662,14 @@ define('Types/_display/Collection', [
          * Удаляет набор элементов проекции
          * @param {Number} start Начальный индекс (в коллекции)
          * @param {Number} [count] Кол-во элементов (по умолчанию - все)
-         * @return {Array.<Types/Display/CollectionItem>} Удаленные элементы
+         * @return {Array.<Types/_display/CollectionItem>} Удаленные элементы
          * @protected
          */
         /**
          * Удаляет набор элементов проекции
          * @param {Number} start Начальный индекс (в коллекции)
          * @param {Number} [count] Кол-во элементов (по умолчанию - все)
-         * @return {Array.<Types/Display/CollectionItem>} Удаленные элементы
+         * @return {Array.<Types/_display/CollectionItem>} Удаленные элементы
          * @protected
          */
         Collection.prototype._removeItems = function (start, count) {
@@ -2689,14 +2687,14 @@ define('Types/_display/Collection', [
          * Заменяет набор элементов проекции
          * @param {Number} start Начальный индекс (в коллекции)
          * @param {Array} newItems Замененные элементы
-         * @return {Array.<Types/Display/CollectionItem>} Замененные элементы
+         * @return {Array.<Types/_display/CollectionItem>} Замененные элементы
          * @protected
          */
         /**
          * Заменяет набор элементов проекции
          * @param {Number} start Начальный индекс (в коллекции)
          * @param {Array} newItems Замененные элементы
-         * @return {Array.<Types/Display/CollectionItem>} Замененные элементы
+         * @return {Array.<Types/_display/CollectionItem>} Замененные элементы
          * @protected
          */
         Collection.prototype._replaceItems = function (start, newItems) {
@@ -2709,7 +2707,7 @@ define('Types/_display/Collection', [
          * @param {Number} newIndex Старый индекс (в коллекции)
          * @param {Number} oldIndex Новый индекс (в коллекции)
          * @param {Array} items Перемещаемые элементы
-         * @return {Array.<Types/Display/CollectionItem>} Перемещенные элементы
+         * @return {Array.<Types/_display/CollectionItem>} Перемещенные элементы
          * @protected
          */
         /**
@@ -2717,7 +2715,7 @@ define('Types/_display/Collection', [
          * @param {Number} newIndex Старый индекс (в коллекции)
          * @param {Number} oldIndex Новый индекс (в коллекции)
          * @param {Array} items Перемещаемые элементы
-         * @return {Array.<Types/Display/CollectionItem>} Перемещенные элементы
+         * @return {Array.<Types/_display/CollectionItem>} Перемещенные элементы
          * @protected
          */
         Collection.prototype._moveItems = function (newIndex, oldIndex, items) {
@@ -2775,13 +2773,13 @@ define('Types/_display/Collection', [
             return removed;
         };    /**
          * Возвращает набор контрольных свойств элемента проекции для анализа его состояния
-         * @param {Types/Display/CollectionItem} item Элемент проекции
+         * @param {Types/_display/CollectionItem} item Элемент проекции
          * @return {Object}
          * @protected
          */
         /**
          * Возвращает набор контрольных свойств элемента проекции для анализа его состояния
-         * @param {Types/Display/CollectionItem} item Элемент проекции
+         * @param {Types/_display/CollectionItem} item Элемент проекции
          * @return {Object}
          * @protected
          */
@@ -2792,13 +2790,13 @@ define('Types/_display/Collection', [
             };
         };    /**
          * Возвращает состояния элементов
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции
          * @return {Array.<Object>}
          * @protected
          */
         /**
          * Возвращает состояния элементов
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции
          * @return {Array.<Object>}
          * @protected
          */
@@ -2830,7 +2828,7 @@ define('Types/_display/Collection', [
         };    /**
          * Генерирует события об изменении элементов проекции при изменении их состояния
          * @param {Object} session Сессия изменений
-         * @param {Array.<Types/Display/CollectionItem>} items Измененные элементы
+         * @param {Array.<Types/_display/CollectionItem>} items Измененные элементы
          * @param {Array} state Состояние элементов до изменений
          * @param {Function} beforeCheck Функция обратного вызова перед проверкой изменений состояния
          * @protected
@@ -2838,7 +2836,7 @@ define('Types/_display/Collection', [
         /**
          * Генерирует события об изменении элементов проекции при изменении их состояния
          * @param {Object} session Сессия изменений
-         * @param {Array.<Types/Display/CollectionItem>} items Измененные элементы
+         * @param {Array.<Types/_display/CollectionItem>} items Измененные элементы
          * @param {Array} state Состояние элементов до изменений
          * @param {Function} beforeCheck Функция обратного вызова перед проверкой изменений состояния
          * @protected
@@ -2859,16 +2857,16 @@ define('Types/_display/Collection', [
             }
         };    /**
          * Генерирует событие об изменении текущего элемента проекции коллекции
-         * @param {Types/Display/CollectionItem} newCurrent Новый текущий элемент
-         * @param {Types/Display/CollectionItem} oldCurrent Старый текущий элемент
+         * @param {Types/_display/CollectionItem} newCurrent Новый текущий элемент
+         * @param {Types/_display/CollectionItem} oldCurrent Старый текущий элемент
          * @param {Number} newPosition Новая позиция
          * @param {Number} oldPosition Старая позиция
          * @protected
          */
         /**
          * Генерирует событие об изменении текущего элемента проекции коллекции
-         * @param {Types/Display/CollectionItem} newCurrent Новый текущий элемент
-         * @param {Types/Display/CollectionItem} oldCurrent Старый текущий элемент
+         * @param {Types/_display/CollectionItem} newCurrent Новый текущий элемент
+         * @param {Types/_display/CollectionItem} oldCurrent Старый текущий элемент
          * @param {Number} newPosition Новая позиция
          * @param {Number} oldPosition Старая позиция
          * @protected

@@ -2,8 +2,8 @@
 /**
  * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную коллекцию.
  * Дерево может строиться по алгоритму {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}. Выбор алгоритма выполняется в зависимости от настроек.
- * @class Types/Display/Tree
- * @extends Types/Display/Collection
+ * @class Types/_display/Tree
+ * @extends Types/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
@@ -84,16 +84,16 @@ define('Types/_display/Tree', [
     }
     var Tree = /** @class */
     function (_super) {
-        tslib_1.__extends(Tree, _super);    /** @lends Types/Display/Tree.prototype */
+        tslib_1.__extends(Tree, _super);    /** @lends Types/_display/Tree.prototype */
                                             // @ts-ignore
-        /** @lends Types/Display/Tree.prototype */
+        /** @lends Types/_display/Tree.prototype */
         // @ts-ignore
         function Tree(options) {
             var _this = this;    /**
-             * {Object.<Array.<Types/Display/TreeItem>>} Соответствие узлов и их потомков
+             * {Object.<Array.<Types/_display/TreeItem>>} Соответствие узлов и их потомков
              */
             /**
-             * {Object.<Array.<Types/Display/TreeItem>>} Соответствие узлов и их потомков
+             * {Object.<Array.<Types/_display/TreeItem>>} Соответствие узлов и их потомков
              */
             _this._childrenMap = {};    // FIXME: must process options before superclass constructor because it's immediately used in _composer
             // FIXME: must process options before superclass constructor because it's immediately used in _composer
@@ -224,11 +224,11 @@ define('Types/_display/Tree', [
             return invertPropertyLogic(this._$hasChildrenProperty);
         };    /**
          * Возвращает корневой узел дерева
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         /**
          * Возвращает корневой узел дерева
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         Tree.prototype.getRoot = function () {
             if (this._root === null) {
@@ -246,11 +246,11 @@ define('Types/_display/Tree', [
             return this._root;
         };    /**
          * Устанавливает корневой узел дерева
-         * @param {Types/Display/TreeItem|*} root Корневой узел или его содержимое
+         * @param {Types/_display/TreeItem|*} root Корневой узел или его содержимое
          */
         /**
          * Устанавливает корневой узел дерева
-         * @param {Types/Display/TreeItem|*} root Корневой узел или его содержимое
+         * @param {Types/_display/TreeItem|*} root Корневой узел или его содержимое
          */
         Tree.prototype.setRoot = function (root) {
             if (this._$root === root) {
@@ -294,15 +294,15 @@ define('Types/_display/Tree', [
             this._finishUpdateSession(session);
         };    /**
          * Возвращает коллекцию потомков элемента коллекции
-         * @param {Types/Display/TreeItem} parent Родительский узел
+         * @param {Types/_display/TreeItem} parent Родительский узел
          * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-         * @return {Types/Display/TreeChildren}
+         * @return {Types/_display/TreeChildren}
          */
         /**
          * Возвращает коллекцию потомков элемента коллекции
-         * @param {Types/Display/TreeItem} parent Родительский узел
+         * @param {Types/_display/TreeItem} parent Родительский узел
          * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-         * @return {Types/Display/TreeChildren}
+         * @return {Types/_display/TreeChildren}
          */
         Tree.prototype.getChildren = function (parent, withFilter) {
             return new TreeChildren_1.default({
@@ -449,20 +449,20 @@ define('Types/_display/Tree', [
          */
         Tree.prototype._checkItem = function (item) {
             if (!item || !(item instanceof CollectionItem_1.default)) {
-                throw new Error(this._moduleName + '::_checkItem(): item should be in instance of Types/Display/CollectionItem');
+                throw new Error(this._moduleName + '::_checkItem(): item should be in instance of Types/_display/CollectionItem');
             }
         };    /**
          * Возвращает массив детей для указанного родителя
-         * @param {Types/Display/TreeItem} parent Родительский узел
+         * @param {Types/_display/TreeItem} parent Родительский узел
          * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-         * @return {Array.<Types/Display/TreeItem>}
+         * @return {Array.<Types/_display/TreeItem>}
          * @protected
          */
         /**
          * Возвращает массив детей для указанного родителя
-         * @param {Types/Display/TreeItem} parent Родительский узел
+         * @param {Types/_display/TreeItem} parent Родительский узел
          * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-         * @return {Array.<Types/Display/TreeItem>}
+         * @return {Array.<Types/_display/TreeItem>}
          * @protected
          */
         Tree.prototype._getChildrenArray = function (parent, withFilter) {
@@ -547,8 +547,8 @@ define('Types/_display/Tree', [
             }
         };
         return Tree;
-    }(Collection_1.default    /** @lends Types/Display/Tree.prototype */);
-    /** @lends Types/Display/Tree.prototype */
+    }(Collection_1.default    /** @lends Types/_display/Tree.prototype */);
+    /** @lends Types/_display/Tree.prototype */
     exports.default = Tree;
     Tree.prototype._moduleName = 'Types/display:Tree';
     Tree.prototype['[Types/_display/Tree]'] = true;    // @ts-ignore

@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_display/itemsStrategy/Composer" />
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
- * @class Types/Display/ItemsStrategy/Composer
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Composer
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/Composer', [
@@ -17,11 +17,11 @@ define('Types/_display/itemsStrategy/Composer', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Composer = /** @class */
     function (_super) {
-        tslib_1.__extends(Composer, _super);    /** @lends Types/Display/ItemsStrategy/Composer.prototype */
+        tslib_1.__extends(Composer, _super);    /** @lends Types/_display/ItemsStrategy/Composer.prototype */
                                                 /**
          * Конструктор
          */
-        /** @lends Types/Display/ItemsStrategy/Composer.prototype */
+        /** @lends Types/_display/ItemsStrategy/Composer.prototype */
         /**
          * Конструктор
          */
@@ -51,14 +51,14 @@ define('Types/_display/itemsStrategy/Composer', [
          * @param {Function} Module Конструктор стратегии
          * @param {Object} [options] Опции конструктора
          * @param {Function} [after] После какой стратегии добавить (по умолчанию в конец)
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          */
         /**
          * Добавляет стратегию в конец
          * @param {Function} Module Конструктор стратегии
          * @param {Object} [options] Опции конструктора
          * @param {Function} [after] После какой стратегии добавить (по умолчанию в конец)
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          */
         Composer.prototype.append = function (Module, options, after) {
             var index = this._modules.indexOf(after);
@@ -76,14 +76,14 @@ define('Types/_display/itemsStrategy/Composer', [
          * @param {Function} Module Конструктор стратегии
          * @param {Object} options Опции конструктора
          * @param {Function} [before] Перед какой стратегией добавить (по умолчанию в начало)
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          */
         /**
          * Добавляет стратегию в начало
          * @param {Function} Module Конструктор стратегии
          * @param {Object} options Опции конструктора
          * @param {Function} [before] Перед какой стратегией добавить (по умолчанию в начало)
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          */
         Composer.prototype.prepend = function (Module, options, before) {
             var index = this._modules.indexOf(before);
@@ -97,12 +97,12 @@ define('Types/_display/itemsStrategy/Composer', [
         };    /**
          * Удалает стратегию
          * @param {Function} Module Конструктор стратегии
-         * @return {Types/Display/IItemsStrategy} Удаленный экземпляр стратегии
+         * @return {Types/_display/IItemsStrategy} Удаленный экземпляр стратегии
          */
         /**
          * Удалает стратегию
          * @param {Function} Module Конструктор стратегии
-         * @return {Types/Display/IItemsStrategy} Удаленный экземпляр стратегии
+         * @return {Types/_display/IItemsStrategy} Удаленный экземпляр стратегии
          */
         Composer.prototype.remove = function (Module) {
             var index = this._modules.indexOf(Module);
@@ -116,11 +116,11 @@ define('Types/_display/itemsStrategy/Composer', [
             return instance;
         };    /**
          * Сбрасывает компоновщик
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          */
         /**
          * Сбрасывает компоновщик
-         * @return {Types/Display/ItemsStrategy/Composer}
+         * @return {Types/_display/ItemsStrategy/Composer}
          */
         Composer.prototype.reset = function () {
             this._modules.length = 0;
@@ -130,12 +130,12 @@ define('Types/_display/itemsStrategy/Composer', [
         };    /**
          * Возвращает экземпляр стратегии
          * @param {Function} Module Конструктор стратегии
-         * @return {Types/Display/IItemsStrategy} Экземпляр стратегии
+         * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
          */
         /**
          * Возвращает экземпляр стратегии
          * @param {Function} Module Конструктор стратегии
-         * @return {Types/Display/IItemsStrategy} Экземпляр стратегии
+         * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
          */
         Composer.prototype.getInstance = function (Module) {
             var index = this._modules.indexOf(Module);
@@ -145,18 +145,18 @@ define('Types/_display/itemsStrategy/Composer', [
             return this._getInstance(index);
         };    /**
          * Возвращает результат компоновки
-         * @return {Types/Display/IItemsStrategy} Экземпляр стратегии
+         * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
          */
         /**
          * Возвращает результат компоновки
-         * @return {Types/Display/IItemsStrategy} Экземпляр стратегии
+         * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
          */
         Composer.prototype.getResult = function () {
             return this._result;
         };    //endregion Public members
-              //region Types/Entity/SerializableMixin
+              //region Types/_entity/SerializableMixin
         //endregion Public members
-        //region Types/Entity/SerializableMixin
+        //region Types/_entity/SerializableMixin
         Composer.prototype._getSerializableState = function (state) {
             state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
             state.$options = {};
@@ -173,9 +173,9 @@ define('Types/_display/itemsStrategy/Composer', [
                 this._options = state._options;
                 this._result = state._result;
             };
-        };    //endregion Types/Entity/SerializableMixin
+        };    //endregion Types/_entity/SerializableMixin
               //region Protected members
-        //endregion Types/Entity/SerializableMixin
+        //endregion Types/_entity/SerializableMixin
         //region Protected members
         Composer.prototype._reBuild = function (index, onAdd) {
             var _this = this;
@@ -210,8 +210,8 @@ define('Types/_display/itemsStrategy/Composer', [
             return item;
         };
         return Composer;
-    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin)    /** @lends Types/Display/ItemsStrategy/Composer.prototype */);
-    /** @lends Types/Display/ItemsStrategy/Composer.prototype */
+    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin)    /** @lends Types/_display/ItemsStrategy/Composer.prototype */);
+    /** @lends Types/_display/ItemsStrategy/Composer.prototype */
     exports.default = Composer;
     Composer.prototype._moduleName = 'Types/display:itemsStrategy.Composer';
     Composer.prototype['[Types/_display/itemsStrategy/Composer]'] = true;    // @ts-ignore

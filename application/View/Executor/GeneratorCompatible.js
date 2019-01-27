@@ -719,7 +719,7 @@ define('View/Executor/GeneratorCompatible', [
             '',
             attributes.inheritOptions
         ]);
-        var dataComponent = data.dataComponent, id, varStorage = null, cnstr = data.controlClass, resultingFn = cnstr && getTemplate(cnstr), decOptions;
+        var dataComponent = data.dataComponent, id, varStorage = null, cnstr = data.controlClass, resultingFn = cnstr && cnstr.prototype && getTemplate(cnstr), decOptions;
         if (!cnstr && !resultingFn) {
             return '';
         }

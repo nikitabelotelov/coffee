@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_collection/enumerator/Objectwise" />
 /**
  * Энумератор для собственных свойств объекта
- * @class Types/Collection/ObjectEnumerator
- * @implements Types/Collection/IEnumerator
+ * @class Types/_collection/ObjectEnumerator
+ * @implements Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.
  */

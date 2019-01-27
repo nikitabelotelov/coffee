@@ -2,13 +2,13 @@
 /**
  * Прототип поля записи.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Format/Field
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IEquatable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * @class Types/_entity/format/Field
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -21,8 +21,8 @@ define('Types/_entity/format/Field', [
     'Types/_entity/OptionsToPropertyMixin',
     'Types/_entity/SerializableMixin',
     'Types/_entity/CloneableMixin',
-    'Core/helpers/Object/isEqual'
-], function (require, exports, tslib_1, util_1, DestroyableMixin_1, OptionsToPropertyMixin_1, SerializableMixin_1, CloneableMixin_1, isEqualObject) {
+    'Types/object'
+], function (require, exports, tslib_1, util_1, DestroyableMixin_1, OptionsToPropertyMixin_1, SerializableMixin_1, CloneableMixin_1, object_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    // @ts-ignore
     // @ts-ignore
@@ -35,12 +35,12 @@ define('Types/_entity/format/Field', [
             return _this;
         }    /**
          * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
-         * @param {Types/Format/Field} to Формат поля, с которым сравнить
+         * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
          * @return {Boolean}
          */
         /**
          * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
-         * @param {Types/Format/Field} to Формат поля, с которым сравнить
+         * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
          * @return {Boolean}
          */
         Field.prototype.isEqual = function (to) {
@@ -49,14 +49,14 @@ define('Types/_entity/format/Field', [
             }
             var selfProto = Object.getPrototypeOf(this);
             var toProto = Object.getPrototypeOf(to);
-            return selfProto === toProto && this.getName() === to.getName() && isEqualObject(this.getDefaultValue(), to.getDefaultValue()) && this.isNullable() === to.isNullable();
-        };    //endregion Types/Entity/IEquatable
+            return selfProto === toProto && this.getName() === to.getName() && object_1.isEqual(this.getDefaultValue(), to.getDefaultValue()) && this.isNullable() === to.isNullable();
+        };    //endregion Types/_entity/IEquatable
               //region Public methods
               /**
          * Возвращает модуль, который является конструктором значения поля
          * @return {String|Function}
          */
-        //endregion Types/Entity/IEquatable
+        //endregion Types/_entity/IEquatable
         //region Public methods
         /**
          * Возвращает модуль, который является конструктором значения поля
@@ -160,11 +160,11 @@ define('Types/_entity/format/Field', [
             this._$nullable = nullable;
         };    /**
          * Копирует формат поля из другого формата
-         * @param {Types/Format/Field} format Формат поля, который надо скопировать
+         * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
          */
         /**
          * Копирует формат поля из другого формата
-         * @param {Types/Format/Field} format Формат поля, который надо скопировать
+         * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
          */
         Field.prototype.copyFrom = function (format) {
             var formatOptions = format._getOptions();

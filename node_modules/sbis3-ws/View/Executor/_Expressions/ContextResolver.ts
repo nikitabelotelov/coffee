@@ -6,13 +6,18 @@ import * as IoC from 'Core/IoC';
 import * as DataContext from 'Core/DataContext';
 
 const whiteList = {
-   "Controls/Application/AppData": true,
    "UserActivity/ActivityContextField": true,
    "Notes/VDOM/Context": true,
+   "Controls/Application/AppData": true,
    "Controls/Container/Scroll/Context": true,
    "Controls/Context/TouchContextField": true,
    "Controls/StickyHeader/Context": true,
    "Controls/Container/Data/ContextOptions": true,
+   "Controls/Selector/__ControllerContext": true,
+   "Controls/Container/Filter/FilterContextField": true,
+   "Controls/Container/Search/SearchContextField": true,
+   "Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions": true,
+   "Controls/Container/Suggest/Layout/_SuggestOptionsField": true,
    "WSTests/unit/tmpl/sync-tests/context/contextField": true,
    "WSTests/unit/tmpl/sync-tests/context/updateConsumers/ctxField": true,
    "WSTests/unit/tmpl/sync-tests/context/contextField2": true,

@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_display/IBind" />
 /**
  * Интерфейс привязки к проекции коллекции
- * @interface Types/Display/IBindCollection
+ * @interface Types/_display/IBindCollection
  * @public
  * @author Мальцев А.А.
  */
@@ -12,7 +12,7 @@ define('Types/_display/IBind', [
 ], function (require, exports, collection_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var IBind = /** @lends Types/Display/IBindCollection.prototype */
+    var IBind = /** @lends Types/_display/IBindCollection.prototype */
     {
         '[Types/_display/IBind]': true,
         /**
@@ -41,18 +41,18 @@ define('Types/_display/IBind', [
         ACTION_RESET: collection_1.IObservable.ACTION_RESET    /**
          * @event onCollectionChange После изменения коллекции
          * @param {Core/EventObject} event Дескриптор события.
-         * @param {Types/Collection/IBind#ChangeAction} action Действие, приведшее к изменению.
-         * @param {Types/Display/CollectionItem[]} newItems Новые элементы коллекции.
+         * @param {Types/_collection/IBind#ChangeAction} action Действие, приведшее к изменению.
+         * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.
          * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-         * @param {Types/Display/CollectionItem[]} oldItems Удаленные элементы коллекции.
+         * @param {Types/_display/CollectionItem[]} oldItems Удаленные элементы коллекции.
          * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
          * @param {String} groupId Идентификатор группы, в которой произошли изменения
          * @example
          * <pre>
          *    define([
-         *       'Types/Collection/ObservableList',
-         *       'Types/Display/Collection',
-         *       'Types/Display/IBindCollection'
+         *       'Types/_collection/ObservableList',
+         *       'Types/_display/Collection',
+         *       'Types/_display/IBindCollection'
          *    ], function(
          *       ObservableList,
          *       CollectionDisplay,
@@ -75,18 +75,18 @@ define('Types/_display/IBind', [
     /**
          * @event onCollectionChange После изменения коллекции
          * @param {Core/EventObject} event Дескриптор события.
-         * @param {Types/Collection/IBind#ChangeAction} action Действие, приведшее к изменению.
-         * @param {Types/Display/CollectionItem[]} newItems Новые элементы коллекции.
+         * @param {Types/_collection/IBind#ChangeAction} action Действие, приведшее к изменению.
+         * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.
          * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-         * @param {Types/Display/CollectionItem[]} oldItems Удаленные элементы коллекции.
+         * @param {Types/_display/CollectionItem[]} oldItems Удаленные элементы коллекции.
          * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
          * @param {String} groupId Идентификатор группы, в которой произошли изменения
          * @example
          * <pre>
          *    define([
-         *       'Types/Collection/ObservableList',
-         *       'Types/Display/Collection',
-         *       'Types/Display/IBindCollection'
+         *       'Types/_collection/ObservableList',
+         *       'Types/_display/Collection',
+         *       'Types/_display/IBindCollection'
          *    ], function(
          *       ObservableList,
          *       CollectionDisplay,

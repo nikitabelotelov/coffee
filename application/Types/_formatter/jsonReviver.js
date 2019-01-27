@@ -1,8 +1,8 @@
 define('Types/_formatter/jsonReviver', [
     'require',
     'exports',
-    'Core/IoC'
-], function (require, exports, IoC) {
+    'Types/util'
+], function (require, exports, util_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DataRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
@@ -32,7 +32,7 @@ define('Types/_formatter/jsonReviver', [
                     }
                     instance = Module.fromJSON ? Module.fromJSON.call(Module, item.value) : Module.prototype.fromJSON.call(Module, item.value);
                 } catch (e) {
-                    IoC.resolve('ILogger').error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
+                    util_1.logger.error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
                     instance = null;
                 }
                 instanceStorage[item.value.id] = instance;

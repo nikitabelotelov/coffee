@@ -5,6 +5,7 @@ import { IAdapterStorage } from "./IAdapterStorage";
     /**
      * Класс, который записывает Stomp данные в IndexDB
      * @class Lib/ServerEvent/native/_IndexedDB/Writer
+     * @author Санников К.А
      */
 export class Writer
 {

@@ -9,6 +9,7 @@ const SECONDS_5 = 5000;
  * Класс доставки событий через indexedDB.
  * Доставка на вкладку осуществляется через периодический опрос indexedDB.
  * При запросе на доставку, сообщение помещается в indexedDB.
+ * @author Санников К.А
  */
 export class IndexedDB implements SEB.IEventDeliver {
     static INIT_TIMEOUT = 4000;

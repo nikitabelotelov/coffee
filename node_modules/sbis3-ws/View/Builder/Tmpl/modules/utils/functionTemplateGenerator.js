@@ -76,7 +76,7 @@ define('View/Builder/Tmpl/modules/utils/functionTemplateGenerator', [
             if (this.includedFn){
                return templateObjectHtmlTemplateNew.replace(/\n/g, ' ')
                   .replace('/*#FUNC#*/', functionString).replace('/*#FUNCTOSTR#*/', functionString)
-                  .replace('/*#DIRTY#*/', dirtyString||'{}');
+                  .replace('/*#DIRTY#*/', dirtyString ? ('isVdom?'+dirtyString+':{}') : '{}');
             }
             return templateObjectHtmlTemplate
                .replace(/\n/g, ' ')

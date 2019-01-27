@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/Enum" />
 /**
  * Проекция типа "Перечисляемое".
- * @class Types/Display/Enum
- * @extends Types/Display/Collection
+ * @class Types/_display/Enum
+ * @extends Types/_display/Collection
  * @public
  * @author Ганшнин Ярослав
  */
@@ -20,12 +20,12 @@ define('Types/_display/Enum', [
     }
     var Enum = /** @class */
     function (_super) {
-        tslib_1.__extends(Enum, _super);    /** @lends Types/Display/Enum.prototype */
-        /** @lends Types/Display/Enum.prototype */
+        tslib_1.__extends(Enum, _super);    /** @lends Types/_display/Enum.prototype */
+        /** @lends Types/_display/Enum.prototype */
         function Enum(options) {
             var _this = _super.call(this, options) || this;
             if (!_this._$collection['[Types/_collection/IEnum]']) {
-                throw new TypeError(_this._moduleName + ': source collection should implement Types/Type/IEnum');
+                throw new TypeError(_this._moduleName + ': source collection should implement Types/_collectionIEnum');
             }
             _this._getCursorEnumerator().setPosition(_this.getIndexBySourceIndex(_this._$collection.get()));
             if (_this._$collection['[Types/_entity/ObservableMixin]']) {
@@ -76,8 +76,8 @@ define('Types/_display/Enum', [
             return -1;
         };
         return Enum;
-    }(Collection_1.default    /** @lends Types/Display/Enum.prototype */);
-    /** @lends Types/Display/Enum.prototype */
+    }(Collection_1.default    /** @lends Types/_display/Enum.prototype */);
+    /** @lends Types/_display/Enum.prototype */
     exports.default = Enum;
     Enum.prototype._moduleName = 'Types/display:Enum';
     Enum.prototype['[Types/_display/Enum]'] = true;    // @ts-ignore

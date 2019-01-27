@@ -976,6 +976,13 @@ define('Lib/Control/Control', [
           * компонента, то все конфиги внутри нее останутся в configStorage
           * При destroy компонента удалим найденные конфиги из configStorage
           */
+         // New Control instance will be registered in global object.
+         // It may lead to memory leak on presentation service.
+         // To prevent this it is necessary to check that Control is not created on server.
+         if(typeof window === 'undefined') {
+            IoC.resolve('ILogger').error(new Error('Creating Lib/Control/Control on server side is forbidden'));
+         }
+
          for(var opt in cfg) {
             if (cfg.hasOwnProperty(opt)) {
                this._saveConfigFromOption(cfg[opt]);

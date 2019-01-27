@@ -2,7 +2,9 @@
 import { IAdapterStorage, IQuery } from "./IAdapterStorage";
 
 const MINUTE: number = 60000;
-
+/**
+ * @author Санников К.А
+ */
 class Query implements IQuery {
     getKeyRange() {
         return undefined;

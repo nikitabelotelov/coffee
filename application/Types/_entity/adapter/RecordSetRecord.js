@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/RecordSetRecord" />
 /**
  * Адаптер для записи таблицы данных в формате записи.
- * Работает с данными, представленными в виде экземлпяра {@link Types/Entity/Record}.
+ * Работает с данными, представленными в виде экземлпяра {@link Types/_entity/Record}.
  *
  * Создадим адаптер для записи:
  * <pre>
@@ -14,10 +14,10 @@
  *       adapter = new RecordSetRecord(record);
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/RecordSetRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @mixes Types/Adapter/GenericFormatMixin
+ * @class Types/_entity/adapter/RecordSetRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -36,13 +36,13 @@ define('Types/_entity/adapter/RecordSetRecord', [
     function (_super) {
         tslib_1.__extends(RecordSetRecord, _super);    /**
          * Конструктор
-         * @param {Types/Entity/Record} data Сырые данные
-         * @param {Types/Collection/RecordSet} [tableData] Таблица
+         * @param {Types/_entity/Record} data Сырые данные
+         * @param {Types/_collection/RecordSet} [tableData] Таблица
          */
         /**
          * Конструктор
-         * @param {Types/Entity/Record} data Сырые данные
-         * @param {Types/Collection/RecordSet} [tableData] Таблица
+         * @param {Types/_entity/Record} data Сырые данные
+         * @param {Types/_collection/RecordSet} [tableData] Таблица
          */
         function RecordSetRecord(data, tableData) {
             var _this = this;

@@ -13,7 +13,7 @@ define('Types/_chain/SlicedEnumerator', [
     function () {
         /**
          * Конструктор вырезающего энумератора.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @param {Number} begin Индекс, по которому начинать извлечение
          * @param {Number} end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
          * @protected

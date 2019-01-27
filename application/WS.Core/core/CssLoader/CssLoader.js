@@ -16,34 +16,30 @@ define('Core/CssLoader/CssLoader', [
       loadCssAsync: function(name) {
          var self = this;
          var url = self.linkResolver.resolveLink(name, 'css');
-         return IoC.resolve('ITransport', {
-            method: 'GET',
-            dataType: 'text',
-            url: url
-         }).execute();
+         return this._loadFile(url);
       },
       loadCssThemedAllThemes: function(name, themes) {
-         var self = this;
          var defArr = [];
          for(var i = 0; i < themes.length; i++) {
-            var url = self.linkResolver.resolveCssWithTheme(name, themes[i]);
-            defArr.push(IoC.resolve('ITransport', {
-               method: 'GET',
-               dataType: 'text',
-               url: url
-            }).execute());
+            defArr.push(this.loadCssThemedAsync(name, themes[i]));
          }
          return Promise.all(defArr);
       },
-      loadCssThemed: function(name, theme) {
+      loadCssThemedAsync: function(name, theme) {
          var self = this;
-         var defArr = [];
          var url = self.linkResolver.resolveCssWithTheme(name, theme);
-         return IoC.resolve('ITransport', {
+         return this._loadFile(url);
+      },
+      _loadFile: function(url) {
+         var promise = IoC.resolve('ITransport', {
             method: 'GET',
             dataType: 'text',
             url: url
          }).execute();
+         promise.catch(function() {
+            IoC.resolve('ILogger').error('Css loading', 'Can\'t load css: ' + url + '');
+         });
+         return promise;
       }
    });
 

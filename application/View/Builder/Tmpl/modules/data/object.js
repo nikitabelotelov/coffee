@@ -321,7 +321,7 @@ define('View/Builder/Tmpl/modules/data/object',
             if (this.includedFn){
                templateObject.html = FSC.wrapAroundObject(templateObjectHtmlTemplateNew.replace(/\n/g, ' ')
                   .replace('/*#FUNC#*/', fAsString).replace('/*#FUNCTOSTR#*/', fAsString)
-                  .replace('/*#DIRTY#*/', dirtyCh||'{}'));
+                  .replace('/*#DIRTY#*/', dirtyCh ? ('isVdom?'+dirtyCh+':{}') : '{}'));
             } else {
                templateObject.html = FSC.wrapAroundObject(templateObjectHtmlTemplate.replace(/\n/g, ' ')
                   .replace('/*#FUNC#*/', fAsString)

@@ -92,23 +92,11 @@ export function getElementProps(element) {
 }
 
 function firstElementChild(element) {
-   return element.firstElementChild && element.firstElementChild.className !== 'vdom-focus-in'
-      ? element.firstElementChild
-      : element.firstElementChild &&
-         element.firstElementChild.nextElementSibling &&
-         element.firstElementChild.nextElementSibling.className !== 'vdom-focus-out'
-         ? element.firstElementChild.nextElementSibling
-         : null;
+   return element.firstElementChild ? element.firstElementChild : null;
 }
 
 function lastElementChild(element) {
-   return element.lastElementChild && element.lastElementChild.className !== 'vdom-focus-out'
-      ? element.lastElementChild
-      : element.lastElementChild &&
-         element.lastElementChild.previousElementSibling &&
-         element.lastElementChild.previousElementSibling.className !== 'vdom-focus-in'
-         ? element.lastElementChild.previousElementSibling
-         : null;
+   return element.lastElementChild ? element.lastElementChild : null;
 }
 
 function previousElementSibling(element) {
@@ -455,15 +443,16 @@ export function focus(element) {
    if (element.focus) {
       element.focus();
    }
-
-   try {
-      // The element itself does not have a focus method.
-      // This is true for SVG elements in Firefox and IE,
-      // as well as MathML elements in every browser.
-      // IE9 - 11 will let us abuse HTMLElement's focus method,
-      // Firefox and Edge will throw an error.
-      HTMLElement.prototype.focus.call(element);
-   } catch (e) {
-      focusSvgForeignObjectHack(element);
+   else {
+      try {
+         // The element itself does not have a focus method.
+         // This is true for SVG elements in Firefox and IE,
+         // as well as MathML elements in every browser.
+         // IE9 - 11 will let us abuse HTMLElement's focus method,
+         // Firefox and Edge will throw an error.
+         HTMLElement.prototype.focus.call(element);
+      } catch (e) {
+         focusSvgForeignObjectHack(element);
+      }
    }
 }

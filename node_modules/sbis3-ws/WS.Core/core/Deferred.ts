@@ -198,6 +198,7 @@ class Deferred {
    _running:boolean;
    __parentPromise:any;
    _cancelCallback:any;
+   _logCallbackExecutionTime:boolean;
    /**
     * @param {Object} [cfg] Конфигурация. Содержит опцию: cancelCallback - функция,
     *    реализующая отмену на уровне кода, управляющего этим Deferred-ом.
@@ -221,6 +222,8 @@ class Deferred {
             //@ts-ignore;
             this._cancelCallback = cfg.cancelCallback;
          }
+
+         this._logCallbackExecutionTime = !!cfg.logCallbackExecutionTime;
       }
       this._chained = false;
       this._chain = [];
@@ -230,6 +233,13 @@ class Deferred {
       this._running = false;
    }
 
+   /**
+    * установить флаг логгирования данного deferred в сервисе пердставления
+    * @param value значение флага
+    */
+   logCallbackExecutionTime(value) {
+      this._logCallbackExecutionTime = !!value;
+   }
 
    /**
     * Отменяет Deferred. Отмена работает только тогда, когда он находится в состоянии ожидания (когда на нём ещё не были
@@ -513,7 +523,11 @@ class Deferred {
          try {
             // Признак того, что Deferred сейчас выполняет цепочку
             this._running = true;
-            res = cDebug.methodExecutionTime(f, this, [res]);
+            if (this._logCallbackExecutionTime) {
+               res = cDebug.methodExecutionTime(f, this, [res]);
+            } else {
+               res = f(res);
+            }
             fired = resultToFired(res);
             if (isDeferredValue(res)) {
                cb = function(cbRes) {

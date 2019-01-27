@@ -301,16 +301,19 @@ export function createNode(controlClass_, options, key, environment, parentNode,
          control,
          params,
          context,
-         instCompat;
+         instCompat,
+         defaultOptions;
 
       if (typeof controlClass_ === 'function') {
          // создаем инстанс компонента
          instCompat = Compatible.createInstanceCompatible(controlCnstr, optionsWithState, internalOptions);
          control = instCompat.instance;
          optionsWithState = instCompat.resolvedOptions;
+         defaultOptions = instCompat.defaultOptions;
       } else {
          // инстанс уже есть, работаем с его опциями
          control = controlClass_;
+         defaultOptions = OptionsResolver.getDefaultOptions(controlClass_);
          if (isJs.compat) {
             optionsWithState = Compatible.combineOptionsIfCompatible(
                controlCnstr.prototype,
@@ -331,6 +334,7 @@ export function createNode(controlClass_, options, key, environment, parentNode,
       contextVersions = collectObjectVersions(context);
 
       params = getControlNodeParams(control, controlCnstr, environment);
+
       result = {
          attributes: options.attributes,
          events: options.events,
@@ -343,7 +347,7 @@ export function createNode(controlClass_, options, key, environment, parentNode,
          id: control._instId || 0,
          parent: parentNode,
          key: key,
-         defaultOptions: params && params.defaultOptions,
+         defaultOptions: defaultOptions,
          markup: invisible ? Vdom.textNode('') : undefined,
          fullMarkup: undefined,
          childrenNodes: ARR_EMPTY,
@@ -825,6 +829,11 @@ export function rebuildNode(environment, dirties, node, force, isRoot) {
                            newChildNodeContext,
                            childControlNode.control
                         );
+
+                        OptionsResolver.resolveOptions(childControlNode.controlClass,
+                            childControlNode.defaultOptions,
+                            newOptions,
+                            childControlNode.parent.control._moduleName);
 
                         // Forbid force update in the time between _beforeUpdate and _afterUpdate
                         childControl._beforeUpdate && childControl._beforeUpdate(newOptions, resolvedContext);

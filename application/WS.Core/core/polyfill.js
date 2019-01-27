@@ -69,7 +69,9 @@ define('Core/polyfill', (function() {
    if (typeof AbortController === 'undefined') {
       polyfills.push('Core/polyfill/AbortController');
    }
-
+   if (typeof WeakMap === 'undefined') {
+      polyfills.push('Core/polyfill/WeakMap');
+   }
    return polyfills;
 })(), function() {
    return Array.prototype.slice.call(arguments);

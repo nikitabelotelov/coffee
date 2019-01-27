@@ -3,13 +3,15 @@ define('Core/moduleStubs', [
    'Core/constants',
    'Core/Deferred',
    'View/Executor/Utils',
-   'Core/patchRequireJS'
+   'Core/patchRequireJS',
+   'Core/library'
 ], function(
    require,
    constants,
    Deferred,
    Utils,
-   patchRequireJS
+   patchRequireJS,
+   library
 ) {
 
    'use strict';
@@ -22,6 +24,20 @@ define('Core/moduleStubs', [
 
    global.SBIS3 = {};
    global.SBIS3.CORE = {};
+
+   function getModsFromLibrary(lib, path, name) {
+      var mod = lib;
+      if (path.length !== 0) {
+         path.forEach(function(property) {
+            if (mod && typeof mod === 'object' && property in mod) {
+               mod = mod[property];
+            } else {
+               throw new ReferenceError('Cannot find module "' + path.join('.') + '" in library "' + name + '".');
+            }
+         });
+      }
+      return mod;
+   }
 
    moduleStubs = {
       requireModule: function(mods) {
@@ -39,6 +55,7 @@ define('Core/moduleStubs', [
             mods = modulesArg instanceof Array ? modulesArg : [modulesArg],
             resultMods = new Array(mods.length),
             idsToLoad = [],
+            idsName = {},
             fireResult = function() {
                var
                   nameArray,
@@ -49,9 +66,13 @@ define('Core/moduleStubs', [
                   var
                      mod = arguments[idx],
                      modIdx = idsToLoad[idx];
-                  resultMods[modIdx] = mod;
+                  if (mod) {
+                     var lib = library.parse(idsName[modIdx]);
+                     resultMods[modIdx] = getModsFromLibrary(mod, lib.path, lib.name);
+                  } else {
+                     resultMods[modIdx] = mod;
+                  }
                }
-
                mods.forEach(function(mod, index) {
                   if (mod) {
                      glob = modules;
@@ -71,19 +92,21 @@ define('Core/moduleStubs', [
          dReady.addErrback(function(e) {
             return e;
          });
-
          mods.forEach(function(mod, idx) {
+            var lib = library.parse(mod);
             // На серверном скрипте не надо проверять defined. работаем как есть
             if (!constants.isServerScript && Utils.RequireHelper.defined(mod)) {
-               resultMods[idx] = require(mod);
+               resultMods[idx] = require(lib.name);
             } else {
                idsToLoad.push(idx);
+               idsName[idx] = mod;
             }
          });
 
          if (idsToLoad.length > 0) {
             modsToLoad = idsToLoad.map(function(id) {
-               return mods[id];
+               var lib = library.parse(mods[id]);
+               return lib.name;
             });
 
             require(modsToLoad, fireResult, function(err) {
@@ -94,7 +117,7 @@ define('Core/moduleStubs', [
                }
             });
          } else {
-            fireResult();
+            fireResult(modsToLoad);
          }
 
          return dReady;

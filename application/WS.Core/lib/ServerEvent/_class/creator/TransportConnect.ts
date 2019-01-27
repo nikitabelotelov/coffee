@@ -98,7 +98,7 @@ export class TransportConnect {
         });
     }
 
-    private initStomp(webSocket): Promise<Stomp.Client> {
+    private initStomp(webSocket: WebSocket): Promise<Stomp.Client> {
         return new Promise((resolve, reject) => {
             let stomp = Stomp.over(webSocket);
             stomp.heartbeat.outgoing = TransportConnect.STOMP_HEARTBEAT_OUT_TIME;

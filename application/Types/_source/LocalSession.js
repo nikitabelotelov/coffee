@@ -4,12 +4,12 @@
  * Источник позволяет хранить данные в локальной сессии браузера.
  * Во всех вкладках будут одни и те же данные.
  *
- * @class Types/Source/LocalSession
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @implements Types/Source/IData
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_source/LocalSession
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @implements Types/_source/IData
+ * @mixes Types/_entity/OptionsMixin
  * @author Санников Кирилл
  * @public
  * @example
@@ -41,10 +41,10 @@ define('Types/_source/LocalSession', [
     'Types/collection',
     'Types/di',
     'Types/util',
-    'Core/core-merge',
+    'Types/object',
     'Core/Deferred',
     'Lib/Storage/LocalStorage'
-], function (require, exports, tslib_1, Query_1, entity_1, collection_1, di_1, util_1, coreMerge, Deferred, LocalStorage) {
+], function (require, exports, tslib_1, Query_1, entity_1, collection_1, di_1, util_1, object_1, Deferred, LocalStorage) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DATA_FIELD_PREFIX = 'd';
@@ -510,9 +510,9 @@ define('Types/_source/LocalSession', [
             var _this_1 = _super.call(this) || this;    ///region {ICrud}
             ///region {ICrud}
             _this_1['[Types/_source/ICrud]'] = true;    ///endregion
-                                                        ///region {Types/Source/ICrudPlus}
+                                                        ///region ICrudPlus
             ///endregion
-            ///region {Types/Source/ICrudPlus}
+            ///region ICrudPlus
             _this_1['[Types/_source/ICrudPlus]'] = true;    ///endregion
                                                             ///region {IData}
             ///endregion
@@ -532,9 +532,9 @@ define('Types/_source/LocalSession', [
             return _this_1;
         }    /**
          * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-         * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model}.
-         * @see Types/Entity/Model
+         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
+         * @see Types/_entity/Model
          * @example
          * Создадим новый объект:
          * <pre>
@@ -547,9 +547,9 @@ define('Types/_source/LocalSession', [
          */
         /**
          * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-         * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model}.
-         * @see Types/Entity/Model
+         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
+         * @see Types/_entity/Model
          * @example
          * Создадим новый объект:
          * <pre>
@@ -570,7 +570,7 @@ define('Types/_source/LocalSession', [
          * Читает модель из источника данных
          * @param {String|Number} key Первичный ключ модели
          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
-         * @see Types/Entity/Model
+         * @see Types/_entity/Model
          * Прочитаем данные о Солнце:
          * <pre>
          *    solarSystem.read(1).addCallback(function(star) {
@@ -582,7 +582,7 @@ define('Types/_source/LocalSession', [
          * Читает модель из источника данных
          * @param {String|Number} key Первичный ключ модели
          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
-         * @see Types/Entity/Model
+         * @see Types/_entity/Model
          * Прочитаем данные о Солнце:
          * <pre>
          *    solarSystem.read(1).addCallback(function(star) {
@@ -599,7 +599,7 @@ define('Types/_source/LocalSession', [
         };    /**
          *
          * Обновляет модель в источнике данных
-         * @param {Types/Entity/Model|Types/Collection/RecordSet} data Обновляемая запись или рекордсет
+         * @param {Types/_entity/Model|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
          * @return {Core/Deferred} Асинхронный результат выполнения
          * @example
          * Вернем Плутону статус планеты:
@@ -621,7 +621,7 @@ define('Types/_source/LocalSession', [
         /**
          *
          * Обновляет модель в источнике данных
-         * @param {Types/Entity/Model|Types/Collection/RecordSet} data Обновляемая запись или рекордсет
+         * @param {Types/_entity/Model|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
          * @return {Core/Deferred} Асинхронный результат выполнения
          * @example
          * Вернем Плутону статус планеты:
@@ -703,10 +703,10 @@ define('Types/_source/LocalSession', [
             return Deferred.success(true);
         };    /**
          * Выполняет запрос на выборку
-         * @param {Types/Query/Query} [query] Запрос
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Source/DataSet}.
-         * @see Types/Query/Query
-         * @see Types/Source/DataSet
+         * @param {Types/_source/Query} [query] Запрос
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
+         * @see Types/_source/Query
+         * @see Types/_source/DataSet
          * @example
          * <pre>
          *   solarSystem.query().addCallbacks(function (ds) {
@@ -716,10 +716,10 @@ define('Types/_source/LocalSession', [
          */
         /**
          * Выполняет запрос на выборку
-         * @param {Types/Query/Query} [query] Запрос
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Source/DataSet}.
-         * @see Types/Query/Query
-         * @see Types/Source/DataSet
+         * @param {Types/_source/Query} [query] Запрос
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
+         * @see Types/_source/Query
+         * @see Types/_source/DataSet
          * @example
          * <pre>
          *   solarSystem.query().addCallbacks(function (ds) {
@@ -778,14 +778,14 @@ define('Types/_source/LocalSession', [
             if (fromData === null || toData === null) {
                 return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
             }
-            var data = coreMerge(fromData, toData);
+            var data = object_1.merge(fromData, toData);
             this.rawManager.set(from, data);
             this.rawManager.remove(to);
             return Deferred.success(true);
         };    /**
          * Создает копию модели
          * @param {String} key Первичный ключ модели
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model копия модели}.
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
          * @example
          * <pre>
          *   solarSystem.copy('5').addCallbacks(function (copy) {
@@ -796,7 +796,7 @@ define('Types/_source/LocalSession', [
         /**
          * Создает копию модели
          * @param {String} key Первичный ключ модели
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model копия модели}.
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
          * @example
          * <pre>
          *   solarSystem.copy('5').addCallbacks(function (copy) {
@@ -810,7 +810,7 @@ define('Types/_source/LocalSession', [
             if (from === null) {
                 return Deferred.fail('Record with key ' + from + ' isn\'t exists');
             }
-            var to = coreMerge({}, from);
+            var to = object_1.merge({}, from);
             this.rawManager.set(myId, to);
             return Deferred.success(this.modelManager.get(to));
         };    /**
@@ -915,18 +915,18 @@ define('Types/_source/LocalSession', [
         };    /**
          * Создает новый экземпляр dataSet
          * @param {Object} rawData данные
-         * @return {Types/Source/DataSet}
+         * @return {Types/_source/DataSet}
          * @protected
          */
         /**
          * Создает новый экземпляр dataSet
          * @param {Object} rawData данные
-         * @return {Types/Source/DataSet}
+         * @return {Types/_source/DataSet}
          * @protected
          */
         LocalSession.prototype._getDataSet = function (rawData) {
             return di_1.create(// eslint-disable-line new-cap
-            this._dataSetModule, coreMerge({
+            this._dataSetModule, Object.assign({
                 writable: this._writable,
                 adapter: this.getAdapter(),
                 model: this.getModel(),
@@ -936,7 +936,7 @@ define('Types/_source/LocalSession', [
                 rawData: rawData,
                 itemsProperty: this._dataSetItemsProperty,
                 metaProperty: this._dataSetMetaProperty
-            }, { rec: false }));
+            }));
         };
         LocalSession.prototype._hierarchyMove = function (sourceItems, to, meta, keys) {
             var _this = this;

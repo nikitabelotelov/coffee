@@ -3,9 +3,9 @@
  * Список - коллекция c доступом по индексу.
  * Основные возможности:
  * <ul>
- *    <li>последовательный перебор элементов коллекции - поддержка интерфейса {@link Types/Collection/IEnumerable};</li>
- *    <li>доступ к элементам коллекции по индексу - поддержка интерфейса {@link Types/Collection/IList};</li>
- *    <li>поиск элементов коллекции по значению свойства - поддержка интерфейса {@link Types/Collection/IIndexedCollection}.</li>
+ *    <li>последовательный перебор элементов коллекции - поддержка интерфейса {@link Types/_collection/IEnumerable};</li>
+ *    <li>доступ к элементам коллекции по индексу - поддержка интерфейса {@link Types/_collection/IList};</li>
+ *    <li>поиск элементов коллекции по значению свойства - поддержка интерфейса {@link Types/_collection/IIndexedCollection}.</li>
  * </ul>
  * Создадим рекордсет, в котором в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
@@ -23,20 +23,20 @@
  *    characters.at(0).firstName;//'Tom'
  *    characters.at(1).firstName;//'Huckleberry'
  * </pre>
- * @class Types/Collection/List
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Collection/IEnumerable
- * @implements Types/Collection/IList
- * @implements Types/Collection/IIndexedCollection
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IEquatable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/ReadWriteMixin
- * @mixes Types/Entity/VersionableMixin
+ * @class Types/_collection/List
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_collection/IList
+ * @implements Types/_collection/IIndexedCollection
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/ReadWriteMixin
+ * @mixes Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -79,13 +79,13 @@ define('Types/_collection/List', [
             _super.prototype.destroy.call(this);
         };    /**
          * Возвращает энумератор для перебора элементов списка.
-         * Пример использования можно посмотреть в модуле {@link Types/Collection/IEnumerable}.
-         * @return {Types/Collection/ArrayEnumerator}
+         * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
+         * @return {Types/_collection/ArrayEnumerator}
          */
         /**
          * Возвращает энумератор для перебора элементов списка.
-         * Пример использования можно посмотреть в модуле {@link Types/Collection/IEnumerable}.
-         * @return {Types/Collection/ArrayEnumerator}
+         * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
+         * @return {Types/_collection/ArrayEnumerator}
          */
         List.prototype.getEnumerator = function () {
             return new Arraywise_1.default(this._$items);
@@ -251,14 +251,14 @@ define('Types/_collection/List', [
               //region Protected methods
               /**
          * Возвращает индексатор коллекции
-         * @return {Types/Collection/Indexer}
+         * @return {Types/_collection/Indexer}
          * @protected
          */
         // SerializableMixin
         //region Protected methods
         /**
          * Возвращает индексатор коллекции
-         * @return {Types/Collection/Indexer}
+         * @return {Types/_collection/Indexer}
          * @protected
          */
         List.prototype._getIndexer = function () {
@@ -301,14 +301,14 @@ define('Types/_collection/List', [
             return index >= 0 && index < max;
         };    /**
          * Переиндексирует список
-         * @param {Types/Collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+         * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
          * @param {Number} [start=0] С какой позиции переиндексировать
          * @param {Number} [count=0] Число переиндексируемых элементов
          * @protected
          */
         /**
          * Переиндексирует список
-         * @param {Types/Collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+         * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
          * @param {Number} [start=0] С какой позиции переиндексировать
          * @param {Number} [count=0] Число переиндексируемых элементов
          * @protected
@@ -344,17 +344,17 @@ define('Types/_collection/List', [
             }
         };    /**
          * Вызывает метод splice
-         * @param {Types/Collection/IEnumerable|Array} items Коллекция с элементами для замены
+         * @param {Types/_collection/IEnumerable|Array} items Коллекция с элементами для замены
          * @param {Number} start Индекс в массиве, с которого начинать добавление.
-         * @param {Types/Collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+         * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
          * @return {Array}
          * @protected
          */
         /**
          * Вызывает метод splice
-         * @param {Types/Collection/IEnumerable|Array} items Коллекция с элементами для замены
+         * @param {Types/_collection/IEnumerable|Array} items Коллекция с элементами для замены
          * @param {Number} start Индекс в массиве, с которого начинать добавление.
-         * @param {Types/Collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+         * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
          * @return {Array}
          * @protected
          */
@@ -401,7 +401,7 @@ define('Types/_collection/List', [
          * @deprecated
          */
         List.extend = function (mixinsList, classExtender) {
-            util_1.logger.error('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+            util_1.logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
             return coreExtend(this, mixinsList, classExtender);
         };
         ;

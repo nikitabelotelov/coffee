@@ -10,8 +10,8 @@
  *       dictionary: ['one', 'two', 'three']
  *    };
  * </pre>
- * @class Types/Format/FlagsField
- * @extends Types/Format/DictionaryField
+ * @class Types/_entity/format/FlagsField
+ * @extends Types/_entity/format/DictionaryField
  * @public
  * @author Мальцев А.А.
  */
@@ -25,14 +25,14 @@ define('Types/_entity/format/FlagsField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var FlagsField = /** @class */
     function (_super) {
-        tslib_1.__extends(FlagsField, _super);    /** @lends Types/Format/FlagsField.prototype */
-        /** @lends Types/Format/FlagsField.prototype */
+        tslib_1.__extends(FlagsField, _super);    /** @lends Types/_entity/format/FlagsField.prototype */
+        /** @lends Types/_entity/format/FlagsField.prototype */
         function FlagsField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         return FlagsField;
-    }(DictionaryField_1.default    /** @lends Types/Format/FlagsField.prototype */);
-    /** @lends Types/Format/FlagsField.prototype */
+    }(DictionaryField_1.default    /** @lends Types/_entity/format/FlagsField.prototype */);
+    /** @lends Types/_entity/format/FlagsField.prototype */
     exports.default = FlagsField;
     FlagsField.prototype['[Types/_entity/format/FlagsField]'] = true;
     FlagsField.prototype._moduleName = 'Types/entity:format.FlagsField';

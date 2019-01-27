@@ -4,8 +4,8 @@
  *
  * Выберем 100 заказов за последние сутки и отсортируем их по возрастанию номера:
  * <pre>
- *    require(['Types/Query/Query'], function (Query) {
- *       var query = new Query(),
+ *    require(['Types/source'], function (source) {
+ *       var query = new source.Query(),
  *          date = new Date();
  *
  *       date.setDate(date.getDate() - 1);
@@ -20,9 +20,9 @@
  *          .limit(100);
  *    });
  * </pre>
- * @class Types/Query/Query
- * @implements Types/Entity/ICloneable
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_source/Query
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -79,14 +79,14 @@ define('Types/_source/Query', [
         return expression;
     }    /**
      * Объект, задающий способ объединения множеств.
-     * @class Types/Query/Join
-     * @mixes Types/Entity/OptionsMixin
+     * @class Types/_source/Query/Join
+     * @mixes Types/_entity/OptionsMixin
      * @public
      */
     /**
      * Объект, задающий способ объединения множеств.
-     * @class Types/Query/Join
-     * @mixes Types/Entity/OptionsMixin
+     * @class Types/_source/Query/Join
+     * @mixes Types/_entity/OptionsMixin
      * @public
      */
     var Join = /** @class */
@@ -95,43 +95,43 @@ define('Types/_source/Query', [
         function Join(options) {
             var _this = _super.call(this) || this;    /**
              * @cfg {String} Правое множество
-             * @name Types/Query/Join#resource
+             * @name Types/_source/Query/Join#resource
              */
             /**
              * @cfg {String} Правое множество
-             * @name Types/Query/Join#resource
+             * @name Types/_source/Query/Join#resource
              */
             _this._$resource = '';    /**
              * @cfg {String} Синоним правого множества
-             * @name Types/Query/Join#as
+             * @name Types/_source/Query/Join#as
              */
             /**
              * @cfg {String} Синоним правого множества
-             * @name Types/Query/Join#as
+             * @name Types/_source/Query/Join#as
              */
             _this._$as = '';    /**
              * @cfg {Object} Правило объединения
-             * @name Types/Query/Join#on
+             * @name Types/_source/_source/Query/Join#on
              */
             /**
              * @cfg {Object} Правило объединения
-             * @name Types/Query/Join#on
+             * @name Types/_source/_source/Query/Join#on
              */
             _this._$on = {};    /**
              * @cfg {Object} Выбираемые поля
-             * @name Types/Query/Join#select
+             * @name Types/_source/Query/Join#select
              */
             /**
              * @cfg {Object} Выбираемые поля
-             * @name Types/Query/Join#select
+             * @name Types/_source/Query/Join#select
              */
             _this._$select = {};    /**
              * @cfg {Boolean} Внутреннее объединение
-             * @name Types/Query/Join#inner
+             * @name Types/_source/Query/Join#inner
              */
             /**
              * @cfg {Boolean} Внутреннее объединение
-             * @name Types/Query/Join#inner
+             * @name Types/_source/Query/Join#inner
              */
             _this._$inner = true;
             entity_1.OptionsToPropertyMixin.call(_this, options);
@@ -191,14 +191,14 @@ define('Types/_source/Query', [
     }(util_1.mixin(Object, entity_1.OptionsToPropertyMixin));
     exports.Join = Join;    /**
      * Объект, задающий способ сортировки множества
-     * @class Types/Query/Order
-     * @mixes Types/Entity/OptionsMixin
+     * @class Types/_source/Query/Order
+     * @mixes Types/_entity/OptionsMixin
      * @public
      */
     /**
      * Объект, задающий способ сортировки множества
-     * @class Types/Query/Order
-     * @mixes Types/Entity/OptionsMixin
+     * @class Types/_source/Query/Order
+     * @mixes Types/_entity/OptionsMixin
      * @public
      */
     var Order = /** @class */
@@ -212,7 +212,7 @@ define('Types/_source/Query', [
              */
                                                       /**
              * @cfg {String} Объект сортировки
-             * @name Types/Query/Order#selector
+             * @name Types/_source/Query/Order#selector
              */
             /**
              * @typedef {Boolean} Order
@@ -221,15 +221,15 @@ define('Types/_source/Query', [
              */
             /**
              * @cfg {String} Объект сортировки
-             * @name Types/Query/Order#selector
+             * @name Types/_source/Query/Order#selector
              */
             _this._$selector = '';    /**
              * @cfg {Order} Порядок сортировки
-             * @name Types/Query/Order#order
+             * @name Types/_source/Query/Order#order
              */
             /**
              * @cfg {Order} Порядок сортировки
-             * @name Types/Query/Order#order
+             * @name Types/_source/Query/Order#order
              */
             _this._$order = false;
             entity_1.OptionsToPropertyMixin.call(_this, options);
@@ -404,13 +404,13 @@ define('Types/_source/Query', [
               //region Public methods
               /**
          * Сбрасывает все параметры запроса
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          */
         //endregion ICloneable
         //region Public methods
         /**
          * Сбрасывает все параметры запроса
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          */
         Query.prototype.clear = function () {
             this._select = {};
@@ -430,8 +430,8 @@ define('Types/_source/Query', [
          * @example
          * Получим поля выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date']);
          *       console.log(query.getSelect());//{id: 'id', date: 'date'}
          *    });
@@ -443,8 +443,8 @@ define('Types/_source/Query', [
          * @example
          * Получим поля выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date']);
          *       console.log(query.getSelect());//{id: 'id', date: 'date'}
          *    });
@@ -455,20 +455,20 @@ define('Types/_source/Query', [
         };    /**
          * Устанавливает поля выборки
          * @param {Array.<String>|Object.<String>|String} expression Выбираемые поля
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выбираем все заказы с определенным набором полей:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date', 'customerId' ])
          *          .from('Orders');
          *    });
          * </pre>
          * Выбираем все заказы со всеми полями:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders');
          *    });
@@ -477,20 +477,20 @@ define('Types/_source/Query', [
         /**
          * Устанавливает поля выборки
          * @param {Array.<String>|Object.<String>|String} expression Выбираемые поля
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выбираем все заказы с определенным набором полей:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date', 'customerId' ])
          *          .from('Orders');
          *    });
          * </pre>
          * Выбираем все заказы со всеми полями:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders');
          *    });
@@ -505,8 +505,8 @@ define('Types/_source/Query', [
          * @example
          * Получим объект выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date'])
          *          .from('Orders');
          *       console.log(query.getFrom());//'Orders'
@@ -519,8 +519,8 @@ define('Types/_source/Query', [
          * @example
          * Получим объект выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date'])
          *          .from('Orders');
          *       console.log(query.getFrom());//'Orders'
@@ -535,8 +535,8 @@ define('Types/_source/Query', [
          * @example
          * Получим псеводним выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date'])
          *          .from('Orders', 'o');
          *       console.log(query.getAs());//'o'
@@ -549,8 +549,8 @@ define('Types/_source/Query', [
          * @example
          * Получим псеводним выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['id', 'date'])
          *          .from('Orders', 'o');
          *       console.log(query.getAs());//'o'
@@ -563,12 +563,12 @@ define('Types/_source/Query', [
          * Устанавливает объект выборки
          * @param {String} resource Объект выборки
          * @param {String} [as] Псеводним объекта выборки
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выбираем заказы с указанием полей через псеводним:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['o.id', 'o.date', 'o.customerId'])
          *          .from('Orders', 'o');
          *    });
@@ -578,12 +578,12 @@ define('Types/_source/Query', [
          * Устанавливает объект выборки
          * @param {String} resource Объект выборки
          * @param {String} [as] Псеводним объекта выборки
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выбираем заказы с указанием полей через псеводним:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select(['o.id', 'o.date', 'o.customerId'])
          *          .from('Orders', 'o');
          *    });
@@ -595,12 +595,12 @@ define('Types/_source/Query', [
             return this;
         };    /**
          * Возвращает способы объединения
-         * @return {Types/Query/Join[]}
+         * @return {Types/_source/Query/Join[]}
          * @example
          * Получим способ объединения c объектом Customers:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .join(
@@ -617,12 +617,12 @@ define('Types/_source/Query', [
          */
         /**
          * Возвращает способы объединения
-         * @return {Types/Query/Join[]}
+         * @return {Types/_source/Query/Join[]}
          * @example
          * Получим способ объединения c объектом Customers:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .join(
@@ -645,11 +645,11 @@ define('Types/_source/Query', [
          * @param {Object} on Правило объединения
          * @param {Object|Array|String} expression Выбираемые поля
          * @param {Boolean} [inner=true] Внутреннее или внешнее объединение
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .join(
@@ -658,7 +658,7 @@ define('Types/_source/Query', [
          *             '*'
          *          );
          *
-         *       var query = new Query()
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .join(
@@ -675,11 +675,11 @@ define('Types/_source/Query', [
          * @param {Object} on Правило объединения
          * @param {Object|Array|String} expression Выбираемые поля
          * @param {Boolean} [inner=true] Внутреннее или внешнее объединение
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .join(
@@ -688,7 +688,7 @@ define('Types/_source/Query', [
          *             '*'
          *          );
          *
-         *       var query = new Query()
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .join(
@@ -720,8 +720,8 @@ define('Types/_source/Query', [
          * @example
          * Получим способ фильтрации выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .where({host: 'my.store.com'});
@@ -736,8 +736,8 @@ define('Types/_source/Query', [
          * @example
          * Получим способ фильтрации выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .where({host: 'my.store.com'});
@@ -753,7 +753,7 @@ define('Types/_source/Query', [
          * @remark
          * Если expression передан в виде функции, то она принимает аргументы: элемент коллекции и его порядковый номер.
          * @param {Object.<String>|Function(*, Number): Boolean} expression Условие фильтрации
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выберем рейсы, приземлившиеся в аэропорту "Шереметьево", прибывшие из Нью-Йорка или Лос-Анджелеса:
          * <pre>
@@ -769,8 +769,8 @@ define('Types/_source/Query', [
          * </pre>
          * Выберем все заказы с номером больше 10, сделанные до текущего момента:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .where(function(order) {
@@ -784,7 +784,7 @@ define('Types/_source/Query', [
          * @remark
          * Если expression передан в виде функции, то она принимает аргументы: элемент коллекции и его порядковый номер.
          * @param {Object.<String>|Function(*, Number): Boolean} expression Условие фильтрации
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выберем рейсы, приземлившиеся в аэропорту "Шереметьево", прибывшие из Нью-Йорка или Лос-Анджелеса:
          * <pre>
@@ -800,8 +800,8 @@ define('Types/_source/Query', [
          * </pre>
          * Выберем все заказы с номером больше 10, сделанные до текущего момента:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .where(function(order) {
@@ -820,12 +820,12 @@ define('Types/_source/Query', [
             return this;
         };    /**
          * Возвращает способы сортировки
-         * @return {Array.<Types/Query/Order>}
+         * @return {Array.<Types/_source/Query/Order>}
          * @example
          * Получим способы сортировки выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy('id');
@@ -838,12 +838,12 @@ define('Types/_source/Query', [
          */
         /**
          * Возвращает способы сортировки
-         * @return {Array.<Types/Query/Order>}
+         * @return {Array.<Types/_source/Query/Order>}
          * @example
          * Получим способы сортировки выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy('id');
@@ -858,14 +858,14 @@ define('Types/_source/Query', [
             return this._orderBy;
         };    /**
          * Устанавливает порядок сортировки выборки
-         * @param {String|Array.<Object.<Types/Query/Order/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
-         * @param {Types/Query/Order/Order.typedef} [desc=false] По убыванию
-         * @return {Types/Query/Query}
+         * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+         * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
+         * @return {Types/_source/Query}
          * @example
          * Отсортируем заказы по полю id по возрастанию:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy('id');
@@ -873,8 +873,8 @@ define('Types/_source/Query', [
          * </pre>
          * Отсортируем заказы по полю id по убыванию:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy('id', true);
@@ -882,8 +882,8 @@ define('Types/_source/Query', [
          * </pre>
          * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy([
@@ -895,14 +895,14 @@ define('Types/_source/Query', [
          */
         /**
          * Устанавливает порядок сортировки выборки
-         * @param {String|Array.<Object.<Types/Query/Order/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
-         * @param {Types/Query/Order/Order.typedef} [desc=false] По убыванию
-         * @return {Types/Query/Query}
+         * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+         * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
+         * @return {Types/_source/Query}
          * @example
          * Отсортируем заказы по полю id по возрастанию:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy('id');
@@ -910,8 +910,8 @@ define('Types/_source/Query', [
          * </pre>
          * Отсортируем заказы по полю id по убыванию:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy('id', true);
@@ -919,8 +919,8 @@ define('Types/_source/Query', [
          * </pre>
          * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .orderBy([
@@ -970,8 +970,8 @@ define('Types/_source/Query', [
          * @example
          * Получим способ группировки выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .groupBy('customerId');
@@ -986,8 +986,8 @@ define('Types/_source/Query', [
          * @example
          * Получим способ группировки выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .groupBy('customerId');
@@ -1001,11 +1001,11 @@ define('Types/_source/Query', [
         };    /**
          * Устанавливает способ группировки выборки
          * @param {String|Array.<String>} expression Способ группировки элементов
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .groupBy('customerId');
@@ -1020,11 +1020,11 @@ define('Types/_source/Query', [
         /**
          * Устанавливает способ группировки выборки
          * @param {String|Array.<String>} expression Способ группировки элементов
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .groupBy('customerId');
@@ -1051,8 +1051,8 @@ define('Types/_source/Query', [
          * @example
          * Получим смещение выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .offset(50);
@@ -1067,8 +1067,8 @@ define('Types/_source/Query', [
          * @example
          * Получим смещение выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .offset(50);
@@ -1082,12 +1082,12 @@ define('Types/_source/Query', [
         };    /**
          * Устанавливает смещение первого элемента выборки
          * @param {Number} start Смещение первого элемента выборки
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выберем все заказы, начиная с пятидесятого:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .offset(50);
@@ -1097,12 +1097,12 @@ define('Types/_source/Query', [
         /**
          * Устанавливает смещение первого элемента выборки
          * @param {Number} start Смещение первого элемента выборки
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выберем все заказы, начиная с пятидесятого:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .offset(50);
@@ -1118,8 +1118,8 @@ define('Types/_source/Query', [
          * @example
          * Получим максимальное количество записей выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .limit(10);
@@ -1134,8 +1134,8 @@ define('Types/_source/Query', [
          * @example
          * Получим максимальное количество записей выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .limit(10);
@@ -1149,12 +1149,12 @@ define('Types/_source/Query', [
         };    /**
          * Устанавливает ограничение кол-ва элементов выборки
          * @param {Number} count Максимальное кол-во элементов выборки
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выберем первые десять заказов:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .limit(10);
@@ -1164,12 +1164,12 @@ define('Types/_source/Query', [
         /**
          * Устанавливает ограничение кол-ва элементов выборки
          * @param {Number} count Максимальное кол-во элементов выборки
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Выберем первые десять заказов:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Orders')
          *          .limit(10);
@@ -1185,8 +1185,8 @@ define('Types/_source/Query', [
          * @example
          * Получим мета-данные выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Catalogue')
          *          .meta({selectBreadCrumbs: true});
@@ -1201,8 +1201,8 @@ define('Types/_source/Query', [
          * @example
          * Получим мета-данные выборки:
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Catalogue')
          *          .meta({selectBreadCrumbs: true});
@@ -1216,12 +1216,12 @@ define('Types/_source/Query', [
         };    /**
          * Устанавливает мета-данные выборки
          * @param {Object} data Мета-данные
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Укажем, что в результатах запроса хочем дополнительно получить "хлебные крошки":
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Catalogue')
          *          .where({'parentId': 10})
@@ -1232,12 +1232,12 @@ define('Types/_source/Query', [
         /**
          * Устанавливает мета-данные выборки
          * @param {Object} data Мета-данные
-         * @return {Types/Query/Query}
+         * @return {Types/_source/Query}
          * @example
          * Укажем, что в результатах запроса хочем дополнительно получить "хлебные крошки":
          * <pre>
-         *    require(['Types/Query/Query'], function (Query) {
-         *       var query = new Query()
+         *    require(['Types/source'], function (source) {
+         *       var query = new source.Query()
          *          .select('*')
          *          .from('Catalogue')
          *          .where({'parentId': 10})
@@ -1256,5 +1256,6 @@ define('Types/_source/Query', [
         return Query;
     }(util_1.mixin(Object, entity_1.OptionsToPropertyMixin));
     exports.default = Query;
+    Query.prototype._moduleName = 'Types/source:Query';
     Query.prototype['[Types/_source/Query]'] = true;
 });

@@ -9,7 +9,7 @@ import * as constants from 'Core/constants';
 // @ts-ignore
 import * as Logger from 'View/Logger';
 
-import { resolveOptions } from './OptionsResolver';
+import { resolveOptions, getDefaultOptions } from './OptionsResolver';
 import { RawMarkupNode } from '../Expressions';
 
 /**
@@ -72,7 +72,8 @@ export function createInstanceCompatible(cnstr, userOptions, internalOptions) {
       coreControl,
       parentName = internalOptions.logicParent && internalOptions.logicParent._moduleName;
 
-   resolveOptions(cnstr, actualOptions, parentName);
+   var defaultOpts = getDefaultOptions(cnstr);
+   resolveOptions(cnstr, defaultOpts, actualOptions, parentName);
 
    if (internalOptions.parent && internalOptions.parent._options && internalOptions.parent._options.iWantBeWS3) {
       actualOptions.iWantBeWS3 = true;
@@ -128,7 +129,8 @@ export function createInstanceCompatible(cnstr, userOptions, internalOptions) {
    }
    return {
       instance: inst,
-      resolvedOptions: actualOptions
+      resolvedOptions: actualOptions,
+      defaultOptions: defaultOpts
    };
 }
 

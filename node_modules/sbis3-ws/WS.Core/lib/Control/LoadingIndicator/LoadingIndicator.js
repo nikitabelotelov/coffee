@@ -750,7 +750,8 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
                //zIndex которого выше zIndex-а всего остального.
                //если же индикатор лежит не в окне, а в своём контейнере, то блокировать клавиатуру не нужно,
                //потому что этот контейнер, скорее всего, немодальный
-               zIndex = this._options.showInWindow ? this._myWindow.getZIndex() : 0;
+               // на вдом _myWindow нет, т.к. показывается всегда новый индикатор. ставлю защиту
+               zIndex = this._options.showInWindow && this._myWindow ? this._myWindow.getZIndex() : 0;
 
 
                if (e.keyCode !== F5 && e.keyCode !== F12 && zIndex >= this._getMaxZIndex()) {
@@ -876,8 +877,8 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
             if(this._myWindow) {
                delete this._myWindow._myIndicator;
             }
-            wsLoadingIndicator.superclass.destroy.apply(this, arguments);
          }
+         wsLoadingIndicator.superclass.destroy.apply(this, arguments);
       }
    });
 

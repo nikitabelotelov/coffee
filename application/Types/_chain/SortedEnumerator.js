@@ -16,13 +16,13 @@ define('Types/_chain/SortedEnumerator', [
     function (_super) {
         tslib_1.__extends(SortedEnumerator, _super);    /**
          * Конструктор сортирующего энумератора.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @param {function(*, Number): *} [compareFunction] Функция сравнения.
          * @protected
          */
         /**
          * Конструктор сортирующего энумератора.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @param {function(*, Number): *} [compareFunction] Функция сравнения.
          * @protected
          */

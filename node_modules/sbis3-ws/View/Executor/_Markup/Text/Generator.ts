@@ -110,7 +110,9 @@ function buildForNewControl(scope, cnstr, decOptions) {
    _options.doNotSetParent = true;
 
    var parentName = (_options._logicParent && _options._logicParent._moduleName) || '';
-   OptionsResolver.resolveOptions(cnstr, _options, parentName);
+
+   var defaultOpts = OptionsResolver.getDefaultOptions(cnstr);
+   OptionsResolver.resolveOptions(cnstr, defaultOpts, _options, parentName);
 
    var
       inst = new cnstr(_options),
@@ -301,7 +303,7 @@ GeneratorText.createWsControl = function createWsControl(tpl, scope, attributes,
 
    var varStorage = null,
       cnstr = data.controlClass,
-      resultingFn = cnstr && cnstr.prototype._template;
+      resultingFn = cnstr && cnstr.prototype && cnstr.prototype._template;
 
    if (!cnstr && !resultingFn) {
       return '';

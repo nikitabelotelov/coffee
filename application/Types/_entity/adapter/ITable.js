@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/ITable" />
 /**
  * Интерфейс адаптера для таблицы данных
- * @interface Types/Adapter/ITable
+ * @interface Types/_entity/adapter/ITable
  * @public
  * @author Мальцев А.А.
  */

@@ -879,11 +879,10 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
          this._calcVariables();
          this._isCalculatingVariables = true;
          this._areas[area.getId()] = area;
-         if (area._options.isStack) {
-            BODY().addClass('ws-float-area-overflow-scrolling-auto'); //Убираем overflow-scrolling со всех скролл контейнеров
-            this._removeTouchFixClass();
-            area.getContainer().addClass('ws-float-area__touchScroll-fix'); //Включаем overflow-scrolling внутри новой панели
-         }
+
+         BODY().addClass('ws-float-area-overflow-scrolling-auto'); //Убираем overflow-scrolling со всех скролл контейнеров
+         this._removeTouchFixClass();
+         area.getContainer().addClass('ws-float-area__touchScroll-fix'); //Включаем overflow-scrolling внутри новой панели
       },
       /**
        *
@@ -895,13 +894,14 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
             info = this._areaInfos[id];
          if (info) {
             delete this._areaInfos[id];
-
             this._removeAreaFromStack(info, true);
-            if (!this._stack.length) {
-               $(cConstants.$body).removeClass('ws-float-area-overflow-scrolling-auto');
-            }
-            else {
-               this._removeTouchFixClass();
+         }
+
+         if (!Object.keys(this._areas || {}).length) {
+            $(cConstants.$body).removeClass('ws-float-area-overflow-scrolling-auto');
+         } else {
+            this._removeTouchFixClass();
+            if (this._getTopFloatArea()) {
                this._getTopFloatArea().control.getContainer().addClass('ws-float-area__touchScroll-fix');
             }
          }
@@ -909,8 +909,10 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
       },
 
       _removeTouchFixClass: function() {
-         for (var i = 0; i < this._stack.length; i++) {
-            this._stack[i].control.getContainer().removeClass('ws-float-area__touchScroll-fix');
+         for (var id in this._areas) {
+            if (this._areas.hasOwnProperty(id)) {
+               this._areas[id].getContainer().removeClass('ws-float-area__touchScroll-fix');
+            }
          }
       },
 

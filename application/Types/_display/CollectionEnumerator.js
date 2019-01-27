@@ -1,11 +1,11 @@
 /// <amd-module name="Types/_display/CollectionEnumerator" />
 /**
  * Энумератор для проекции коллекции
- * @class Types/Display/CollectionEnumerator
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @implements Types/Collection/IEnumerator
- * @mixes Types/Collection/IndexedEnumeratorMixin
+ * @class Types/_display/CollectionEnumerator
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @implements Types/_collection/IEnumerator
+ * @mixes Types/_collection/IndexedEnumeratorMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -24,28 +24,28 @@ define('Types/_display/CollectionEnumerator', [
         tslib_1.__extends(CollectionEnumerator, _super);
         function CollectionEnumerator(options) {
             var _this = _super.call(this) || this;    /**
-             * @cfg {Array.<Types/Display/CollectionItem>|Function} Элементы проекции
-             * @name Types/Display/CollectionEnumerator#items
+             * @cfg {Array.<Types/_display/CollectionItem>|Function} Элементы проекции
+             * @name Types/_display/CollectionEnumerator#items
              */
             /**
-             * @cfg {Array.<Types/Display/CollectionItem>|Function} Элементы проекции
-             * @name Types/Display/CollectionEnumerator#items
+             * @cfg {Array.<Types/_display/CollectionItem>|Function} Элементы проекции
+             * @name Types/_display/CollectionEnumerator#items
              */
             _this._$items = [];    /**
              * @cfg {Array.<Boolean>} Результат применения фильтра
-             * @name Types/Display/CollectionEnumerator#filterMap
+             * @name Types/_display/CollectionEnumerator#filterMap
              */
             /**
              * @cfg {Array.<Boolean>} Результат применения фильтра
-             * @name Types/Display/CollectionEnumerator#filterMap
+             * @name Types/_display/CollectionEnumerator#filterMap
              */
             _this._$filterMap = [];    /**
              * @cfg {Array.<Number>} Результат применения сортировки
-             * @name Types/Display/CollectionEnumerator#sortMap
+             * @name Types/_display/CollectionEnumerator#sortMap
              */
             /**
              * @cfg {Array.<Number>} Результат применения сортировки
-             * @name Types/Display/CollectionEnumerator#sortMap
+             * @name Types/_display/CollectionEnumerator#sortMap
              */
             _this._$sortMap = [];    /**
              * Индекс элемента проекции -> Порядковый индекс
@@ -114,7 +114,7 @@ define('Types/_display/CollectionEnumerator', [
               /**
          * Возвращает элемент по индексу
          * @param {Number} index Индекс
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          * @state mutable
          */
         //endregion
@@ -122,7 +122,7 @@ define('Types/_display/CollectionEnumerator', [
         /**
          * Возвращает элемент по индексу
          * @param {Number} index Индекс
-         * @return {Types/Display/CollectionItem}
+         * @return {Types/_display/CollectionItem}
          * @state mutable
          */
         CollectionEnumerator.prototype.at = function (index) {
@@ -140,11 +140,11 @@ define('Types/_display/CollectionEnumerator', [
             return this._internalToSource.length;
         };    /**
          * Устанавливает текущий элемент
-         * @param {Types/Display/CollectionItem} item Текущий элемент
+         * @param {Types/_display/CollectionItem} item Текущий элемент
          */
         /**
          * Устанавливает текущий элемент
-         * @param {Types/Display/CollectionItem} item Текущий элемент
+         * @param {Types/_display/CollectionItem} item Текущий элемент
          */
         CollectionEnumerator.prototype.setCurrent = function (item) {
             this._itemsCache = null;

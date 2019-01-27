@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_entity/Identity" />
 /**
  * Тип данных "Идентификатор".
- * @class Types/Type/Identity
+ * @class Types/_entity/Identity
  * @public
  * @author Мальцев А.А.
  * @example
  * <pre>
- *    require(['Types/Type/Identity'], function (Identity) {
+ *    require(['Types/_entity/Identity'], function (Identity) {
  *       var id = new Identity([1, 'Employees']);
  *       console.log(id.getValue());//1
  *       console.log(id.getName());//'Employees'
@@ -21,7 +21,7 @@ define('Types/_entity/Identity', [
 ], function (require, exports, di_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var Identity    /** @lends Types/Type/Identity.prototype */ = /** @lends Types/Type/Identity.prototype */
+    var Identity    /** @lends Types/_entity/Identity.prototype */ = /** @lends Types/_entity/Identity.prototype */
     /** @class */
     function () {
         /**

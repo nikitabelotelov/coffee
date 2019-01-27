@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_entity/adapter/CowTable" />
 /**
  * Адаптер таблицы для работы в режиме Copy-on-write.
- * @class Types/Adapter/CowTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @implements Types/Adapter/IDecorator
+ * @class Types/_entity/adapter/CowTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.
  */
 define('Types/_entity/adapter/CowTable', [
@@ -21,13 +21,13 @@ define('Types/_entity/adapter/CowTable', [
         tslib_1.__extends(CowTable, _super);    /**
          * Конструктор
          * @param {*} data Сырые данные
-         * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+         * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
          * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
          */
         /**
          * Конструктор
          * @param {*} data Сырые данные
-         * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+         * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
          * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
          */
         function CowTable(data, original, writeCallback) {
@@ -99,9 +99,9 @@ define('Types/_entity/adapter/CowTable', [
         };
         CowTable.prototype.getOriginal = function () {
             return this._originalTable;
-        };    //endregion Types/Adapter/IDecorator
+        };    //endregion Types/_entity/adapter/IDecorator
               //region Protected methods
-        //endregion Types/Adapter/IDecorator
+        //endregion Types/_entity/adapter/IDecorator
         //region Protected methods
         CowTable.prototype._copy = function () {
             if (!this._copied) {

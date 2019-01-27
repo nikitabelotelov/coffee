@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/InstantiableMixin" />
 /**
  * Миксин, позволяющий генерировать уникальный (в рамках миксина) идентификатор для каждого экземпляра класса.
- * @mixin Types/Entity/InstantiableMixin
+ * @mixin Types/_entity/InstantiableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -14,7 +14,7 @@ define('Types/_entity/InstantiableMixin', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var MAX_VALUE = Number.MAX_SAFE_INTEGER || Math.pow(2, 53) - 1;
     var counter = 0;
-    var InstantiableMixin = /** @lends Types/Entity/InstantiableMixin.prototype */
+    var InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype */
     {
         '[Types/_entity/InstantiableMixin]': true,
         /**

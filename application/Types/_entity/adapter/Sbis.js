@@ -2,9 +2,9 @@
 /**
  * Адаптер для данных в формате СБиС.
  * Работает с форматом данных, который использует БЛ СБИС.
- * Примеры можно посмотреть в модулях {@link Types/Adapter/SbisRecord} и {@link Types/Adapter/SbisTable}.
- * @class Types/Adapter/Sbis
- * @extends Types/Adapter/Abstract
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/SbisRecord} и {@link Types/_entity/adapter/SbisTable}.
+ * @class Types/_entity/adapter/Sbis
+ * @extends Types/_entity/adapter/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -22,8 +22,8 @@ define('Types/_entity/adapter/Sbis', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Sbis = /** @class */
     function (_super) {
-        tslib_1.__extends(Sbis, _super);    /** @lends Types/Adapter/Sbis.prototype */
-        /** @lends Types/Adapter/Sbis.prototype */
+        tslib_1.__extends(Sbis, _super);    /** @lends Types/_entity/adapter/Sbis.prototype */
+        /** @lends Types/_entity/adapter/Sbis.prototype */
         function Sbis() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -59,8 +59,8 @@ define('Types/_entity/adapter/Sbis', [
             configurable: true
         });
         return Sbis;
-    }(Abstract_1.default    /** @lends Types/Adapter/Sbis.prototype */);
-    /** @lends Types/Adapter/Sbis.prototype */
+    }(Abstract_1.default    /** @lends Types/_entity/adapter/Sbis.prototype */);
+    /** @lends Types/_entity/adapter/Sbis.prototype */
     exports.default = Sbis;
     Sbis.prototype['[Types/_entity/adapter/Sbis]'] = true;
     Sbis.prototype._moduleName = 'Types/entity:adapter.Sbis';

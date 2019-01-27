@@ -3,6 +3,7 @@ import { IAdapterStorage, IQuery } from "./IAdapterStorage";
 
 /**
  * Отладочная утилита. Не нужно долго хранить.
+ * @author Санников К.А
  */
 const HALF_MINUTE: number = 60000;
 const KEY_TIMESTAMP = 'timestamp';

@@ -1,5 +1,6 @@
 /// <amd-module name='View/_Request/Console' />
 /* tslint:disable:no-console */
+/* eslint-disable no-console */
 import {IConsole} from 'View/_Request/Interface/IConsole';
 // @ts-ignore
 import constants = require("Core/constants");

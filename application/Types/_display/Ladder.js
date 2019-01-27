@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_display/Ladder" />
 /**
  * Лесенка - позволяет отслеживать повторяющиеся значения в колонках таблицы.
- * @class Types/Display/Ladder
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/Ladder
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А. Александрович
  */
@@ -52,15 +52,15 @@ define('Types/_display/Ladder', [
     }
     var Ladder = /** @class */
     function (_super) {
-        tslib_1.__extends(Ladder, _super);    /** @lends Types/Display/Ladder.prototype */
+        tslib_1.__extends(Ladder, _super);    /** @lends Types/_display/Ladder.prototype */
                                               /**
          * Конструктор лесенки.
-         * @param {Types/Display/Collection} collection Проекция, по которой строится лесенка.
+         * @param {Types/_display/Collection} collection Проекция, по которой строится лесенка.
          */
-        /** @lends Types/Display/Ladder.prototype */
+        /** @lends Types/_display/Ladder.prototype */
         /**
          * Конструктор лесенки.
-         * @param {Types/Display/Collection} collection Проекция, по которой строится лесенка.
+         * @param {Types/_display/Collection} collection Проекция, по которой строится лесенка.
          */
         function Ladder(collection) {
             var _this = _super.call(this) || this;    /**
@@ -169,27 +169,27 @@ define('Types/_display/Ladder', [
               //region Public methods
               /**
          * Возвращает проекцию коллекции, по которой строится лесенка.
-         * @return {Types/Display/Collection|null}
+         * @return {Types/_display/Collection|null}
          */
         //endregion
         //region Public methods
         /**
          * Возвращает проекцию коллекции, по которой строится лесенка.
-         * @return {Types/Display/Collection|null}
+         * @return {Types/_display/Collection|null}
          */
         Ladder.prototype.getCollection = function () {
             return this._collection;
         };    /**
          * Устанавливает проекцию коллекции, по которой строится лесенка.
-         * @param {Types/Display/Collection|null} collection Проекция, по которой строится лесенка.
+         * @param {Types/_display/Collection|null} collection Проекция, по которой строится лесенка.
          */
         /**
          * Устанавливает проекцию коллекции, по которой строится лесенка.
-         * @param {Types/Display/Collection|null} collection Проекция, по которой строится лесенка.
+         * @param {Types/_display/Collection|null} collection Проекция, по которой строится лесенка.
          */
         Ladder.prototype.setCollection = function (collection) {
             if (collection !== null && !(collection instanceof Collection_1.default)) {
-                throw new TypeError('Argument "collection" should be an instance of Types/Display/Collection');
+                throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
             }    //Reset for  the new collection
             //Reset for  the new collection
             var reset = collection !== this._collection;    //For the same collection just move event handler to the end (unsubscribe and then subscribe)
@@ -505,8 +505,8 @@ define('Types/_display/Ladder', [
             return prevVal !== currVal;
         };
         return Ladder;
-    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin)    /** @lends Types/Display/Ladder.prototype */);
-    /** @lends Types/Display/Ladder.prototype */
+    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin)    /** @lends Types/_display/Ladder.prototype */);
+    /** @lends Types/_display/Ladder.prototype */
     exports.default = Ladder;
     Ladder.prototype._moduleName = 'Types/display:Ladder';
     Ladder.prototype['[Types/_display/Ladder]'] = true;

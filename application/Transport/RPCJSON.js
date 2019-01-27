@@ -150,7 +150,11 @@ define('Transport/RPCJSON', [
                fallback:
                request;
 
-           return callFunction(requestParams).addErrback(function (error) {
+           var def = callFunction(requestParams);
+           // логгируем колбеки дефередов, связанных с запросами на БЛ
+           def.logCallbackExecutionTime(true);
+
+           return def.addErrback(function (error) {
                if (!error.details){
                    var code = error.httpError || 0;
                    error.details = code > 500? rk('Попробуйте заглянуть сюда через 15 минут'): '';

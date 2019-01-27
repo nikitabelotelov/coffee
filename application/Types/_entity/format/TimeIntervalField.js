@@ -9,8 +9,8 @@
  *       type: 'timeinterval'
  *    };
  * </pre>
- * @class Types/Format/TimeIntervalField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/TimeIntervalField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -24,14 +24,14 @@ define('Types/_entity/format/TimeIntervalField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var TimeIntervalField = /** @class */
     function (_super) {
-        tslib_1.__extends(TimeIntervalField, _super);    /** @lends Types/Format/TimeIntervalField.prototype */
-        /** @lends Types/Format/TimeIntervalField.prototype */
+        tslib_1.__extends(TimeIntervalField, _super);    /** @lends Types/_entity/format/TimeIntervalField.prototype */
+        /** @lends Types/_entity/format/TimeIntervalField.prototype */
         function TimeIntervalField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         return TimeIntervalField;
-    }(Field_1.default    /** @lends Types/Format/TimeIntervalField.prototype */);
-    /** @lends Types/Format/TimeIntervalField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/TimeIntervalField.prototype */);
+    /** @lends Types/_entity/format/TimeIntervalField.prototype */
     exports.default = TimeIntervalField;
     TimeIntervalField.prototype['[Types/_entity/format/TimeIntervalField]'] = true;
     TimeIntervalField.prototype._moduleName = 'Types/entity:format.TimeIntervalField';

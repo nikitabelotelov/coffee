@@ -9,8 +9,8 @@
  *       type: 'binary'
  *    };
  * </pre>
- * @class Types/Format/BinaryField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/BinaryField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -24,14 +24,14 @@ define('Types/_entity/format/BinaryField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var BinaryField = /** @class */
     function (_super) {
-        tslib_1.__extends(BinaryField, _super);    /** @lends Types/Format/BinaryField.prototype */
-        /** @lends Types/Format/BinaryField.prototype */
+        tslib_1.__extends(BinaryField, _super);    /** @lends Types/_entity/format/BinaryField.prototype */
+        /** @lends Types/_entity/format/BinaryField.prototype */
         function BinaryField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         return BinaryField;
-    }(Field_1.default    /** @lends Types/Format/BinaryField.prototype */);
-    /** @lends Types/Format/BinaryField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/BinaryField.prototype */);
+    /** @lends Types/_entity/format/BinaryField.prototype */
     exports.default = BinaryField;
     BinaryField.prototype['[Types/_entity/format/BinaryField]'] = true;
     BinaryField.prototype._moduleName = 'Types/entity:format.BinaryField';

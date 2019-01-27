@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Grouped" />
 /**
  * Группирующее звено цепочки.
- * @class Types/Chain/Grouped
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Grouped
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -18,17 +18,17 @@ define('Types/_chain/Grouped', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Grouped = /** @class */
     function (_super) {
-        tslib_1.__extends(Grouped, _super);    /** @lends Types/Chain/Grouped.prototype */
+        tslib_1.__extends(Grouped, _super);    /** @lends Types/_chain/Grouped.prototype */
                                                /**
          * Конструктор группирующего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {String|function(*): String} key Поле группировки или функция группировки для каждого элемента.
          * @param {String|function(*): *} [value] Поле значения или функция, возвращающая значение для каждого элемента.
          */
-        /** @lends Types/Chain/Grouped.prototype */
+        /** @lends Types/_chain/Grouped.prototype */
         /**
          * Конструктор группирующего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
          * @param {String|function(*): String} key Поле группировки или функция группировки для каждого элемента.
          * @param {String|function(*): *} [value] Поле значения или функция, возвращающая значение для каждого элемента.
          */

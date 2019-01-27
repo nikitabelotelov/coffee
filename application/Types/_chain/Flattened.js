@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Flattened" />
 /**
  * Разворачивающее звено цепочки.
- * @class Types/Chain/Flattened
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Flattened
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_chain/Flattened', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Flattened = /** @class */
     function (_super) {
-        tslib_1.__extends(Flattened, _super);    /** @lends Types/Chain/Flattened.prototype */
-        /** @lends Types/Chain/Flattened.prototype */
+        tslib_1.__extends(Flattened, _super);    /** @lends Types/_chain/Flattened.prototype */
+        /** @lends Types/_chain/Flattened.prototype */
         function Flattened() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    // region Types/_collection/IEnumerable

@@ -21,6 +21,7 @@ if (typeof indexedDB !== "undefined" && indexedDB !== null && indexedDB instance
 /**
  * Соединение с indexedDB
  * @class Lib/ServerEvent/native/_IndexedDB/Connector
+ * @author Санников К.А
  */
 export class Connector {
     static DB_DEBUG = "sbis.seb.debug";

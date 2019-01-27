@@ -9,7 +9,7 @@ define('Types/_chain/FlattenedEnumerator', [
     function () {
         /**
          * Конструктор разворачивающего энумератора.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @protected
          */
         function FlattenedEnumerator(previous) {

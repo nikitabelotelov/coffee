@@ -27,7 +27,7 @@ define('View/Executor/_Utils/Common', [
                 // or already defined with require
                 var libPath = splitModule(tpl), library = _deps && _deps[libPath.library] || requireIfDefined(libPath.library);    // if the library was found, return the requested module from it
                 // if the library was found, return the requested module from it
-                return library && library[libPath.module];
+                return library && extractLibraryModule(library, libPath.module);
             }
             return null;
         },
@@ -583,13 +583,26 @@ define('View/Executor/_Utils/Common', [
     }
     exports.isLibraryModule = isLibraryModule;
     function splitModule(string) {
-        var moduleName = string.indexOf('ws:') === 0 ? splitWs(string) : string, moduleSplit = moduleName.split(':');
+        var fullName = string.indexOf('ws:') === 0 ? splitWs(string) : string, librarySplit = fullName.split(':', 2), libraryName = librarySplit[0], moduleName = librarySplit[1] && librarySplit[1].replace(/\//g, '.'), modulePath = moduleName.split('.');
         return {
-            library: moduleSplit[0],
-            module: moduleSplit[1]
+            library: libraryName,
+            module: modulePath,
+            fullName: libraryName + ':' + moduleName
         };
     }
     exports.splitModule = splitModule;
+    function extractLibraryModule(library, modulePath) {
+        var mod = library;
+        modulePath.forEach(function (part) {
+            if (mod && mod[part]) {
+                mod = mod[part];
+            } else {
+                throw new Error('Module "' + modulePath.join('.') + '" does not exist in the specified library');
+            }
+        });
+        return mod;
+    }
+    exports.extractLibraryModule = extractLibraryModule;
     function splitOptional(string) {
         var ws;
         ws = string.split('optional!');

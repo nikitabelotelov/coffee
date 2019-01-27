@@ -2,8 +2,8 @@
 /**
  * Формат поля иерархии
  *
- * @class Types/Format/HierarchyField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/HierarchyField
+ * @extends Types/_entity/format/Field
  * @author Мальцев А.А.
  */
 define('Types/_entity/format/HierarchyField', [
@@ -16,8 +16,8 @@ define('Types/_entity/format/HierarchyField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var HierarchyField = /** @class */
     function (_super) {
-        tslib_1.__extends(HierarchyField, _super);    /** @lends Types/Format/HierarchyField.prototype */
-        /** @lends Types/Format/HierarchyField.prototype */
+        tslib_1.__extends(HierarchyField, _super);    /** @lends Types/_entity/format/HierarchyField.prototype */
+        /** @lends Types/_entity/format/HierarchyField.prototype */
         function HierarchyField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -42,8 +42,8 @@ define('Types/_entity/format/HierarchyField', [
             return null;
         };
         return HierarchyField;
-    }(Field_1.default    /** @lends Types/Format/HierarchyField.prototype */);
-    /** @lends Types/Format/HierarchyField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/HierarchyField.prototype */);
+    /** @lends Types/_entity/format/HierarchyField.prototype */
     exports.default = HierarchyField;
     HierarchyField.prototype['[Types/_entity/format/HierarchyField]'] = true;
     HierarchyField.prototype._moduleName = 'Types/entity:format.HierarchyField';

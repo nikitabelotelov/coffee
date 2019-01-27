@@ -4,16 +4,16 @@
  *
  * Основные аспекты записи:
  * <ul>
- *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/Entity/IObject};</li>
- *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/Collection/IEnumerable};</li>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin}.</li>
+ *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/_entity/IObject};</li>
+ *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/_collection/IEnumerable};</li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
  * </ul>
  *
  * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
- *    require(['Types/Entity/Record'], function (Record) {
- *       var employee = new Record({
+ *    require(['Types/entity'], function (entity) {
+ *       var employee = new entity.Record({
  *          rawData: {
  *             id: 1,
  *             firstName: 'John',
@@ -27,12 +27,12 @@
  * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
  *    require([
- *       'Types/Entity/Record',
- *       'Types/Source/SbisService'
- *    ], function (Record, SbisService) {
- *       var source = new SbisService({endpoint: 'Employee'});
+ *       'Types/entity',
+ *       'Types/source'
+ *    ], function (entity, source) {
+ *       var source = new source.SbisService({endpoint: 'Employee'});
  *       source.call('read', {login: 'root'}).addCallback(function(response) {
- *          var employee = new Record({
+ *          var employee = new entity.Record({
  *             rawData: response.getRawData(),
  *             adapter: response.getAdapter()
  *          });
@@ -41,24 +41,24 @@
  *       });
  *    });
  * </pre>
- * @class Types/Entity/Record
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Entity/IObject
- * @implements Types/Entity/IObjectNotify
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @implements Types/Entity/IEquatable
- * @implements Types/Collection/IEnumerable
- * @implements Types/Mediator/IReceiver
- * @implements Types/Entity/IVersionable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/ReadWriteMixin
- * @mixes Types/Entity/FormattableMixin
- * @mixes Types/Entity/VersionableMixin
+ * @class Types/_entity/Record
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/IObject
+ * @implements Types/_entity/IObjectNotify
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @implements Types/_entity/IEquatable
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/relation/IReceiver
+ * @implements Types/_entity/IVersionable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/ReadWriteMixin
+ * @mixes Types/_entity/FormattableMixin
+ * @mixes Types/_entity/VersionableMixin
  * @ignoreOptions owner cloneChanged
  * @ignoreMethods detach
  * @public
@@ -409,7 +409,7 @@ define('Types/_entity/Record', [
             return changed;
         };    /**
          * Возвращает энумератор для перебора названий полей записи
-         * @return {Types/Collection/ArrayEnumerator}
+         * @return {Types/_collection/ArrayEnumerator}
          * @example
          * Переберем все поля записи:
          * <pre>
@@ -431,7 +431,7 @@ define('Types/_entity/Record', [
          */
         /**
          * Возвращает энумератор для перебора названий полей записи
-         * @return {Types/Collection/ArrayEnumerator}
+         * @return {Types/_collection/ArrayEnumerator}
          * @example
          * Переберем все поля записи:
          * <pre>
@@ -665,12 +665,12 @@ define('Types/_entity/Record', [
             }
         };    /**
          * Создает адаптер для сырых данных
-         * @return {Types/Adapter/IRecord}
+         * @return {Types/_entity/adapter/IRecord}
          * @protected
          */
         /**
          * Создает адаптер для сырых данных
-         * @return {Types/Adapter/IRecord}
+         * @return {Types/_entity/adapter/IRecord}
          * @protected
          */
         Record.prototype._createRawDataAdapter = function () {
@@ -758,7 +758,7 @@ define('Types/_entity/Record', [
             return name ? this._hasChangedField(name) : this.getChanged().length > 0;
         };    /**
          * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-         * @return {Types/Collection/RecordSet|null}
+         * @return {Types/_collection/RecordSet|null}
          * @example
          * Проверим владельца записи до и после вставки в рекордсет:
          * <pre>
@@ -780,7 +780,7 @@ define('Types/_entity/Record', [
          */
         /**
          * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-         * @return {Types/Collection/RecordSet|null}
+         * @return {Types/_collection/RecordSet|null}
          * @example
          * Проверим владельца записи до и после вставки в рекордсет:
          * <pre>
@@ -1489,20 +1489,20 @@ define('Types/_entity/Record', [
             enumerable: true,
             configurable: true
         });    /**
-         * @name Types/Entity/Record#addFieldTo
+         * @name Types/_entity/Record#addFieldTo
          * @function
          * Добавляет поле в запись. Если формат не указан, то он строится по типу значения поля.
-         * @param {Types/Entity/Record} record Запись
+         * @param {Types/_entity/Record} record Запись
          * @param {String} name Имя поля
          * @param {*} value Значение поля
          * @param {Object} [format] Формат поля
          * @static
          */
         /**
-         * @name Types/Entity/Record#addFieldTo
+         * @name Types/_entity/Record#addFieldTo
          * @function
          * Добавляет поле в запись. Если формат не указан, то он строится по типу значения поля.
-         * @param {Types/Entity/Record} record Запись
+         * @param {Types/_entity/Record} record Запись
          * @param {String} name Имя поля
          * @param {*} value Значение поля
          * @param {Object} [format] Формат поля
@@ -1518,7 +1518,7 @@ define('Types/_entity/Record', [
             }
             record.addField(format, undefined, value);
         };    /**
-         * @name Types/Entity/Record#fromObject
+         * @name Types/_entity/Record#fromObject
          * @function
          * Создает запись по объекту c учетом типов значений полей. Поля добавляются в запись в алфавитном порядке.
          * @example
@@ -1534,12 +1534,12 @@ define('Types/_entity/Record', [
          * //output: 'id: Integer', 'title: String'
          * </pre>
          * @param {Object} data Объект вида "имя поля" -> "значение поля"
-         * @param {String|Types/Adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
-         * @return {Types/Entity/Record}
+         * @param {String|Types/_entity/adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
+         * @return {Types/_entity/Record}
          * @static
          */
         /**
-         * @name Types/Entity/Record#fromObject
+         * @name Types/_entity/Record#fromObject
          * @function
          * Создает запись по объекту c учетом типов значений полей. Поля добавляются в запись в алфавитном порядке.
          * @example
@@ -1555,8 +1555,8 @@ define('Types/_entity/Record', [
          * //output: 'id: Integer', 'title: String'
          * </pre>
          * @param {Object} data Объект вида "имя поля" -> "значение поля"
-         * @param {String|Types/Adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
-         * @return {Types/Entity/Record}
+         * @param {String|Types/_entity/adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
+         * @return {Types/_entity/Record}
          * @static
          */
         Record.fromObject = function (data, adapter) {
@@ -1587,21 +1587,21 @@ define('Types/_entity/Record', [
             }
             return record;
         };    /**
-         * @name Types/Entity/Record#filter
+         * @name Types/_entity/Record#filter
          * @function
          * Создает запись c набором полей, ограниченным фильтром.
-         * @param {Types/Entity/Record} record Исходная запись
+         * @param {Types/_entity/Record} record Исходная запись
          * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @static
          */
         /**
-         * @name Types/Entity/Record#filter
+         * @name Types/_entity/Record#filter
          * @function
          * Создает запись c набором полей, ограниченным фильтром.
-         * @param {Types/Entity/Record} record Исходная запись
+         * @param {Types/_entity/Record} record Исходная запись
          * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @static
          */
         Record.filter = function (record, callback) {
@@ -1618,21 +1618,21 @@ define('Types/_entity/Record', [
             result.acceptChanges();
             return result;
         };    /**
-         * @name Types/Entity/Record#filterFields
+         * @name Types/_entity/Record#filterFields
          * @function
          * Создает запись c указанным набором полей
-         * @param {Types/Entity/Record} record Исходная запись
+         * @param {Types/_entity/Record} record Исходная запись
          * @param {Array.<String>} fields Набор полей, которые следует оставить в записи
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @static
          */
         /**
-         * @name Types/Entity/Record#filterFields
+         * @name Types/_entity/Record#filterFields
          * @function
          * Создает запись c указанным набором полей
-         * @param {Types/Entity/Record} record Исходная запись
+         * @param {Types/_entity/Record} record Исходная запись
          * @param {Array.<String>} fields Набор полей, которые следует оставить в записи
-         * @return {Types/Entity/Record}
+         * @return {Types/_entity/Record}
          * @static
          */
         Record.filterFields = function (record, fields) {
@@ -1642,17 +1642,20 @@ define('Types/_entity/Record', [
             return Record.filter(record, function (name) {
                 return fields.indexOf(name) > -1;
             });
-        };    /**
+        };    //endregion
+              //region Deprecated
+              /**
          * @deprecated
          */
+        //endregion
+        //region Deprecated
         /**
          * @deprecated
          */
         Record.extend = function (mixinsList, classExtender) {
-            util_3.logger.error('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+            util_3.logger.info('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
             return coreExtend(this, mixinsList, classExtender);
         };
-        ;
         return Record;
     }(util_2.mixin(DestroyableMixin_1.default, OptionsToPropertyMixin_1.default, ObservableMixin_1.default, SerializableMixin_1.default, CloneableMixin_1.default, ManyToManyMixin_1.default, ReadWriteMixin_1.default, FormattableMixin_1.default, VersionableMixin_1.default));
     exports.default = Record;

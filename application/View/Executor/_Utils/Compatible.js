@@ -79,7 +79,8 @@ define('View/Executor/_Utils/Compatible', [
     function createInstanceCompatible(cnstr, userOptions, internalOptions) {
         internalOptions = internalOptions || {};
         var actualOptions = combineOptionsIfCompatible(cnstr.prototype, userOptions, internalOptions), inst, restoreOptions, coreControl, parentName = internalOptions.logicParent && internalOptions.logicParent._moduleName;
-        OptionsResolver_1.resolveOptions(cnstr, actualOptions, parentName);
+        var defaultOpts = OptionsResolver_1.getDefaultOptions(cnstr);
+        OptionsResolver_1.resolveOptions(cnstr, defaultOpts, actualOptions, parentName);
         if (internalOptions.parent && internalOptions.parent._options && internalOptions.parent._options.iWantBeWS3) {
             actualOptions.iWantBeWS3 = true;
         }
@@ -129,7 +130,8 @@ define('View/Executor/_Utils/Compatible', [
         }
         return {
             instance: inst,
-            resolvedOptions: actualOptions
+            resolvedOptions: actualOptions,
+            defaultOptions: defaultOpts
         };
     }
     exports.createInstanceCompatible = createInstanceCompatible;    /**

@@ -1,8 +1,7 @@
 /// <amd-module name="Types/_collection/IEnum" />
 /**
- * Интерфейс тип "перечисляемое".
- * Работает на основе словаря, хранящего соотвествие индексов и их значений.
- * @interface Types/Type/IEnum
+ * Enumerable interface. It's an enumerable collection of keys and values one of which can be selected or not.
+ * @interface Types/_collectionIEnum
  * @public
  * @author Мальцев А.А.
  */

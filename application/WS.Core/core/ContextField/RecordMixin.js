@@ -23,7 +23,7 @@ define('Core/ContextField/RecordMixin', [
          items.forEach(function(data) {
             var item = data[0],
                values = data[1];
-            if (item['[Data/_entity/IObject]']) {
+            if (item['[Types/_entity/IObject]']) {
                item.set(values);
             } else {
                Object.keys(values).forEach(function(key) {

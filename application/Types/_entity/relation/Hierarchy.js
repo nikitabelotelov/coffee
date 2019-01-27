@@ -49,9 +49,9 @@
  *    hierarchy.hasDeclaredChildren(catalogue.at(1));//false
  * </pre>
  *
- * @class Types/Relation/Hierarchy
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_entity/relation/Hierarchy
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -67,8 +67,8 @@ define('Types/_entity/relation/Hierarchy', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Hierarchy = /** @class */
     function (_super) {
-        tslib_1.__extends(Hierarchy, _super);    /** @lends Types/Mediator/Hierarchy.prototype */
-        /** @lends Types/Mediator/Hierarchy.prototype */
+        tslib_1.__extends(Hierarchy, _super);    /** @lends Types/_entity/relation/Hierarchy.prototype */
+        /** @lends Types/_entity/relation/Hierarchy.prototype */
         function Hierarchy(options) {
             var _this = _super.call(this, options) || this;
             OptionsToPropertyMixin_1.default.call(_this, options);
@@ -195,7 +195,7 @@ define('Types/_entity/relation/Hierarchy', [
          *   <li><em>false</em>: запись скрытым листом</li>
          *   <li><em>null</em>: запись является листом</li>
          * </ul>
-         * @param {Types/Entity/Record} record
+         * @param {Types/_entity/Record} record
          * @return {Boolean|null}
          * @see nodeProperty
          */
@@ -207,7 +207,7 @@ define('Types/_entity/relation/Hierarchy', [
          *   <li><em>false</em>: запись скрытым листом</li>
          *   <li><em>null</em>: запись является листом</li>
          * </ul>
-         * @param {Types/Entity/Record} record
+         * @param {Types/_entity/Record} record
          * @return {Boolean|null}
          * @see nodeProperty
          */
@@ -215,16 +215,16 @@ define('Types/_entity/relation/Hierarchy', [
             return record.get(this._$nodeProperty);
         };    /**
          * Возвращает список детей для указанного родителя.
-         * @param {Types/Entity/Record|Sting|Number} parent Родительский узел или его идентификатор
-         * @param {Types/Collection/RecordSet} rs Рекордсет
-         * @return {Array.<Types/Entity/Record>}
+         * @param {Types/_entity/Record|Sting|Number} parent Родительский узел или его идентификатор
+         * @param {Types/_collection/RecordSet} rs Рекордсет
+         * @return {Array.<Types/_entity/Record>}
          * @see nodeProperty
          */
         /**
          * Возвращает список детей для указанного родителя.
-         * @param {Types/Entity/Record|Sting|Number} parent Родительский узел или его идентификатор
-         * @param {Types/Collection/RecordSet} rs Рекордсет
-         * @return {Array.<Types/Entity/Record>}
+         * @param {Types/_entity/Record|Sting|Number} parent Родительский узел или его идентификатор
+         * @param {Types/_collection/RecordSet} rs Рекордсет
+         * @return {Array.<Types/_entity/Record>}
          * @see nodeProperty
          */
         Hierarchy.prototype.getChildren = function (parent, rs) {
@@ -251,14 +251,14 @@ define('Types/_entity/relation/Hierarchy', [
         };    /**
          *
          * Возвращает признак наличия декларируемых детей.
-         * @param {Types/Entity/Record} record
+         * @param {Types/_entity/Record} record
          * @return {Boolean}
          * @see declaredChildrenProperty
          */
         /**
          *
          * Возвращает признак наличия декларируемых детей.
-         * @param {Types/Entity/Record} record
+         * @param {Types/_entity/Record} record
          * @return {Boolean}
          * @see declaredChildrenProperty
          */
@@ -266,15 +266,15 @@ define('Types/_entity/relation/Hierarchy', [
             return record.get(this._$declaredChildrenProperty);
         };    /**
          * Возвращает признак наличия родителя для указанного дочернего узла.
-         * @param {Types/Entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-         * @param {Types/Collection/RecordSet} rs Рекордсет
+         * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+         * @param {Types/_collection/RecordSet} rs Рекордсет
          * @return {Boolean}
          * @see nodeProperty
          */
         /**
          * Возвращает признак наличия родителя для указанного дочернего узла.
-         * @param {Types/Entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-         * @param {Types/Collection/RecordSet} rs Рекордсет
+         * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+         * @param {Types/_collection/RecordSet} rs Рекордсет
          * @return {Boolean}
          * @see nodeProperty
          */
@@ -288,18 +288,18 @@ define('Types/_entity/relation/Hierarchy', [
          * Возвращает родителя для указанного дочернего узла.
          * Если записи с указанным идентификатором нет - кидает исключение.
          * Если узел является корневым, возвращает null.
-         * @param {Types/Entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-         * @param {Types/Collection/RecordSet} rs Рекордсет
-         * @return {Types/Entity/Record|Null}
+         * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+         * @param {Types/_collection/RecordSet} rs Рекордсет
+         * @return {Types/_entity/Record|Null}
          * @see nodeProperty
          */
         /**
          * Возвращает родителя для указанного дочернего узла.
          * Если записи с указанным идентификатором нет - кидает исключение.
          * Если узел является корневым, возвращает null.
-         * @param {Types/Entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-         * @param {Types/Collection/RecordSet} rs Рекордсет
-         * @return {Types/Entity/Record|Null}
+         * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+         * @param {Types/_collection/RecordSet} rs Рекордсет
+         * @return {Types/_entity/Record|Null}
          * @see nodeProperty
          */
         Hierarchy.prototype.getParent = function (child, rs) {
@@ -310,18 +310,18 @@ define('Types/_entity/relation/Hierarchy', [
               //region Protected methods
               /**
          * Возвращает инстанс записи
-         * @param {Types/Entity/Record|Sting|Number} value Запись или ее ПК
-         * @param {Types/Collection/RecordSet} rs Рекордсет
-         * @return {Types/Entity/Record}
+         * @param {Types/_entity/Record|Sting|Number} value Запись или ее ПК
+         * @param {Types/_collection/RecordSet} rs Рекордсет
+         * @return {Types/_entity/Record}
          * @protected
          */
         //endregion Public methods
         //region Protected methods
         /**
          * Возвращает инстанс записи
-         * @param {Types/Entity/Record|Sting|Number} value Запись или ее ПК
-         * @param {Types/Collection/RecordSet} rs Рекордсет
-         * @return {Types/Entity/Record}
+         * @param {Types/_entity/Record|Sting|Number} value Запись или ее ПК
+         * @param {Types/_collection/RecordSet} rs Рекордсет
+         * @return {Types/_entity/Record}
          * @protected
          */
         Hierarchy.prototype._asRecord = function (value, rs) {
@@ -336,14 +336,14 @@ define('Types/_entity/relation/Hierarchy', [
             return rs.at(index);
         };    /**
          * Возвращает значение поля записи
-         * @param {Types/Entity/Record|Sting|Number} value Запись или значение ее поля
+         * @param {Types/_entity/Record|Sting|Number} value Запись или значение ее поля
          * @param {String} field Имя поля
          * @return {*}
          * @protected
          */
         /**
          * Возвращает значение поля записи
-         * @param {Types/Entity/Record|Sting|Number} value Запись или значение ее поля
+         * @param {Types/_entity/Record|Sting|Number} value Запись или значение ее поля
          * @param {String} field Имя поля
          * @return {*}
          * @protected
@@ -355,8 +355,8 @@ define('Types/_entity/relation/Hierarchy', [
             return value.get(field);
         };
         return Hierarchy;
-    }(util_1.mixin(DestroyableMixin_1.default, OptionsToPropertyMixin_1.default)    /** @lends Types/Mediator/Hierarchy.prototype */);
-    /** @lends Types/Mediator/Hierarchy.prototype */
+    }(util_1.mixin(DestroyableMixin_1.default, OptionsToPropertyMixin_1.default)    /** @lends Types/_entity/relation/Hierarchy.prototype */);
+    /** @lends Types/_entity/relation/Hierarchy.prototype */
     exports.default = Hierarchy;
     Hierarchy.prototype['[Types/_entity/relation/Hierarchy]'] = true;
     Hierarchy.prototype._$idProperty = '';

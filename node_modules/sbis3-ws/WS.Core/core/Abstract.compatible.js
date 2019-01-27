@@ -24,14 +24,14 @@ define('Core/Abstract.compatible', [
    function subscribeInner(event, handler, control) {
       if (control._getChannel) {
          control._getChannel().subscribe(event, handler, control);
-      } else {
+      } else if (control.subscribe) {
          control.subscribe(event, handler, control);
       }
    }
    function unsubscribeInner(event, handler, control) {
       if (control._getChannel) {
          control._getChannel().unsubscribe(event, handler);
-      } else {
+      } else if (control.unsubscribe) {
          control.unsubscribe(event, handler);
       }
    }
@@ -196,21 +196,9 @@ define('Core/Abstract.compatible', [
              * и если сейчас notify не из слоя совместимости, значит пропатчим его и позовем еще
              * и из слоя совместимости
              */
-            if (!this._notifyOriginCompat && this._notify._isVdomNotify) {
-               this._notifyOriginCompat = this._notify;
-               this._notify = function() {
-                  var res;
-                  if (this._mounted || !this._destroyed) {
-                     // Вызвать событие по новому можно только в случае, если
-                     // компонент смонтирован в DOM, либо если его там нет, но
-                     // при этом он не задестроен (например <invisible-node/>
-                     // не монтируются)
-                     res = this._notifyOriginCompat.apply(this, convertNotifyArgsIfNeeded(arguments));
-                  }
-                  res = AbstractObj._notify.apply(this, arguments) || res;
-                  return res;
-               }.bind(this);
-            }
+            makeNotifyCompatible(this);
+            makeNotifyCompatible(control);
+
             if (typeof handler !== 'function') {
                throw new Error(rk('Аргумент handler у метода subscribeTo должен быть функцией'));
             }
@@ -705,6 +693,29 @@ define('Core/Abstract.compatible', [
       }
 
    };
+
+   /**
+    * Проверяет, является метод _notify компонента вдомным, и если является,
+    * заменяет его на специальную версию _notify, которая пробрасывает события
+    * и по старому, и по новому
+    */
+   function makeNotifyCompatible(control) {
+      if (control && !control._notifyOriginCompat && control._notify && control._notify._isVdomNotify) {
+         control._notifyOriginCompat = control._notify;
+         control._notify = function() {
+            var res;
+            if (control._mounted || !control._destroyed) {
+               // Вызвать событие по новому можно только в случае, если
+               // компонент смонтирован в DOM, либо если его там нет, но
+               // при этом он не задестроен (например <invisible-node/>
+               // не монтируются)
+               res = control._notifyOriginCompat.apply(control, convertNotifyArgsIfNeeded(arguments));
+            }
+            res = AbstractObj._notify.apply(control, arguments) || res;
+            return res;
+         };
+      }
+   }
 
    return AbstractObj;
 });

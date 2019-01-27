@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_entity/ReadWriteMixin" />
 /**
  * Миксин, позволяющий ограничивать запись и чтение.
- * Подмешивается после Types/Entity/ObservableMixin и после Types/Entity/ManyToManyMixin, перекрывая часть их методов
- * @mixin Types/Entity/ReadWriteMixin
+ * Подмешивается после Types/_entity/ObservableMixin и после Types/_entity/ManyToManyMixin, перекрывая часть их методов
+ * @mixin Types/_entity/ReadWriteMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -23,10 +23,10 @@ define('Types/_entity/ReadWriteMixin', [
      * Свойство, хранящее признак возможности записи
      */
     var $writable = util_1.protect('writable');
-    var ReadWriteMixin = /** @lends Types/Entity/ReadWriteMixin.prototype */
+    var ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */
     {
         '[Types/_entity/ReadWriteMixin]': true,
-        //region Types/Entity/ReadWriteMixin
+        //region Types/_entity/ReadWriteMixin
         get writable() {
             return this[$writable];
         },
@@ -47,8 +47,8 @@ define('Types/_entity/ReadWriteMixin', [
                 ManyToManyMixin_1.default.destroy.call(this);
             }
         },
-        //endregion Types/Entity/ReadWriteMixin
-        //region Types/Entity/ObservableMixin
+        //endregion Types/_entity/ReadWriteMixin
+        //region Types/_entity/ObservableMixin
         subscribe: function (event, handler, ctx) {
             if (this[$writable]) {
                 return ObservableMixin_1.default.prototype.subscribe.call(this, event, handler, ctx);
@@ -71,17 +71,17 @@ define('Types/_entity/ReadWriteMixin', [
                 return ObservableMixin_1.default.prototype._notify.apply(this, arguments);
             }
         },
-        //endregion Types/Entity/ObservableMixin
-        //region Types/Entity/OptionsToPropertyMixin
+        //endregion Types/_entity/ObservableMixin
+        //region Types/_entity/OptionsToPropertyMixin
         _getOptions: function () {
             // @ts-ignore
             var options = OptionsToPropertyMixin_1.default.prototype._getOptions.call(this);    //Delete "writable" property received from _options
             //Delete "writable" property received from _options
             delete options.writable;
             return options;
-        }    //endregion Types/Entity/OptionsToPropertyMixin
+        }    //endregion Types/_entity/OptionsToPropertyMixin
     };    // @ts-ignore
-    //endregion Types/Entity/OptionsToPropertyMixin
+    //endregion Types/_entity/OptionsToPropertyMixin
     // @ts-ignore
     var IS_BROWSER = typeof window !== 'undefined';    // @ts-ignore
     // @ts-ignore

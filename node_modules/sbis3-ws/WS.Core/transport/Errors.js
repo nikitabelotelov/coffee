@@ -17,31 +17,31 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
         get lossOfConnection() {
             return i18n.rk('Потеряна связь с сайтом');
         },
-        get '401'() {
+        get 401() {
             return i18n.rk('Ошибка авторизации');
         },
-        get '403'() {
+        get 403() {
             return i18n.rk('У вас недостаточно прав для выполнения данного действия');
         },
-        get '404'() {
+        get 404() {
             return i18n.rk('Документ не найден');
         },
-        get '413'() {
+        get 413() {
             return i18n.rk('Превышен допустимый размер загружаемого файла');
         },
-        get '423'() {
+        get 423() {
             return i18n.rk('Действие заблокировано лицензией');
         },
-        get '500'() {
+        get 500() {
             return i18n.rk('Внутренняя ошибка сервера');
         },
-        get '502'() {
+        get 502() {
             return i18n.rk('Сервис находится на техническом обслуживании');
         },
-        get '503'() {
+        get 503() {
             return i18n.rk('Сервис находится на техническом обслуживании');
         },
-        get '504'() {
+        get 504() {
             return i18n.rk('Сервис находится на техническом обслуживании');
         },
     };
@@ -106,11 +106,11 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
             var _this = this;
             var config;
             // для обратной совместимсти с Transport/HTTPError
-            if (typeof cfg == "string") {
+            if (typeof cfg === "string") {
                 var status_1 = args[0], url = args[1], payload = args[2], details = args[3];
                 config = {
                     message: cfg,
-                    httpError: status_1, url: url, payload: payload, details: details
+                    httpError: status_1, url: url, payload: payload, details: details,
                 };
             }
             else {
@@ -121,6 +121,7 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
             _this.payload = config.payload || '';
             _this.status = config.httpError;
             _this.details = _this.details || exports.DETAILS_TEXT.default;
+            _this.xhr = config.xhr;
             // для обратной совместимсти с Transport/HTTPError
             _this.httpError = typeof _this.status !== 'undefined' ? _this.status : '';
             return _this;
@@ -150,6 +151,7 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
         return Parse;
     }(Transport));
     exports.Parse = Parse;
+    // tslint:disable max-classes-per-file
     /**
      * Ошибка подключения
      * @name Transport/Errors#Connection
@@ -161,7 +163,7 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
             var _this = _super.call(this, {
                 url: url,
                 message: exports.ERROR_TEXT.lossOfConnection,
-                details: exports.DETAILS_TEXT.lossOfConnection
+                details: exports.DETAILS_TEXT.lossOfConnection,
             }) || this;
             _this.name = 'ConnectionError';
             // для обратной совместимсти с Transport/HTTPError#offlineModeError
@@ -181,7 +183,7 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
         function Auth(url) {
             var _this = _super.call(this, {
                 url: url,
-                message: exports.ERROR_TEXT[401]
+                message: exports.ERROR_TEXT[401],
             }) || this;
             _this.name = 'AuthError';
             return _this;
@@ -199,7 +201,7 @@ define("Transport/Errors", ["require", "exports", "tslib", "Core/i18n", "Core/co
         function Abort(url) {
             var _this = _super.call(this, {
                 url: url,
-                message: exports.ERROR_TEXT.abort
+                message: exports.ERROR_TEXT.abort,
             }) || this;
             _this.canceled = true;
             return _this;

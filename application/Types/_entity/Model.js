@@ -4,7 +4,7 @@
  * Модели обеспечивают доступ к данным и поведению объектов предметной области (сущностям).
  * Такими сущностями могут быть, например, товары, пользователи, документы - и другие предметы окружающего мира, которые вы моделируете в своем приложении.
  *
- * В основе абстрактной модели лежит {@link Types/Entity/Record запись}.
+ * В основе абстрактной модели лежит {@link Types/_entity/Record запись}.
  * Основные аспекты модели (дополнительно к аспектам записи):
  * <ul>
  *    <li>определение {@link properties собственных свойств} сущности;</li>
@@ -12,55 +12,52 @@
  * </ul>
  *
  * Поведенческие аспекты каждой сущности реализуются ее прикладным модулем в виде публичных методов.
- * Прикладные модели могут внедряться в порождающие их объекты, такие как {@link Types/Source/ISource#model источники данных} или {@link Types/Collection/RecordSet#model рекордсеты}.
+ * Прикладные модели могут внедряться в порождающие их объекты, такие как {@link Types/_source/ISource#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
  *
  * Для реализации конкретной модели используется наследование от абстрактной либо промежуточной.
  *
  * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля в свойстве _moduleName каждого наследника:
  * <pre>
- * define('My.Awesome.Model', ['Types/Entity/Model'], function (Model) {
- *    'use strict';
- *
- *    var AwesomeModel = Model.extend({
- *      _moduleName: 'My.Awesome.Model'
- *      //...
+ *    //My/Awesome/Model.ts
+ *    import {Model} from 'Types/entity';
+ *    export default class AwesomeModel extends Model {
+ *       _moduleName: string = 'My/Awesome/Model';
+ *       //...
  *    });
  *
  *    return AwesomeModel;
- * });
  * </pre>
  *
  * Определим модель пользователя:
  * <pre>
- *    define('Application/Model/User', ['Types/Entity/Model', 'Application/Lib/Salt'], function (Model, Salt) {
- *       var User = Model.extend({
- *          _moduleName: 'Application/Model/User'
- *          _$format: [
- *             {name: 'login', type: 'string'},
- *             {name: 'salt', type: 'string'}
- *          ],
- *          _$idProperty: 'login',
- *          authenticate: function(password) {
- *             return Salt.encode(this.get('login') + ':' + password) === this.get('salt');
- *          }
- *       });
- *
- *       return User;
- *    });
+ *    //My/Awesome/Model.ts
+ *    import {Salt} from 'Application/Lib';
+ *    import {Model} from 'Types/entity';
+ *    export default class User extends Model{
+ *       _moduleName: string = 'Application/Model/User';
+ *       _$format: Array = [
+ *          {name: 'login', type: 'string'},
+ *          {name: 'salt', type: 'string'}
+ *       ];
+ *       _$idProperty: string = 'login';
+ *       authenticate(password: string): boolean {
+ *          return Salt.encode(this.get('login') + ':' + password) === this.get('salt');
+ *       }
+ *     });
  * </pre>
  * Создадим модель пользователя:
  * <pre>
- *    define('Application/Controller/Test/Auth', ['Application/Model/User'], function (User) {
- *       var user = new User();
- *       user.set({
- *          login: 'i.c.wiener',
- *          salt: 'grhS2Nys345fsSW3mL9'
- *       });
- *       var testOk = user.authenticate('its pizza time!');
+ *    //Application/Controller/Test/Auth.ts
+ *    import User from 'Application/Model/User';
+ *    const user = new User();
+ *    user.set({
+ *       login: 'i.c.wiener',
+ *       salt: 'grhS2Nys345fsSW3mL9'
  *    });
+ *    const testOk = user.authenticate('its pizza time!');
  * </pre>
  *
- * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для организации такой структуры следует использовать {@link Types/Adapter/RecordSet адаптер рекордсета}:
+ * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
  * <pre>
  *    var MyEngine, MyTransmission, myCar;
  *
@@ -99,10 +96,10 @@
  *   myCar.get('transmissionType');//'Manual'
  *   myCar.get('color');//'Red'
  * </pre>
- * @class Types/Entity/Model
- * @extends Types/Entity/Record
- * @implements Types/Entity/IInstantiable
- * @mixes Types/Entity/InstantiableMixin
+ * @class Types/_entity/Model
+ * @extends Types/_entity/Record
+ * @implements Types/_entity/IInstantiable
+ * @mixes Types/_entity/InstantiableMixin
  * @public
  * @ignoreMethods getDefault
  * @author Мальцев А.А.
@@ -116,8 +113,9 @@ define('Types/_entity/Model', [
     'Types/_entity/functor',
     'Types/di',
     'Types/util',
-    'Types/shim'
-], function (require, exports, tslib_1, Record_1, InstantiableMixin_1, functor_1, di_1, util_1, shim_1) {
+    'Types/shim',
+    'Core/core-extend'
+], function (require, exports, tslib_1, Record_1, InstantiableMixin_1, functor_1, di_1, util_1, shim_1, coreExtend) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Separator for path in object
@@ -246,17 +244,17 @@ define('Types/_entity/Model', [
               // region IEnumerable
               /**
          * Возвращает энумератор для перебора названий свойств модели
-         * @return {Types/Collection/ArrayEnumerator}
+         * @return {Types/_collection/ArrayEnumerator}
          * @example
-         * Смотри пример {@link Types/Entity/Record#getEnumerator для записи}:
+         * Смотри пример {@link Types/_entity/Record#getEnumerator для записи}:
          */
         // endregion
         // region IEnumerable
         /**
          * Возвращает энумератор для перебора названий свойств модели
-         * @return {Types/Collection/ArrayEnumerator}
+         * @return {Types/_collection/ArrayEnumerator}
          * @example
-         * Смотри пример {@link Types/Entity/Record#getEnumerator для записи}:
+         * Смотри пример {@link Types/_entity/Record#getEnumerator для записи}:
          */
         Model.prototype.getEnumerator = function () {
             var ArrayEnumerator = di_1.resolve('Types/collection:enumerator.Arraywise');
@@ -266,14 +264,14 @@ define('Types/_entity/Model', [
          * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
          * @param {Object} [context] Контекст вызова callback.
          * @example
-         * Смотри пример {@link Types/Entity/Record#each для записи}:
+         * Смотри пример {@link Types/_entity/Record#each для записи}:
          */
         /**
          * Перебирает все свойства модели (включая имеющиеся в "сырых" данных)
          * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
          * @param {Object} [context] Контекст вызова callback.
          * @example
-         * Смотри пример {@link Types/Entity/Record#each для записи}:
+         * Смотри пример {@link Types/_entity/Record#each для записи}:
          */
         Model.prototype.each = function (callback, context) {
             return _super.prototype.each.call(this, callback, context);
@@ -489,7 +487,7 @@ define('Types/_entity/Model', [
             return defaultPropertiesValues[name][0];
         };    /**
          * Объединяет модель с данными другой модели
-         * @param {Types/Entity/Model} model Модель, с которой будет произведено объединение
+         * @param {Types/_entity/Model} model Модель, с которой будет произведено объединение
          * @example
          * Объединим модели пользователя и группы пользователей:
          * <pre>
@@ -516,7 +514,7 @@ define('Types/_entity/Model', [
          */
         /**
          * Объединяет модель с данными другой модели
-         * @param {Types/Entity/Model} model Модель, с которой будет произведено объединение
+         * @param {Types/_entity/Model} model Модель, с которой будет произведено объединение
          * @example
          * Объединим модели пользователя и группы пользователей:
          * <pre>
@@ -839,8 +837,20 @@ define('Types/_entity/Model', [
                 adapter: record.getAdapter(),
                 format: record._getFormat(true)    //"Anakin, I Am Your Son"
             });
-        };
+        };    //endregion
+              //region Deprecated
+              /**
+         * @deprecated
+         */
         //"Anakin, I Am Your Son"
+        //endregion
+        //region Deprecated
+        /**
+         * @deprecated
+         */
+        Model.extend = function (mixinsList, classExtender) {
+            return coreExtend(this, mixinsList, classExtender);
+        };
         return Model;
     }(util_1.mixin(Record_1.default, InstantiableMixin_1.default));
     exports.default = Model;

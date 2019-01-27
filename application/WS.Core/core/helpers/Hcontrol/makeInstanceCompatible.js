@@ -5,6 +5,25 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
    'Lib/Control/AreaAbstract/AreaAbstract.compatible',
    'Lib/Control/BaseCompatible/BaseCompatible'
 ], function(Control, AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible) {
+   /**
+    * Есть модули, которые сами управляют своей совместимостью, автоматическое
+    * подмешивание makeInstanceCompatible в _afterCreate им только мешает
+    */
+   var compatibleBlacklist = [
+      'Core/CompoundContainer',
+      'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
+      'Controls/Popup/Manager/Popup'
+   ];
+
+   /**
+    * Есть ли указанный модуль в списке заблокированных для подмешивания
+    * makeInstanceCompatible
+    * @param {string} moduleName
+    */
+   function isModuleBlocked(moduleName) {
+      return compatibleBlacklist.indexOf(moduleName) >= 0;
+   }
+
    function mix(inst, mixin) {
       for (var key in mixin) {
          if (mixin.hasOwnProperty(key) && !inst[key]) {
@@ -13,12 +32,24 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
       }
    }
 
+   function mixWithModuleMarker(inst, mixin, moduleName) {
+      mix(inst, mixin);
+
+      // При подмешивании поведения из модулей слоя совместимости, поставим
+      // специальные маркеры, чтобы core-instance правильно определял присутствие
+      // этих миксинов в инстансе
+      inst['[' + moduleName + ']'] = true;
+      if (!inst._mixins) {
+         inst._mixins = [];
+      }
+   }
+
    function doIt(inst, props, fromCtr) {
       // Подмешиваем поведение из модулей слоя совместимости
-      mix(inst, BaseCompatible);
-      mix(inst, AreaAbstractCompatible);
-      mix(inst, ControlCompatible);
-      mix(inst, AbstractCompatible);
+      mixWithModuleMarker(inst, BaseCompatible, 'Lib/Control/BaseCompatible/BaseCompatible');
+      mixWithModuleMarker(inst, AreaAbstractCompatible, 'Lib/Control/AreaAbstract/AreaAbstract.compatible');
+      mixWithModuleMarker(inst, ControlCompatible, 'Lib/Control/Control.compatible');
+      mixWithModuleMarker(inst, AbstractCompatible, 'Core/Abstract.compatible');
 
       // Определение слоя совместимости.
       // Логика такая, если создается контрол НЕ внутри CompoundControl
@@ -52,7 +83,13 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
       inst._compatBaseDestroy = inst.destroy;
       inst.destroy = function() {
          inst._compatBaseDestroy.apply(this, arguments);
-         BaseCompatible.destroy.apply(this, arguments);
+
+         // inst мог вручную в своем destroy вызвать destroy из BaseCompatible.
+         // В таком случае у него уже будет выставлен флаг _isDestroyed
+         if (!this._isDestroyed) {
+            BaseCompatible.destroy.apply(this, arguments);
+            ControlCompatible.destroy.apply(this, arguments);
+         }
       };
 
       /**
@@ -159,20 +196,32 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
             if (Control.prototype._afterCreateBase) {
                Control.prototype._afterCreateBase.apply(this, arguments);
             }
-            if (needMix(cfg) || cfg.iWantBeWS3) {
+            if (!isModuleBlocked(this._moduleName) && (needMix(cfg) || cfg.iWantBeWS3)) {
                var props = {};
                mix(props, cfg);
                doIt(this, props, true);
                this._doneCompat = true;
             }
          };
+         Control._getInheritOptionsDefault = Control._getInheritOptions;
+
+         Control._getInheritOptions = function(ctor) {
+            var inherit = Control._getInheritOptionsDefault(ctor);
+
+            /*Нужно сделать так, чтобы у всех контролов в режиме совместимости без темы
+            * вставала тема онллайн, потому что в cssке сгенерированны классы с префиком online*/
+            if (!inherit.theme) {
+               inherit.theme = 'online';
+            }
+            return inherit;
+         };
+
       } else if (inst._doneCompat) {
          return;
       }
 
       doIt(inst, opts);
       inst._doneCompat = true;
-
    };
 
    makeInstanceCompatible.newWave = true;

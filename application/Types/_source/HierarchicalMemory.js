@@ -36,10 +36,10 @@
  *    });
  * </pre>
  * @class Types/_source/HierarchicalMemory
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_source/HierarchicalMemory', [
@@ -70,6 +70,13 @@ define('Types/_source/HierarchicalMemory', [
             _this._source = new Memory_1.default(options);
             return _this;
         }
+        Object.defineProperty(HierarchicalMemory.prototype, '_idProperty', {
+            get: function () {
+                return this._source.getIdProperty();
+            },
+            enumerable: true,
+            configurable: true
+        });
         HierarchicalMemory.prototype.create = function (meta) {
             return this._source.create(meta);
         };
@@ -89,17 +96,17 @@ define('Types/_source/HierarchicalMemory', [
                 _this._source.query(query).addCallbacks(function (response) {
                     if (_this._$parentProperty) {
                         var hierarchy = new entity_1.relation.Hierarchy({
-                            idProperty: _this._$idProperty,
+                            idProperty: _this._idProperty,
                             parentProperty: _this._$parentProperty
                         });
                         var sourceRecords = new collection.RecordSet({
-                            rawData: _this._$data,
+                            rawData: _this._source.data,
                             adapter: _this._source.getAdapter(),
-                            idProperty: _this._$idProperty
+                            idProperty: _this._idProperty
                         });
                         var breadcrumbs = new collection.RecordSet({
                             adapter: _this._source.getAdapter(),
-                            idProperty: _this._$idProperty
+                            idProperty: _this._idProperty
                         });    // Extract breadcrumbs as path from filtered node to the root
                         // Extract breadcrumbs as path from filtered node to the root
                         var startFromId = query.getWhere()[_this._$parentProperty];
@@ -109,7 +116,7 @@ define('Types/_source/HierarchicalMemory', [
                             var node = void 0;
                             while (startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
                                 breadcrumbs.add(node, 0);
-                                startFromNode = node.get(_this._$idProperty);
+                                startFromNode = node.get(_this._idProperty);
                             }
                         }    //Store breadcrumbs as 'path' in meta data
                         //Store breadcrumbs as 'path' in meta data
@@ -160,19 +167,7 @@ define('Types/_source/HierarchicalMemory', [
     HierarchicalMemory.prototype._moduleName = 'Types/source:HierarchicalMemory';
     HierarchicalMemory.prototype['[Types/_source/HierarchicalMemory]'] = true;    // @ts-ignore
     // @ts-ignore
-    HierarchicalMemory.prototype._$adapter = null;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$model = null;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$listModule = null;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$idProperty = null;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$parentProperty = null;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$data = null;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$filter = null;    //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
+    HierarchicalMemory.prototype._$parentProperty = null;    //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
     //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
     HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;
 });

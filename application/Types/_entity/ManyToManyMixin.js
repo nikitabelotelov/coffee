@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/ManyToManyMixin" />
 /**
  * Миксин, позволяющий сущности строить отношения "многие ко многим"
- * @mixin Types/Entity/ManyToManyMixin
+ * @mixin Types/_entity/ManyToManyMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -12,13 +12,13 @@ define('Types/_entity/ManyToManyMixin', [
 ], function (require, exports, ManyToMany_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var ManyToManyMixin = /** @lends Types/Entity/ManyToManyMixin.prototype */
+    var ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */
     {
         '[Types/_entity/ManyToManyMixin]': true,
         //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
         '[WS.Data/Entity/ManyToManyMixin]': true,
         /**
-         * @property {Types/Mediator/ManyToMany} Медиатор, отвечающий за связи между сущностями
+         * @property {Types/_entity/relation/ManyToMany} Медиатор, отвечающий за связи между сущностями
          */
         _mediator: null,
         //region Public methods
@@ -42,7 +42,7 @@ define('Types/_entity/ManyToManyMixin', [
         //region Protected methods
         /**
          * Добавляет отношение с другой сущностью
-         * @param {Types/Mediator/IReceiver} child Другая сущность
+         * @param {Types/_entity/relation/IReceiver} child Другая сущность
          * @param {String} [name] Название отношения
          * @protected
          */
@@ -60,7 +60,7 @@ define('Types/_entity/ManyToManyMixin', [
         },
         /**
          * Удаляет отношение с другой сущностью
-         * @param {Types/Mediator/IReceiver} child Другая сущность
+         * @param {Types/_entity/relation/IReceiver} child Другая сущность
          * @protected
          */
         _removeChild: function (child) {
@@ -126,7 +126,7 @@ define('Types/_entity/ManyToManyMixin', [
         },
         /**
          * Возвращает признак наличия одинакового посредника
-         * @param {Types/Mediator/ManyToMany} mediator
+         * @param {Types/_entity/relation/ManyToMany} mediator
          * @return {Boolean}
          * @protected
          */
@@ -135,7 +135,7 @@ define('Types/_entity/ManyToManyMixin', [
         },
         /**
          * Создает посредника для установления отношений с детьми
-         * @return {Types/Mediator/ManyToMany}
+         * @return {Types/_entity/relation/ManyToMany}
          * @protected
          */
         _createMediator: function () {
@@ -143,7 +143,7 @@ define('Types/_entity/ManyToManyMixin', [
         },
         /**
          * Возвращает посредника для установления отношений с детьми
-         * @return {Types/Mediator/ManyToMany}
+         * @return {Types/_entity/relation/ManyToMany}
          * @protected
          */
         _getMediator: function () {
@@ -151,7 +151,7 @@ define('Types/_entity/ManyToManyMixin', [
         },
         /**
          * Устанавливает посредника для установления отношений с детьми
-         * @param {Types/Mediator/ManyToMany|null} mediator
+         * @param {Types/_entity/relation/ManyToMany|null} mediator
          * @protected
          */
         _setMediator: function (mediator) {

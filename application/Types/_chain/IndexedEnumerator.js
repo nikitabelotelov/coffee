@@ -8,7 +8,7 @@ define('Types/_chain/IndexedEnumerator', [
     function () {
         /**
          * Конструктор.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          */
         function IndexedEnumerator(previous) {
             this['[Types/_collection/IEnumerator]'] = true;

@@ -10,7 +10,7 @@
  *    <li>замена элементов: {@link replace}, {@link assign};</li>
  *    <li>подсчет числа элементов: {@link getCount}.</li>
  * </ul>
- * @interface Types/Collection/IList
+ * @interface Types/_collection/IList
  * @public
  * @author Мальцев А.А.
  */

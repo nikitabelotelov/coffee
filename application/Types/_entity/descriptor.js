@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/descriptor" />
 /**
  * Модуль описания типа.
- * @class Types/Type/descriptor
+ * @class Types/_entity/descriptor
  * @public
  * @author Мальцев А.А.
  */
@@ -33,13 +33,13 @@ define('Types/_entity/descriptor', [
         return type;
     }    /**
      * Returns validator for certain type.
-     * @name Types/Type/descriptor#validate
+     * @name Types/_entity/descriptor#validate
      * @param {Function|String} type Type descriptor.
      * @returns {Function} Validator.
      */
     /**
      * Returns validator for certain type.
-     * @name Types/Type/descriptor#validate
+     * @name Types/_entity/descriptor#validate
      * @param {Function|String} type Type descriptor.
      * @returns {Function} Validator.
      */
@@ -77,12 +77,12 @@ define('Types/_entity/descriptor', [
         throw new TypeError('Argument "type" should be one of following types: string, function or object but "' + typeName + '" received.');
     }    /**
      * Returns validator for required value.
-     * @name Types/Type/descriptor#required
+     * @name Types/_entity/descriptor#required
      * @returns {Chained} Validator
      */
     /**
      * Returns validator for required value.
-     * @name Types/Type/descriptor#required
+     * @name Types/_entity/descriptor#required
      * @returns {Chained} Validator
      */
     function required() {
@@ -95,13 +95,13 @@ define('Types/_entity/descriptor', [
         });
     }    /**
      * Returns validator for "One of" restriction.
-     * @name Types/Type/descriptor#oneOf
+     * @name Types/_entity/descriptor#oneOf
      * @param {Array} values Allowed values.
      * @returns {Chained} Validator.
      */
     /**
      * Returns validator for "One of" restriction.
-     * @name Types/Type/descriptor#oneOf
+     * @name Types/_entity/descriptor#oneOf
      * @param {Array} values Allowed values.
      * @returns {Chained} Validator.
      */
@@ -118,13 +118,13 @@ define('Types/_entity/descriptor', [
         });
     }    /**
      * Returns validator for Array<T> restriction.
-     * @name Types/Type/descriptor#oneOf
+     * @name Types/_entity/descriptor#oneOf
      * @param {Function|String} type Type descriptor.
      * @returns {Chained} Validator.
      */
     /**
      * Returns validator for Array<T> restriction.
-     * @name Types/Type/descriptor#oneOf
+     * @name Types/_entity/descriptor#oneOf
      * @param {Function|String} type Type descriptor.
      * @returns {Chained} Validator.
      */
@@ -148,13 +148,13 @@ define('Types/_entity/descriptor', [
         });
     }    /**
      * Creates chain element with all available validators.
-     * @name Types/Type/descriptor#chain
+     * @name Types/_entity/descriptor#chain
      * @param {Chained} parent Previous chain element.
      * @returns {Chained} New chain element.
      */
     /**
      * Creates chain element with all available validators.
-     * @name Types/Type/descriptor#chain
+     * @name Types/_entity/descriptor#chain
      * @param {Chained} parent Previous chain element.
      * @returns {Chained} New chain element.
      */
@@ -184,13 +184,13 @@ define('Types/_entity/descriptor', [
         return wrapper;
     }    /**
      * Creates type descriptor for given value type.
-     * @name Types/Type/descriptor#chain
+     * @name Types/_entity/descriptor#chain
      * @param {Descriptor} type Value type.
      * @returns {Chained} Type descriptor.
      */
     /**
      * Creates type descriptor for given value type.
-     * @name Types/Type/descriptor#chain
+     * @name Types/_entity/descriptor#chain
      * @param {Descriptor} type Value type.
      * @returns {Chained} Type descriptor.
      */

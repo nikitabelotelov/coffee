@@ -9,8 +9,8 @@
  *       type: 'rpcfile'
  *    };
  * </pre>
- * @class Types/Format/RpcFileField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/RpcFileField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -24,14 +24,14 @@ define('Types/_entity/format/RpcFileField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var RpcFileField = /** @class */
     function (_super) {
-        tslib_1.__extends(RpcFileField, _super);    /** @lends Types/Format/RpcFileField.prototype */
-        /** @lends Types/Format/RpcFileField.prototype */
+        tslib_1.__extends(RpcFileField, _super);    /** @lends Types/_entity/format/RpcFileField.prototype */
+        /** @lends Types/_entity/format/RpcFileField.prototype */
         function RpcFileField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         return RpcFileField;
-    }(Field_1.default    /** @lends Types/Format/RpcFileField.prototype */);
-    /** @lends Types/Format/RpcFileField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/RpcFileField.prototype */);
+    /** @lends Types/_entity/format/RpcFileField.prototype */
     exports.default = RpcFileField;
     RpcFileField.prototype['[Types/_entity/format/RpcFileField]'] = true;
     RpcFileField.prototype._moduleName = 'Types/entity:format.RpcFileField';

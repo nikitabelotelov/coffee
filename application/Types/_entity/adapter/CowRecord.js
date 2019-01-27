@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_entity/adapter/CowRecord" />
 /**
  * Адаптер записи таблицы для работы в режиме Copy-on-write.
- * @class Types/Adapter/CowRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @implements Types/Adapter/IDecorator
+ * @class Types/_entity/adapter/CowRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.
  */
 define('Types/_entity/adapter/CowRecord', [
@@ -21,13 +21,13 @@ define('Types/_entity/adapter/CowRecord', [
         tslib_1.__extends(CowRecord, _super);    /**
          * Конструктор
          * @param {*} data Сырые данные
-         * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+         * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
          * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
          */
         /**
          * Конструктор
          * @param {*} data Сырые данные
-         * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+         * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
          * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
          */
         function CowRecord(data, original, writeCallback) {
@@ -79,9 +79,9 @@ define('Types/_entity/adapter/CowRecord', [
         };
         CowRecord.prototype.getOriginal = function () {
             return this._originalRecord;
-        };    //endregion Types/Adapter/IDecorator
+        };    //endregion Types/_entity/adapter/IDecorator
               //region Protected methods
-        //endregion Types/Adapter/IDecorator
+        //endregion Types/_entity/adapter/IDecorator
         //region Protected methods
         CowRecord.prototype._copy = function () {
             if (!this._copied) {

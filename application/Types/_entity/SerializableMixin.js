@@ -15,7 +15,7 @@
  *    return SubModule;
  * });
  * </pre>
- * @mixin Types/Entity/SerializableMixin
+ * @mixin Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -118,7 +118,7 @@ define('Types/_entity/SerializableMixin', [
             util_1.logger.stack(text, skip === undefined ? 3 : skip);
         }
     }
-    var SerializableMixin    /** @lends Types/Entity/SerializableMixin.prototype */ = /** @lends Types/Entity/SerializableMixin.prototype */
+    var SerializableMixin    /** @lends Types/_entity/SerializableMixin.prototype */ = /** @lends Types/_entity/SerializableMixin.prototype */
     /** @class */
     function () {
         //region Public methods

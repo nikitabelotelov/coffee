@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/provider/IAbstract" />
 /**
  * Интерфейс абстрактного провайдера
- * @interface Types/Source/Provider/IAbstract
+ * @interface Types/_source/provider/IAbstract
  * @public
  * @author Мальцев А.А.
  */

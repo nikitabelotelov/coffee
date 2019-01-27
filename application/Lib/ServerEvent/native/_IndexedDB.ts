@@ -1,4 +1,7 @@
 /// <amd-module name="Lib/ServerEvent/native/_IndexedDB" />
+/**
+ * @author Санников К.А
+ */
 export { Writer } from './_IndexedDB/Writer';
 export { Reader } from './_IndexedDB/Reader';
 export { AdapterStomp } from './_IndexedDB/AdapterStomp';

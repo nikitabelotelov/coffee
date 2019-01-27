@@ -1,8 +1,7 @@
 /// <amd-module name="Types/_collection/IFlags" />
 /**
- * Интерфейс типа "флаги".
- * Работает на основе словаря, хранящего соотвествие индексов и их значений.
- * @interface Types/Type/IFlags
+ * Flags interface. It's an enumerable collection of keys and values every one of which can be selected or not.
+ * @interface Types/_collectionIFlags
  * @public
  * @author Мальцев А.А.
  */

@@ -2,7 +2,7 @@
 /**
  * Интерфейс изменения версий объекта.
  * Позволяет быстро проверить изменилось ли что либо в объекте.
- * @interface Types/Entity/IVersionable
+ * @interface Types/_entity/IVersionable
  * @public
  * @author Мальцев А.А.
  */

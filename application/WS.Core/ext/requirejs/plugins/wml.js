@@ -23,8 +23,8 @@
    ) {
 
       function createLostFunction(err, ext) {
+         IoC.resolve('ILogger').error(ext+'!', err.message, err);
          var f = function () {
-            IoC.resolve('ILogger').error(ext+'!', err.message, err);
             return '<div>' + err.message + '</div>';
          };
          f.stable = true;

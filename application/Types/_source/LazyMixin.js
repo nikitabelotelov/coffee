@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/LazyMixin" />
 /**
  * Миксин, позволяющий загружать некоторые зависимости лениво.
- * @mixin Types/Source/LazyMixin
+ * @mixin Types/_source/LazyMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -15,7 +15,7 @@ define('Types/_source/LazyMixin', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var global = (0, eval)('this');
     var DeferredCanceledError = global.DeferredCanceledError;
-    var LazyMixin = /** @lends Types/Source/LazyMixin.prototype */
+    var LazyMixin = /** @lends Types/_source/LazyMixin.prototype */
     {
         '[Types/_source/LazyMixin]': true,
         /**

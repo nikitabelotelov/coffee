@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/EndpointMixin" />
 /**
  * Миксин, позволяющий задавать конечную точку доступа.
- * @mixin Types/Source/EndpointMixin
+ * @mixin Types/_source/EndpointMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -11,12 +11,12 @@ define('Types/_source/EndpointMixin', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var EndpointMixin = /** @lends Types/Source/EndpointMixin.prototype */
+    var EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */
     {
         '[Types/_source/EndpointMixin]': true,
         /**
-         * @cfg {Types/Source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
-         * @name Types/Source/EndpointMixin#endpoint
+         * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
+         * @name Types/_source/EndpointMixin#endpoint
          * @remark
          * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет интерпретироваться как контракт (endpoint.contract).
          * @see getEndPoint

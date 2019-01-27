@@ -1,29 +1,15 @@
+///<amd-module name="Types/_entity/date/toSql" />
+/**
+ * @public
+ * @author Мальцев А.А.
+ */
 define('Types/_entity/date/toSql', [
     'require',
     'exports',
     'Types/formatter'
 ], function (require, exports, formatter_1) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    /**
-     * @public
-     * @author Мальцев А.А.
-     */
-                                                                      /**
-     * @typedef {String} SerializeMode
-     * @variant MODE_DATETIME Дата в время
-     * @variant MODE_DATE Дата
-     * @variant MODE_TIME Время
-     */
-    /**
-     * @public
-     * @author Мальцев А.А.
-     */
-    /**
-     * @typedef {String} SerializeMode
-     * @variant MODE_DATETIME Дата в время
-     * @variant MODE_DATE Дата
-     * @variant MODE_TIME Время
-     */
+    Object.defineProperty(exports, '__esModule', { value: true });
     var MODE = {
         'TIME': 'time',
         'DATE': 'date',
@@ -58,10 +44,9 @@ define('Types/_entity/date/toSql', [
         }
         return (isNegative ? '-' : '+') + (tz < 10 ? '0' : '') + tz;
     }
-    ;
     function toSQL(date, mode) {
         if (mode === void 0) {
-            mode = 'datetime';
+            mode = MODE.DATETIME;
         }
         var result = formatter_1.date(date, modeFormat[mode]);
         if (mode !== MODE.DATE && date > UNIX_EPOCH_START) {

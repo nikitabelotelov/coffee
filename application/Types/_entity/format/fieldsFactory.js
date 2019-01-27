@@ -61,12 +61,12 @@ define('Types/_entity/format/fieldsFactory', [
      * @property {FieldType|Function|String} type Тип поля (название или конструктор)
      * @property {*} defaultValue Значение поля по умолчанию
      * @property {Boolean} nullable Значение может быть null
-     * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/Format/*Field) данного типа поля. Например опция precision для типа @{link Types/Format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
+     * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
      */
                                                                       /**
      * Конструирует формат поля по декларативному описанию
      * @param {FieldDeclaration} declaration Декларативное описание
-     * @return {Types/Format/Field}
+     * @return {Types/_entity/format/Field}
      */
     /**
      * @typedef {String} FieldType
@@ -98,12 +98,12 @@ define('Types/_entity/format/fieldsFactory', [
      * @property {FieldType|Function|String} type Тип поля (название или конструктор)
      * @property {*} defaultValue Значение поля по умолчанию
      * @property {Boolean} nullable Значение может быть null
-     * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/Format/*Field) данного типа поля. Например опция precision для типа @{link Types/Format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
+     * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
      */
     /**
      * Конструирует формат поля по декларативному описанию
      * @param {FieldDeclaration} declaration Декларативное описание
-     * @return {Types/Format/Field}
+     * @return {Types/_entity/format/Field}
      */
     function default_1(declaration) {
         if (Object.getPrototypeOf(declaration) !== Object.prototype) {
@@ -171,10 +171,10 @@ define('Types/_entity/format/fieldsFactory', [
         if (typeof type === 'function') {
             var inst = Object.create(type.prototype);
             if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
-                //Yes it's Types/Entity/Record
+                //Yes it's Types/_entity/Record
                 return new RecordField_1.default(declaration);
             } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
-                //Yes it's Types/Collection/RecordSet
+                //Yes it's Types/_collection/RecordSet
                 return new RecordSetField_1.default(declaration);
             } else if (inst['[Types/_collection/IEnum]']) {
                 return new EnumField_1.default(declaration);

@@ -11,11 +11,11 @@
  *    });
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/JsonRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @mixes Types/Adapter/GenericFormatMixin
- * @mixes Types/Adapter/JsonFormatMixin
+ * @class Types/_entity/adapter/JsonRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @mixes Types/_entity/adapter/GenericFormatMixin
+ * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -47,9 +47,9 @@ define('Types/_entity/adapter/JsonRecord', [
             JsonFormatMixin_1.default.constructor.call(_this, data);
             return _this;
         }    //endregion IRecord
-             //region Types/Adapter/JsonFormatMixin
+             //region Types/_entity/adapter/JsonFormatMixin
         //endregion IRecord
-        //region Types/Adapter/JsonFormatMixin
+        //region Types/_entity/adapter/JsonFormatMixin
         JsonRecord.prototype.addField = function (format, at) {
             if (!format || !(format instanceof format_1.Field)) {
                 throw new TypeError(this._moduleName + '::addField(): argument "format" should be an instance of Types/entity:format.Field');
@@ -64,9 +64,9 @@ define('Types/_entity/adapter/JsonRecord', [
         JsonRecord.prototype.removeField = function (name) {
             JsonFormatMixin_1.default.removeField.call(this, name);
             delete this._data[name];
-        };    //endregion Types/Adapter/JsonFormatMixin
+        };    //endregion Types/_entity/adapter/JsonFormatMixin
               //region Public methods
-        //endregion Types/Adapter/JsonFormatMixin
+        //endregion Types/_entity/adapter/JsonFormatMixin
         //region Public methods
         JsonRecord.prototype.has = function (name) {
             return this._isValidData() ? this._data.hasOwnProperty(name) : false;

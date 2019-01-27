@@ -2,7 +2,7 @@
 /**
  * Миксин, добавляющий аспект состояния "экземпляр разрушен".
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @mixin Types/Entity/DestroyableMixin
+ * @mixin Types/_entity/DestroyableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -17,7 +17,7 @@ define('Types/_entity/DestroyableMixin', [
     function dontTouchDeads() {
         throw new ReferenceError('This class instance is destroyed.');
     }
-    var DestroyableMixin    /** @lends Types/Entity/DestroyableMixin.prototype */ = /** @lends Types/Entity/DestroyableMixin.prototype */
+    var DestroyableMixin    /** @lends Types/_entity/DestroyableMixin.prototype */ = /** @lends Types/_entity/DestroyableMixin.prototype */
     /** @class */
     function () {
         function DestroyableMixin() {

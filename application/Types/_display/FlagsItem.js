@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/FlagsItem" />
 /**
  * Элемент коллекции флагов
- * @class Types/Display/FlagsItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/FlagsItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_display/FlagsItem', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var FlagsItem = /** @class */
     function (_super) {
-        tslib_1.__extends(FlagsItem, _super);    /** @lends Types/Display/FlagsItem.prototype */
-        /** @lends Types/Display/FlagsItem.prototype */
+        tslib_1.__extends(FlagsItem, _super);    /** @lends Types/_display/FlagsItem.prototype */
+        /** @lends Types/_display/FlagsItem.prototype */
         function FlagsItem() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -32,8 +32,8 @@ define('Types/_display/FlagsItem', [
             this._$owner.getCollection().set(this._$contents, selected, this._$owner.localize);
         };
         return FlagsItem;
-    }(CollectionItem_1.default    /** @lends Types/Display/FlagsItem.prototype */);
-    /** @lends Types/Display/FlagsItem.prototype */
+    }(CollectionItem_1.default    /** @lends Types/_display/FlagsItem.prototype */);
+    /** @lends Types/_display/FlagsItem.prototype */
     exports.default = FlagsItem;
     FlagsItem.prototype._moduleName = 'Types/display:FlagsItem';
     FlagsItem.prototype['[Types/_display/FlagsItem]'] = true;

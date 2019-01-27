@@ -22,12 +22,12 @@
  *    });
  *    adapter.at(0);//{d: [1, 'Test 1'], s: [{n: 'id', t: 'Число целое'}, {n: 'title', t: 'Строка'}]}
  * </pre>
- * @class Types/Adapter/SbisTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @implements Types/Adapter/IMetaData
- * @implements Types/Entity/ICloneable
- * @mixes Types/Adapter/SbisFormatMixin
+ * @class Types/_entity/adapter/SbisTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @implements Types/_entity/adapter/IMetaData
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -40,8 +40,8 @@ define('Types/_entity/adapter/SbisTable', [
     'Types/_entity/adapter/SbisRecord',
     'Types/_entity/format',
     'Types/util',
-    'Core/core-merge'
-], function (require, exports, tslib_1, DestroyableMixin_1, SbisFormatMixin_1, SbisRecord_1, format_1, util_1, coreMerge) {
+    'Types/object'
+], function (require, exports, tslib_1, DestroyableMixin_1, SbisFormatMixin_1, SbisRecord_1, format_1, util_1, object_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var SbisTable = /** @class */
@@ -110,15 +110,14 @@ define('Types/_entity/adapter/SbisTable', [
             this._touchData();
             this._checkRowIndex(acceptor);
             this._checkRowIndex(donor);
-            coreMerge(this._data.d[acceptor], this._data.d[donor]);
+            object_1.merge(this._data.d[acceptor], this._data.d[donor]);
             this.remove(donor);
         };
         SbisTable.prototype.copy = function (index) {
             this._touchData();
             this._checkRowIndex(index);
             var source = this._data.d[index];
-            var clone = [];
-            coreMerge(clone, source, { clone: true });
+            var clone = object_1.merge([], source);
             this._data.d.splice(1 + index, 0, clone);
             return clone;
         };

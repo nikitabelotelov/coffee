@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/BreadcrumbsItem" />
 /**
  * Хлебная крошка
- * @class Types/Display/BreadcrumbsItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/BreadcrumbsItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -17,8 +17,8 @@ define('Types/_display/BreadcrumbsItem', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var BreadcrumbsItem = /** @class */
     function (_super) {
-        tslib_1.__extends(BreadcrumbsItem, _super);    /** @lends Types/Display/BreadcrumbsItem.prototype */
-        /** @lends Types/Display/BreadcrumbsItem.prototype */
+        tslib_1.__extends(BreadcrumbsItem, _super);    /** @lends Types/_display/BreadcrumbsItem.prototype */
+        /** @lends Types/_display/BreadcrumbsItem.prototype */
         function BreadcrumbsItem(options) {
             return _super.call(this, options) || this;
         }    // region Public methods
@@ -41,8 +41,8 @@ define('Types/_display/BreadcrumbsItem', [
             throw new ReferenceError('BreadcrumbsItem contents is read only.');
         };
         return BreadcrumbsItem;
-    }(CollectionItem_1.default    /** @lends Types/Display/BreadcrumbsItem.prototype */);
-    /** @lends Types/Display/BreadcrumbsItem.prototype */
+    }(CollectionItem_1.default    /** @lends Types/_display/BreadcrumbsItem.prototype */);
+    /** @lends Types/_display/BreadcrumbsItem.prototype */
     exports.default = BreadcrumbsItem;
     BreadcrumbsItem.prototype._moduleName = 'Types/display:BreadcrumbsItem';
     BreadcrumbsItem.prototype['[Types/_display/BreadcrumbsItem]'] = true;    // @ts-ignore

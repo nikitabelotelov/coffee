@@ -15,7 +15,7 @@ define('WS.Data/Source/Memory', [
 ) {
    'use strict';
 
-   util.logger.error('WS.Data/Source/Memory', 'Module is deprecated and will be removed in 19.200. Use Types/source:Memory instead.');
+   //util.logger.error('WS.Data/Source/Memory', 'Module is deprecated and will be removed in 19.200. Use Types/source:Memory instead.');
 
    var Memory = extend.extend(source.Memory, {
       '[WS.Data/Source/Memory]': true,

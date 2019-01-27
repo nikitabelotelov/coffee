@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/IProducible" />
 /**
  * Интерфейс получения экземпляра класса через фабричный метод
- * @interface Types/Entity/IProducible
+ * @interface Types/_entity/IProducible
  * @author Мальцев А.А.
  */
 define('Types/_entity/IProducible', [

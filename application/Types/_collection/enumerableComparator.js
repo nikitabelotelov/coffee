@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/enumerableComparator" />
 /**
  * Позволяет сравнить две коллекции до и после набора изменений
- * @class Types/Collection/Comparer
+ * @class Types/_collection/Comparer
  * @author Мальцев А.А.
  */
 define('Types/_collection/enumerableComparator', [
@@ -26,13 +26,13 @@ define('Types/_collection/enumerableComparator', [
         return sessionId++;
     }    /**
      * Извлекает элементы коллекции
-     * @param {Types/Collection/IEnumerable} collection Коллекция
+     * @param {Types/_collection/IEnumerable} collection Коллекция
      * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
      * @return {Object}
      */
     /**
      * Извлекает элементы коллекции
-     * @param {Types/Collection/IEnumerable} collection Коллекция
+     * @param {Types/_collection/IEnumerable} collection Коллекция
      * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
      * @return {Object}
      */
@@ -57,7 +57,7 @@ define('Types/_collection/enumerableComparator', [
      * Возвращает изменения группы
      * @param {String} groupName Название группы
      * @param {Object} session Сессия изменений
-     * @param {Types/Collection/IEnumerable} collection Коллекция
+     * @param {Types/_collection/IEnumerable} collection Коллекция
      * @param {Number} [startFrom=0] Начать с элемента номер
      * @param {Number} [offset=0] Смещение элеметов в after относительно before
      * @return {Object}
@@ -66,7 +66,7 @@ define('Types/_collection/enumerableComparator', [
      * Возвращает изменения группы
      * @param {String} groupName Название группы
      * @param {Object} session Сессия изменений
-     * @param {Types/Collection/IEnumerable} collection Коллекция
+     * @param {Types/_collection/IEnumerable} collection Коллекция
      * @param {Number} [startFrom=0] Начать с элемента номер
      * @param {Number} [offset=0] Смещение элеметов в after относительно before
      * @return {Object}
@@ -329,7 +329,7 @@ define('Types/_collection/enumerableComparator', [
         '[Types/_collection/enumerableComparator]': true,
         /**
          * Запускает сессию изменений коллекции (фиксирует ее состояние до изменений)
-         * @param {Types/Collection/IEnumerable} collection Коллекция
+         * @param {Types/_collection/IEnumerable} collection Коллекция
          * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
          * @return {Object}
          */
@@ -344,7 +344,7 @@ define('Types/_collection/enumerableComparator', [
         /**
          * Завершает сессию изменений коллекции (фиксирует ее состояние после изменений)
          * @param {Object} session Сессия изменений
-         * @param {Types/Collection/IEnumerable} collection Коллекция
+         * @param {Types/_collection/IEnumerable} collection Коллекция
          * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
          */
         finishSession: function (session, collection, contentsWrapper) {
@@ -355,7 +355,7 @@ define('Types/_collection/enumerableComparator', [
         /**
          * Анализирует изменения в коллекции по завершенной сессии
          * @param {Object} session Сессия изменений
-         * @param {Types/Collection/IEnumerable} collection Коллекция
+         * @param {Types/_collection/IEnumerable} collection Коллекция
          * @param {Function} callback Функция обратного вызова для каждой пачки изменений
          */
         analizeSession: function (session, collection, callback) {

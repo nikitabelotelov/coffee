@@ -13,7 +13,7 @@ define('Types/_chain/UniquelyEnumerator', [
     function () {
         /**
          * Конструктор энумератора уникальных элементов.
-         * @param {Types/Chain/Abstract} previous Предыдущее звено.
+         * @param {Types/_chain/Abstract} previous Предыдущее звено.
          * @param {function(*, String|Number): String|Number} [idExtractor] Возвращает уникальный идентификатор элемента.
          */
         function UniquelyEnumerator(previous, idExtractor) {

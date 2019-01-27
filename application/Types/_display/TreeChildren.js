@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/TreeChildren" />
 /**
  * Список дочерних элементов узла дерева.
- * @class Types/Display/TreeChildren
- * @extends Types/Collection/List
+ * @class Types/_display/TreeChildren
+ * @extends Types/_collection/List
  * @public
  * @author Мальцев А.А.
  */
@@ -18,8 +18,8 @@ define('Types/_display/TreeChildren', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var TreeChildren = /** @class */
     function (_super) {
-        tslib_1.__extends(TreeChildren, _super);    /** @lends Types/Display/TreeChildren.prototype */
-        /** @lends Types/Display/TreeChildren.prototype */
+        tslib_1.__extends(TreeChildren, _super);    /** @lends Types/_display/TreeChildren.prototype */
+        /** @lends Types/_display/TreeChildren.prototype */
         function TreeChildren(options) {
             var _this = _super.call(this, options) || this;
             if (!(_this._$owner instanceof Object)) {
@@ -31,11 +31,11 @@ define('Types/_display/TreeChildren', [
             return _this;
         }    /**
          * Возвращает узел-владелец
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         /**
          * Возвращает узел-владелец
-         * @return {Types/Display/TreeItem}
+         * @return {Types/_display/TreeItem}
          */
         TreeChildren.prototype.getOwner = function () {
             return this._$owner;

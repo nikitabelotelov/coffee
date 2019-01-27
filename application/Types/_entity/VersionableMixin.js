@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/VersionableMixin" />
 /**
  * Миксин, позволяющий получать и измениять номер версии объекта.
- * @mixin Types/Entity/VersionableMixin
+ * @mixin Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -11,7 +11,7 @@ define('Types/_entity/VersionableMixin', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var VersionableMixin = /** @lends Types/Entity/VersionableMixin.prototype */
+    var VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */
     {
         '[Types/_entity/VersionableMixin]': true,
         //region IVersionable

@@ -13,7 +13,7 @@
  *       console.error(error);
  *    });
  * </pre>
- * @interface Types/Source/IRpc
+ * @interface Types/_source/IRpc
  * @public
  * @author Мальцев А.А.
  */

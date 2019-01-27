@@ -1,4 +1,4 @@
-define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/constants", "Core/EventBus", "Core/UserInfo", "Core/LocalStorageNative", "Core/IoC", "Lib/ServerEvent/_class/Constants", "Lib/ServerEvent/_class/logger/WatchDogAggregator", "Lib/ServerEvent/_class/Subscribe", "Lib/ServerEvent/_class/SubscribeContainer", "Lib/ServerEvent/_class/transport/ExclusiveProxy", "Lib/ServerEvent/_class/Events", "Lib/ServerEvent/_class/logger/ConnectWatchDog", "Lib/ServerEvent/_class/logger/Bit"], function (require, exports, Deferred, CoreConst, EventBus, UserInfo, LocalStorageNative, IoC, CONST, WatchDogAggregator_1, Subscribe_1, SubscribeContainer_1, ExclusiveProxy_1, Events_1, ConnectWatchDog_1, Bit_1) {
+define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/constants", "Core/EventBus", "Core/LocalStorageNative", "Core/IoC", "Lib/ServerEvent/_class/Constants", "Lib/ServerEvent/_class/logger/WatchDogAggregator", "Lib/ServerEvent/_class/Subscribe", "Lib/ServerEvent/_class/SubscribeContainer", "Lib/ServerEvent/_class/transport/ExclusiveProxy", "Lib/ServerEvent/_class/Events", "Lib/ServerEvent/_class/logger/ConnectWatchDog"], function (require, exports, Deferred, CoreConst, EventBus, LocalStorageNative, IoC, CONST, WatchDogAggregator_1, Subscribe_1, SubscribeContainer_1, ExclusiveProxy_1, Events_1, ConnectWatchDog_1) {
     /// <amd-module name="Lib/ServerEvent/Bus" />
     /**
      * FIXME проверка названия канала
@@ -6,10 +6,6 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
      */
     "use strict";
     /// region evristic ack
-    var TENSOR_ID = '00000003';
-    var currentUser = UserInfo.getCurrent();
-    currentUser = typeof currentUser === "string" ? currentUser : "";
-    var isDetectEventBit = currentUser.indexOf(TENSOR_ID) === 0;
     LocalStorageNative.setItem('shared-bus-ack', 'true');
     /// endregion
     /// region channaled scoupes
@@ -26,7 +22,7 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
             this.subscribes = new SubscribeContainer_1.SubscribeContainer();
             this.isExclusive = false;
             this.watcher = new WatchDogAggregator_1.WatchDogAggregator([new ConnectWatchDog_1.ConnectWatchDog()]);
-            this.initDeferred = new Deferred();
+            this.subsDeferred = new Deferred();
             this.subscribe = this.subscribeInit.bind(this);
             this.closeChannel = this.closeChannel.bind(this);
             this.closeTransportBehavior = this.closeTransportBehavior.bind(this);
@@ -62,7 +58,7 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
         };
         Seb.prototype.subscribeDeferred = function (subscribe) {
             var _this = this;
-            this.initDeferred.addCallback(function (transport) {
+            this.subsDeferred.addCallback(function (transport) {
                 _this.subscribeClear(transport, subscribe);
                 return transport;
             });
@@ -74,16 +70,17 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
             try {
                 ExclusiveProxy_1.ExclusiveProxy.init(this.isExclusive || subscribe.getDeliveryType() !== CONST.DELIVERY_COMMON, this.closeTransportBehavior, this.watcher).addCallback(function (tw) {
                     _this.subscribe = _this.subscribeClear.bind(_this, tw);
-                    if (isDetectEventBit && !_this.bitSensor) {
-                        _this.bitSensor = new Bit_1.Bit(EventBus);
-                    }
-                    _this.initDeferred.callback(tw);
+                    _this.subsDeferred.callback(tw);
                 }).addErrback(function (err) {
                     if (err.httpError === 404) {
-                        _this.initDeferred = undefined;
                         IoC.resolve("ILogger").warn(new AuthError().message);
                         _this.subscribe = function () { };
+                        return;
                     }
+                    _this.subscribe = _this.subscribeInit;
+                    var oldInitDeferred = _this.subsDeferred;
+                    _this.subsDeferred = new Deferred();
+                    oldInitDeferred.dependOn(_this.subsDeferred);
                     IoC.resolve("ILogger").warn("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u0434\u043F\u0438\u0441\u0430\u0442\u044C\u0441\u044F \u043D\u0430 " + subscribe.getChannelName());
                 });
             }
@@ -105,7 +102,7 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
          * Поднимаем новое соединение и переподписываеся
          */
         Seb.prototype.reInit = function () {
-            this.initDeferred = new Deferred();
+            this.subsDeferred = new Deferred();
             this.subscribe = this.subscribeInit;
             var oldSubs = this.subscribes.all();
             this.subscribes.clear();
@@ -119,10 +116,10 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
          */
         Seb.prototype.reconnect = function () {
             var _this = this;
-            if (!this.initDeferred) {
+            if (!this.subsDeferred) {
                 return this.reInit();
             }
-            this.initDeferred.addCallbacks(function (tw) {
+            this.subsDeferred.addCallbacks(function (tw) {
                 _this.subscribe = _this.subscribeBeforeReconnect.bind(_this);
                 tw.close();
                 return tw;
@@ -136,7 +133,7 @@ define("Lib/ServerEvent/Bus", ["require", "exports", "Core/Deferred", "Core/cons
          */
         Seb.prototype.closeChannel = function (name) {
             var _this = this;
-            this.initDeferred.addCallback(function (initializer) {
+            this.subsDeferred.addCallback(function (initializer) {
                 var removed = _this.subscribes.removeByName(name);
                 for (var _i = 0, removed_1 = removed; _i < removed_1.length; _i++) {
                     var item = removed_1[_i];

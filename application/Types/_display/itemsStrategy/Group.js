@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/Group" />
 /**
  * Стратегия-декоратор для формирования групп элементов
- * @class Types/Display/ItemsStrategy/Group
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Group
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/Group', [
@@ -201,22 +201,22 @@ define('Types/_display/itemsStrategy/Group', [
               //region Statics
               /**
          * Создает индекс сортировки в порядке группировки
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Object} options Опции
-         * @param {Array.<Types/Display/GroupItem>} options.groups Группы
-         * @param {Types/Display/Display} options.display Проекция
-         * @param {Function(Types/Display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
+         * @param {Array.<Types/_display/GroupItem>} options.groups Группы
+         * @param {Types/_display/Display} options.display Проекция
+         * @param {Function(Types/_display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
          * @return {Array.<Number>}
          */
         //endregion
         //region Statics
         /**
          * Создает индекс сортировки в порядке группировки
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Object} options Опции
-         * @param {Array.<Types/Display/GroupItem>} options.groups Группы
-         * @param {Types/Display/Display} options.display Проекция
-         * @param {Function(Types/Display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
+         * @param {Array.<Types/_display/GroupItem>} options.groups Группы
+         * @param {Types/_display/Display} options.display Проекция
+         * @param {Function(Types/_display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
          * @return {Array.<Number>}
          */
         Group.sortItems = function (items, options) {

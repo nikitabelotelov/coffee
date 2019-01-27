@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/IEquatable" />
 /**
  * Интерфейс сравнения объектов.
- * @interface Types/Entity/IEquatable
+ * @interface Types/_entity/IEquatable
  * @public
  * @author Мальцев А.А.
  */

@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_collection/format/Format" />
 /**
  * Формат полей.
- * Представляет собой список полей записи: Types/Collection/List.<Types/Format/Field>
- * @class Types/Format/Format
- * @extends Types/Collection/List
+ * Представляет собой список полей записи: Types/_collection/List.<Types/_entity/format/Field>
+ * @class Types/_entity/format/Format
+ * @extends Types/_collection/List
  * @public
  * @author Мальцев А.А.
  */
@@ -20,12 +20,12 @@ define('Types/_collection/format/Format', [
     var Format = /** @class */
     function (_super) {
         tslib_1.__extends(Format, _super);    /**
-         * @cfg {Array.<Types/Format/Field>} Элементы списка
-         * @name Types/Format/Format#items
+         * @cfg {Array.<Types/_entity/format/Field>} Элементы списка
+         * @name Types/_entity/format/Format#items
          */
         /**
-         * @cfg {Array.<Types/Format/Field>} Элементы списка
-         * @name Types/Format/Format#items
+         * @cfg {Array.<Types/_entity/format/Field>} Элементы списка
+         * @name Types/_entity/format/Format#items
          */
         function Format(options) {
             var _this = _super.call(this, options) || this;

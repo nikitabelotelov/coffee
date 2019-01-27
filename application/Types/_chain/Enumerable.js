@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Enumerable" />
 /**
  * Цепочка по IEnumerable.
- * @class Types/Chain/Enumerable
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Enumerable
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -16,8 +16,8 @@ define('Types/_chain/Enumerable', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Enumerable = /** @class */
     function (_super) {
-        tslib_1.__extends(Enumerable, _super);    /** @lends Types/Chain/Enumerable.prototype */
-        /** @lends Types/Chain/Enumerable.prototype */
+        tslib_1.__extends(Enumerable, _super);    /** @lends Types/_chain/Enumerable.prototype */
+        /** @lends Types/_chain/Enumerable.prototype */
         function Enumerable(source) {
             var _this = this;
             if (!source || !source['[Types/_collection/IEnumerable]']) {

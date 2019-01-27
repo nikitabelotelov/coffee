@@ -873,11 +873,15 @@ function fireEvent(e) {
    var shifted = false;
    if (target.className === 'vdom-focus-in') {
       if (closest(relatedTarget, this._rootDOMNode)) {
-         shifted = true;
+         // в vdom-focus-in прилетели либо изнутри контейнера, либо сверху потому что зациклились, shift - только если изнутри
+         if (!(relatedTarget.classList.contains('vdom-focus-out') && this._rootDOMNode['ws-tab-cycling'] === 'true')) {
+            shifted = true;
+         }
       }
    }
    if (target.className === 'vdom-focus-out') {
       if (!closest(relatedTarget, this._rootDOMNode)) {
+         // в vdom-focus-out прилетели либо снаружи контейнера, либо снизу потому что зациклились, shift - и если снаружи и если зациклились
          shifted = true;
       }
    }
@@ -891,17 +895,6 @@ function fireEvent(e) {
 
    target.dispatchEvent(evt);
 }
-var FocusHook = function (environment) {
-   this.fireTab = function (e) {
-      fireEvent.call(environment, e);
-   };
-};
-FocusHook.prototype.hook = function (node) {
-   node.addEventListener('focus', this.fireTab);
-};
-FocusHook.prototype.unhook = function (node) {
-   node.removeEventListener('focus', this.fireTab);
-};
 
 function findFirstVNode(arr) {
    if (!Array.isArray(arr)) {
@@ -913,26 +906,34 @@ function findFirstVNode(arr) {
 }
 
 function appendFocusesElements(self, vnode) {
-   var firstChild = findFirstVNode(vnode.children);
+   var firstChild = findFirstVNode(vnode.children),
+       fireTab = function (e) {
+         fireEvent.call(self, e);
+      },
+      hookOut = function hookOut(node) {
+         if (node) {
+            node.addEventListener('focus', fireTab);
+         }
+      };
    // добавляем ноды vdom-focus-in и vdom-focus-out тольео если есть какие-то внутренние ноды
    if (firstChild && firstChild.key !== 'vdom-focus-in') {
       var focusInNode = Vdom.htmlNode(
          'a',
          {
-            attributes: { class: 'vdom-focus-in', tabindex: '1' },
-            focusHook: new FocusHook(self)
+            attributes: { class: 'vdom-focus-in', tabindex: '1' }
          },
          [],
-         'vdom-focus-in'
+         'vdom-focus-in',
+          hookOut
       );
       var focusOutNode = Vdom.htmlNode(
          'a',
          {
-            attributes: { class: 'vdom-focus-out', tabindex: '0' },
-            focusHook: new FocusHook(self)
+            attributes: { class: 'vdom-focus-out', tabindex: '0' }
          },
          [],
-         'vdom-focus-out'
+         'vdom-focus-out',
+          hookOut
       );
       vnode.children = [].concat(focusInNode, vnode.children, focusOutNode);
       return true;
@@ -1006,7 +1007,11 @@ proto.applyNewVNode = function (newVNnode, rebuildChanges, newRootCntNode) {
    }
 
    this._rootDOMNode.isRoot = true;
-   patch = this._rootVNode ? Vdom.render(vnode, this._rootDOMNode, true, true) : null;
+   if (this._rootDOMNode.hasOwnProperty('$V') || !this._rootDOMNode.firstChild) {
+      patch = this._rootVNode ? Vdom.render(vnode, this._rootDOMNode, undefined, undefined, true) : null;
+   } else {
+      patch = this._rootVNode ? Vdom.hydrate(vnode, this._rootDOMNode, true, true) : null;
+   }
    this._rootVNode = vnode;
 
    hasCompound = isControlNodesCompound([newRootCntNode]);

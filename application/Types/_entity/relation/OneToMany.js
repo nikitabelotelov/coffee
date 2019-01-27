@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_entity/relation/OneToMany" />
 /**
  * Посредник, реализующий отношения "один ко многим".
- * @class Types/Mediator/OneToMany
- * @mixes Types/Entity/DestroyableMixin
+ * @class Types/_entity/relation/OneToMany
+ * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
 define('Types/_entity/relation/OneToMany', [
@@ -28,8 +28,8 @@ define('Types/_entity/relation/OneToMany', [
     }
     var OneToMany = /** @class */
     function (_super) {
-        tslib_1.__extends(OneToMany, _super);    /** @lends Types/Mediator/OneToMany.prototype */
-        /** @lends Types/Mediator/OneToMany.prototype */
+        tslib_1.__extends(OneToMany, _super);    /** @lends Types/_entity/relation/OneToMany.prototype */
+        /** @lends Types/_entity/relation/OneToMany.prototype */
         function OneToMany() {
             var _this = _super.call(this) || this;
             _this._parentToChild = new shim_1.Map();
@@ -42,17 +42,13 @@ define('Types/_entity/relation/OneToMany', [
             this._childToParent = null;
             this._childToRelation = null;
             _super.prototype.destroy.call(this);
-        };    //region Types/Mediator/IMediator
-              //endregion Types/Mediator/IMediator
-              //region Public methods
+        };    //region Public methods
               /**
          * Добавляет отношение "родитель - ребенок"
          * @param {Object} parent Родитель
          * @param {Object} child Ребенок
          * @param {String} [name] Название отношений
          */
-        //region Types/Mediator/IMediator
-        //endregion Types/Mediator/IMediator
         //region Public methods
         /**
          * Добавляет отношение "родитель - ребенок"
@@ -205,8 +201,8 @@ define('Types/_entity/relation/OneToMany', [
             }
         };
         return OneToMany;
-    }(DestroyableMixin_1.default    /** @lends Types/Mediator/OneToMany.prototype */);
-    /** @lends Types/Mediator/OneToMany.prototype */
+    }(DestroyableMixin_1.default    /** @lends Types/_entity/relation/OneToMany.prototype */);
+    /** @lends Types/_entity/relation/OneToMany.prototype */
     exports.default = OneToMany;
     OneToMany.prototype['[Types/_entity/relation/OneToMany]'] = true;
     OneToMany.prototype._parentToChild = null;

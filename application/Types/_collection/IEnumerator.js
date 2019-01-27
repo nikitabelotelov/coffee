@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/IEnumerator" />
 /**
  * Интерфейс коллекции c последовательным доступом
- * @interface Types/Collection/IEnumerator
+ * @interface Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.
  */

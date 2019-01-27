@@ -9,8 +9,8 @@
  *       type: 'recordset'
  *    };
  * </pre>
- * @class Types/Format/RecordSetField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/RecordSetField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -24,14 +24,14 @@ define('Types/_entity/format/RecordSetField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var RecordSetField = /** @class */
     function (_super) {
-        tslib_1.__extends(RecordSetField, _super);    /** @lends Types/Format/RecordSetField.prototype */
-        /** @lends Types/Format/RecordSetField.prototype */
+        tslib_1.__extends(RecordSetField, _super);    /** @lends Types/_entity/format/RecordSetField.prototype */
+        /** @lends Types/_entity/format/RecordSetField.prototype */
         function RecordSetField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         return RecordSetField;
-    }(Field_1.default    /** @lends Types/Format/RecordSetField.prototype */);
-    /** @lends Types/Format/RecordSetField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/RecordSetField.prototype */);
+    /** @lends Types/_entity/format/RecordSetField.prototype */
     exports.default = RecordSetField;
     RecordSetField.prototype['[Types/_entity/format/RecordSetField]'] = true;
     RecordSetField.prototype._moduleName = 'Types/entity:format.RecordSetField';

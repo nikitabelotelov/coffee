@@ -45,7 +45,7 @@
  *       console.error(error);
  *    });
  * </pre>
- * @interface Types/Source/ICrud
+ * @interface Types/_source/ICrud
  * @public
  * @author Мальцев А.А.
  */

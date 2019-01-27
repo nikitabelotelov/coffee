@@ -40,24 +40,19 @@ GeneratorVdom.createWsControl = function createWsControl(name, scope, attrs, con
 
    var compound = data.compound,
       controlProperties = data.controlProperties;
-
-   if (OptionsResolver.resolveOptions(controlClass, controlProperties, data.logicParent ? data.logicParent._moduleName : '')) {
-      return {
-         compound: compound,
-         invisible: false,
-         controlClass: controlClass,
-         controlProperties: controlProperties, // прикладные опции контрола
-         controlInternalProperties: data.internal, // служебные опции контрола
-         controlAttributes: data.attrs,
-         controlEvents: attrs.events,
-         key: controlProperties.__key || attrs.key,
-         controlNodeIdx: -1,
-         context: attrs.context,
-         inheritOptions: attrs.inheritOptions
-      };
-   } else {
-      return GeneratorVdom.createText('', controlProperties.__key || attrs.key);
-   }
+   return {
+      compound: compound,
+      invisible: false,
+      controlClass: controlClass,
+      controlProperties: controlProperties, // прикладные опции контрола
+      controlInternalProperties: data.internal, // служебные опции контрола
+      controlAttributes: data.attrs,
+      controlEvents: attrs.events,
+      key: controlProperties.__key || attrs.key,
+      controlNodeIdx: -1,
+      context: attrs.context,
+      inheritOptions: attrs.inheritOptions
+   };
 };
 
 GeneratorVdom.createTemplate = function createTemplate(name, scope, attributes, context, _deps) {

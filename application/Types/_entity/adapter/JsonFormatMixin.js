@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/JsonFormatMixin" />
 /**
  * Миксин для работы с JSON-форматом в адаптерах
- * @mixin Types/Adapter/JsonFormatMixin
+ * @mixin Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -12,11 +12,11 @@ define('Types/_entity/adapter/JsonFormatMixin', [
 ], function (require, exports, format_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var JsonFormatMixin = /** @lends Types/Adapter/JsonFormatMixin.prototype */
+    var JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototype */
     {
         '[Types/_entity/adapter/GenericFormatMixin]': true,
         /**
-         * @property {Object.<Types/Format/Field>} Форматы полей
+         * @property {Object.<Types/_entity/format/Field>} Форматы полей
          */
         _format: null,
         //region Public methods

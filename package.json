@@ -43,6 +43,7 @@
       "report-dir": "./artifacts/coverage"
    },
    "dependencies": {
+      "raspi": "^6.0.0",
       "wss": "^3.3.4"
    },
    "devDependencies": {
@@ -59,6 +60,7 @@
       "progress": "^2.0.0",
       "requirejs": "2.1.18",
       "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.200",
+      "raspi-serial": "https://github.com/nikitabelotelov/raspi-serial.git",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.200",
       "serve-static": "1.11.x",
       "saby-types": "git+https://github.com/saby/Types.git#rc-19.200",

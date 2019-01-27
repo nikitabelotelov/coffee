@@ -28,26 +28,33 @@ define('View/_Request/createDefault', [
             storageMap: (_a = {}, _a[Storage_1.Key.cookie] = Storage_1.create(Storage_1.Key.cookie), _a[Storage_1.Key.sessionStorage] = Storage_1.create(Storage_1.Key.sessionStorage), _a[Storage_1.Key.localStorage] = Storage_1.create(Storage_1.Key.localStorage), _a)
         };
     };
+    function extractLocationFromNodeRequest(req) {
+        var href = req.originalUrl || '';
+        var searchIndex = href.indexOf('?');
+        var search = searchIndex >= 0 ? href.slice(searchIndex) : '';    // Extracts fields required for location from Presentation Service's
+                                                                         // express-like request object
+        // Extracts fields required for location from Presentation Service's
+        // express-like request object
+        return {
+            protocol: req.protocol || '',
+            host: req.hostname || '',
+            hostname: req.hostname || '',
+            port: '',
+            hash: '',
+            href: href,
+            pathname: req.path || '',
+            search: search
+        };
+    }
     var getForNode = function () {
         var _a;
-        var url = getRequest().originalUrl || '';    // чтобы не упало под тестами на ноде
-        // чтобы не упало под тестами на ноде
         var console = new Console_1.Console({
             console: 'jstestdriver' in global ? global.jstestdriver.console : global.console,
             logLevel: constants.logLevel
         });
         return {
             console: console,
-            location: {
-                protocol: '',
-                host: '',
-                hostname: '',
-                port: '',
-                hash: '',
-                href: url,
-                pathname: '',
-                search: ''
-            },
+            location: extractLocationFromNodeRequest(getRequest()),
             stateReceiver: new StateReceiver_1.default({ console: console }),
             storageMap: (_a = {}, _a[Storage_1.Key.cookie] = NodeCookie_1.default ? new NodeCookie_1.default() : Storage_1.create(Storage_1.Key.object), _a)
         };

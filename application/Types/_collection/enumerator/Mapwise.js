@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_collection/enumerator/Mapwise" />
 /**
  * Энумератор для Map
- * @class Types/Collection/MapEnumerator
- * @implements Types/Collection/IEnumerator
+ * @class Types/_collection/MapEnumerator
+ * @implements Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.
  */

@@ -2,9 +2,9 @@
 /**
  * Адаптер для данных в формате JSON.
  * Работает с данными, представленными в виде обычных JSON объектов.
- * Примеры можно посмотреть в модулях {@link Types/Adapter/JsonRecord} и {@link Types/Adapter/JsonTable}.
- * @class Types/Adapter/Json
- * @extends Types/Adapter/Abstract
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/JsonRecord} и {@link Types/_entity/adapter/JsonTable}.
+ * @class Types/_entity/adapter/Json
+ * @extends Types/_entity/adapter/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -21,8 +21,8 @@ define('Types/_entity/adapter/Json', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Json = /** @class */
     function (_super) {
-        tslib_1.__extends(Json, _super);    /** @lends Types/Adapter/Json.prototype */
-        /** @lends Types/Adapter/Json.prototype */
+        tslib_1.__extends(Json, _super);    /** @lends Types/_entity/adapter/Json.prototype */
+        /** @lends Types/_entity/adapter/Json.prototype */
         function Json() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -36,8 +36,8 @@ define('Types/_entity/adapter/Json', [
             return undefined;
         };
         return Json;
-    }(Abstract_1.default    /** @lends Types/Adapter/Json.prototype */);
-    /** @lends Types/Adapter/Json.prototype */
+    }(Abstract_1.default    /** @lends Types/_entity/adapter/Json.prototype */);
+    /** @lends Types/_entity/adapter/Json.prototype */
     exports.default = Json;
     Json.prototype['[Types/_entity/adapter/Json]'] = true;
     Json.prototype._moduleName = 'Types/entity:adapter.Json';

@@ -1,16 +1,16 @@
 /// <amd-module name="Types/_source/DataSet" />
 /**
  * Набор данных, полученный из источника.
- * Представляет собой набор {@link Types/Collection/RecordSet выборок}, {@link Types/Entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
- * Использование таких комплексных наборов позволяет за один вызов {@link Types/Source/ICrud#query списочного} либо {@link Types/Source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
+ * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
+ * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/_source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
  * {@link rawData Исходные данные} могут быть предоставлены источником в разных форматах (JSON, XML). По умолчанию используется формат JSON.
- * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/Adapter/Json}.
+ * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
  * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для наглядности ниже приведены несколько примеров чтения частей из набора данных.
  *
  * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты выполнения запроса:
  * <pre>
- *    require(['Types/Source/DataSet'], function (DataSet) {
- *       var data = new DataSet({
+ *    require(['Types/source'], function (source) {
+ *       var data = new source.DataSet({
  *          rawData: {
  *             orders: [
  *                {id: 1, buyer_id: 1, date: '2016-06-02 14:12:45', amount: 96},
@@ -53,9 +53,9 @@
  * </pre>
  * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения запроса:
  * <pre>
- *    require(['Types/Source/DataSet', 'Types/Adapter/Xml'], function (DataSet) {
- *       var data = new DataSet({
- *          adapter: 'adapter.xml',
+ *    require(['Types/source', 'Types/entity'], function (source, entity) {
+ *       var data = new source.DataSet({
+ *          adapter: new entity.adapter.Xml(),
  *          rawData: '<?xml version="1.0"?>' +
  *             '<response>' +
  *             '   <orders>' +
@@ -107,10 +107,10 @@
  *       console.log(data.getScalar('executeDate'));//'2016-06-27 11:34:57'
  *    });
  * </pre>
- * @class Types/Source/DataSet
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_source/DataSet
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
  * @ignoreOptions totalProperty writable
  * @ignoreMethods getTotal getTotalProperty setTotalProperty
  * @public
@@ -128,8 +128,8 @@ define('Types/_source/DataSet', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var DataSet = /** @class */
     function (_super) {
-        tslib_1.__extends(DataSet, _super);    /** @lends Types/Source/DataSet.prototype */
-        /** @lends Types/Source/DataSet.prototype */
+        tslib_1.__extends(DataSet, _super);    /** @lends Types/_source/DataSet.prototype */
+        /** @lends Types/_source/DataSet.prototype */
         function DataSet(options) {
             var _this = _super.call(this) || this;
             entity_1.OptionsToPropertyMixin.call(_this, options);
@@ -154,30 +154,30 @@ define('Types/_source/DataSet', [
         });    //region Public methods
                /**
          * Возвращает адаптер для работы с данными
-         * @return {Types/Adapter/IAdapter}
+         * @return {Types/_entity/adapter/IAdapter}
          * @see adapter
-         * @see Types/Adapter/IAdapter
+         * @see Types/_entity/adapter/IAdapter
          * @example
          * Получим адаптер набора данных, используемый по умолчанию:
          * <pre>
-         *    require(['Types/Source/DataSet', 'Types/Adapter/Json'], function (DataSet, JsonAdapter) {
-         *       var data = new DataSet();
-         *       console.log(data.getAdapter() instanceof JsonAdapter);//true
+         *    require(['Types/source', 'Types/entity'], function (source, entity) {
+         *       var data = new source.DataSet();
+         *       console.log(data.getAdapter() instanceof entity.adapter.Json);//true
          *    });
          * </pre>
          */
         //region Public methods
         /**
          * Возвращает адаптер для работы с данными
-         * @return {Types/Adapter/IAdapter}
+         * @return {Types/_entity/adapter/IAdapter}
          * @see adapter
-         * @see Types/Adapter/IAdapter
+         * @see Types/_entity/adapter/IAdapter
          * @example
          * Получим адаптер набора данных, используемый по умолчанию:
          * <pre>
-         *    require(['Types/Source/DataSet', 'Types/Adapter/Json'], function (DataSet, JsonAdapter) {
-         *       var data = new DataSet();
-         *       console.log(data.getAdapter() instanceof JsonAdapter);//true
+         *    require(['Types/source', 'Types/entity'], function (source, entity) {
+         *       var data = new source.DataSet();
+         *       console.log(data.getAdapter() instanceof entity.adapter.Json);//true
          *    });
          * </pre>
          */
@@ -190,13 +190,13 @@ define('Types/_source/DataSet', [
          * Возвращает конструктор записей, порождаемых набором данных.
          * @return {String|Function}
          * @see model
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Получим конструктор записей, используемый по умолчанию:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       console.log(data.getModel());//'Types/entity:Model'
          *    });
          * </pre>
@@ -205,13 +205,13 @@ define('Types/_source/DataSet', [
          * Возвращает конструктор записей, порождаемых набором данных.
          * @return {String|Function}
          * @see model
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Получим конструктор записей, используемый по умолчанию:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       console.log(data.getModel());//'Types/entity:Model'
          *    });
          * </pre>
@@ -223,13 +223,13 @@ define('Types/_source/DataSet', [
          * @param {String|Function} model
          * @see model
          * @see getModel
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Установим конструктор пользовательской модели:
          * <pre>
-         *    require(['Types/Source/DataSet', 'Application/Models/User'], function (DataSet, UserModel) {
-         *       var data = new DataSet();
+         *    require(['Types/source', 'Application/Models/User'], function (source, UserModel) {
+         *       var data = new source.DataSet();
          *       data.setModel(UserModel);
          *    });
          * </pre>
@@ -239,13 +239,13 @@ define('Types/_source/DataSet', [
          * @param {String|Function} model
          * @see model
          * @see getModel
-         * @see Types/Entity/Model
-         * @see Types/Di
+         * @see Types/_entity/Model
+         * @see Types/di
          * @example
          * Установим конструктор пользовательской модели:
          * <pre>
-         *    require(['Types/Source/DataSet', 'Application/Models/User'], function (DataSet, UserModel) {
-         *       var data = new DataSet();
+         *    require(['Types/source', 'Application/Models/User'], function (source, UserModel) {
+         *       var data = new source.DataSet();
          *       data.setModel(UserModel);
          *    });
          * </pre>
@@ -256,12 +256,12 @@ define('Types/_source/DataSet', [
          * Возвращает конструктор списка моделей
          * @return {String|Function}
          * @see listModule
-         * @see Types/Di
+         * @see Types/di
          * @example
          * Получим конструктор рекордсетов, используемый по умолчанию:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       console.log(data.getListModule());//'Types/collection:RecordSet'
          *    });
          * </pre>
@@ -270,12 +270,12 @@ define('Types/_source/DataSet', [
          * Возвращает конструктор списка моделей
          * @return {String|Function}
          * @see listModule
-         * @see Types/Di
+         * @see Types/di
          * @example
          * Получим конструктор рекордсетов, используемый по умолчанию:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       console.log(data.getListModule());//'Types/collection:RecordSet'
          *    });
          * </pre>
@@ -287,12 +287,12 @@ define('Types/_source/DataSet', [
          * @param {String|Function} listModule
          * @see getListModule
          * @see listModule
-         * @see Types/Di
+         * @see Types/di
          * @example
          * Установим конструктор рекордсетов:
          * <pre>
-         *    require(['Types/Source/DataSet', 'Application/Collection/Users'], function (DataSet, UsersCollection) {
-         *       var data = new DataSet();
+         *    require(['Types/source', 'Application/Collection/Users'], function (source, UsersCollection) {
+         *       var data = new source.DataSet();
          *       data.setListModule(UsersCollection);
          *    });
          * </pre>
@@ -302,12 +302,12 @@ define('Types/_source/DataSet', [
          * @param {String|Function} listModule
          * @see getListModule
          * @see listModule
-         * @see Types/Di
+         * @see Types/di
          * @example
          * Установим конструктор рекордсетов:
          * <pre>
-         *    require(['Types/Source/DataSet', 'Application/Collection/Users'], function (DataSet, UsersCollection) {
-         *       var data = new DataSet();
+         *    require(['Types/source', 'Application/Collection/Users'], function (source, UsersCollection) {
+         *       var data = new source.DataSet();
          *       data.setListModule(UsersCollection);
          *    });
          * </pre>
@@ -318,12 +318,12 @@ define('Types/_source/DataSet', [
          * Возвращает название свойства модели, содержащего первичный ключ
          * @return {String}
          * @see idProperty
-         * @see Types/Entity/Model#idProperty
+         * @see Types/_entity/Model#idProperty
          * @example
          * Получим название свойства модели, содержащего первичный ключ:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          idProperty: 'id'
          *       });
          *       console.log(data.getIdProperty());//'id'
@@ -334,12 +334,12 @@ define('Types/_source/DataSet', [
          * Возвращает название свойства модели, содержащего первичный ключ
          * @return {String}
          * @see idProperty
-         * @see Types/Entity/Model#idProperty
+         * @see Types/_entity/Model#idProperty
          * @example
          * Получим название свойства модели, содержащего первичный ключ:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          idProperty: 'id'
          *       });
          *       console.log(data.getIdProperty());//'id'
@@ -353,12 +353,12 @@ define('Types/_source/DataSet', [
          * @param {String} name
          * @see getIdProperty
          * @see idProperty
-         * @see Types/Entity/Model#idProperty
+         * @see Types/_entity/Model#idProperty
          * @example
          * Установим название свойства модели, содержащего первичный ключ:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       data.setIdProperty('id');
          *    });
          * </pre>
@@ -368,12 +368,12 @@ define('Types/_source/DataSet', [
          * @param {String} name
          * @see getIdProperty
          * @see idProperty
-         * @see Types/Entity/Model#idProperty
+         * @see Types/_entity/Model#idProperty
          * @example
          * Установим название свойства модели, содержащего первичный ключ:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       data.setIdProperty('id');
          *    });
          * </pre>
@@ -388,8 +388,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим название свойства, в котором находится основная выборка:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          itemsProperty: 'items'
          *       });
          *       console.log(data.getItemsProperty());//'items'
@@ -404,8 +404,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим название свойства, в котором находится основная выборка:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          itemsProperty: 'items'
          *       });
          *       console.log(data.getItemsProperty());//'items'
@@ -422,8 +422,8 @@ define('Types/_source/DataSet', [
          * @example
          * Установим название свойства, в котором находится основная выборка:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       data.setItemsProperty('items');
          *    });
          * </pre>
@@ -436,8 +436,8 @@ define('Types/_source/DataSet', [
          * @example
          * Установим название свойства, в котором находится основная выборка:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *       data.setItemsProperty('items');
          *    });
          * </pre>
@@ -447,13 +447,13 @@ define('Types/_source/DataSet', [
         };    /**
          * Возвращает выборку
          * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
-         * @return {Types/Collection/RecordSet}
+         * @return {Types/_collection/RecordSet}
          * @see itemsProperty
          * @example
          * Получим основную выборку из набора данных, представляющего выборку:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: [
          *                {id: 1, title: 'How to build a Home'},
          *                {id: 2, title: 'How to plant a Tree'},
@@ -468,8 +468,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим основную и дополнительную выборки из набора данных, представляющего несколько выборок:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: {
          *                articles: [{
          *                   id: 1,
@@ -505,13 +505,13 @@ define('Types/_source/DataSet', [
         /**
          * Возвращает выборку
          * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
-         * @return {Types/Collection/RecordSet}
+         * @return {Types/_collection/RecordSet}
          * @see itemsProperty
          * @example
          * Получим основную выборку из набора данных, представляющего выборку:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: [
          *                {id: 1, title: 'How to build a Home'},
          *                {id: 2, title: 'How to plant a Tree'},
@@ -526,8 +526,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим основную и дополнительную выборки из набора данных, представляющего несколько выборок:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: {
          *                articles: [{
          *                   id: 1,
@@ -588,13 +588,13 @@ define('Types/_source/DataSet', [
         };    /**
          * Возвращает запись
          * @param {String} [property] Свойство данных, в которых находится модель
-         * @return {Types/Entity/Model|undefined}
+         * @return {Types/_entity/Model|undefined}
          * @see itemsProperty
          * @example
          * Получим запись из набора данных, который содержит только ее:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: {
          *                id: 1,
          *                title: 'C++ Beginners Tutorial'
@@ -608,8 +608,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим записи статьи и темы из набора данных, который содержит несколько записей:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: {
          *                article: {
          *                   id: 2,
@@ -633,13 +633,13 @@ define('Types/_source/DataSet', [
         /**
          * Возвращает запись
          * @param {String} [property] Свойство данных, в которых находится модель
-         * @return {Types/Entity/Model|undefined}
+         * @return {Types/_entity/Model|undefined}
          * @see itemsProperty
          * @example
          * Получим запись из набора данных, который содержит только ее:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: {
          *                id: 1,
          *                title: 'C++ Beginners Tutorial'
@@ -653,8 +653,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим записи статьи и темы из набора данных, который содержит несколько записей:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *             rawData: {
          *                article: {
          *                   id: 2,
@@ -700,8 +700,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим количество открытых задач:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var statOpen = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var statOpen = new source.DataSet({
          *          rawData: 234
          *       });
          *
@@ -711,8 +711,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим количество открытых и закрытых задач:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var stat = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var stat = new source.DataSet({
          *          rawData: {
          *             total: 500,
          *             open: 234,
@@ -734,8 +734,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим количество открытых задач:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var statOpen = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var statOpen = new source.DataSet({
          *          rawData: 234
          *       });
          *
@@ -745,8 +745,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим количество открытых и закрытых задач:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var stat = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var stat = new source.DataSet({
          *          rawData: {
          *             total: 500,
          *             open: 234,
@@ -797,8 +797,8 @@ define('Types/_source/DataSet', [
          * @example
          * Проверим наличие свойств 'articles' и 'topics':
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          rawData: {
          *             articles: [{
          *                id: 1,
@@ -820,8 +820,8 @@ define('Types/_source/DataSet', [
          * @example
          * Проверим наличие свойств 'articles' и 'topics':
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          rawData: {
          *             articles: [{
          *                id: 1,
@@ -845,8 +845,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим значение свойства 'article':
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          rawData: {
          *             article: {
          *                id: 1,
@@ -867,8 +867,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим значение свойства 'article':
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          rawData: {
          *             article: {
          *                id: 1,
@@ -891,8 +891,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим данные в сыром виде:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          rawData: {
          *             id: 1,
          *             title: 'C++ Beginners Tutorial'
@@ -911,8 +911,8 @@ define('Types/_source/DataSet', [
          * @example
          * Получим данные в сыром виде:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet({
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet({
          *          rawData: {
          *             id: 1,
          *             title: 'C++ Beginners Tutorial'
@@ -933,8 +933,8 @@ define('Types/_source/DataSet', [
          * @example
          * Установим данные в сыром виде:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *
          *       data.setRawData({
          *          id: 1,
@@ -952,8 +952,8 @@ define('Types/_source/DataSet', [
          * @example
          * Установим данные в сыром виде:
          * <pre>
-         *    require(['Types/Source/DataSet'], function (DataSet) {
-         *       var data = new DataSet();
+         *    require(['Types/source'], function (source) {
+         *       var data = new source.DataSet();
          *
          *       data.setRawData({
          *          id: 1,
@@ -987,13 +987,13 @@ define('Types/_source/DataSet', [
         };    /**
          * Возвращает инстанс модели
          * @param {*} rawData Данные модели
-         * @return {Types/Entity/Model}
+         * @return {Types/_entity/Model}
          * @protected
          */
         /**
          * Возвращает инстанс модели
          * @param {*} rawData Данные модели
-         * @return {Types/Entity/Model}
+         * @return {Types/_entity/Model}
          * @protected
          */
         DataSet.prototype._getModelInstance = function (rawData) {
@@ -1009,13 +1009,13 @@ define('Types/_source/DataSet', [
         };    /**
          * Возвращает инстанс рекордсета
          * @param {*} rawData Данные рекордсета
-         * @return {Types/Collection/RecordSet}
+         * @return {Types/_collection/RecordSet}
          * @protected
          */
         /**
          * Возвращает инстанс рекордсета
          * @param {*} rawData Данные рекордсета
-         * @return {Types/Collection/RecordSet}
+         * @return {Types/_collection/RecordSet}
          * @protected
          */
         DataSet.prototype._getListInstance = function (rawData) {
@@ -1040,8 +1040,8 @@ define('Types/_source/DataSet', [
             }
         };
         return DataSet;
-    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.SerializableMixin)    /** @lends Types/Source/DataSet.prototype */);
-    /** @lends Types/Source/DataSet.prototype */
+    }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.SerializableMixin)    /** @lends Types/_source/DataSet.prototype */);
+    /** @lends Types/_source/DataSet.prototype */
     exports.default = DataSet;
     DataSet.prototype._moduleName = 'Types/source:DataSet';
     DataSet.prototype['[Types/_source/DataSet]'] = true;    // @ts-ignore

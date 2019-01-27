@@ -5,8 +5,8 @@
  *
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
- *    require(['Types/Source/Memory', 'Types/Query/Query'], function (MemorySource, Query) {
- *       var solarSystem = new MemorySource({
+ *    require(['Types/source'], function (source) {
+ *       var solarSystem = new source.Memory({
  *          data: [
  *             {id: 1, name: 'Sun', kind: 'Star'},
  *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -62,8 +62,8 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/Memory
- * @extends Types/Source/Local
+ * @class Types/_source/Memory
+ * @extends Types/_source/Local
  * @public
  * @author Мальцев А.А.
  */
@@ -92,8 +92,8 @@ define('Types/_source/Memory', [
     var contracts = {};
     var Memory = /** @class */
     function (_super) {
-        tslib_1.__extends(Memory, _super);    /** @lends Types/Source/Memory.prototype */
-        /** @lends Types/Source/Memory.prototype */
+        tslib_1.__extends(Memory, _super);    /** @lends Types/_source/Memory.prototype */
+        /** @lends Types/_source/Memory.prototype */
         function Memory(options) {
             var _this = _super.call(this, options) || this;    //FIXME: YAGNI
             //FIXME: YAGNI
@@ -117,7 +117,7 @@ define('Types/_source/Memory', [
             return this[$cachedAdapter] || (this[$cachedAdapter] = this.getAdapter().forTable(this._$data));
         };
         Memory.prototype._applyFrom = function (from) {
-            return from ? contracts[from] : this._data;
+            return from ? contracts[from] : this.data;
         };
         Memory.prototype._applyJoin = function (data, join) {
             if (join.length) {
@@ -138,7 +138,7 @@ define('Types/_source/Memory', [
               //region Protected members
               /**
          * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
-         * @param {Types/Query/Query} [query] Запрос
+         * @param {Types/_source/Query} [query] Запрос
          * @return {*}
          * @protected
          */
@@ -146,7 +146,7 @@ define('Types/_source/Memory', [
         //region Protected members
         /**
          * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
-         * @param {Types/Query/Query} [query] Запрос
+         * @param {Types/_source/Query} [query] Запрос
          * @return {*}
          * @protected
          */
@@ -162,8 +162,8 @@ define('Types/_source/Memory', [
             return this._emptyData.get(table);
         };
         return Memory;
-    }(Local_1.default    /** @lends Types/Source/Memory.prototype */);
-    /** @lends Types/Source/Memory.prototype */
+    }(Local_1.default    /** @lends Types/_source/Memory.prototype */);
+    /** @lends Types/_source/Memory.prototype */
     exports.default = Memory;
     Memory.prototype._moduleName = 'Types/source:Memory';
     Memory.prototype['[Types/_source/Memory]'] = true;    // @ts-ignore

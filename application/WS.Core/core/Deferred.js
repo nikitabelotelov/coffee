@@ -39,6 +39,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                     //@ts-ignore;
                     this._cancelCallback = cfg.cancelCallback;
                 }
+                this._logCallbackExecutionTime = !!cfg.logCallbackExecutionTime;
             }
             this._chained = false;
             this._chain = [];
@@ -47,6 +48,13 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
             this._results = [null, null];
             this._running = false;
         }
+        /**
+         * установить флаг логгирования данного deferred в сервисе пердставления
+         * @param value значение флага
+         */
+        Deferred.prototype.logCallbackExecutionTime = function (value) {
+            this._logCallbackExecutionTime = !!value;
+        };
         /**
          * Отменяет Deferred. Отмена работает только тогда, когда он находится в состоянии ожидания (когда на нём ещё не были
          * вызваны методы callback/errback/cancel), иначе метод cancel не делает ничего.
@@ -268,7 +276,12 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                 try {
                     // Признак того, что Deferred сейчас выполняет цепочку
                     this._running = true;
-                    res = cDebug.methodExecutionTime(f, this, [res]);
+                    if (this._logCallbackExecutionTime) {
+                        res = cDebug.methodExecutionTime(f, this, [res]);
+                    }
+                    else {
+                        res = f(res);
+                    }
                     fired = resultToFired(res);
                     if (isDeferredValue(res)) {
                         cb = function (cbRes) {

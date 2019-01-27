@@ -4,9 +4,9 @@
  *
  * Создадим источник с заранее загруженным результатом списочного метода:
  * <pre>
- *    require(['Types/Source/PrefetchProxy', 'Types/Source/Memory', 'Types/Source/DataSet'], function (PrefetchProxy, MemorySource, DataSet) {
- *       var fastFoods = new PrefetchProxy({
- *          target: new MemorySource({
+ *    require(['Types/source'], function (source) {
+ *       var fastFoods = new source.PrefetchProxy({
+ *          target: new source.Memory({
  *             data: [
  *                {id: 1, name: 'Kurger Bing'},
  *                {id: 2, name: 'DcMonald\'s'},
@@ -15,7 +15,7 @@
  *             ],
  *          }),
  *          data: {
- *             query: new DataSet({
+ *             query: new source.DataSet({
  *                rawData: [
  *                   {id: 1, name: 'Mret a Panger'},
  *                   {id: 2, name: 'Cofta Cosfee'},
@@ -44,12 +44,12 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/PrefetchProxy
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_source/PrefetchProxy
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -68,35 +68,35 @@ define('Types/_source/PrefetchProxy', [
         tslib_1.__extends(PrefetchProxy, _super);
         function PrefetchProxy(options) {
             var _this = _super.call(this, options) || this;    /**
-             * @cfg {Types/Source/ICrud|Types/Source/ICrudPlus} Целевой источник данных.
-             * @name Types/Source/PrefetchProxy#target
+             * @cfg {Types/_source/ICrud} Целевой источник данных.
+             * @name Types/_source/PrefetchProxy#target
              */
             /**
-             * @cfg {Types/Source/ICrud|Types/Source/ICrudPlus} Целевой источник данных.
-             * @name Types/Source/PrefetchProxy#target
+             * @cfg {Types/_source/ICrud} Целевой источник данных.
+             * @name Types/_source/PrefetchProxy#target
              */
             _this._$target = null;    /**
-             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/Source/ICrud} и {@link Types/Source/ICrudPlus}.
-             * @name Types/Source/PrefetchProxy#data
+             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+             * @name Types/_source/PrefetchProxy#data
              */
             /**
-             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/Source/ICrud} и {@link Types/Source/ICrudPlus}.
-             * @name Types/Source/PrefetchProxy#data
+             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+             * @name Types/_source/PrefetchProxy#data
              */
             _this._$data = {
                 /**
-                 * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/Source/ICrud#read}.
-                 * @name Types/Source/PrefetchProxy#data.read
+                 * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#read}.
+                 * @name Types/_source/PrefetchProxy#data.read
                  */
                 read: null,
                 /**
-                 * @cfg {Types/Source/DataSet} Предварительно загруженные данные для метода {@link Types/Source/ICrud#query}.
-                 * @name Types/Source/PrefetchProxy#data.query
+                 * @cfg {Types/_source/DataSet} Предварительно загруженные данные для метода {@link Types/_source/ICrud#query}.
+                 * @name Types/_source/PrefetchProxy#data.query
                  */
                 query: null,
                 /**
-                 * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/Source/ICrud#copy}.
-                 * @name Types/Source/PrefetchProxy#data.copy
+                 * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#copy}.
+                 * @name Types/_source/PrefetchProxy#data.copy
                  */
                 copy: null
             };    /**

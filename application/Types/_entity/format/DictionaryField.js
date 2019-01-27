@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_entity/format/DictionaryField" />
 /**
  * Формат поля со словарём (абстрактный класс)
- * @class Types/Format/DictionaryField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/DictionaryField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -16,8 +16,8 @@ define('Types/_entity/format/DictionaryField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var DictionaryField = /** @class */
     function (_super) {
-        tslib_1.__extends(DictionaryField, _super);    /** @lends Types/Format/DictionaryField.prototype */
-        /** @lends Types/Format/DictionaryField.prototype */
+        tslib_1.__extends(DictionaryField, _super);    /** @lends Types/_entity/format/DictionaryField.prototype */
+        /** @lends Types/_entity/format/DictionaryField.prototype */
         function DictionaryField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -48,8 +48,8 @@ define('Types/_entity/format/DictionaryField', [
             return this._$localeDictionary;
         };
         return DictionaryField;
-    }(Field_1.default    /** @lends Types/Format/DictionaryField.prototype */);
-    /** @lends Types/Format/DictionaryField.prototype */
+    }(Field_1.default    /** @lends Types/_entity/format/DictionaryField.prototype */);
+    /** @lends Types/_entity/format/DictionaryField.prototype */
     exports.default = DictionaryField;
     DictionaryField.prototype['[Types/_entity/format/DictionaryField]'] = true;
     DictionaryField.prototype._moduleName = 'Types/entity:format.DictionaryField';

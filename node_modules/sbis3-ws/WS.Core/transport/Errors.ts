@@ -98,9 +98,19 @@ export class Transport {
 classicExtend(Transport, Error);
 
 type HTTPConfig = IConfig & Partial<{
-    status: number;
+    httpError: number;
     payload: string;
+    xhr: XMLHttpRequestLike;
 }>;
+
+interface XMLHttpRequestLike {
+    setRequestHeader(header: string, value: string)
+    getResponseHeader(key: string) : string
+    getAllResponseHeaders(): string
+    overrideMimeType(mimeType: string)
+    abort()
+    send(body?: any)
+}
 
 /**
  * HTTP ошибка
@@ -115,12 +125,13 @@ type HTTPConfig = IConfig & Partial<{
  * @extends Transport/Errors#Transport
  */
 export class HTTP extends Transport {
+    public xhr: XMLHttpRequestLike;
     public status: number;
     public payload: string;
     // для обратной совместимсти с Transport/HTTPError
     public httpError: number | string;
     constructor(cfg: HTTPConfig | string, ...args) {
-        let config;
+        let config: HTTPConfig;
         // для обратной совместимсти с Transport/HTTPError
         if (typeof cfg === "string") {
             const [status, url, payload, details] = args;
@@ -136,6 +147,7 @@ export class HTTP extends Transport {
         this.payload = config.payload || '';
         this.status = config.httpError;
         this.details = this.details || DETAILS_TEXT.default;
+        this.xhr = config.xhr;
         // для обратной совместимсти с Transport/HTTPError
         this.httpError = typeof this.status !== 'undefined' ? this.status : '';
     }

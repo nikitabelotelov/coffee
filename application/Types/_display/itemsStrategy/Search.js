@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/Search" />
 /**
  * Стратегия-декоратор для объединения развернутых узлов в "хлебную крошку"
- * @class Types/Display/ItemsStrategy/Search
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Search
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 define('Types/_display/itemsStrategy/Search', [
@@ -105,14 +105,14 @@ define('Types/_display/itemsStrategy/Search', [
               //region Protected
               /**
          * Возвращает элементы проекции
-         * @return Array.<Types/Display/CollectionItem>
+         * @return Array.<Types/_display/CollectionItem>
          * @protected
          */
         //endregion
         //region Protected
         /**
          * Возвращает элементы проекции
-         * @return Array.<Types/Display/CollectionItem>
+         * @return Array.<Types/_display/CollectionItem>
          * @protected
          */
         Search.prototype._getItems = function () {
@@ -121,20 +121,20 @@ define('Types/_display/itemsStrategy/Search', [
               //region Statics
               /**
          * Создает индекс сортировки, объединяющий хлебные крошки в один элемент
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Object} options Опции
-         * @param {Types/Display/Collection} options.display Проекция
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @param {Types/_display/Collection} options.display Проекция
+         * @return {Array.<Types/_display/CollectionItem>}
          * @static
          */
         //endregion
         //region Statics
         /**
          * Создает индекс сортировки, объединяющий хлебные крошки в один элемент
-         * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+         * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
          * @param {Object} options Опции
-         * @param {Types/Display/Collection} options.display Проекция
-         * @return {Array.<Types/Display/CollectionItem>}
+         * @param {Types/_display/Collection} options.display Проекция
+         * @return {Array.<Types/_display/CollectionItem>}
          * @static
          */
         Search.sortItems = function (items, options) {

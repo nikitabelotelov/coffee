@@ -1,4 +1,5 @@
 /// <amd-module name="Lib/ServerEvent/native/SockjsEmulator" />
+import EventClass = require('Lib/ServerEvent/_class/Events');
 /**
  * @link https://github.com/sockjs/sockjs-client/blob/master/lib/utils/browser-crypto.js
  */
@@ -194,7 +195,7 @@ class SockJSTransport implements WebSocket {
                 if (!data[1]) {
                     return;
                 }
-                value.call(this, new MessageEvent('websocket', {
+                value.call(this, EventClass.createME('websocket', {
                     data: data[1],
                     origin: ev.origin,
                     source: ev.source

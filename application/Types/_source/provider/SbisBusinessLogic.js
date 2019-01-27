@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_source/provider/SbisBusinessLogic" />
 /**
  * JSON-RPC Провайдер для бизнес-логики СБиС
- * @class Types/Source/Provider/SbisBusinessLogic
- * @implements Types/Source/Provider/IAbstract
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_source/provider/SbisBusinessLogic
+ * @implements Types/_source/provider/IAbstract
+ * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -25,7 +25,7 @@ define('Types/_source/provider/SbisBusinessLogic', [
             var _this = _super.call(this) || this;
             _this['[Types/_source/provider/IAbstract]'] = true;    /**
              * @cfg {Endpoint} Конечная точка, обеспечивающая доступ клиента к БЛ
-             * @name Types/Source/Provider/SbisBusinessLogic#endpoint
+             * @name Types/_source/provider/SbisBusinessLogic#endpoint
              * @see getEndPoint
              * @example
              * <pre>
@@ -39,7 +39,7 @@ define('Types/_source/provider/SbisBusinessLogic', [
              */
             /**
              * @cfg {Endpoint} Конечная точка, обеспечивающая доступ клиента к БЛ
-             * @name Types/Source/Provider/SbisBusinessLogic#endpoint
+             * @name Types/_source/provider/SbisBusinessLogic#endpoint
              * @see getEndPoint
              * @example
              * <pre>

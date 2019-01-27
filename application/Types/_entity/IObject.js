@@ -2,7 +2,7 @@
 /**
  * Интерфейс доступа к свойствам объекта.
  * Позволяет читать и записывать значения свойств, а также проверять их наличие.
- * @interface Types/Entity/IObject
+ * @interface Types/_entity/IObject
  * @public
  * @author Мальцев А.А.
  */

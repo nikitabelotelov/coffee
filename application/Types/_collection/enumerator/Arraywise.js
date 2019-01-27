@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_collection/enumerator/Arraywise" />
 /**
  * Энумератор для массива
- * @class Types/Collection/ArrayEnumerator
- * @implements Types/Collection/IEnumerator
- * @mixes Types/Collection/IndexedEnumeratorMixin
+ * @class Types/_collection/ArrayEnumerator
+ * @implements Types/_collection/IEnumerator
+ * @mixes Types/_collection/IndexedEnumeratorMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -62,13 +62,13 @@ define('Types/_collection/enumerator/Arraywise', [
         };
         Arraywise.prototype.reset = function () {
             this._index = -1;
-        };    // endregion Types/Collection/IEnumerator
+        };    // endregion Types/_collection/IEnumerator
               // region Public methods
               /**
          * Устанавливает резолвер элементов по позиции
          * @param {function(Number): *} resolver Функция обратного вызова, которая должна по позиции вернуть элемент
          */
-        // endregion Types/Collection/IEnumerator
+        // endregion Types/_collection/IEnumerator
         // region Public methods
         /**
          * Устанавливает резолвер элементов по позиции

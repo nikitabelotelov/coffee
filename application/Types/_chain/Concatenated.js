@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Concatenated" />
 /**
  * Объединяющее звено цепочки.
- * @class Types/Chain/Concatenated
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Concatenated
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -17,17 +17,17 @@ define('Types/_chain/Concatenated', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var Concatenated = /** @class */
     function (_super) {
-        tslib_1.__extends(Concatenated, _super);    /** @lends Types/Chain/Concatenated.prototype */
+        tslib_1.__extends(Concatenated, _super);    /** @lends Types/_chain/Concatenated.prototype */
                                                     /**
          * Конструктор объединяющего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
-         * @param {Array.<Array>|Array.<Types/Collection/IEnumerable>} items Коллекции для объединения.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
+         * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
          */
-        /** @lends Types/Chain/Concatenated.prototype */
+        /** @lends Types/_chain/Concatenated.prototype */
         /**
          * Конструктор объединяющего звена цепочки.
-         * @param {Types/Chain/Abstract} source Предыдущее звено.
-         * @param {Array.<Array>|Array.<Types/Collection/IEnumerable>} items Коллекции для объединения.
+         * @param {Types/_chain/Abstract} source Предыдущее звено.
+         * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
          */
         function Concatenated(source, items) {
             var _this = _super.call(this, source) || this;

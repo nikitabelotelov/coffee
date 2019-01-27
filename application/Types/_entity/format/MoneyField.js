@@ -9,8 +9,8 @@
  *       type: 'money'
  *    };
  * </pre>
- * @class Types/Format/MoneyField
- * @extends Types/Format/RealField
+ * @class Types/_entity/format/MoneyField
+ * @extends Types/_entity/format/RealField
  * @public
  * @author Мальцев А.А.
  */
@@ -24,8 +24,8 @@ define('Types/_entity/format/MoneyField', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var MoneyField = /** @class */
     function (_super) {
-        tslib_1.__extends(MoneyField, _super);    /** @lends Types/Format/MoneyField.prototype */
-        /** @lends Types/Format/MoneyField.prototype */
+        tslib_1.__extends(MoneyField, _super);    /** @lends Types/_entity/format/MoneyField.prototype */
+        /** @lends Types/_entity/format/MoneyField.prototype */
         function MoneyField() {
             return _super !== null && _super.apply(this, arguments) || this;
         }    //region Public methods
@@ -44,8 +44,8 @@ define('Types/_entity/format/MoneyField', [
             return this._$large;
         };
         return MoneyField;
-    }(RealField_1.default    /** @lends Types/Format/MoneyField.prototype */);
-    /** @lends Types/Format/MoneyField.prototype */
+    }(RealField_1.default    /** @lends Types/_entity/format/MoneyField.prototype */);
+    /** @lends Types/_entity/format/MoneyField.prototype */
     exports.default = MoneyField;
     MoneyField.prototype['[Types/_entity/format/MoneyField]'] = true;
     MoneyField.prototype._moduleName = 'Types/entity:format.MoneyField';
