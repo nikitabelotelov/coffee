@@ -44,9 +44,9 @@ export function wrapContext(inst, currentCtx) {
          if (ctx.hasOwnProperty(i)) {
             // if (!(ctx[i] instanceof DataContext))
             //    IoC.resolve('ILogger').error(null, 'Context field ' + i + ' === ' + ctx[i] + ' should be instance of Core/DataContext');
-            if (ctx[i]._moduleName && !whiteList[ctx[i]._moduleName]) {
+            if (ctx[i] && ctx[i]._moduleName && !whiteList[ctx[i]._moduleName]) {
                IoC.resolve('ILogger').error('Wrong context field', ctx[i]._moduleName
-                  + '. Only allowed context fields: ' + Object.keys(whiteList));
+                  + '. In control: ' + inst._moduleName + '. Only allowed context fields: ' + Object.keys(whiteList));
             }
             currentCtx[i] = ctx[i];
             if (ctx[i] && ctx[i].getVersion === DataContext.prototype.getVersion) {

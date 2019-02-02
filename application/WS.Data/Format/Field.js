@@ -1,14 +1,8 @@
 /* global define */
 define('WS.Data/Format/Field', [
-   'Types/entity',
-   'Types/util'
 ], function(
-   type,
-   util
 ) {
    'use strict';
 
-   util.logger.error('WS.Data/Format/Field', 'Module is deprecated and will be removed in 19.200. Use Types/entity:format.Field instead.');
-
-   return type.format.Field;
+   throw new Error('WS.Data/Format/Field is deprecated and has been removed in 19.200. Use Types/entity:format.EnumField instead.');
 });

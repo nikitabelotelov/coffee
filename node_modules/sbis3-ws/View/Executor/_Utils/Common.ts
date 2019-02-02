@@ -590,7 +590,7 @@ export function isOptionalString(str) {
 
 export function isLibraryModuleString(str) {
    // library module string example: SomeStorage.Library:Module
-   var name = str.indexOf('ws:') === 0 ? splitWs(str) : str;
+   var name = str.indexOf('ws:') === 0 ? str.replace('ws:', '') : str;
    return name.indexOf(':') >= 0 && name.indexOf('<') === -1 && name.indexOf(' ') === -1;
 }
 
@@ -619,7 +619,7 @@ export function isLibraryModule(cfg) {
 
 export function splitModule(string) {
    var
-      fullName = string.indexOf('ws:') === 0 ? splitWs(string) : string,
+      fullName = string.indexOf('ws:') === 0 ? string.replace('ws:', '') : string,
       librarySplit = fullName.split(':', 2),
       libraryName = librarySplit[0],
       moduleName = librarySplit[1] && librarySplit[1].replace(/\//g, '.'),

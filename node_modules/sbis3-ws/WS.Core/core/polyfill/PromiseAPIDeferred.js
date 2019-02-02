@@ -2,104 +2,56 @@ define("Core/polyfill/PromiseAPIDeferred", ["require", "exports", "Core/Deferred
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperties(Promise.prototype, {
-        addCallback: {
-            value: addCallback
-        },
-        addCallbacks: {
-            value: addCallbacks
-        },
-        addErrback: {
-            value: addErrback
-        },
-        addBoth: {
-            value: addBoth
-        },
-        callback: {
-            value: callback
-        },
-        cancel: {
-            value: cancel
-        },
-        createDependent: {
-            value: createDependent
-        },
-        dependOn: {
-            value: dependOn
-        },
-        errback: {
-            value: errback
-        },
-        getResult: {
-            value: getResult
-        },
-        isCallbacksLocked: {
-            value: isCallbacksLocked
-        },
-        isReady: {
-            value: isReady
-        },
-        isSuccessful: {
-            value: isSuccessful
-        },
+        addCallback: { value: addCallback },
+        addCallbacks: { value: addCallbacks },
+        addErrback: { value: addErrback },
+        addBoth: { value: addBoth },
+        callback: { value: callback },
+        cancel: { value: cancel },
+        createDependent: { value: createDependent },
+        dependOn: { value: dependOn },
+        errback: { value: errback },
+        getResult: { value: getResult },
+        isCallbacksLocked: { value: isCallbacksLocked },
+        isReady: { value: isReady },
+        isSuccessful: { value: isSuccessful },
     });
     /**
      * Добавляет обработчик на успех
-     * @param {Function} callback
+     * @param {Function} onFulfilled
      * @returns {Deferred}
      */
-    function addCallback(callback) {
-        var def = new Deferred().addCallback(callback);
-        this.then(function (res) {
-            if (res instanceof Error) {
-                def.errback(res);
-                return;
-            }
-            def.callback(res);
-        });
-        return def;
+    function addCallback(onFulfilled) {
+        var def = new Deferred().addCallback(onFulfilled);
+        return bindCallbacks(this, def);
     }
     /**
      * Добавляет обработчик на ошибку
-     * @param {Function} onerror
+     * @param {Function} onRejected
      * @returns {Deferred}
      */
-    function addErrback(onerror) {
-        var def = new Deferred().addErrback(onerror);
-        this.catch(function (err) { return def.errback(err); });
-        return def;
+    function addErrback(onRejected) {
+        var def = new Deferred().addErrback(onRejected);
+        return bindCallbacks(this, def);
     }
     /**
      * Добавляет обработчики: на успешный результат и на ошибку
-     * @param {Function} callback обработчик успеха
-     * @param {Function} errback  обработчик ошибки
+     * @param {Function} onFulfilled обработчик успеха
+     * @param {Function} onRejected  обработчик ошибки
      * @returns {Deferred}
      */
-    function addCallbacks(callback, errback) {
-        var def = new Deferred().addCallbacks(callback, errback);
-        this.then(function (res) {
-            if (res instanceof Error) {
-                def.errback(res);
-                return;
-            }
-            def.callback(res);
-        }, function (err) { return def.errback(err); });
-        return def;
+    function addCallbacks(onFulfilled, onRejected) {
+        var def = new Deferred().addCallbacks(onFulfilled, onRejected);
+        return bindCallbacks(this, def);
     }
     /**
      * Добавляет один обработчик на успех и на ошибку
-     * @param {Function} callback общий обработчик.
+     * @param {Function} onFulfilled общий обработчик.
      * @returns {Deferred}
      */
-    function addBoth(callback) {
-        var def = new Deferred().addBoth(callback);
-        this.then(function (res) {
-            if (res instanceof Error) {
-                def.errback(res);
-                return;
-            }
-            def.callback(res);
-        }, function (err) { return def.errback(err); });
-        return def;
+    function addBoth(onFulfilled) {
+        var def = new Deferred().addBoth(onFulfilled);
+        return bindCallbacks(this, def);
     }
     /**
      * Запускает на выполнение цепочку коллбэков.
@@ -127,17 +79,17 @@ define("Core/polyfill/PromiseAPIDeferred", ["require", "exports", "Core/Deferred
         if (master instanceof Promise) {
             throw new Error('Нельзя вызвать метод dependOn у Promise');
         }
-        var callback = function (value) { return value; };
-        var errback = function (error) { throw error; };
+        var onFulfilled;
+        var onReject;
         var promise = new Promise(function (resolve, reject) {
-            callback = resolve;
-            errback = reject;
+            onFulfilled = resolve;
+            onReject = reject;
         });
         master.addCallbacks(function (res) {
-            callback(res);
+            onFulfilled(res);
             return res;
         }, function (err) {
-            errback(err);
+            onReject(err);
             return err;
         });
         return promise;
@@ -182,9 +134,19 @@ define("Core/polyfill/PromiseAPIDeferred", ["require", "exports", "Core/Deferred
      * @param {string} message текст ошибки
      */
     function logError(message) {
-        //@ts-ignore
+        // @ts-ignore
         new Promise(function (resolve_1, reject_1) { require(['Core/IoC'], resolve_1, reject_1); }).then(function (IoC) {
             IoC.resolve('ILogger').warn('Core/polyfill/PromiseAPIDeferred', message);
         });
+    }
+    function bindCallbacks(promise, deferred) {
+        promise.then(function (res) {
+            if (res instanceof Error) {
+                deferred.errback(res);
+                return;
+            }
+            deferred.callback(res);
+        }, function (err) { deferred.errback(err); });
+        return deferred;
     }
 });

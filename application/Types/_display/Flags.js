@@ -44,7 +44,7 @@ define('Types/_display/Flags', [
         function Flags(options) {
             var _this = _super.call(this, options) || this;
             if (!_this._$collection['[Types/_collection/IFlags]']) {
-                throw new TypeError(_this._moduleName + ': source collection should implement Types/_collectionIFlags');
+                throw new TypeError(_this._moduleName + ': source collection should implement Types/_collection/IFlags');
             }
             if (_this._$collection['[Types/_entity/ObservableMixin]']) {
                 _this._$collection.subscribe('onChange', _this._onSourceChange);

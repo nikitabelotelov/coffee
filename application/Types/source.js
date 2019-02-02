@@ -56,6 +56,8 @@ define('Types/source', [
     exports.PrefetchProxy = PrefetchProxy_1.default;
     exports.provider = provider;
     exports.Query = Query_1.default;
+    exports.QueryExpandMode = Query_1.ExpandMode;
+    exports.IQueryMeta = Query_1.IMeta;
     exports.Remote = Remote_1.default;
     exports.Rpc = Rpc_1.default;
     exports.SbisService = SbisService_1.default;

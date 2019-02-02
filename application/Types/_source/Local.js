@@ -154,7 +154,7 @@ define('Types/_source/Local', [
             var total;
             if (query) {
                 items = this._applyJoin(items, query.getJoin());
-                items = this._applyWhere(items, query.getWhere());
+                items = this._applyWhere(items, query.getWhere(), query.getMeta());
                 items = this._applyOrderBy(items, query.getOrderBy());
                 total = adapter.forTable(items).getCount();
                 items = this._applyPaging(items, query.getOffset(), query.getLimit());
@@ -285,21 +285,24 @@ define('Types/_source/Local', [
                 _this._index[key] = index;
             });
         };    /**
-         * Применяет фильтр
-         * @param {*} data Данные
-         * @param {Object|Function} where Фильтр
+         * Applies filter
+         * @param data Data to handle
+         * @param where Query filter
+         * @param meta Query metadata
          * @return {*}
          * @protected
          */
         /**
-         * Применяет фильтр
-         * @param {*} data Данные
-         * @param {Object|Function} where Фильтр
+         * Applies filter
+         * @param data Data to handle
+         * @param where Query filter
+         * @param meta Query metadata
          * @return {*}
          * @protected
          */
-        Local.prototype._applyWhere = function (data, where) {
-            var _this = this;
+        Local.prototype._applyWhere = function (data, where, meta) {
+            var _this = this;    //TODO: support for IMeta.expand values
+            //TODO: support for IMeta.expand values
             where = where || {};
             if (!this._$filter && typeof where === 'object' && !Object.keys(where).length) {
                 return data;

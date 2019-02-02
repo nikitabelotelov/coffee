@@ -3,7 +3,7 @@
 // @ts-ignore
 import {Control} from 'UI/Base';
 // @ts-ignore
-import template = require('wml!Coffee/PageLoader');
+import template = require('wml!Coffee/PageLoader/PageLoader');
 
 
 class PageLoader extends Control {

@@ -307,22 +307,20 @@
       global.wsConfig.getWithDomain = requireHandlers.getWithDomain;
       global.wsConfig.getWithSuffix = requireHandlers.getWithSuffix;
 
-      var oldPaths = {
-         'WS': removeTrailingSlash(wsPath),
-         'WS.Core': wsPath,
-         'Lib': pathJoin(wsPath, 'lib'),
-         'Ext': pathJoin(wsPath, 'lib/Ext'),
-         'Deprecated': pathJoin(resourcesPath, 'WS.Deprecated'),
-         'Helpers': pathJoin(wsPath, 'core/helpers'),
-         'Transport': pathJoin(wsPath, 'transport'),
-         'bootup' : pathJoin(wsPath, 'res/js/bootup'),
-         'bootup-min' : pathJoin(wsPath, 'res/js/bootup-min'),
-         'old-bootup' : pathJoin(wsPath, 'res/js/old-bootup')
-      };
       //Build config
       var config = {
          baseUrl: baseUrl,
          paths: {
+            'WS': removeTrailingSlash(wsPath),
+            'WS.Core': wsPath,
+            'Lib': pathJoin(wsPath, 'lib'),
+            'Ext': pathJoin(wsPath, 'lib/Ext'),
+            'Deprecated': pathJoin(resourcesPath, 'WS.Deprecated'),
+            'Helpers': pathJoin(wsPath, 'core/helpers'),
+            'Transport': pathJoin(wsPath, 'transport'),
+            'bootup' : pathJoin(wsPath, 'res/js/bootup'),
+            'bootup-min' : pathJoin(wsPath, 'res/js/bootup-min'),
+            'old-bootup' : pathJoin(wsPath, 'res/js/old-bootup'),
             'tslib': pathJoin(wsPath, 'ext/tslib'),
             'Resources': resourcesPath || '.',
             'Core': pathJoin(wsPath, 'core'),
@@ -361,13 +359,6 @@
          onNodeCreated: onNodeCreated,
          waitSeconds: IS_SERVER_SCRIPT ? 0 : LOADING_TIMEOUT
       };
-      if(!global.wsConfig.lite && !(options && options.lite)) {
-         for(var key in oldPaths) {
-            if(oldPaths.hasOwnProperty(key)) {
-               config.paths[key] = oldPaths[key];
-            }
-         }
-      }
 
       //Check and handle some options
       if (options) {

@@ -15,6 +15,7 @@ define('Vdom/_private/Synchronizer/resources/SyntheticEvent', [
      * Некоторые события не всплывают (флаги взяты из документации)
      * */
     var domEventsBubbling = {
+        animationend: true,
         blur: false,
         error: false,
         focus: false,

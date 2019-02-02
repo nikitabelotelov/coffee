@@ -153,13 +153,15 @@ define('Types/_entity/Model', [
         Model.prototype.destroy = function () {
             this._defaultPropertiesValues = null;
             this._propertiesDependency = null;
-            this._nowCalculatingProperties = null;
+            this._calculatingProperties = null;
+            this._deepChangedProperties = null;
             _super.prototype.destroy.call(this);
         };    // region IObject
         // region IObject
         Model.prototype.get = function (name) {
             this._pushDependency(name);
-            if (this._fieldsCache.has(name)) {
+            var isCalculating = this._calculatingProperties ? this._calculatingProperties.has(name) : false;
+            if (!isCalculating && this._fieldsCache.has(name)) {
                 return this._fieldsCache.get(name);
             }
             var property = this._$properties && this._$properties[name];
@@ -179,7 +181,7 @@ define('Types/_entity/Model', [
                 this._removeChild(superValue);
                 this._addChild(value, this._getRelationNameForField(name));
             }
-            if (this._isFieldValueCacheable(value)) {
+            if (!isCalculating && this._isFieldValueCacheable(value)) {
                 this._fieldsCache.set(name, value);
             } else if (this._fieldsCache.has(name)) {
                 this._fieldsCache.delete(name);
@@ -188,13 +190,15 @@ define('Types/_entity/Model', [
         };
         Model.prototype.set = function (name, value) {
             var _this = this;
+            var _a;
             if (!this._$properties) {
                 _super.prototype.set.call(this, name, value);
                 return;
             }
             var map = this._getHashMap(name, value);
             var pairs = [];
-            var errors = [];
+            var propertiesErrors = [];
+            var isCalculating = this._calculatingProperties ? this._calculatingProperties.size > 0 : false;
             Object.keys(map).forEach(function (key) {
                 _this._deleteDependencyCache(key);    //Try to set every property
                 //Try to set every property
@@ -203,6 +207,7 @@ define('Types/_entity/Model', [
                     var property = _this._$properties && _this._$properties[key];
                     if (property) {
                         if (property.set) {
+                            //Remove cached value
                             if (_this._fieldsCache.has(key)) {
                                 _this._removeChild(_this._fieldsCache.get(key));
                                 _this._fieldsCache.delete(key);
@@ -212,7 +217,7 @@ define('Types/_entity/Model', [
                                 return;
                             }
                         } else if (property.get) {
-                            errors.push(new ReferenceError('Property "' + key + '" is read only'));
+                            propertiesErrors.push(new ReferenceError('Property "' + key + '" is read only'));
                             return;
                         }
                     }
@@ -223,20 +228,32 @@ define('Types/_entity/Model', [
                     ]);
                 } catch (err) {
                     //Collecting errors for every property
-                    errors.push(err);
+                    propertiesErrors.push(err);
                 }
-            });
-            var superErrors = [];
-            var superChanged = _super.prototype._setPairs.call(this, pairs, superErrors);
-            if (superChanged) {
-                var changed = Object.keys(superChanged).reduce(function (memo, key) {
-                    memo[key] = map[key];
-                    return memo;
-                }, {});
-                this._notifyChange(changed);
+            });    //Collect pairs of properties
+            //Collect pairs of properties
+            if (isCalculating && pairs.length) {
+                //Here is the set() that recursive calls from another set() so just accumulate the changes
+                this._deepChangedProperties = this._deepChangedProperties || [];
+                (_a = this._deepChangedProperties).push.apply(_a, pairs);
+            } else if (!isCalculating && this._deepChangedProperties) {
+                //Here is the top level set() so do merge with accumulated changes
+                pairs.push.apply(pairs, this._deepChangedProperties);
+                this._deepChangedProperties.length = 0;
             }
-            this._checkErrors(errors);
-            this._checkErrors(superErrors);
+            var pairsErrors = [];    //It's top level set() so notify changes if have some
+            //It's top level set() so notify changes if have some
+            if (!isCalculating) {
+                var changedProperties = _super.prototype._setPairs.call(this, pairs, pairsErrors);
+                if (changedProperties) {
+                    var changed = Object.keys(changedProperties).reduce(function (memo, key) {
+                        memo[key] = _this.get(key);
+                        return memo;
+                    }, {});
+                    this._notifyChange(changed);
+                }
+            }
+            this._checkErrors(propertiesErrors.concat(pairsErrors));
         };
         Model.prototype.has = function (name) {
             return this._$properties && this._$properties.hasOwnProperty(name) || _super.prototype.has.call(this, name);
@@ -725,21 +742,22 @@ define('Types/_entity/Model', [
          * @protected
          */
         Model.prototype._processCalculatedValue = function (name, value, property, isReading) {
-            var _this = this;    //Check for recursive calculate
-            //Check for recursive calculate
-            var nowCalculatingProperties = this._nowCalculatingProperties;
-            if (!nowCalculatingProperties) {
-                nowCalculatingProperties = this._nowCalculatingProperties = new shim_1.Set();
+            var _this = this;    //Check for recursive calculating
+            //Check for recursive calculating
+            var calculatingProperties = this._calculatingProperties;
+            if (!calculatingProperties) {
+                calculatingProperties = this._calculatingProperties = new shim_1.Set();
             }
             var checkKey = name + '|' + isReading;
-            if (nowCalculatingProperties.has(checkKey)) {
+            if (calculatingProperties.has(checkKey)) {
                 throw new Error('Recursive value ' + (isReading ? 'reading' : 'writing') + ' detected for property "' + name + '"');
-            }
+            }    //Initial conditions
+            //Initial conditions
             var method = isReading ? property.get : property.set;
             var isFunctor = isReading && functor_1.Compute.isFunctor(method);
-            var doGathering = isReading && !isFunctor;
-            var prevGathering;    //Automatic dependency gathering
-            //Automatic dependency gathering
+            var doGathering = isReading && !isFunctor;    //Automatic dependencies gathering
+            //Automatic dependencies gathering
+            var prevGathering;
             if (isReading) {
                 prevGathering = this._propertiesDependencyGathering;
                 this._propertiesDependencyGathering = doGathering ? name : '';
@@ -752,13 +770,13 @@ define('Types/_entity/Model', [
             }    //Get or set property value
             //Get or set property value
             try {
-                nowCalculatingProperties.add(checkKey);
+                calculatingProperties.add(checkKey);
                 value = method.call(this, value);
             } finally {
                 if (isReading) {
                     this._propertiesDependencyGathering = prevGathering;
                 }
-                nowCalculatingProperties.delete(checkKey);
+                calculatingProperties.delete(checkKey);
             }
             return value;
         };    /**
@@ -865,7 +883,8 @@ define('Types/_entity/Model', [
     Model.prototype._defaultPropertiesValues = null;
     Model.prototype._propertiesDependency = null;
     Model.prototype._propertiesDependencyGathering = '';
-    Model.prototype._nowCalculatingProperties = null;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    Model.prototype._calculatingProperties = null;
+    Model.prototype._deepChangedProperties = null;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
     //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
     Model.prototype['[WS.Data/Entity/Model]'] = true;    //FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
                                                          // @ts-ignore

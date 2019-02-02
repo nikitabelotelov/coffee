@@ -319,18 +319,24 @@ define('Core/RightsManager', [
                      rightsObj, accessFlags,
                      restrictionFlags = this.READ_MASK | this.WRITE_MASK; // если ограничений нет, будем считать что они разрешены
 
-                  if (typeof currentZone === 'number') {
-                     // Права в формате старого метода
-                     accessFlags = currentZone;
-                  } else {
-                     // Права в формате нового метода
-                     accessFlags = currentZone.flags;
-                     if (accessRestriction) {
-                        if (currentZone.restrictions) {
-                           restrictionFlags = currentZone.restrictions[accessRestriction];
-                        } else {
-                           restrictionFlags = 0;
-                        }
+                  /**
+                   *  Если на проверку приходит сложная конструкция вида "zone|myOrg"
+                   *  то указанное огранчиение (myOrg) по зоне, мы должны попытаться проверить влюбом случае, даже если у зоны нет ограничений впринципе.
+                   *  если ограничения нет - считаем, что оно запрещено
+                   *  если нет даже поля restriction - считаем, что все ограничения на зоне запрещены
+                   *
+                   *  приходится писать currentZone.flags || currentZone; т.к. в местах сериализации PS  и в слое совместимости реализована логика:
+                   *  если нет ограничений на зоне, значит вернем только значение flags, а не весь обьект. (скрины в задаче)
+                   *  https://online.sbis.ru/opendoc.html?guid=76859dfc-7a8c-472d-9b15-b77e8be35359
+                   *  Формат зоны досутпа один объект с полями flags и restriction, restriction может отсутствовать.
+                   *  Старый формат "зона: значение" больше не используется, поддерживать не нужно.
+                   */
+                  accessFlags = currentZone.flags || currentZone;
+                  if (accessRestriction) {
+                     if (currentZone.restrictions) {
+                        restrictionFlags = currentZone.restrictions[accessRestriction];
+                     } else {
+                        restrictionFlags = 0;
                      }
                   }
 

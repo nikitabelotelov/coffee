@@ -1,24 +1,24 @@
 /* global define  */
 define('WS.Data/MoveStrategy/Base', [
    'WS.Data/MoveStrategy/IMoveStrategy',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Di',
-   'WS.Data/Utils',
+   'Types/collection',
+   'Types/di',
+   'Types/util',
    'Core/ParallelDeferred',
    'Core/Abstract',
    'Core/helpers/Function/throttle'
 ], function(
    IMoveStrategy,
-   RecordSet,
+   collection,
    Di,
-   Utils,
+   util,
    ParallelDeferred,
    Abstract,
    throttle
 ) {
    'use strict';
 
-   var warning = throttle(Utils.logger.error, 100);
+   var warning = throttle(util.logger.error, 100);
 
    /**
     * Базовый класс стратегий перемещения для списочного контрола {@link SBIS3.CONTROLS.ListView} и его наследники.
@@ -69,30 +69,30 @@ define('WS.Data/MoveStrategy/Base', [
       $protected: {
          _options: {
 
-         /**
-          * @cfg {String} Имя поля, по которому строится иерархия.
-          * @see hierarhyMove
-          */
+            /**
+             * @cfg {String} Имя поля, по которому строится иерархия.
+             * @see hierarhyMove
+             */
             hierField: undefined,
 
             /**
-          * @cfg {WS.Data/Source/SbisService} Источник данных.
-          */
+             * @cfg {WS.Data/Source/SbisService} Источник данных.
+             */
             dataSource: null,
 
             /**
-          * @cfg {SBIS3.CONTROLS.ListView} Списочный контрол listView либо его наследник.
-          */
+             * @cfg {SBIS3.CONTROLS.ListView} Списочный контрол listView либо его наследник.
+             */
             listView: null,
 
             /**
-          * @cfg {WS.Data/Collection/IList} Список в котором надо перемещать элементы.
-          */
+             * @cfg {WS.Data/Collection/IList} Список в котором надо перемещать элементы.
+             */
             items: null,
 
             /**
-          * @cfg {WS.Data/Collection/IList} Инвертирует вызов методов перемещния по порядку.
-          */
+             * @cfg {WS.Data/Collection/IList} Инвертирует вызов методов перемещния по порядку.
+             */
             invertOrder: false
          },
 
@@ -148,7 +148,7 @@ define('WS.Data/MoveStrategy/Base', [
             updateItems.push(clone);
          });
          if (movedItems.length > 1) {
-            var rs = new RecordSet({
+            var rs = new collection.RecordSet({
                adapter: movedItems[0].getAdapter()
             });
             rs.append(updateItems);

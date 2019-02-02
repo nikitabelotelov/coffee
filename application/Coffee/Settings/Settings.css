@@ -6,3 +6,6 @@
   -ms-flex-pack: distribute;
       justify-content: space-around;
 }
+.settings-list-item {
+  padding: 20px;
+}

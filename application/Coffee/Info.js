@@ -4,8 +4,8 @@ define('Coffee/Info', [
     'exports',
     'tslib',
     'UI/Base',
-    'wml!Coffee/Info',
-    'css!Coffee/Info'
+    'wml!Coffee/InfoPage/Info',
+    'css!Coffee/InfoPage/Info'
 ], function (require, exports, tslib_1, Base_1, template) {
     'use strict';
     var Info = /** @class */

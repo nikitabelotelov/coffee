@@ -10,7 +10,21 @@ let SettingsStruct = {
     G3: {
         val5: "val5"
     }
-}
+};
+
+let InfoStruct = {
+    G1: {
+        val1: "val1",
+        val2: "val2"
+    },
+    G2: {
+        val3: "val3",
+        val4: "val4"
+    },
+    G3: {
+        val5: "val5"
+    }
+};
 
 let DataStore = {
     socket: null,

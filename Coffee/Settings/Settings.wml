@@ -1,8 +1,9 @@
 <div class="settings-page">
+   <Router.Link href="/Coffee/page/Info"><span>На главную</span></Router.Link>
    <div class="menu">
       <ws:for data="key, data in _options.settings">
          <Router.Link href="set/:id" id="{{ key }}">
-            <div class="one-setting">
+            <div class="settings-list-item">
                {{ key }}
             </div>
          </Router.Link>
@@ -10,7 +11,7 @@
    </div>
    <div class="content">
       <Router.Route mask="set/:pageId">
-         <div>
+         <div class="settings-list-item">
             <ws:if data="{{content.pageId !== undefined}}">
                <ws:for data="name, value in _options.settings[content.pageId]">
                   <div>{{name}} : {{value}}</div>

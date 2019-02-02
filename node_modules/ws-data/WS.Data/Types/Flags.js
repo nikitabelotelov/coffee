@@ -1,5 +1,6 @@
 /* global define */
-define('WS.Data/Types/Flags', ['WS.Data/Type/Flags'], function(Flags) {
+define('WS.Data/Types/Flags', [], function() {
    'use strict';
-   return Flags;
+
+   throw new Error('WS.Data/Types/Flags is deprecated and has been removed in 19.200.');
 });

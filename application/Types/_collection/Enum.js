@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_collection/Enum" />
 /**
  * Enumerable type. It's an enumerable collection of keys and values one of which can be selected or not.
- * @class Types/_collectionEnum
- * @extends Types/_collectionDictionary
- * @implements Types/_collectionIEnum
+ * @class Types/_collection/Enum
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IEnum
  * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/ManyToManyMixin

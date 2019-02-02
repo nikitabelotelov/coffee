@@ -6,6 +6,7 @@
  * Некоторые события не всплывают (флаги взяты из документации)
  * */
 var domEventsBubbling = {
+   animationend: true,
    blur: false,
    error: false,
    focus: false,

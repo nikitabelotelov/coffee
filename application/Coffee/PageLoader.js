@@ -4,7 +4,7 @@ define('Coffee/PageLoader', [
     'exports',
     'tslib',
     'UI/Base',
-    'wml!Coffee/PageLoader'
+    'wml!Coffee/PageLoader/PageLoader'
 ], function (require, exports, tslib_1, Base_1, template) {
     'use strict';
     var PageLoader = /** @class */

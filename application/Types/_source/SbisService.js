@@ -137,10 +137,11 @@ define('Types/_source/SbisService', [
     'Types/_source/Rpc',
     'Types/_source/OptionsMixin',
     'Types/_source/DataMixin',
+    'Types/_source/Query',
     'Types/di',
     'Types/util',
     'Core/ParallelDeferred'
-], function (require, exports, tslib_1, Rpc_1, OptionsMixin_1, DataMixin_1, di_1, util_1, ParallelDeferred) {
+], function (require, exports, tslib_1, Rpc_1, OptionsMixin_1, DataMixin_1, Query_1, di_1, util_1, ParallelDeferred) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Типы навигации для query()
@@ -164,14 +165,10 @@ define('Types/_source/SbisService', [
      * Детектор сложного идентификатора
      */
     var COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;    /**
-     * Возвращает ключ объекта БЛ из сложного идентификатора
-     * @param {String} id Идентификатор
-     * @return {String}
+     * Returns key of the BL Object from its complex id
      */
     /**
-     * Возвращает ключ объекта БЛ из сложного идентификатора
-     * @param {String} id Идентификатор
-     * @return {String}
+     * Returns key of the BL Object from its complex id
      */
     function getKeyByComplexId(id) {
         id = String(id || '');
@@ -180,16 +177,10 @@ define('Types/_source/SbisService', [
         }
         return id;
     }    /**
-     * Возвращает имя объекта БЛ из сложного идентификатора
-     * @param {String} id Идентификатор
-     * @param {String} defaults Значение по умолчанию
-     * @return {String}
+     * Returns name of the BL Object from its complex id
      */
     /**
-     * Возвращает имя объекта БЛ из сложного идентификатора
-     * @param {String} id Идентификатор
-     * @param {String} defaults Значение по умолчанию
-     * @return {String}
+     * Returns name of the BL Object from its complex id
      */
     function getNameByComplexId(id, defaults) {
         id = String(id || '');
@@ -198,16 +189,10 @@ define('Types/_source/SbisService', [
         }
         return defaults;
     }    /**
-     * Создает сложный идентификатор
-     * @param {String} id Идентификатор
-     * @param {String} defaults Имя объекта БЛ по умолчанию
-     * @return {Array.<String>}
+     * Creates complex id
      */
     /**
-     * Создает сложный идентификатор
-     * @param {String} id Идентификатор
-     * @param {String} defaults Имя объекта БЛ по умолчанию
-     * @return {Array.<String>}
+     * Creates complex id
      */
     function createComplexId(id, defaults) {
         id = String(id || '');
@@ -219,16 +204,10 @@ define('Types/_source/SbisService', [
             defaults
         ];
     }    /**
-     * Собирает группы по именам объектов БЛ
-     * @param {Array.<String>} ids Идентификаторы
-     * @param {String} defaults Имя объекта БЛ по умолчанию
-     * @return {Object.<Array.<String>>}
+     * Joins BL objects into groups be its names
      */
     /**
-     * Собирает группы по именам объектов БЛ
-     * @param {Array.<String>} ids Идентификаторы
-     * @param {String} defaults Имя объекта БЛ по умолчанию
-     * @return {Object.<Array.<String>>}
+     * Joins BL objects into groups be its names
      */
     function getGroupsByComplexIds(ids, defaults) {
         var groups = {};
@@ -241,51 +220,45 @@ define('Types/_source/SbisService', [
         return groups;
     }    /**
      * Calls destroy method for some BL-Object
-     * @param {Types/_source/SbisService} instance Экземпляр SbisService
-     * @param {Array.<String>} ids Идентификаторы удаляемых записей
-     * @param {String} name Имя объекта БЛ
-     * @param {Object} meta Дополнительные данные
-     * @return {Core/Deferred}
+     * @param instance Instance
+     * @param ids BL objects ids to delete
+     * @param name BL object name
+     * @param meta Meta data
      */
     /**
      * Calls destroy method for some BL-Object
-     * @param {Types/_source/SbisService} instance Экземпляр SbisService
-     * @param {Array.<String>} ids Идентификаторы удаляемых записей
-     * @param {String} name Имя объекта БЛ
-     * @param {Object} meta Дополнительные данные
-     * @return {Core/Deferred}
+     * @param instance Instance
+     * @param ids BL objects ids to delete
+     * @param name BL object name
+     * @param meta Meta data
      */
     function callDestroyWithComplexId(instance, ids, name, meta) {
         return instance._callProvider(instance._$endpoint.contract === name ? instance._$binding.destroy : name + '.' + instance._$binding.destroy, instance._$passing.destroy.call(instance, ids, meta));
     }    /**
-     * Строит запись из объекта
-     * @param {Object|Types/_entity/Record} data Данные полей записи
-     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
-     * @return {Types/_entity/Record|null}
+     * Builds Record from plain object
+     * @param data Данные полей записи
+     * @param adapter
      */
     /**
-     * Строит запись из объекта
-     * @param {Object|Types/_entity/Record} data Данные полей записи
-     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
-     * @return {Types/_entity/Record|null}
+     * Builds Record from plain object
+     * @param data Данные полей записи
+     * @param adapter
      */
     function buildRecord(data, adapter) {
         var Record = di_1.resolve('Types/entity:Record');
         return Record.fromObject(data, adapter);
     }
     exports.buildRecord = buildRecord;    /**
-     * Строит рекодсет из массива
-     * @param {Array.<Object>|Types/_collection/RecordSet} data Данные рекордсета
-     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
-     * @param {String} idProperty
-     * @return {Types/_collection/RecordSet|null}
+     * Builds RecordSet from array of plain objects
+     * @param data Данные рекордсета
+     * @param adapter Адаптер
+     * @param idProperty
      */
     /**
-     * Строит рекодсет из массива
-     * @param {Array.<Object>|Types/_collection/RecordSet} data Данные рекордсета
-     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
-     * @param {String} idProperty
-     * @return {Types/_collection/RecordSet|null}
+     * Builds RecordSet from array of plain objects
+     * @param data Данные рекордсета
+     * @param adapter Адаптер
+     * @param idProperty
      */
     function buildRecordSet(data, adapter, idProperty) {
         if (data === null) {
@@ -306,14 +279,10 @@ define('Types/_source/SbisService', [
         return records;
     }
     exports.buildRecordSet = buildRecordSet;    /**
-     * Возвращает параметры сортировки
-     * @param {Types/_source/Query} query Запрос
-     * @return {Array|null}
+     * Returns sorting params
      */
     /**
-     * Возвращает параметры сортировки
-     * @param {Types/_source/Query} query Запрос
-     * @return {Array|null}
+     * Returns sorting params
      */
     function getSortingParams(query) {
         if (!query) {
@@ -336,18 +305,10 @@ define('Types/_source/SbisService', [
         return sort;
     }
     exports.getSortingParams = getSortingParams;    /**
-     * Возвращает параметры навигации
-     * @param {Types/_source/Query} query Запрос
-     * @param {Object} options Опции источника
-     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
-     * @return {Object|null}
+     * Returns navigation parameters
      */
     /**
-     * Возвращает параметры навигации
-     * @param {Types/_source/Query} query Запрос
-     * @param {Object} options Опции источника
-     * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
-     * @return {Object|null}
+     * Returns navigation parameters
      */
     function getPagingParams(query, options, adapter) {
         if (!query) {
@@ -418,20 +379,50 @@ define('Types/_source/SbisService', [
                 params = {
                     Offset: offset || 0,
                     Limit: limit,
-                    'ЕстьЕще': more
+                    HaveMore: more
                 };
             }
         }
         return params;
     }
     exports.getPagingParams = getPagingParams;    /**
-     * Возвращает дополнительные параметры
-     * @param {Types/_source/Query} query Запрос
+     * Returns filtration parameters
+     */
+    /**
+     * Returns filtration parameters
+     */
+    function getFilterParams(query) {
+        var params = null;
+        if (query) {
+            params = query.getWhere();
+            var meta = query.getMeta();
+            if (meta) {
+                switch (meta.expand) {
+                case Query_1.ExpandMode.None:
+                    params['Разворот'] = 'Без разворота';
+                    break;
+                case Query_1.ExpandMode.Nodes:
+                    params['Разворот'] = 'С разворотом';
+                    params['ВидДерева'] = 'Только узлы';
+                    break;
+                case Query_1.ExpandMode.Leaves:
+                    params['Разворот'] = 'С разворотом';
+                    params['ВидДерева'] = 'Только листья';
+                    break;
+                case Query_1.ExpandMode.All:
+                    params['Разворот'] = 'С разворотом';
+                    params['ВидДерева'] = 'Узлы и листья';
+                    break;
+                }
+            }
+        }
+        return params;
+    }    /**
+     * Returns additional paramters
      * @return {Array}
      */
     /**
-     * Возвращает дополнительные параметры
-     * @param {Types/_source/Query} query Запрос
+     * Returns additional paramters
      * @return {Array}
      */
     function getAdditionalParams(query) {
@@ -493,18 +484,7 @@ define('Types/_source/SbisService', [
             args['ДопПоля'] = superArgs[1];
         }
         return args;
-    }    /**
-     * Возвращает аргументы метода пакетного обновления рекордсета
-     * @param {Types/_collection/RecordSet} items Обновляемый рекордсет
-     * @return {Object}
-     * @protected
-     */
-    /**
-     * Возвращает аргументы метода пакетного обновления рекордсета
-     * @param {Types/_collection/RecordSet} items Обновляемый рекордсет
-     * @return {Object}
-     * @protected
-     */
+    }
     function passUpdateBatch(items, meta) {
         var RecordSet = di_1.resolve('Types/collection:RecordSet');
         var patch = RecordSet.patch(items);
@@ -523,7 +503,7 @@ define('Types/_source/SbisService', [
     }
     function passQuery(query) {
         var nav = getPagingParams(query, this._$options, this._$adapter);
-        var filter = query ? query.getWhere() : null;
+        var filter = getFilterParams(query);
         var sort = getSortingParams(query);
         var add = getAdditionalParams(query);
         return {
@@ -562,22 +542,21 @@ define('Types/_source/SbisService', [
         };
     }    /**
      * Calls move method in old style
-     * @param {Types/_source/SbisService} instance Экземпляр SbisService
-     * @param {String} from Идентификатор перемещаемой записи
-     * @param {String} to Идентификатор целевой записи
-     * @param {Object} meta Дополнительные данные
-     * @return {Core/Deferred}
+     * @param instance
+     * @param from Record to move
+     * @param to Record to move to
+     * @param meta Meta data
      */
     /**
      * Calls move method in old style
-     * @param {Types/_source/SbisService} instance Экземпляр SbisService
-     * @param {String} from Идентификатор перемещаемой записи
-     * @param {String} to Идентификатор целевой записи
-     * @param {Object} meta Дополнительные данные
-     * @return {Core/Deferred}
+     * @param instance
+     * @param from Record to move
+     * @param to Record to move to
+     * @param meta Meta data
      */
     function oldMove(instance, from, to, meta) {
         util_1.logger.info(instance._moduleName, 'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.');
+        from = from;
         var moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
         var params = {
             'ПорядковыйНомер': instance._$orderProperty,

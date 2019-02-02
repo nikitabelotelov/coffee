@@ -3,11 +3,12 @@ define('Coffee/Main', [
     'require',
     'exports',
     'tslib',
-    'Core/Control',
-    'wml!Coffee/Main',
+    'UI/Base',
+    'wml!Coffee/Main/Main',
     'Coffee/Data/DataStore',
-    'css!Coffee/Main'
-], function (require, exports, tslib_1, Control, template, DataStore_1) {
+    'Core/ConsoleLogger',
+    'css!Coffee/Main/Main'
+], function (require, exports, tslib_1, Base_1, template, DataStore_1) {
     'use strict';
     var Main = /** @class */
     function (_super) {
@@ -25,10 +26,10 @@ define('Coffee/Main', [
         Main.prototype._beforeMount = function () {
             var _this = this;
             return DataStore_1.DataStore.initDataStore().then(function () {
-                return DataStore_1.DataStore.onSettingsUpdated(_this.updateSettingsData.bind(_this));
+                DataStore_1.DataStore.onSettingsUpdated(_this.updateSettingsData.bind(_this));
             });
         };
         return Main;
-    }(Control);
+    }(Base_1.Control);
     return Main;
 });

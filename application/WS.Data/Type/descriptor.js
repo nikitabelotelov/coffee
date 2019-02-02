@@ -1,14 +1,8 @@
 /* global define */
 define('WS.Data/Type/descriptor', [
-   'Types/entity',
-   'Types/util'
 ], function(
-   type,
-   util
 ) {
    'use strict';
 
-   util.logger.error('WS.Data/Type/descriptor', 'Module is deprecated and will be removed in 19.200. Use Types/entity:descriptor instead.');
-
-   return type.descriptor;
+   throw new Error('WS.Data/Source/descriptor is deprecated and has been removed in 19.200.');
 });

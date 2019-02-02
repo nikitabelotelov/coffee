@@ -131,8 +131,8 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
             if (this._fired !== WAITING) {
                 throw new Error("Deferred is already fired with state \"" + STATE_NAMES[this._fired] + "\"");
             }
-            if (isDeferredValue(result)) {
-                throw new Error('Deferred instances can only be chained if they are the result of a callback');
+            if (isDeferredLikeValue(result)) {
+                throw new Error('DeferredLike instances can only be chained if they are the result of a callback');
             }
             if (isError) {
                 if (!isErrorValue(result)) {
@@ -283,7 +283,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                         res = f(res);
                     }
                     fired = resultToFired(res);
-                    if (isDeferredValue(res)) {
+                    if (isDeferredLikeValue(res)) {
                         cb = function (cbRes) {
                             self._paused--;
                             self._resback(cbRes);
@@ -535,8 +535,13 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
     function isErrorValue(res) {
         return res instanceof Error;
     }
-    function isDeferredValue(res) {
-        return res instanceof Deferred;
+    /**
+     * Проверка принадлежности instance к типу DeferredLike
+     * @param {any} instance
+     * @returns {boolean} true, если instance :: DeferredLike
+     */
+    function isDeferredLikeValue(instance) {
+        return instance && !!(instance.addCallback && instance.addErrback);
     }
     function resultToFired(res) {
         return isCancelValue(res) ? CANCELED : isErrorValue(res) ? FAILED : SUCCESS;

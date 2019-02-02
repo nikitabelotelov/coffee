@@ -145,7 +145,6 @@ function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking?, oldOpti
          hasNew = newOptions.hasOwnProperty(i) || newOptions[i] !== undefined;
          if (hasNew) {
             if (
-               (typeof newOptions[i] === 'function' && typeof oldOptions[i] === 'function') ||
                (typeof newOptions[i] === 'number' &&
                   typeof oldOptions[i] === 'number' &&
                   (isNaN(newOptions[i]) && isNaN(oldOptions[i])))

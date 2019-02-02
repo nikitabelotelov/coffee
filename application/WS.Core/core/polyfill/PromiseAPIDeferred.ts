@@ -1,48 +1,21 @@
-
 /// <amd-module name='Core/polyfill/PromiseAPIDeferred'/>
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 import 'Core/polyfill';
 Object.defineProperties(Promise.prototype, {
-    addCallback: {
-        value: addCallback,
-    },
-    addCallbacks: {
-        value: addCallbacks,
-    },
-    addErrback: {
-        value: addErrback,
-    },
-    addBoth: {
-        value: addBoth,
-    },
-    callback: {
-        value: callback,
-    },
-    cancel: {
-        value: cancel,
-    },
-    createDependent: {
-        value: createDependent,
-    },
-    dependOn: {
-        value: dependOn,
-    },
-    errback: {
-        value: errback,
-    },
-    getResult: {
-        value: getResult,
-    },
-    isCallbacksLocked: {
-        value: isCallbacksLocked,
-    },
-    isReady: {
-        value: isReady,
-    },
-    isSuccessful: {
-        value: isSuccessful,
-    },
+    addCallback: { value: addCallback },
+    addCallbacks: { value: addCallbacks },
+    addErrback: { value: addErrback },
+    addBoth: { value: addBoth },
+    callback: { value: callback },
+    cancel: { value: cancel },
+    createDependent: { value: createDependent },
+    dependOn: { value: dependOn },
+    errback: { value: errback },
+    getResult: { value: getResult },
+    isCallbacksLocked: { value: isCallbacksLocked },
+    isReady: { value: isReady },
+    isSuccessful: { value: isSuccessful },
 });
 
 /**
@@ -52,14 +25,7 @@ Object.defineProperties(Promise.prototype, {
  */
 function addCallback(onFulfilled) {
     const def = new Deferred().addCallback(onFulfilled);
-    this.then((res) => {
-        if (res instanceof Error) {
-            def.errback(res);
-            return;
-        }
-        def.callback(res);
-    });
-    return def;
+    return bindCallbacks(this, def);
 }
 
 /**
@@ -69,8 +35,7 @@ function addCallback(onFulfilled) {
  */
 function addErrback(onRejected) {
     const def = new Deferred().addErrback(onRejected);
-    this.catch((err) => { def.errback(err); });
-    return def;
+    return bindCallbacks(this, def);
 }
 
 /**
@@ -81,14 +46,7 @@ function addErrback(onRejected) {
  */
 function addCallbacks(onFulfilled, onRejected) {
     const def = new Deferred().addCallbacks(onFulfilled, onRejected);
-    this.then((res) => {
-        if (res instanceof Error) {
-            def.errback(res);
-            return;
-        }
-        def.callback(res);
-    }, (err) => { def.errback(err); });
-    return def;
+    return bindCallbacks(this, def);
 }
 
 /**
@@ -98,14 +56,7 @@ function addCallbacks(onFulfilled, onRejected) {
  */
 function addBoth(onFulfilled) {
     const def = new Deferred().addBoth(onFulfilled);
-    this.then((res) => {
-        if (res instanceof Error) {
-            def.errback(res);
-            return;
-        }
-        def.callback(res);
-    }, (err) => { def.errback(err); });
-    return def;
+    return bindCallbacks(this, def);
 }
 
 /**
@@ -199,8 +150,19 @@ function isSuccessful() {
  * @param {string} message текст ошибки
  */
 function logError(message: string) {
-   //@ts-ignore
-   import('Core/IoC').then((IoC) => { // tslint:disable-line
+    // @ts-ignore
+    import('Core/IoC').then((IoC) => { // tslint:disable-line
         IoC.resolve('ILogger').warn('Core/polyfill/PromiseAPIDeferred', message);
     });
+}
+
+function bindCallbacks(promise: Promise<any>, deferred: Deferred): Deferred {
+    promise.then((res) => {
+        if (res instanceof Error) {
+            deferred.errback(res);
+            return;
+        }
+        deferred.callback(res);
+    }, (err) => { deferred.errback(err); });
+    return deferred;
 }

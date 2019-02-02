@@ -250,7 +250,13 @@ define('Lib/Control/CompoundControl/CompoundControl', [
          instance,
          cnstr,
          parseLib;
-      moduleName = (cName ? cName : cfg._moduleName);
+
+      if (cfg && cfg.amdModuleName) {
+         moduleName = cfg.amdModuleName;
+      }
+      if (!moduleName) {
+         moduleName = (cName ? cName : cfg._moduleName);
+      }
       if (globalRequireMap[moduleName]) {
          cnstr = globalRequireMap[moduleName];
       } else {

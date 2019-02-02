@@ -13,4 +13,5 @@ define('Types/_entity/functor', [
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     exports.Compute = Compute_1.default;
+    exports.IComputeFunctor = Compute_1.IFunctor;
 });

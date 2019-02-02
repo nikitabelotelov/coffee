@@ -16,6 +16,17 @@ define('Coffee/Data/DataStore', [
         G3: { val5: 'val5' }
     };
     exports.SettingsStruct = SettingsStruct;
+    var InfoStruct = {
+        G1: {
+            val1: 'val1',
+            val2: 'val2'
+        },
+        G2: {
+            val3: 'val3',
+            val4: 'val4'
+        },
+        G3: { val5: 'val5' }
+    };
     var DataStore = {
         socket: null,
         messageHandlers: new Array(),

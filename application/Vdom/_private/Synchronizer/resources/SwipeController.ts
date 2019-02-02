@@ -11,12 +11,28 @@ export function resetSwipeState() {
 }
 
 export function initSwipeState(event) {
-   if (!swipeState || !swipeState.target) {
-      resetSwipeState();
-      swipeState.time = Date.now();
-      swipeState.location = getTouchLocation(event);
-      swipeState.target = event.target;
+   var location = getTouchLocation(event);
+   if (hasSwipeData() || resetSwipeState() || !isSwipe(location)) {
+      return;
    }
+   /// Обработка события
+   swipeState.time = Date.now();
+   swipeState.location = location;
+   swipeState.target = event.target;
+}
+
+function isSwipe(location) {
+   /// Данная проверка необходима, чтобы не слать событие swipe, когда пользователь переходит по истории страниц
+   /// вперед/назад свайпом - на это событие реагирует браузер. Отличительная черта такого события - swipe начинается
+   /// на границах экрана по X.
+   return (
+       location.x - swipeState.deviationThreshold >= 0 &&
+       location.x + swipeState.deviationThreshold <= window.innerWidth
+   );
+}
+
+function hasSwipeData() {
+   return swipeState && swipeState.target;
 }
 
 function getTouchLocation(event) {
@@ -28,10 +44,10 @@ function getTouchLocation(event) {
 }
 
 function detectSwipeDirection(event) {
-   var
-      location = getTouchLocation(event),
-      direction;
-   if (event.target === swipeState.target && swipeState.time - Date.now() < swipeState.maxSwipeDuration) {
+   var currentTime = Date.now();
+   var location = getTouchLocation(event);
+   var direction;
+   if (event.target === swipeState.target && swipeState.time - currentTime < swipeState.maxSwipeDuration) {
       if (
          Math.abs(swipeState.location.x - location.x) > swipeState.minSwipeDistance &&
          Math.abs(swipeState.location.y - location.y) < swipeState.deviationThreshold

@@ -186,6 +186,8 @@
       "Core/Context",
       "Core/ContextBinder",
 
+      "Core/ContextField/*",
+
       "Core/RightsManager"
     ],
     "output": "core-compatible.package.js"

@@ -12,9 +12,9 @@ define('Types/_entity/factory', [
     'Types/di',
     'Types/_entity/date/toSql',
     'Types/_entity/date/fromSql',
-    'Core/TimeInterval',
+    'Types/_entity/TimeInterval',
     'Core/defaultRenders'
-], function (require, exports, format_1, di_1, toSql_1, fromSql_1, CoreTimeInterval, renders) {
+], function (require, exports, format_1, di_1, toSql_1, fromSql_1, TimeInterval_1, renders) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * @const {RegExp} Выделяет временную зону в строковом представлении Date
@@ -177,12 +177,12 @@ define('Types/_entity/factory', [
         return (format.getKind ? format.getKind() : format.meta && format.meta.kind) || '';
     }    /**
      * Сериализует поле флагов
-     * @param {Types/_collectionFlags} data
+     * @param {Types/_collection/Flags} data
      * @return {Array.<Boolean>}
      */
     /**
      * Сериализует поле флагов
-     * @param {Types/_collectionFlags} data
+     * @param {Types/_collection/Flags} data
      * @return {Array.<Boolean>}
      */
     function serializeFlags(data) {
@@ -303,10 +303,10 @@ define('Types/_entity/factory', [
                     }
                     return value;
                 case 'timeinterval':
-                    if (value instanceof CoreTimeInterval) {
+                    if (value instanceof TimeInterval_1.default) {
                         return value.toString();
                     }
-                    return CoreTimeInterval.toString(value);
+                    return TimeInterval_1.default.toString(value);
                 case 'array':
                     var kind_1 = getKind(options.format);
                     if (!(value instanceof Array)) {
@@ -409,10 +409,10 @@ define('Types/_entity/factory', [
                 return value;
             case 'timeinterval':
                 value = toScalar(value);
-                if (value instanceof CoreTimeInterval) {
+                if (value instanceof TimeInterval_1.default) {
                     return value.toString();
                 }
-                return CoreTimeInterval.toString(value);
+                return TimeInterval_1.default.toString(value);
             case 'array':
                 var kind_2 = getKind(options.format);
                 if (!(value instanceof Array)) {

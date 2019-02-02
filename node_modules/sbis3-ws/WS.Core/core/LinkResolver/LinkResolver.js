@@ -9,12 +9,70 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
       return arrRes.join('/');
    }
 
-   function cropSlash(str) {
+   function cropSlash(str, onlyEnding) {
       var res = str;
-      res = res.replace(/\/+$/, '');
-      res = res.replace(/^\/+/, '');
+      res = res.replace(/(\/|\\)+$/, '');
+      if (!onlyEnding) {
+         res = res.replace(/^(\/|\\)+/, '');
+      }
       return res;
    }
+
+   // Need this code for compatibility with old controls
+   // Some old module names are not the same as its physical address
+   // So we need to replace parts of these adresses
+   // We cannot get it from require's config.js because it's not amd-module
+   // native require doesn't work properly with relative paths while building html.tmpl
+   // and we doesn't have baseUrl to create absolute path
+   function createRequireRoutes() {
+      return {
+         'WS': 'WS.Core',
+         'Lib': 'WS.Core/lib',
+         'Ext': 'WS.Core/lib/Ext',
+         'Deprecated': 'WS.Deprecated',
+         'Helpers': 'WS.Core/core/helpers',
+         'Transport': 'WS.Core/transport',
+         'bootup': 'WS.Core/res/js/bootup',
+         'bootup-min': 'WS.Core/res/js/bootup-min',
+         'old-bootup': 'WS.Core/res/js/old-bootup',
+         'tslib': 'WS.Core/ext/tslib',
+         'Resources': '',
+         'WS.Core': 'WS.Core',
+         'Core': 'WS.Core/core',
+         'css': 'WS.Core/ext/requirejs/plugins/css',
+         'native-css': 'WS.Core/ext/requirejs/plugins/native-css',
+         'normalize': 'WS.Core/ext/requirejs/plugins/normalize',
+         'html': 'WS.Core/ext/requirejs/plugins/html',
+         'tmpl': 'WS.Core/ext/requirejs/plugins/tmpl',
+         'wml': 'WS.Core/ext/requirejs/plugins/wml',
+         'text': 'WS.Core/ext/requirejs/plugins/text',
+         'is': 'WS.Core/ext/requirejs/plugins/is',
+         'is-api': 'WS.Core/ext/requirejs/plugins/is-api',
+         'i18n': 'WS.Core/ext/requirejs/plugins/i18n',
+         'json': 'WS.Core/ext/requirejs/plugins/json',
+         'order': 'WS.Core/ext/requirejs/plugins/order',
+         'template': 'WS.Core/ext/requirejs/plugins/template',
+         'cdn': 'WS.Core/ext/requirejs/plugins/cdn',
+         'datasource': 'WS.Core/ext/requirejs/plugins/datasource',
+         'xml': 'WS.Core/ext/requirejs/plugins/xml',
+         'preload': 'WS.Core/ext/requirejs/plugins/preload',
+         'browser': 'WS.Core/ext/requirejs/plugins/browser',
+         'optional': 'WS.Core/ext/requirejs/plugins/optional',
+         'remote': 'WS.Core/ext/requirejs/plugins/remote',
+
+         'router': 'router',
+
+         'jquery': '/cdn/jquery/3.3.1/jquery-min'
+      };
+   }
+
+   function replaceBackslash(str) {
+      var res = str;
+      res = res.replace(/\\/g, '/');
+      return res;
+   }
+
+   var baseUrl = cropSlash(replaceBackslash(wsConfig._baseUrl), true);
 
    var LinkResolver = coreExtend.extend([], {
       constructor: function(isDebug, buildNumber, wsRoot, appRoot, resourceRoot) {
@@ -37,31 +95,32 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
       resolveLinkTemplated: function(url) {
          var res = url;
          res = this.fixOldAndBundles(url);
-         if(!~url.indexOf('%')) {
+         if (!~url.indexOf('%')) {
             res = this.originResourceRoot + res;
          }
          return res;
       },
-      initPaths: function(reqPaths) {
-         var reqPaths = reqPaths || requirejs.s.contexts._.config.paths;
-         var paths = {};
-         var name;
-         var baseUrl = this.resourceRoot;
-         if(typeof wsConfig !== 'undefined') {
-            // TODO something with this code
-            if(wsConfig._baseUrl && wsConfig._baseUrl.length > this.resourceRoot.length) {
-               baseUrl = wsConfig._baseUrl;
-            }
-         }
-         for(var key in reqPaths) {
-            name = reqPaths[key];
-            if(name.indexOf('/') !== 0) {
-               name = '/' + name;
-            }
-            name = name.split(baseUrl)[1];
-            paths[key] = name;
-         }
+      initPathsServerSide: function() {
+         var paths = createRequireRoutes();
          this.paths = paths;
+      },
+      initPaths: function(reqPaths) {
+         if (typeof window === 'undefined') {
+            this.initPathsServerSide();
+         } else {
+            var reqPaths = reqPaths || requirejs.s.contexts._.config.paths;
+            var paths = {};
+            var name;
+            for (var key in reqPaths) {
+               name = reqPaths[key];
+               if (name.indexOf('/') !== 0) {
+                  name = '/' + name;
+               }
+               name = name.split(this.resourceRoot)[1];
+               paths[key] = name;
+            }
+            this.paths = paths;
+         }
       },
       getLinkWithResourceRoot: function(link) {
          var res = joinPaths([this.resourceRoot, link]);
@@ -71,7 +130,7 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
          return res;
       },
       isRelativeLink: function(link) {
-         if(link.indexOf('/') === 0) {
+         if (link.indexOf('/') === 0) {
             return false;
          } else {
             return true;
@@ -93,9 +152,9 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
          return res;
       },
       resolveLink: function(link, ext) {
-         if(!this.isRelativeLink(link)) {
+         if (!this.isRelativeLink(link)) {
             return this.getLinkWithExt(link, ext, false);
-         } else if(~this.resourceRoot.indexOf('%')) {
+         } else if (~this.resourceRoot.indexOf('%')) {
             // While generating html.tmpl resource root might be template string( for exapmple %{resource_root})
             // We shouldn't create path for file here, it will be done by PS
             return this.getLinkWithExt(this.resolveLinkTemplated(link), ext);
@@ -134,7 +193,7 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
          } else {
             // Files with "min" at the end of the name will not be minified by builder
             // So we don't need to add ".min." to its extension
-            if(link.slice(-3) !== 'min') {
+            if (link.slice(-3) !== 'min') {
                res = link + '.min.' + ext;
             } else {
                res = link + '.' + ext;

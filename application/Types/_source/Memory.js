@@ -125,7 +125,7 @@ define('Types/_source/Memory', [
             }
             return data;
         };
-        Memory.prototype._applyWhere = function (data, where) {
+        Memory.prototype._applyWhere = function (data, where, meta) {
             //FIXME: get rid of this SBIS-specified
             if (where && typeof where === 'object') {
                 where = Object.assign({}, where);
@@ -133,7 +133,7 @@ define('Types/_source/Memory', [
                 delete where['ВидДерева'];
                 delete where['usePages'];
             }
-            return _super.prototype._applyWhere.call(this, data, where);
+            return _super.prototype._applyWhere.call(this, data, where, meta);
         };    //endregion Local
               //region Protected members
               /**

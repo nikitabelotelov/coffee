@@ -25,7 +25,7 @@ define('Types/_display/Enum', [
         function Enum(options) {
             var _this = _super.call(this, options) || this;
             if (!_this._$collection['[Types/_collection/IEnum]']) {
-                throw new TypeError(_this._moduleName + ': source collection should implement Types/_collectionIEnum');
+                throw new TypeError(_this._moduleName + ': source collection should implement Types/_collection/IEnum');
             }
             _this._getCursorEnumerator().setPosition(_this.getIndexBySourceIndex(_this._$collection.get()));
             if (_this._$collection['[Types/_entity/ObservableMixin]']) {

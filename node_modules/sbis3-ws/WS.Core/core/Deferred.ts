@@ -333,9 +333,9 @@ class Deferred {
          );
       }
 
-      if (isDeferredValue(result)) {
+      if (isDeferredLikeValue(result)) {
          throw new Error(
-            'Deferred instances can only be chained if they are the result of a callback'
+            'DeferredLike instances can only be chained if they are the result of a callback'
          );
       }
 
@@ -529,7 +529,7 @@ class Deferred {
                res = f(res);
             }
             fired = resultToFired(res);
-            if (isDeferredValue(res)) {
+            if (isDeferredLikeValue(res)) {
                cb = function(cbRes) {
                   self._paused--;
                   self._resback(cbRes);
@@ -807,9 +807,13 @@ function isCancelValue(res) {
 function isErrorValue(res) {
    return res instanceof Error;
 }
-
-function isDeferredValue(res) {
-   return res instanceof Deferred;
+/**
+ * Проверка принадлежности instance к типу DeferredLike
+ * @param {any} instance
+ * @returns {boolean} true, если instance :: DeferredLike
+ */
+function isDeferredLikeValue(instance: any): boolean {
+   return instance && !!(instance.addCallback && instance.addErrback);
 }
 
 function resultToFired(res) {

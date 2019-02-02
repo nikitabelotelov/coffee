@@ -1,7 +1,8 @@
 define('View/Builder/Tmpl/modules/template', [
       'View/Builder/Tmpl/handlers/error',
-      'Core/Deferred'
-   ], function templateLoader(errorHandling, Deferred) {
+      'Core/Deferred',
+      'View/config'
+   ], function templateLoader(errorHandling, Deferred, config) {
       'use strict';
       var templateM = {
          parse: function templateParse(tag) {
@@ -41,6 +42,9 @@ define('View/Builder/Tmpl/modules/template', [
          },
          module: function templateModule(tag, data) {
             var name = tag.attribs.name;
+            if (config.reservedWords.includes(name)) {
+               errorHandling("Unexpected reserved word '" + name + "' in template attribute name", this.filename);
+            }
             return function templateReady() {
                var result;
                if (!this.includeStack[name]) {

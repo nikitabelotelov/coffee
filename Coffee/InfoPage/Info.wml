@@ -1,0 +1,8 @@
+<div class="main-page">
+   <div class="left-block">
+      <Router.Link href="/Coffee/page/Info"><span>На главную</span></Router.Link>
+   </div>
+   <Router.Link href="page/:pageId" pageId="Settings">
+      <div class="right-block"></div>
+   </Router.Link>
+</div>

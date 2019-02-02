@@ -82,5 +82,4 @@ define('Types/_entity/date/fromSql', [
         return retval;
     }
     exports.default = fromSQL;
-    ;
 });

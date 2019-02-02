@@ -3,8 +3,8 @@
 // @ts-ignore
 import {Control} from 'UI/Base';
 // @ts-ignore
-import * as template from 'wml!Coffee/Info';
-import "css!Coffee/Info";
+import * as template from 'wml!Coffee/InfoPage/Info';
+import "css!Coffee/InfoPage/Info";
 
 
 class Info extends Control {

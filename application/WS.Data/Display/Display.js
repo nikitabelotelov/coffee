@@ -1,14 +1,8 @@
 /* global define, require */
 define('WS.Data/Display/Display', [
-   'Types/display',
-   'Types/util'
 ], function(
-   display,
-   util
 ) {
    'use strict';
 
-   util.logger.error('WS.Data/Display/Display', 'Module is deprecated and will be removed in 19.200. Use Types/display:Abstract instead.');
-
-   return display.Abstract;
+   throw new Error('WS.Data/Display/Display is deprecated and has been removed in 19.200. Use Types/display:Abstract instead.');
 });

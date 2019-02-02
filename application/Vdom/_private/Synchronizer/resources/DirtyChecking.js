@@ -123,7 +123,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
             if (hasOld) {
                 hasNew = newOptions.hasOwnProperty(i) || newOptions[i] !== undefined;
                 if (hasNew) {
-                    if (typeof newOptions[i] === 'function' && typeof oldOptions[i] === 'function' || typeof newOptions[i] === 'number' && typeof oldOptions[i] === 'number' && (isNaN(newOptions[i]) && isNaN(oldOptions[i]))) {
+                    if (typeof newOptions[i] === 'number' && typeof oldOptions[i] === 'number' && (isNaN(newOptions[i]) && isNaN(oldOptions[i]))) {
                         continue;
                     }    /**
                      * All objects in control's options are compared only by reference

@@ -185,6 +185,7 @@ function hydrateChildren(parentVNode, parentNode, currentNode, context, isSVG, l
     }
 }
 var domPropertySearchMap = ['chrome-extension', 'mc.yandex.ru'];
+var ignoredNodeId = ['ghostery-purple-box', 'StayFocusd-infobar'];
 function domPropertySearch(domString) {
     return domPropertySearchMap.filter(function (value) {
         return domString.search(value) !== -1;
@@ -198,6 +199,11 @@ function ignoreExtensionScripts(dom) {
         dom.tagName === 'SCRIPT' &&
         (searchForExtension(dom.innerText) || searchForExtension(dom.getAttribute('src')));
 }
+function ignoredById(node) {
+    return ignoredNodeId.filter(function (value) {
+        return node && node.id === value;
+    }).length > 0;
+}
 /* we have some node that needs to be ignored
 * because it was created by requirejs*/
 function isIgnoredNode(nextSibling) {
@@ -207,7 +213,7 @@ function isIgnoredNode(nextSibling) {
         (nextSibling && (nextSibling.tagName === 'LINK' || nextSibling.tagName === 'STYLE') && nextSibling.attributes &&
             nextSibling.attributes['data-vdomignore']) ||
         /*ignore ghostery chrome plugin*/
-        (nextSibling && nextSibling.id === 'ghostery-purple-box');
+        ignoredById(nextSibling);
 }
 function skipIgnoredNode(childNode) {
     var nextSibling;

@@ -326,19 +326,95 @@ define('UI/_base/Control', [
                 }
             }
         };
+        Control.prototype._manageStyles = function (theme, oldTheme) {
+            if (!this._checkNewStyles()) {
+                return true;
+            }
+            var themesController = ThemesController.getInstance();
+            var styles = this._styles || [];
+            var themedStyles = this._theme || [];
+            if (oldTheme) {
+                this._removeOldStyles(themesController, oldTheme, themedStyles, []);
+            }
+            return this._loadNewStyles(themesController, theme, themedStyles, styles);
+        };
+        Control.prototype._checkNewStyles = function () {
+            if (this._theme && !this._theme.forEach || this._style && !this._style.forEach) {
+                return false;
+            }
+            return true;
+        };
+        Control.prototype._loadNewStyles = function (themesController, theme, themedStyles, styles) {
+            var self = this;
+            var promiseArray = [];
+            if (typeof window === 'undefined') {
+                styles.forEach(function (name) {
+                    themesController.pushCss(name);
+                });
+                themedStyles.forEach(function (name) {
+                    themesController.pushThemedCss(name, theme);
+                });
+            } else {
+                styles.forEach(function (name) {
+                    if (themesController.isCssLoaded(name)) {
+                        themesController.pushCssLoaded(name);
+                    } else {
+                        var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssAsync(name), 2000));
+                        loadPromise.then(function (res) {
+                            if (res.status === 'rejected') {
+                                IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName);
+                            }
+                        });
+                        promiseArray.push(loadPromise);
+                    }
+                });
+                themedStyles.forEach(function (name) {
+                    if (themesController.isThemedCssLoaded(name, theme)) {
+                        themesController.pushCssThemedLoaded(name, theme);
+                    } else {
+                        var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssThemedAsync(name, theme), 2000));
+                        loadPromise.then(function (res) {
+                            if (res.status === 'rejected') {
+                                IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName + ' with theme ' + theme);
+                            }
+                        });
+                        promiseArray.push(loadPromise);
+                    }
+                });
+                if (promiseArray.length) {
+                    return Promise.all(promiseArray);
+                }
+            }
+            return true;
+        };
+        Control.prototype._removeOldStyles = function (themesController, theme, themedStyles, styles) {
+            styles.forEach(function (name) {
+                themesController.removeCss(name);
+            });
+            themedStyles.forEach(function (name) {
+                themesController.removeCssThemed(name, theme);
+            });
+        };
+        Control.prototype._removeStyles = function (theme) {
+            if (!this._checkNewStyles()) {
+                return true;
+            }
+            var themesController = ThemesController.getInstance();
+            var styles = this._styles || [];
+            var themedStyles = this._theme || [];
+            this._removeOldStyles(themesController, theme, themedStyles, styles);
+        };
         Control.prototype.destroy = function () {
             this._destroyed = true;
             try {
                 var contextTypes = this.constructor.contextTypes ? this.constructor.contextTypes() : {};
                 for (var i in contextTypes) {
                     if (contextTypes.hasOwnProperty(i)) {
-                        var field = this.context.get(i);
-                        if (field)
-                            field.unregisterConsumer(this);
+                        this.context.get(i).unregisterConsumer(this);
                     }
                 }
                 if (this._mounted) {
-                    this._beforeUnmount();
+                    this.__beforeUnmount();
                     Vdom_1.Synchronizer.cleanControlDomLink(this._container);
                 }
             } catch (error) {
@@ -571,51 +647,6 @@ define('UI/_base/Control', [
         Control.prototype._beforeMount = function () {
             return Promise.resolve();
         };
-        Control.prototype._manageStyles = function (theme) {
-            var themesController = ThemesController.getInstance();
-            var styles = this._styles;
-            var themedStyles = this._theme;
-            var promiseArray = [];
-            if (typeof window === 'undefined') {
-                styles.forEach(function (name) {
-                    themesController.pushCss(name);
-                });
-                themedStyles.forEach(function (name) {
-                    themesController.pushThemedCss(name, theme);
-                });
-                return true;
-            } else {
-                styles.forEach(function (name) {
-                    // Wrap promise with timeout and reflect
-                    if (!themesController.isCssLoaded(name)) {
-                        var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssAsync(name), 2000));
-                        loadPromise.then(function (res) {
-                            if (res.status === 'rejected') {
-                                IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + this._moduleName);
-                            }
-                        });
-                        promiseArray.push(loadPromise);
-                    }
-                });
-                themedStyles.forEach(function (name) {
-                    // Wrap promise with timeout and reflect
-                    if (!themesController.isThemedCssLoaded(name, theme)) {
-                        var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssThemedAsync(name, theme), 2000));
-                        loadPromise.then(function (res) {
-                            if (res.status === 'rejected') {
-                                IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + this._moduleName + ' with theme ' + theme);
-                            }
-                        });
-                        promiseArray.push(loadPromise);
-                    }
-                });
-                if (promiseArray.length) {
-                    return Promise.all(promiseArray);
-                } else {
-                    return true;
-                }
-            }
-        };
         Control.prototype._beforeMountLimited = function (opts) {
             var _this = this;
             var resultBeforeMount = this._beforeMount.apply(this, arguments);
@@ -777,6 +808,12 @@ define('UI/_base/Control', [
          * @see Documentation: Context.
          * @private
          */
+        Control.prototype.__beforeUpdate = function (options) {
+            if (options.theme !== this._options.theme) {
+                this._manageStyles(options.theme, this._options.theme);
+            }
+            this._beforeUpdate.apply(this, arguments);
+        };
         Control.prototype._beforeUpdate = function () {
         };    /**
          * Determines whether control should update. Called every time before control update.
@@ -939,6 +976,10 @@ define('UI/_base/Control', [
          * @see Documentation: Context
          * @private
          */
+        Control.prototype.__beforeUnmount = function () {
+            this._removeStyles(this._options.theme);
+            this._beforeUnmount.apply(this, arguments);
+        };
         Control.prototype._beforeUnmount = function () {
         };
         Control.isWasaby = true;

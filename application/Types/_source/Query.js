@@ -34,7 +34,14 @@ define('Types/_source/Query', [
     'Types/util'
 ], function (require, exports, tslib_1, entity_1, util_1) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    /**
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var ExpandMode;
+    (function (ExpandMode) {
+        ExpandMode[ExpandMode['None'] = 0] = 'None';
+        ExpandMode[ExpandMode['Nodes'] = 1] = 'Nodes';
+        ExpandMode[ExpandMode['Leaves'] = 2] = 'Leaves';
+        ExpandMode[ExpandMode['All'] = 3] = 'All';
+    }(ExpandMode = exports.ExpandMode || (exports.ExpandMode = {})));    /**
      * Clones object
      * @param data Object to clone
      * @return {Object}

@@ -2,7 +2,7 @@
 /**
  * An abstract enity which have the dictionary as collection of keys and values.
  * It's an abstract class and it's can't have instances.
- * @class Types/_collectionDictionary
+ * @class Types/_collection/Dictionary
  * @implements Types/_collection/IEnumerable
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin

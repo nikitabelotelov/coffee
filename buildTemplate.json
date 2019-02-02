@@ -17,51 +17,63 @@
   "modules": [
     {
       "name": "Router",
-      "path": "%cd%/Router"
+      "path": "%cd%/Router",
+      "required": true
     },
     {
       "name": "Core",
-      "path": "%cd%/node_modules/sbis3-ws/Core"
+      "path": "%cd%/node_modules/sbis3-ws/Core",
+      "required": true
     },
     {
       "name": "WS.Core",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core",
+      "required": true
     },
     {
       "name": "Lib",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib",
+      "required": true
     },
     {
       "name": "Ext",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib/Ext"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib/Ext",
+      "required": true
     },
     {
       "name": "Transport",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/transport"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/transport",
+      "required": true
     },
     {
       "name": "View",
-      "path": "%cd%/node_modules/sbis3-ws/View"
+      "path": "%cd%/node_modules/sbis3-ws/View",
+      "required": true
     },
     {
       "name": "Inferno",
-      "path": "%cd%/node_modules/sbis3-ws/Inferno"
+      "path": "%cd%/node_modules/sbis3-ws/Inferno",
+      "required": true
     },
     {
       "name": "WS.Data",
-      "path": "%cd%/node_modules/ws-data/WS.Data"
+      "path": "%cd%/node_modules/ws-data/WS.Data",
+      "required": true
     },
     {
       "name": "Types",
-      "path": "%cd%/node_modules/saby-types/Types"
+      "path": "%cd%/node_modules/saby-types/Types",
+      "required": true
     },
     {
       "name": "Vdom",
-      "path": "%cd%/node_modules/sbis3-ws/Vdom"
+      "path": "%cd%/node_modules/sbis3-ws/Vdom",
+      "required": true
     },
     {
       "name": "UI",
-      "path": "%cd%/node_modules/saby-ui/UI"
+      "path": "%cd%/node_modules/saby-ui/UI",
+      "required": true
     },
     {
       "name": "Coffee",

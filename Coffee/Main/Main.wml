@@ -1,0 +1,10 @@
+<Router.Controller>
+   <div>
+      <Router.Route mask="page/:pageId">
+         <Coffee.PageLoader default="Info">
+            <ws:templateOptions
+               settings="{{settingsData}}"/>
+         </Coffee.PageLoader>
+      </Router.Route>
+   </div>
+</Router.Controller>

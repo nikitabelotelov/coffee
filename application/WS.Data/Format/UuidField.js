@@ -1,14 +1,8 @@
 /* global define */
 define('WS.Data/Format/UuidField', [
-   'Types/entity',
-   'Types/util'
 ], function(
-   type,
-   util
 ) {
    'use strict';
 
-   util.logger.error('WS.Data/Format/UuidField', 'Module is deprecated and will be removed in 19.200. Use Types/entity:format.UuidField instead.');
-
-   return type.format.UuidField;
+   throw new Error('WS.Data/Format/UuidField is deprecated and has been removed in 19.200. Use Types/entity:format.UuidField instead.');
 });
