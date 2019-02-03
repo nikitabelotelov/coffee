@@ -138,6 +138,7 @@ function stopServers() {
    expressServer.close();
 }
 
-//global.SerialHelper.SerialOpen();
+require('../serial-helper/serialHelper.js');
+global.SerialHelper.SerialOpen();
 
 
