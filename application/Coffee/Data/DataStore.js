@@ -4,29 +4,34 @@ define('Coffee/Data/DataStore', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var SettingsStruct = {
-        G1: {
-            val1: 'val1',
-            val2: 'val2'
-        },
-        G2: {
-            val3: 'val3',
-            val4: 'val4'
-        },
-        G3: { val5: 'val5' }
-    };
-    exports.SettingsStruct = SettingsStruct;
     var InfoStruct = {
-        G1: {
-            val1: 'val1',
-            val2: 'val2'
+        'Группа 1': {
+            'Температура': 'g1TSet',
+            'Время предсмачивания': 'g1TimeSet',
+            'Время автоматической варки 1': 'g1AutoMode1',
+            'Время автоматической варки 2': 'g1AutoMode2',
+            'Время пост-предсмачивания': 'g1_1TimeSet'
         },
-        G2: {
-            val3: 'val3',
-            val4: 'val4'
+        'Группа 2': {
+            'Температура': 'g2TSet',
+            'Время предсмачивания': 'g2TimeSet',
+            'Время автоматической варки 1': 'g2AutoMode1',
+            'Время автоматической варки 2': 'g2AutoMode2',
+            'Время пост-предсмачивания': 'g2_1TimeSet'
         },
-        G3: { val5: 'val5' }
+        'Паровой бойлер': { 'Давление': 'parTSet' },
+        'Цветовая схема': {
+            'Холодный красный': 'rCold',
+            'Холодный зеленый': 'gCold',
+            'Холодный синий': 'bCold',
+            'Холодный прозрачный': 'aCold',
+            'Горячий красный': 'rHot',
+            'Горячий зеленый': 'gHot',
+            'Горячий синий': 'bHot',
+            'Горячий прозрачный': 'aHot'
+        }
     };
+    exports.InfoStruct = InfoStruct;
     var DataStore = {
         socket: null,
         messageHandlers: new Array(),
@@ -35,7 +40,7 @@ define('Coffee/Data/DataStore', [
             for (var groupName in dataStruct) {
                 result[groupName] = {};
                 for (var fieldName in dataStruct[groupName]) {
-                    result[groupName][fieldName] = rawData[fieldName];
+                    result[groupName][fieldName] = rawData[dataStruct[groupName][fieldName]];
                 }
             }
             return result;
@@ -67,16 +72,16 @@ define('Coffee/Data/DataStore', [
                 };
             });
         },
-        onSettingsUpdated: function (callback) {
-            this.messageHandlers['settingsUpdated'] = callback;
+        onRawDataUpdated: function (callback) {
+            this.messageHandlers['rawDataSetting'] = callback;
         },
         _handleMessage: function (message) {
             var result = JSON.parse(message);
             var data = result.data;
             if (result.type) {
                 switch (result.type) {
-                case 'settingsUpdated':
-                    data = this._parseDataStructure(data, SettingsStruct);
+                case 'rawDataSetting':
+                    data = this._parseDataStructure(data, InfoStruct);
                 default:
                     if (this.messageHandlers[result.type]) {
                         this.messageHandlers[result.type].call(this, data);

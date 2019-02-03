@@ -1,8 +1,11 @@
 <div class="main-page">
-   <div class="left-block">
-      <Router.Link href="/Coffee/page/Info"><span>На главную</span></Router.Link>
+   <div class="menu">
+      <ws:for data="key, data in _options.settings">
+         <Router.Link href="set/:id" id="{{ key }}">
+            <div class="settings-list-item">
+               {{ key }}
+            </div>
+         </Router.Link>
+      </ws:for>
    </div>
-   <Router.Link href="page/:pageId" pageId="Settings">
-      <div class="right-block"></div>
-   </Router.Link>
 </div>

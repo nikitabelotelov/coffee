@@ -1,0 +1,8 @@
+<div class="page-navigation">
+   <Router.Link href="page/:pageId" pageId="Info" class="info-button navigation-button">
+      <div></div>
+   </Router.Link>
+   <Router.Link href="page/:pageId" pageId="Settings" class="settings-button navigation-button">
+      <div></div>
+   </Router.Link>
+</div>

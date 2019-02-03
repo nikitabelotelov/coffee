@@ -1,12 +1,12 @@
-/// <amd-module name="Coffee/Main" />
-define('Coffee/Main', [
+/// <amd-module name="Coffee/PageNavigator" />
+define('Coffee/PageNavigator', [
     'require',
     'exports',
     'tslib',
     'UI/Base',
-    'wml!Coffee/Main/Main',
+    'wml!Coffee/PageNavigator/PageNavigator',
     'Core/ConsoleLogger',
-    'css!Coffee/Main/Main'
+    'css!Coffee/PageNavigator/PageNavigator'
 ], function (require, exports, tslib_1, Base_1, template) {
     'use strict';
     var Main = /** @class */

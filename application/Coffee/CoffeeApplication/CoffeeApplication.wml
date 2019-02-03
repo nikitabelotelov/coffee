@@ -1,0 +1,11 @@
+<Router.Controller>
+   <div class="coffee-application" ws-delegate-focus>
+      <Router.Route mask="page/:pageId" attr:class="">
+         <Coffee.PageLoader default="Info">
+            <ws:templateOptions
+               machineInfo="{{machineInfo}}"/>
+         </Coffee.PageLoader>
+      </Router.Route>
+      <Coffee.PageNavigator attr:class="page-navigator-container"/>
+   </div>
+</Router.Controller>

@@ -19,6 +19,7 @@ EXIT_CODES = {
 
 var requirejs = require(path.join(root, 'node_modules', 'saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
+global.originRequire = require;
 
 
 const createConfig = require(path.join(root, 'node_modules', 'sbis3-ws', 'WS.Core', 'ext', 'requirejs', 'config.js'));
@@ -52,6 +53,29 @@ app.get('/Coffee/*', (req, res) => {
 
 const {createServer} = require('wss')
 
+global.settings = {
+   g1TSet: 94,
+   g2TSet: 92,
+   g1TimeSet: 0,
+   g2TimeSet: 0,
+   g1AutoMode1: 0,
+   g1AutoMode2: 0,
+   g2AutoMode1: 0,
+   g2AutoMode2: 0,
+   allRecieved: 0,
+   g1_1TimeSet: 0,
+   g2_1TimeSet: 0,
+   parTSet: 1000,
+   rCold: 0,
+   gCold: 0,
+   bCold: 16,
+   aCold: 16,
+   rHot: 16,
+   gHot: 0,
+   bHot: 0,
+   aHot: 16
+};
+
 var INTERVALS = [];
 
 const wss = createServer(function connectionListener(ws) {
@@ -84,16 +108,8 @@ function handleMessage(data) {
 function getCurrentData() {
    return new Promise((resolve) => {
       resolve({
-         type: 'settingsUpdated',
-         data: {
-            val1: 1,
-            val2: 2,
-            val3: 3,
-            val4: 4,
-            val5: 5,
-            val6: 6,
-            val7: 7
-         }
+         type: 'rawDataSetting',
+         data: global.settings
       });
    });
 }
@@ -123,3 +139,5 @@ function stopServers() {
 }
 
 //global.SerialHelper.SerialOpen();
+
+
