@@ -1,4 +1,4 @@
-let InfoStruct = {
+let SettingsStruct = {
     "Группа 1": {
         "Температура": "g1TSet",
         "Время предсмачивания": "g1TimeSet",
@@ -16,17 +16,25 @@ let InfoStruct = {
     "Паровой бойлер": {
         "Давление": "parTSet"
     },
-    "Цветовая схема": {
-        "Холодный красный": "rCold",
-        "Холодный зеленый": "gCold",
-        "Холодный синий": "bCold",
-        "Холодный прозрачный": "aCold",
-        "Горячий красный": "rHot",
-        "Горячий зеленый": "gHot",
-        "Горячий синий": "bHot",
-        "Горячий прозрачный": "aHot"
+    "Цветовая схема холодный": {
+        "Красный": "rCold",
+        "Зеленый": "gCold",
+        "Синий": "bCold",
+        "Прозрачность": "aCold"
+    },
+    "Цветовая схема горячий": {
+        "Красный": "rHot",
+        "Зеленый": "gHot",
+        "Синий": "bHot",
+        "Прозрачность": "aHot"
     }
 };
+
+let InfoStruct = {
+    "Группа 1": "g1Temp",
+    "Группа 2": "g2Temp",
+    "Пар": "steamTemp"
+}
 
 let DataStore = {
     socket: null,
@@ -36,8 +44,19 @@ let DataStore = {
         for (let groupName in dataStruct) {
             result[groupName] = {};
             for (let fieldName in dataStruct[groupName]) {
-                result[groupName][fieldName] = rawData[dataStruct[groupName][fieldName]];
+                result[groupName][fieldName] = {};
+                result[groupName][fieldName].value = rawData[dataStruct[groupName][fieldName]];
+                result[groupName][fieldName].dataFieldName = dataStruct[groupName][fieldName];
             }
+        }
+        return result;
+    },
+    _parseInfo(rawData, dataStruct): any {
+        let result = {};
+        for (let fieldName in dataStruct) {
+            result[fieldName] = {};
+            result[fieldName].value = rawData[dataStruct[fieldName]];
+            result[fieldName].dataFieldName = dataStruct[fieldName];
         }
         return result;
     },
@@ -69,17 +88,23 @@ let DataStore = {
     onRawDataUpdated(callback: Function) {
         this.messageHandlers["rawDataSetting"] = callback;
     },
+    onRawInfoUpdated(callback: Function) {
+        this.messageHandlers["rawDataInfo"] = callback;
+    },
     _handleMessage(message): any {
         let result = JSON.parse(message);
         let data = result.data;
         if (result.type) {
             switch (result.type) {
                 case "rawDataSetting":
-                    data = this._parseDataStructure(data, InfoStruct);
-                default:
-                    if (this.messageHandlers[result.type]) {
-                        this.messageHandlers[result.type].call(this, data);
-                    }
+                    data = this._parseDataStructure(data, SettingsStruct);
+                    break;
+                case "rawDataInfo":
+                    data = this._parseInfo(data, InfoStruct);
+                    break;
+            }
+            if (this.messageHandlers[result.type]) {
+                this.messageHandlers[result.type].call(this, data);
             }
         }
     },
@@ -88,4 +113,4 @@ let DataStore = {
     }
 };
 
-export {DataStore, InfoStruct};
+export {DataStore, SettingsStruct};

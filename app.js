@@ -76,11 +76,22 @@ global.settings = {
    aHot: 16
 };
 
+global.info = {
+   g1Temp: 95,
+   g2Temp: 93,
+   steamTemp: 110
+}
+
 var INTERVALS = [];
 
 const wss = createServer(function connectionListener(ws) {
    setIntervalWrapper(() => {
-      getCurrentData().then((data) => {
+      getSettings().then((data) => {
+         ws.send(JSON.stringify(data));
+      });
+   }, 2000);
+   setIntervalWrapper(() => {
+      getCurrentInfo().then((data) => {
          ws.send(JSON.stringify(data));
       });
    }, 2000);
@@ -99,17 +110,26 @@ const wss = createServer(function connectionListener(ws) {
 function handleMessage(data) {
    switch (data.type) {
       case "getCurrentSettings":
-         return getCurrentData();
+         return getSettings();
       default:
          return "wrong request";
    }
 }
 
-function getCurrentData() {
+function getSettings() {
    return new Promise((resolve) => {
       resolve({
          type: 'rawDataSetting',
          data: global.settings
+      });
+   });
+}
+
+function getCurrentInfo() {
+   return new Promise((resolve) => {
+      resolve({
+         type: 'rawDataInfo',
+         data: global.info
       });
    });
 }
@@ -138,5 +158,5 @@ function stopServers() {
    expressServer.close();
 }
 
-global.originRequire('../serial-helper/serialHelper.js');
-global.SerialHelper.SerialOpen();
+// global.originRequire('../serial-helper/serialHelper.js');
+// global.SerialHelper.SerialOpen();

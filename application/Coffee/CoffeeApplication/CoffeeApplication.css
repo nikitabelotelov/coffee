@@ -1,6 +1,9 @@
 * {
   margin: 0;
   padding: 0;
+  outline: none;
+  font-family: "Century Gothic";
+  font-size: 12px;
 }
 .router-Link.topMenu {
   margin: 0 10px;
@@ -15,6 +18,9 @@
       -ms-flex-pack: justify;
           justify-content: space-between;
   height: 100%;
+}
+.coffee-application-content {
+  width: 400px;
 }
 html {
   height: 100%;

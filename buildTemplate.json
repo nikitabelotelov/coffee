@@ -78,6 +78,10 @@
     {
       "name": "Coffee",
       "path": "%cd%/Coffee"
+    },
+    {
+      "name": "cdn",
+      "path": "%cd%/cdn"
     }
 
   ]
