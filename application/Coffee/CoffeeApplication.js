@@ -18,22 +18,8 @@ define('Coffee/CoffeeApplication', [
             _this._template = template;
             return _this;
         }
-        CoffeeApplication.prototype.updateSettingsData = function (data) {
-            this.settingsInfo = data;
-            this._forceUpdate();
-        };
-        ;
-        CoffeeApplication.prototype.updateInfoData = function (data) {
-            this.currentInfo = data;
-            this._forceUpdate();
-        };
-        ;
         CoffeeApplication.prototype._beforeMount = function () {
-            var _this = this;
-            return DataStore_1.DataStore.initDataStore().then(function () {
-                DataStore_1.DataStore.onRawDataUpdated(_this.updateSettingsData.bind(_this));
-                DataStore_1.DataStore.onRawInfoUpdated(_this.updateInfoData.bind(_this));
-            });
+            return DataStore_1.DataStore.initDataStore();
         };
         return CoffeeApplication;
     }(Base_1.Control);

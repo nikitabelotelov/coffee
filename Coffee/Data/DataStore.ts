@@ -31,9 +31,9 @@ let SettingsStruct = {
 };
 
 let InfoStruct = {
-    "Группа 1": "g1Temp",
-    "Группа 2": "g2Temp",
-    "Пар": "steamTemp"
+    "Группа 1": "currentGroup1P",
+    "Группа 2": "currentGroup2P",
+    "Пар": "tParReceived"
 }
 
 let DataStore = {
@@ -85,11 +85,11 @@ let DataStore = {
             };
         });
     },
-    onRawDataUpdated(callback: Function) {
-        this.messageHandlers["rawDataSetting"] = callback;
+    on(eventName: string, callback: Function) {
+        this.messageHandlers[eventName] = callback;
     },
-    onRawInfoUpdated(callback: Function) {
-        this.messageHandlers["rawDataInfo"] = callback;
+    removeHandler(eventName) {
+        this.messageHandlers[eventName] = null;
     },
     _handleMessage(message): any {
         let result = JSON.parse(message);
@@ -99,7 +99,7 @@ let DataStore = {
                 case "rawDataSetting":
                     data = this._parseDataStructure(data, SettingsStruct);
                     break;
-                case "rawDataInfo":
+                case "currentInfoUpdate":
                     data = this._parseInfo(data, InfoStruct);
                     break;
             }

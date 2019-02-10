@@ -35,9 +35,9 @@ define('Coffee/Data/DataStore', [
     };
     exports.SettingsStruct = SettingsStruct;
     var InfoStruct = {
-        'Группа 1': 'g1Temp',
-        'Группа 2': 'g2Temp',
-        'Пар': 'steamTemp'
+        'Группа 1': 'currentGroup1P',
+        'Группа 2': 'currentGroup2P',
+        'Пар': 'tParReceived'
     };
     var DataStore = {
         socket: null,
@@ -90,11 +90,11 @@ define('Coffee/Data/DataStore', [
                 };
             });
         },
-        onRawDataUpdated: function (callback) {
-            this.messageHandlers['rawDataSetting'] = callback;
+        on: function (eventName, callback) {
+            this.messageHandlers[eventName] = callback;
         },
-        onRawInfoUpdated: function (callback) {
-            this.messageHandlers['rawDataInfo'] = callback;
+        removeHandler: function (eventName) {
+            this.messageHandlers[eventName] = null;
         },
         _handleMessage: function (message) {
             var result = JSON.parse(message);
@@ -104,7 +104,7 @@ define('Coffee/Data/DataStore', [
                 case 'rawDataSetting':
                     data = this._parseDataStructure(data, SettingsStruct);
                     break;
-                case 'rawDataInfo':
+                case 'currentInfoUpdate':
                     data = this._parseInfo(data, InfoStruct);
                     break;
                 }

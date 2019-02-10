@@ -4,9 +4,10 @@ define('Coffee/Info', [
     'exports',
     'tslib',
     'UI/Base',
-    'wml!Coffee/InfoPage/Info',
-    'css!Coffee/InfoPage/Info'
-], function (require, exports, tslib_1, Base_1, template) {
+    'wml!Coffee/Info/Info',
+    'Coffee/Data/DataStore',
+    'css!Coffee/Info/Info'
+], function (require, exports, tslib_1, Base_1, template, DataStore_1) {
     'use strict';
     var Info = /** @class */
     function (_super) {
@@ -14,8 +15,21 @@ define('Coffee/Info', [
         function Info() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this._template = template;
+            _this.currentInfo = {};
             return _this;
         }
+        Info.prototype.currentInfoUpdated = function (currentInfo) {
+            this.currentInfo = currentInfo;
+            this._forceUpdate();
+        };
+        ;
+        Info.prototype._beforeMount = function (opts) {
+            DataStore_1.DataStore.on('currentInfoUpdate', this.currentInfoUpdated.bind(this));
+        };
+        ;
+        Info.prototype._beforeUnmount = function () {
+            DataStore_1.DataStore.removeHandler('currentInfoUpdate');
+        };
         return Info;
     }(Base_1.Control);
     return Info;

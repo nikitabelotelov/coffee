@@ -76,11 +76,7 @@ global.settings = {
    aHot: 16
 };
 
-global.info = {
-   g1Temp: 95,
-   g2Temp: 93,
-   steamTemp: 110
-}
+global.currentInfo = {};
 
 var INTERVALS = [];
 
@@ -90,11 +86,11 @@ const wss = createServer(function connectionListener(ws) {
          ws.send(JSON.stringify(data));
       });
    }, 2000);
+
    setIntervalWrapper(() => {
-      getCurrentInfo().then((data) => {
-         ws.send(JSON.stringify(data));
-      });
-   }, 2000);
+      ws.send(JSON.stringify(getCurrentInfo()));
+   }, 1000);
+
    // Send alive-message every 2 seconds
    setIntervalWrapper(function aliveSender() {
       ws.send(JSON.stringify({type: "alive"}));
@@ -126,12 +122,10 @@ function getSettings() {
 }
 
 function getCurrentInfo() {
-   return new Promise((resolve) => {
-      resolve({
-         type: 'rawDataInfo',
-         data: global.info
-      });
-   });
+   return {
+      type: 'currentInfoUpdate',
+      data: global.currentInfo
+   };
 }
 
 app.get('/Update', (req, res) => {
@@ -158,5 +152,13 @@ function stopServers() {
    expressServer.close();
 }
 
-// global.originRequire('../serial-helper/serialHelper.js');
-// global.SerialHelper.SerialOpen();
+function handleCurrentInfoUpdated(receivedInfo) {
+   for(var key in receivedInfo) {
+      global.currentInfo[key] = receivedInfo[key];
+   }
+}
+
+global.originRequire('../serial-helper/serialHelper.js');
+global.SerialHelper.SerialOpen();
+global.SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);
+
