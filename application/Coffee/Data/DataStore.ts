@@ -39,6 +39,16 @@ let InfoStruct = {
 let DataStore = {
     socket: null,
     messageHandlers: new Array<Function>(),
+    initialSettings: null,
+    _serializeSettings(parsedSettings): any {
+        var data = {};
+        for (let i in parsedSettings) {
+            for (let j in parsedSettings[i]) {
+                data[parsedSettings[i][j].dataFieldName] = parsedSettings[i][j].value;
+            }
+        }
+        return data;
+    },
     _parseDataStructure(rawData, dataStruct): any {
         let result = {};
         for (let groupName in dataStruct) {
@@ -96,8 +106,9 @@ let DataStore = {
         let data = result.data;
         if (result.type) {
             switch (result.type) {
-                case "rawDataSetting":
+                case "initialSettings":
                     data = this._parseDataStructure(data, SettingsStruct);
+                    this.initialSettings = data;
                     break;
                 case "currentInfoUpdate":
                     data = this._parseInfo(data, InfoStruct);
@@ -107,6 +118,16 @@ let DataStore = {
                 this.messageHandlers[result.type].call(this, data);
             }
         }
+    },
+    getInitialSettings(): any {
+        return this.initialSettings;
+    },
+    sendSettings(settings): void {
+        if(!this.socket) {
+            return null;
+        }
+        let serialized = this._serializeSettings(settings);
+        this.socket.send(JSON.stringify({ type: "newSettings", data: serialized }));
     },
     closeConnection(): void {
         this.socket.close();

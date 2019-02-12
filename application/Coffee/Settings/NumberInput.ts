@@ -15,9 +15,11 @@ class Info extends Control {
     };
     private increment(): void {
         this.inputValue = this.inputValue + 1;
+        this._notify('valueChanged', [this.inputValue]);
     };
     private decrement(): void {
         this.inputValue = this.inputValue - 1;
+        this._notify('valueChanged', [this.inputValue]);
     }
 }
 

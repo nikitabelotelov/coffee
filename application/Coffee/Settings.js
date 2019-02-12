@@ -15,8 +15,27 @@ define('Coffee/Settings', [
         function Settings() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this._template = template;
+            _this.settingsInfo = {};
             return _this;
         }
+        Settings.prototype._beforeMount = function (opts) {
+            var _this = this;
+            var initialSettings = DataStore_1.DataStore.getInitialSettings();
+            if (initialSettings) {
+                this.settingsInfo = initialSettings;
+            } else {
+                DataStore_1.DataStore.on('initialSettings', function () {
+                    _this.settingsInfo = DataStore_1.DataStore.getInitialSettings();
+                    _this._forceUpdate();
+                    DataStore_1.DataStore.removeHandler('initialSettings');
+                });
+            }
+        };
+        ;
+        Settings.prototype.settingChangedHandler = function (event, value) {
+            DataStore_1.DataStore.sendSettings(this.settingsInfo);
+        };
+        ;
         Settings.prototype.checkUpdate = function () {
             DataStore_1.DataStore.closeConnection();
             setTimeout(function () {

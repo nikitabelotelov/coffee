@@ -81,11 +81,9 @@ global.currentInfo = {};
 var INTERVALS = [];
 
 const wss = createServer(function connectionListener(ws) {
-   setIntervalWrapper(() => {
-      getSettings().then((data) => {
-         ws.send(JSON.stringify(data));
-      });
-   }, 2000);
+   setTimeout(() => {
+      ws.send(JSON.stringify(getInitialSettings()));
+   }, 10000);
 
    setIntervalWrapper(() => {
       ws.send(JSON.stringify(getCurrentInfo()));
@@ -98,6 +96,10 @@ const wss = createServer(function connectionListener(ws) {
    ws.on('close', () => {
       stopAllIntervals();
    });
+   ws.on('message', (data) => {
+      handleMessage(JSON.parse(data));
+   });
+
 }).listen(8080, function() {
    const {address, port} = this.address() // this is the http[s].Server
    console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
@@ -105,20 +107,18 @@ const wss = createServer(function connectionListener(ws) {
 
 function handleMessage(data) {
    switch (data.type) {
-      case "getCurrentSettings":
-         return getSettings();
+      case "newSettings":
+         return sendSettings(data.data);
       default:
          return "wrong request";
    }
 }
 
-function getSettings() {
-   return new Promise((resolve) => {
-      resolve({
-         type: 'rawDataSetting',
-         data: global.settings
-      });
-   });
+function getInitialSettings() {
+   return {
+      type: 'initialSettings',
+      data: global.settings
+   };
 }
 
 function getCurrentInfo() {
@@ -153,9 +153,13 @@ function stopServers() {
 }
 
 function handleCurrentInfoUpdated(receivedInfo) {
-   for(var key in receivedInfo) {
+   for (var key in receivedInfo) {
       global.currentInfo[key] = receivedInfo[key];
    }
+}
+
+function sendSettings(data) {
+   global.SerialHelper.Transmit(data);
 }
 
 global.originRequire('../serial-helper/serialHelper.js');

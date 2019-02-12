@@ -22,10 +22,12 @@ define('Coffee/Settings/NumberInput', [
         ;
         Info.prototype.increment = function () {
             this.inputValue = this.inputValue + 1;
+            this._notify('valueChanged', [this.inputValue]);
         };
         ;
         Info.prototype.decrement = function () {
             this.inputValue = this.inputValue - 1;
+            this._notify('valueChanged', [this.inputValue]);
         };
         return Info;
     }(Base_1.Control);

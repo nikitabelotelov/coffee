@@ -1,6 +1,6 @@
 <div class="settings-page">
    <div class="settings-menu-master">
-      <ws:for data="key, data in _options.settingsInfo">
+      <ws:for data="key, data in settingsInfo">
          <Router.Link href="set/:id" id="{{ key }}">
             <div class="settings-list-item">
                {{ key }}
@@ -11,11 +11,11 @@
    <div class="content">
       <Router.Route mask="set/:pageId">
          <div class="settings-list-item">
-            <ws:if data="{{content.pageId !== undefined}}">
-               <ws:for data="name, fieldInfo in _options.settingsInfo[content.pageId]">
+            <ws:if data="{{content.pageId !== undefined && settingsInfo[content.pageId]}}">
+               <ws:for data="name, fieldInfo in settingsInfo[content.pageId]">
                   <div class="settings-detail-item">
                      <div class="settings-detail-name">{{name}}</div>
-                     <Coffee.Settings.NumberInput value="{{ fieldInfo.value }}"/>
+                     <Coffee.Settings.NumberInput bind:value="fieldInfo.value" on:valueChanged="settingChangedHandler()"/>
                   </div>
                </ws:for>
             </ws:if>

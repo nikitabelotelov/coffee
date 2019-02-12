@@ -42,6 +42,16 @@ define('Coffee/Data/DataStore', [
     var DataStore = {
         socket: null,
         messageHandlers: new Array(),
+        initialSettings: null,
+        _serializeSettings: function (parsedSettings) {
+            var data = {};
+            for (var i in parsedSettings) {
+                for (var j in parsedSettings[i]) {
+                    data[parsedSettings[i][j].dataFieldName] = parsedSettings[i][j].value;
+                }
+            }
+            return data;
+        },
         _parseDataStructure: function (rawData, dataStruct) {
             var result = {};
             for (var groupName in dataStruct) {
@@ -101,8 +111,9 @@ define('Coffee/Data/DataStore', [
             var data = result.data;
             if (result.type) {
                 switch (result.type) {
-                case 'rawDataSetting':
+                case 'initialSettings':
                     data = this._parseDataStructure(data, SettingsStruct);
+                    this.initialSettings = data;
                     break;
                 case 'currentInfoUpdate':
                     data = this._parseInfo(data, InfoStruct);
@@ -112,6 +123,19 @@ define('Coffee/Data/DataStore', [
                     this.messageHandlers[result.type].call(this, data);
                 }
             }
+        },
+        getInitialSettings: function () {
+            return this.initialSettings;
+        },
+        sendSettings: function (settings) {
+            if (!this.socket) {
+                return null;
+            }
+            var serialized = this._serializeSettings(settings);
+            this.socket.send(JSON.stringify({
+                type: 'newSettings',
+                data: serialized
+            }));
         },
         closeConnection: function () {
             this.socket.close();
