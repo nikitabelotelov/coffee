@@ -2,9 +2,7 @@
 //@ts-ignore
 import isEmpty = require('Core/helpers/Object/isEmpty');
 //@ts-ignore
-import loadContents = require('Core/load-contents');
-//@ts-ignore
-import constants = require('Core/constants');
+import { constants, loadContents } from 'Env/Env';
 
 const global = (function() {
    return this || (0, eval)('this');

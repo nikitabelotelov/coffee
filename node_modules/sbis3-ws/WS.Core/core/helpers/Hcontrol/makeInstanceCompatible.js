@@ -16,6 +16,15 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
    ];
 
    /**
+    * Есть модули, которые хотят внутри себя видить только чистый вдом. В таком случае
+    * не подмешиваем их детям слой совместимости, даже если они находятся на старой
+    * странице.
+    */
+   var cleanVdomContainers = [
+      'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
+   ];
+
+   /**
     * Есть ли указанный модуль в списке заблокированных для подмешивания
     * makeInstanceCompatible
     * @param {string} moduleName
@@ -42,6 +51,37 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
       if (!inst._mixins) {
          inst._mixins = [];
       }
+   }
+
+   // https://online.sbis.ru/opendoc.html?guid=ba5bf3a7-fb07-41a0-b830-e5a7649c15d3
+   // На старых страницах теперь используют вдомные EDO-опенеры для задач. При изменении
+   // задачи изнутри панели вызывается событие beforeItemEndEdit, которое позволяет
+   // например обновить строку реестра.
+   // Утверждается, что это событие всплывало до EDO-опенера, и через него наружу,
+   // в старое не-вдомное окружение. Подтвердить мне это не удалось (на моем старом
+   // стенде (январь) событие не всплывает дальше EDO-опенера), но у всплытия
+   // есть свидетели по ссылке выше.
+   // В 19.110 фиксим это, генерируя подписку на вдомное событие, и пробрасывая его в
+   // не-вдомное окружение. В 19.200 разбираемся, что же на самом деле произошло и
+   // удаляем этот код.
+   // https://online.sbis.ru/opendoc.html?guid=1dac6ffa-1382-42f8-bce7-349eb803f2ca
+   function fixEdoOpenerEvent(inst) {
+      var
+         container = inst._container.length ? inst._container[0] : inst._container,
+         handler = function() {
+            AbstractCompatible._notify.apply(this, ['beforeItemEndEdit', Array.prototype.slice.call(arguments, 1)]);
+         }.bind(inst);
+
+      handler.control = inst;
+
+      container.eventProperties = container.eventProperties || {};
+      container.eventProperties['on:beforeitemendedit'] = container.eventProperties['on:beforeitemendedit'] || [];
+      container.eventProperties['on:beforeitemendedit'].push({
+         args: [],
+         fn: handler,
+         name: 'event',
+         value: 'onBeforeItemEndEditHandler'
+      });
    }
 
    function doIt(inst, props, fromCtr) {
@@ -72,7 +112,7 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
 
       inst._getInternalOption = function(name) {
          var result;
-         if (this._internalOptions[name] !== undefined) {
+         if (this._internalOptions && this._internalOptions[name] !== undefined) {
             result = this._internalOptions[name];
          } else {
             result = BaseCompatible._getInternalOption.call(this, name);
@@ -160,9 +200,22 @@ define('Core/helpers/Hcontrol/makeInstanceCompatible', [
          inst._savedOptions = props || inst._options;
          inst._options = {};
       }
+
+      // На старых страницах EDO-опенер используется следующим образом:
+      // 1. Создается с помощью createControl
+      // 2. Сразу после создания для него вызывают makeInstanceCompatible
+      // Отлавливаем строго эту ситуацию, чтобы никак не влиять на другие
+      // компоненты, и генерируем подписку на необходимое событие.
+      // Будет удалено https://online.sbis.ru/opendoc.html?guid=1dac6ffa-1382-42f8-bce7-349eb803f2ca
+      if (inst._moduleName === 'EDO3/Opener/Dialog' && inst._$createdFromCode) {
+         fixEdoOpenerEvent(inst);
+      }
    }
 
    function needMix(cfg) {
+      if (cfg.parent && cleanVdomContainers.indexOf(cfg.parent._moduleName) >= 0) {
+         return false;
+      }
       if (cfg.parent && cfg.parent.hasCompatible && cfg.parent.hasCompatible()) {
          return true;
       }

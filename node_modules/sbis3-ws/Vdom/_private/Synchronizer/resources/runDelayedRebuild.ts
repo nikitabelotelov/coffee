@@ -2,6 +2,8 @@
 
 // @ts-ignore
 import * as runDelayed from 'Core/helpers/Function/runDelayed';
+// @ts-ignore
+import { detection } from 'Env/Env';
 
 var checkPageVisibility = function checkPageVisibility() {
    var hidden = null;
@@ -16,9 +18,16 @@ var checkPageVisibility = function checkPageVisibility() {
       }
    }
    return hidden;
-},
-   pageVisibility = checkPageVisibility();
-
+}, performingAnimation = false, pageVisibility = checkPageVisibility();
+function animationWaiterOff() {
+   performingAnimation = false;
+}
+export function animationWaiter(b) {
+   performingAnimation = b;
+   if (b === true) {
+      setTimeout(animationWaiterOff, 1000)
+   }
+}
 /**
  * Function runDelayedRebuild module <b>runDelayed(fn)</b>.
  *
@@ -37,6 +46,12 @@ var checkPageVisibility = function checkPageVisibility() {
 export default function runDelayedRebuild(fn) {
    if (pageVisibility && document[pageVisibility]) {
       setTimeout(fn, 0);
+   } else if (performingAnimation && detection.chrome) {
+      // @ts-ignore
+      if (window && window.requestIdleCallback) {
+         // @ts-ignore
+         window.requestIdleCallback(fn);
+      }
    } else {
       runDelayed(fn);
    }

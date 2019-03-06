@@ -4,7 +4,7 @@
    var global = (function(){ return this || (0,eval)('this'); }()),
        define = global.define || (global.requirejs && global.requirejs.define) || (requirejsVars && requirejsVars.define);
 
-   define('datasource', ['Core/pathResolver', 'Core/IoC', 'text'], function(pathResolver) {
+   define('datasource', ['Core/pathResolver', 'Env/Env', 'text'], function(pathResolver) {
       return {
          load: function(name, require, onLoad) {
             try {

@@ -1,7 +1,5 @@
-define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver", "Core/IoC", "Core/cookie", "Core/polyfill"], function (require, exports, constants, pathResolver, IoC, cookie) {
+define("Core/i18n", ["require", "exports", "Env/Env", "Core/Deferred", "Core/polyfill"], function (require, exports, Env_1, Deferred) {
     "use strict";
-    var directoryRegexp = /(.*\/)?(resources\/(.+?)|ws)\//;
-    var dblSlashes = /\\/g;
     var PLURAL_PREFIX = 'plural#';
     var PLURAL_DELIMITER = '|';
     var EXPIRES_COOKIES = 2920;
@@ -12,13 +10,13 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
     var global = (function () {
         return this || (0, eval)('this'); // eslint-disable-line no-eval
     })();
-    var localizationEnabled = constants.isServerScript ?
+    var localizationEnabled = Env_1.constants.isServerScript ?
         false :
-        (constants.isNodePlatform ?
+        (Env_1.constants.isNodePlatform ?
             true :
             (global.contents ?
                 !!global.contents.defaultLanguage :
-                constants.i18n));
+                Env_1.constants.i18n));
     function RkString(value, resolver) {
         Object.defineProperties(this, {
             translatedValue: {
@@ -40,6 +38,20 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
         return this.translatedValue;
     };
     /**
+     * Функция грузит модуль с мета-информацией интерфейсного модуля.
+     * @param nameModule - имя интерфейсного модуля.
+     * @returns {Promise}
+     */
+    function loadMetaInfo(nameModule) {
+        var def = new Deferred();
+        require([nameModule + "/.builder/module"], function (info) {
+            def.callback(info);
+        }, function (err) {
+            def.errback(err);
+        });
+        return def;
+    }
+    /**
      * Самый простой мерж, мы знаем, что всегда мержим объекты
      * @param {Object} to
      * @param {Object} from
@@ -53,23 +65,24 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
         return to;
     }
     /**
-     * Функция возращает сторку c параметрами в формате URL.
-     * Пример: '?param1=value1&param2=value2'
-     * @param qeury {Array} Массив параметорв запроса.
+     * Функция возращает URL c без указанного параметра.
+     * Пример: 'path/?param1=value1&param2=value2'
+     * @param request {Object} Тело запроса.
      * @param deleteParam {String} Имя парметра которое надо исключить.
      * @returns {string}
      */
-    function getUrlWithoutParam(qeury, deleteParam) {
-        if (Object.keys(qeury).length === 0 || Object.keys(qeury).length === 1 && qeury.hasOwnProperty(deleteParam)) {
-            return '';
+    function getUrlWithoutParam(request, deleteParam) {
+        var query = request.query;
+        if (Object.keys(query).length === 0 || Object.keys(query).length === 1 && query.hasOwnProperty(deleteParam)) {
+            return request.originalUrl;
         }
         var result = '?';
-        for (var name in qeury) {
+        for (var name in query) {
             if (name !== deleteParam) {
-                result += name + '=' + qeury[name] + '&';
+                result += name + '=' + query[name] + '&';
             }
         }
-        return result.slice(0, result.length - 1);
+        return request.originalUrl.split('?')[0] + result.slice(0, result.length - 1);
     }
     /**
      * Уставливает язык.
@@ -135,59 +148,80 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
             init();
         },
         /**
+         * Функция опрделения языка из настройки браузера.
+         */
+        detectLanguageBrowser: function () {
+            var _this = this;
+            var detectedLang = this.getDefaultLang();
+            var req = process.domain && process.domain.req;
+            var acceptLang = req && req.headers && req.headers['accept-language']
+                && req.headers['accept-language'].split(',');
+            if (acceptLang) {
+                acceptLang.some(function (langHeader) {
+                    var lang = langHeader.split(';')[0];
+                    if (lang.includes('-') && _this.hasLang(lang)) {
+                        detectedLang = lang;
+                        return true;
+                    }
+                    else if (!lang.includes('-')) {
+                        for (var locale in _this.getAvailableLang()) {
+                            if (locale.startsWith(lang)) {
+                                detectedLang = locale;
+                                return true;
+                            }
+                        }
+                    }
+                });
+            }
+            return detectedLang;
+        },
+        /**
+         * Переключает язык на сервисе представлений.
+         * @param lang
+         */
+        _setLangOnNode: function (lang) {
+            var request = process.domain && process.domain.req;
+            var respond = process.domain && process.domain.res;
+            if (request && respond && !(respond.cookies && respond.cookies.hasOwnProperty('lang'))) {
+                Env_1.cookie.set('lang', lang, {
+                    expires: EXPIRES_COOKIES,
+                    path: '/'
+                });
+                respond.redirect(getUrlWithoutParam(request, 'lang'));
+            }
+        },
+        /**
          * Возвращает кодовое обозначение локали того языка, на который локализована данная страница веб-приложения.
          * @deprecated Используйте метод {@link getLang}.
          */
         detectLanguage: function () {
-            if (constants.isServerScript) {
-                return '';
-            }
-            if (constants.isNodePlatform) {
-                // <editor-fold desc="TODO">
-                // TODO: Когда все сайты будут с локализацией, корректное определение языка будет такое:
-                // var req = process.domain && process.domain.req,
-                //     cookie = req && req.cookies,
-                //     acceptLanguage = req && req.headers && req.headers['accept-language']
-                //       && req.headers['accept-language'].substr(0, 5),
-                //     lang = (cookie && cookie.lang) ||
-                //       (acceptLanguage && langReg.test(acceptLanguage) && acceptLanguage) || '';
-                //
-                // if (cookie) {
-                //    cookie.lang = lang;
-                // }
-                // return lang;
-                // </editor-fold>
-                // Мы на препроцессоре, язык попробуем определить из куки
-                var detectedLng = constants.defaultLanguage;
-                var request = process.domain && process.domain.req;
-                if (request) {
-                    var reqCookie = request.cookies && request.cookies.lang;
-                    var queryLang = request.query && request.query.lang;
-                    var respond = process.domain.res;
-                    detectedLng = queryLang || reqCookie || detectedLng;
-                    detectedLng = this.hasLang(detectedLng) ? detectedLng : this.getDefaultLang();
-                    if (respond && !(respond.cookies && respond.cookies.hasOwnProperty('lang')) && queryLang) {
-                        cookie.set('lang', detectedLng, {
-                            expires: EXPIRES_COOKIES,
-                            path: '/'
-                        });
-                        var redirectUrl = request.path + getUrlWithoutParam(request.query, 'lang');
-                        respond.redirect(redirectUrl);
+            if (this.isEnabled()) {
+                if (Env_1.constants.isNodePlatform) {
+                    var detectedLang = this.getDefaultLang();
+                    var request = process.domain && process.domain.req;
+                    if (request) {
+                        var reqCookie = request.cookies && request.cookies.lang;
+                        var queryLang = request.query && request.query.lang;
+                        detectedLang = queryLang || reqCookie || this.detectLanguageBrowser();
+                        detectedLang = this.hasLang(detectedLang) ? detectedLang : this.getDefaultLang();
+                        if (queryLang || !reqCookie) {
+                            this._setLangOnNode(detectedLang);
+                        }
                     }
+                    return detectedLang;
                 }
-                return detectedLng;
-            }
-            if (localizationEnabled) {
-                var avLang = this.getAvailableLang();
-                var detectedLng = cookie.get('lang') || '';
-                if (!detectedLng) {
-                    detectedLng = constants.defaultLanguage || (global.contents && global.contents.defaultLanguage);
+                if (Env_1.constants.isBrowserPlatform) {
+                    var avLang = this.getAvailableLang();
+                    var detectedLng = Env_1.cookie.get('lang') || '';
+                    if (!detectedLng) {
+                        detectedLng = Env_1.constants.defaultLanguage || (global.contents && global.contents.defaultLanguage);
+                    }
+                    // Если уже ничто не помогло, Возьмем первый язык из доступных
+                    if (!detectedLng || detectedLng.length !== 5 || !avLang[detectedLng]) {
+                        detectedLng = Object.keys(avLang)[0] || '';
+                    }
+                    return detectedLng;
                 }
-                // Если уже ничто не помогло, Возьмем первый язык из доступных
-                if (!detectedLng || detectedLng.length !== 5 || !avLang[detectedLng]) {
-                    detectedLng = Object.keys(avLang)[0] || '';
-                }
-                return detectedLng;
             }
             return '';
         },
@@ -197,7 +231,7 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
          * @see detectLanguage
          */
         getDefaultLang: function () {
-            return constants.defaultLanguage || 'ru-RU';
+            return Env_1.constants.defaultLanguage || 'ru-RU';
         },
         /**
          * Возвращает кодовое обозначение локали того языка, на который локализована данная страница веб-приложения.
@@ -209,14 +243,13 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
          * @see setLang
          */
         getLang: function () {
-            if (constants.isServerScript) {
-                return '';
-            }
-            if (constants.isNodePlatform) {
-                return this.detectLanguage();
-            }
-            if (localizationEnabled) {
-                return this._currentLang;
+            if (this.isEnabled()) {
+                if (Env_1.constants.isNodePlatform) {
+                    return this.detectLanguage();
+                }
+                if (Env_1.constants.isBrowserPlatform) {
+                    return this._currentLang;
+                }
             }
             return '';
         },
@@ -239,6 +272,38 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
             return availableLanguage;
         },
         /**
+         * Метод возращает информацию о словарях поддерживаемых интерфейсным модулем.
+         * @param nameModule - имя интерфейсного модуля
+         * @returns {Promise}
+         * @see isProcessedModule
+         */
+        getDictModule: function (nameModule) {
+            if (this.isProcessedModule(nameModule)) {
+                return this._modulesDict[nameModule];
+            }
+            this._modulesDict[nameModule] = loadMetaInfo(nameModule).addCallback(function (info) {
+                var infoDict = {};
+                if (info.dict) {
+                    for (var _i = 0, _a = info.dict; _i < _a.length; _i++) {
+                        var nameDict = _a[_i];
+                        var langAndExtDict = nameDict.split('.');
+                        infoDict[langAndExtDict[0]] = infoDict[langAndExtDict[0]] || [];
+                        infoDict[langAndExtDict[0]].push(langAndExtDict[1] ? langAndExtDict[1] : 'json');
+                    }
+                }
+                return infoDict;
+            });
+            return this._modulesDict[nameModule];
+        },
+        /**
+         * Функция проверяет, что интерфейсный модуль ещё не обрабатывается.
+         * @param nameModule - имя интерфейсного модуля.
+         * @returns {Boolean}
+         */
+        isProcessedModule: function (nameModule) {
+            return this._modulesDict.hasOwnProperty(nameModule);
+        },
+        /**
          * Возвращает признак: может ли веб-приложение локализовано на указанный язык.
          * @param {String} language <a href="/doc/platform/developmentapl/internalization/locale/">Кодовое обозначение локали</a>.
          * @returns {Boolean}
@@ -257,22 +322,18 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
          */
         setLang: function (language) {
             var _this = this;
-            if (constants.isServerScript || constants.isNodePlatform) {
+            if (Env_1.constants.isServerScript || Env_1.constants.isNodePlatform) {
                 return false;
             }
-            if (localizationEnabled) {
+            if (this.isEnabled()) {
                 var changeLang = false, oldLang_1 = this._currentLang, currentLang_1;
                 if (language && typeof (language) === 'string' && /..-../.test(language) && language !== this._currentLang) {
                     var parts = language.split('-');
                     this._currentLang = parts[0].toLowerCase() + "-" + parts[1].toUpperCase();
                     changeLang = true;
                 }
-                if (!language) {
-                    this._currentLang = '';
-                    changeLang = true;
-                }
                 if (changeLang) {
-                    cookie.set('lang', this._currentLang || null, {
+                    Env_1.cookie.set('lang', this._currentLang, {
                         expires: EXPIRES_COOKIES,
                         path: '/'
                     });
@@ -286,9 +347,6 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
                 }
                 return changeLang;
             }
-            cookie.set('lang', null, {
-                path: '/'
-            });
             document.addEventListener('DOMContentLoaded', function () {
                 if (document.body.classList.length && _this._currentLang) {
                     document.body.classList.remove(_this._currentLang);
@@ -316,7 +374,7 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
                 ctx = '';
             }
             retValue = key;
-            if (!constants.isServerScript && (constants.isNodePlatform || localizationEnabled)) {
+            if (!Env_1.constants.isServerScript && this.isEnabled()) {
                 lang = this.getLang();
                 if (lang && this._dict[lang]) {
                     if (num !== undefined) {
@@ -328,7 +386,6 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
                     }
                 }
             }
-            // Простое экранирование
             return retValue;
         },
         /**
@@ -364,7 +421,7 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
                 // Если в ключе есть русские буквы, значит нужно поругаться,
                 // иначе это может быть пробел или символ из шаблона
                 if (/[А-Яа-яA-Za-z]+/.test(key)) {
-                    IoC.resolve('ILogger').error('Localization', "\u0414\u043B\u044F \u043A\u043B\u044E\u0447\u0430 " + key + " \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0432 \u0441\u043B\u043E\u0432\u0430\u0440\u0435.");
+                    Env_1.IoC.resolve('ILogger').error('Localization', "\u0414\u043B\u044F \u043A\u043B\u044E\u0447\u0430 " + key + " \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0432 \u0441\u043B\u043E\u0432\u0430\u0440\u0435.");
                 }
             }
             return undefined;
@@ -408,44 +465,8 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
          * @see hasDict
          * @see setDict
          */
-        getDictPath: function (moduleName, lang, ext) {
-            var modulePath = pathResolver.resolveComponentPath(moduleName);
-            var dictionary = constants.dictionary || {};
-            if (Object.keys(dictionary).length === 0) {
-                if (typeof global.contents !== 'undefined') {
-                    dictionary = global.contents.dictionary || {};
-                }
-                else if (constants.isNodePlatform) {
-                    var contents = process.domain && process.domain.service && process.domain.service.getContents();
-                    dictionary = contents && contents.dictionary || {};
-                }
-            }
-            var resolveByRequire = false;
-            if (!modulePath) {
-                resolveByRequire = true;
-                modulePath = moduleName;
-            }
-            else if (modulePath.indexOf('/') === 0) {
-                resolveByRequire = true;
-                modulePath = modulePath.slice(1);
-            }
-            if (resolveByRequire) {
-                if (modulePath.substr(-ext.length - 1).indexOf("." + ext) !== 0) {
-                    modulePath = modulePath + "." + ext;
-                }
-                modulePath = global.requirejs.toUrl(modulePath);
-            }
-            modulePath = modulePath.replace(dblSlashes, '/');
-            var matched = modulePath.match(directoryRegexp);
-            var firstLevelDir = matched && (matched[3] || matched[2]);
-            var dictPath;
-            if (firstLevelDir && dictionary[firstLevelDir + "." + lang + "." + ext]) {
-                if (firstLevelDir === 'ws') {
-                    firstLevelDir = 'WS';
-                }
-                dictPath = firstLevelDir + "/lang/" + lang + "/" + lang + "." + ext;
-            }
-            return dictPath;
+        getPathToDict: function (moduleName, lang, ext) {
+            return moduleName + "/lang/" + lang + "/" + lang + "." + ext;
         },
         _plural: function (str, num) {
             if (str !== undefined) {
@@ -498,6 +519,7 @@ define("Core/i18n", ["require", "exports", "Core/constants", "Core/pathResolver"
             return word1;
         },
         __init: false,
+        _modulesDict: {},
         /** Разделитель между контекстом и ключом */
         _separator: '@@',
         /** Текущий язык */

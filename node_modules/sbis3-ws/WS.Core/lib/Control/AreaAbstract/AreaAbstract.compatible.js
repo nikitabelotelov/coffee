@@ -9,10 +9,8 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
    "Core/WindowManager",
    'Core/helpers/Object/find',
    'Core/helpers/Array/findIndex',
-   "Core/constants",
+   'Env/Env',
    "Core/Deferred",
-   'Core/detection',
-   'Core/IoC',
    "Lib/Control/AttributeCfgParser/AttributeCfgParser",
    'Core/helpers/String/escapeHtml',
    'Core/core-classicExtend',
@@ -31,10 +29,8 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
    WindowManager,
    objectFind,
    arrayFindIndex,
-   cConstants,
+   Env,
    cDeferred,
-   cDetection,
-   IoC,
    attributeCfgParser,
    escapeHtml,
    classicExtend,
@@ -723,7 +719,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
        */
       _oldKeyboardHover: function(e){
          if(e.which in this._keysWeHandle){
-            if(e.which == cConstants.key.enter) {
+            if(e.which == Env.constants.key.enter) {
                if(!(e.altKey || e.shiftKey) && (e.ctrlKey || e.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
                   if (!this._defaultAction) {
                      return true;
@@ -731,7 +727,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
                   return this._defaultAction(e);
                }
             }
-            if(e.which == cConstants.key.tab){
+            if(e.which == Env.constants.key.tab){
                var curControl = $(e.target).wsControl(),
                   parentControl = curControl && curControl.getParent();
                if (parentControl && !cInstance.instanceOfMixin(parentControl, 'Lib/Mixins/CompoundActiveFixMixin') && parentControl.moveFocus) {
@@ -789,7 +785,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
        */
       _activateSiblingControlOrSelf: function(isShiftKey, searchFrom, noFocus) {
          if (isElementVisible(this.getContainer())) {
-            if (cDetection.isMobilePlatform) {
+            if (Env.detection.isMobilePlatform) {
                activateSiblingControlOrSelfInt(this, isShiftKey, searchFrom, noFocus);
             } else {
                baseControl.ControlBatchUpdater.runBatchedDelayedAction('AreaAbstract.activateSiblingControlOrSelf', [this, isShiftKey, searchFrom, noFocus]);
@@ -820,26 +816,28 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
          }
 
          // не устанавливаем фокус на контрол, который не может принять этот фокус
-         if (!this._isControlActive && this._canAreaAcceptFocus() && (!this.isEnabled || this.isEnabled())) {
-            this._isControlActive = true;
-            this._updateActiveStyles();
+         if (this._canAreaAcceptFocus() && (!this.isEnabled || this.isEnabled())) {
+            if (!this._isControlActive) {
+               this._isControlActive = true;
+               this._updateActiveStyles();
 
-            this._notify('onActivate');
-            this._notify('onFocusIn');
+               this._notify('onActivate');
+               this._notify('onFocusIn');
+            }
 
             // В юнит тестах нет контейнера, поэтому фокусировать некуда
             // мы смотрим только на свойство _isControlActive у инстанса
             if (!dontChangeDomFocus && this._isControlActive && this._container) {
                if (this._container.length) {
                   if (!$.contains(this._container[0], document.activeElement)) {
-                     if (cDetection.isMobilePlatform) {
+                     if (Env.detection.isMobilePlatform) {
                         focusControl(this);
                      } else {
                         baseControl.ControlBatchUpdater.runBatchedDelayedAction('Control.focus', [this]);
                      }
                   }
                } else {
-                  IoC.resolve('ILogger').error("AreaAbstract", "У компонента '" + this._moduleName + "' неправильно задан контейнер _container. В нем нет ни одного элемента.");
+                  Env.IoC.resolve('ILogger').error("AreaAbstract", "У компонента '" + this._moduleName + "' неправильно задан контейнер _container. В нем нет ни одного элемента.");
                }
             }
          }
@@ -1275,11 +1273,9 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
             childs = this._childControls || [],
             result = this._canAreaAcceptFocus();
 
-         if (isNewEnvironment()) {
-            childs = childs.filter(function(child) {
-               return child.isVisible();
-            });
-         }
+         childs = childs.filter(function(child) {
+            return child.isVisible();
+         });
 
          if (result) {
             //Если дочерние контролы есть, то canAcceptFocus зависит от них. Если нет, то от своего isEnabled
@@ -1685,8 +1681,8 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
             this._container.unbind('mousedown.fxselect');
             this._container.unbind('onReady');
 
-            cConstants.$win.unbind('resize.'+this.getId());
-            cConstants.$doc.unbind('mousedown.'+this.getId());
+            Env.constants.$win.unbind('resize.'+this.getId());
+            Env.constants.$doc.unbind('mousedown.'+this.getId());
 
             WindowManager.removeWindow(this);
 
@@ -1780,7 +1776,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
          }
 
          if (opener && !(opener instanceof  baseControl.Control || opener._template)) {
-            IoC.resolve('ILogger').error("AreaAbstract", "Ошибка при установке свойства opener, который не является ни контролом, ни null");
+            Env.IoC.resolve('ILogger').error("AreaAbstract", "Ошибка при установке свойства opener, который не является ни контролом, ни null");
             return;
          }
 
@@ -1991,7 +1987,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract.compatible', [
             var oldParent = control.getParent();
             if(oldParent){
                if (oldParent !== this || this._childsMapId[control.getId()]) {
-                  IoC.resolve('ILogger').error('AreaAbstract::registerChildControl',
+                  Env.IoC.resolve('ILogger').error('AreaAbstract::registerChildControl',
                      rk('Нельзя зарегистрировать этот контрол:') + ' (' + control.getId() + ') ' + rk("в контроле:") + ' ' +
                      this.getId() + ', ' + rk("у него уже есть родитель:") + ' ' + oldParent.getId());
                }

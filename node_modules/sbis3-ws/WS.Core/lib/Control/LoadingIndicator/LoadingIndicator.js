@@ -13,12 +13,12 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
    "Lib/Control/ProgressBar/ProgressBar",
    "Lib/Control/ModalOverlay/ModalOverlay",
    "Core/helpers/String/escapeTagsFromStr",
-   "Core/constants",
+   'Env/Env',
    "Core/Deferred",
    "css!Lib/Control/LoadingIndicator/LoadingIndicator",
    "i18n!Lib/Control/LoadingIndicator/LoadingIndicator"
 ],
-   function(WindowManager, isNewEnvironment, Control, dotTplFn, Window, ProgressBar, ModalOverlay, escapeTagsFromStr, coreConst, Deferred) {
+   function(WindowManager, isNewEnvironment, Control, dotTplFn, Window, ProgressBar, ModalOverlay, escapeTagsFromStr, Env, Deferred) {
 
    'use strict';
 
@@ -88,7 +88,7 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
     });
    
       var toggleDelayClasses = function(add) {
-         var body = $(coreConst.$body);
+         var body = $(Env.constants.$body);
 
          if (this._options.showInWindow) {
             if (add) {
@@ -370,7 +370,7 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
          }
       },
       $constructor: function(){
-         if (!isNewEnvironment()) {
+         if (!this._isNewEnvironment()) {
             this._redraw();
          }
       },
@@ -486,7 +486,7 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
        * @see message
        */
       setMessage: function(message){
-         if (isNewEnvironment()) {
+         if (this._isNewEnvironment()) {
             requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
                ManagerController.getIndicator().show({message: message});
             });
@@ -805,7 +805,7 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
       },
 
       hide: function() {
-         if (isNewEnvironment()) {
+         if (this._isNewEnvironment()) {
             requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
                ManagerController.getIndicator().hide();
             });
@@ -828,7 +828,7 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
       },
 
       show: function() {
-         if (isNewEnvironment()) {
+         if (this._isNewEnvironment()) {
             requirejs(['Controls/Popup/Manager/ManagerController'], function (ManagerController) {
                ManagerController.getIndicator().show({delay: 2000});
             });
@@ -866,7 +866,7 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
       },
 
       destroy: function() {
-         if (isNewEnvironment()) {
+         if (this._isNewEnvironment()) {
             requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
                ManagerController.getIndicator().hide();
             });
@@ -879,6 +879,13 @@ define('Lib/Control/LoadingIndicator/LoadingIndicator',
             }
          }
          wsLoadingIndicator.superclass.destroy.apply(this, arguments);
+      },
+      _isNewEnvironment: function() {
+         // Отключил показ вдомных индикаторов, открываемых через старые контролы.
+         // Сейчас получается разница в логике, новые индикаторы показываются всегда выше всех
+         // Старые показываются выше окон, открытых на текущий момент
+         // В старых шаблонах пользователи написали код с расчетом на такое поведение, что их окно может открыться поверх индикатора.
+         return false;
       }
    });
 

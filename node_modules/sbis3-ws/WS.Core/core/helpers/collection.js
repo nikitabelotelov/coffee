@@ -1,7 +1,7 @@
 define('Core/helpers/collection', [
    'Core/helpers/Function/callNext',
-   'Core/EventBus'
-], function(callNext, EventBus) {
+   'Env/Event'
+], function(callNext, EnvEvent) {
 
    /**
     *
@@ -9,7 +9,7 @@ define('Core/helpers/collection', [
     * @returns {*}
     */
    return function collection(arr) {
-      arr._eventBusChannel = EventBus.channel({
+      arr._eventBusChannel = EnvEvent.Bus.channel({
          strictMode: true
       });
       arr._eventBusChannel.publish("onChange", "onRemoveItem", "onInsertItem", "onMove", "onChangeOrder");

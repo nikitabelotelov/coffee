@@ -1,7 +1,7 @@
 /// <amd-module name="Vdom/_private/Synchronizer/resources/DirtyChecking" />
 
 // @ts-ignore
-import * as isJs from 'Core/constants';
+import { constants as isJs } from 'Env/Env';
 import { mapM, createWriterMonad } from '../../Utils/Monad';
 import { composeWithResultApply } from '../../Utils/Functional';
 import { Subscriber } from 'View/Executor/Expressions';
@@ -56,6 +56,10 @@ function getModuleDefaultCtor(mod) {
    return typeof mod === 'function' ? mod : mod['constructor'];
 }
 
+function isObjectDate(obj) {
+   return Object.prototype.toString.call(obj) === '[object Date]';
+}
+
 var
    ARR_EMPTY = [],
    INVALID_CONTEXT = {};
@@ -106,6 +110,22 @@ function collectObjectVersions(collection) {
       if (collection.hasOwnProperty(key)) {
          if (collection[key] && collection[key].getVersion) {
             versions[key] = collection[key].getVersion();
+         } else if (collection[key] && collection[key].isDataArray) {
+            
+            //тут нужно собрать версии всех объектов,
+            //которые используются внутри контентных опций
+            //здесь учитывается кейс, когда внутри контентной опции
+            //есть контентная опция
+            //по итогу получаем плоский список всех версий всех объектов
+            //внутри контентных опций
+            for (var kfn = 0; kfn < collection[key].length; kfn++) {
+               var innerVersions = collectObjectVersions(collection[key][kfn].internal || {});
+               for(var innerKey in innerVersions) {
+                  if (innerVersions.hasOwnProperty(innerKey)) {
+                     versions[key + ';' + kfn + ';' + innerKey] = innerVersions[innerKey];
+                  }
+               }
+            }
          }
       }
    }
@@ -120,7 +140,7 @@ function checkIsVersionableObject(newOption, oldOptionsVersions) {
    return typeof newOption === 'object' && newOption && oldOptionsVersions && newOption.getVersion;
 }
 
-function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking?, oldOptionsVersions?, checkOldValue?) {
+function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking?, oldOptionsVersions?, checkOldValue?, prefix?) {
    var
       i,
       def,
@@ -159,10 +179,11 @@ function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking?, oldOpti
             if (newOptions[i] === oldOptions[i]) {
                if (checkIsVersionableObject(newOptions[i], oldOptionsVersions)) {
                   var newVersion = newOptions[i].getVersion();
-                  if (oldOptionsVersions[i] !== newVersion) {
-                     oldOptionsVersions[i] = newVersion;
+                  var checkPrefix = prefix || '';
+                  if (oldOptionsVersions[checkPrefix + i] !== newVersion) {
                      changed = true;
                      changedOptions[i] = newOptions[i];
+                     oldOptionsVersions[checkPrefix + i] = newVersion;
                   } else if (Array.isArray(newOptions[i]) && newOptions[i]) {
                      if (!newOptions[i].isDataArray) {
                         changed = true;
@@ -182,13 +203,14 @@ function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking?, oldOpti
                         continue;
                      }
                      for (var kfn = 0; kfn < newOptions[i].length; kfn++) {
-                        var ch = getChangedOptions(
-                           getInternalOptions(newOptions[i][kfn]),
-                           getInternalOptions(oldOptions[i][kfn]),
-                           false,
-                           oldOptionsVersions,
-                           checkOldValue
-                        );
+                        var localPrefix = i + ';' + kfn + ';';
+                        if (prefix) {
+                           localPrefix = prefix + localPrefix;
+                        }
+                        var ch = getChangedOptions(getInternalOptions(newOptions[i][kfn]),
+                                 getInternalOptions(oldOptions[i][kfn]), false,
+                                 oldOptionsVersions, checkOldValue, localPrefix);
+
                         if (ch) {
                            changed = true;
                            changedOptions[i] = newOptions[i];
@@ -196,11 +218,66 @@ function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking?, oldOpti
                         }
                      }
                   }
+               } else if (i.indexOf('__dirtyCheckingVars_') > -1 &&  typeof oldOptions[i] === 'object'
+                  &&  typeof newOptions[i] === 'object' && newOptions[i] && oldOptions[i] &&
+                   /* We don't need to check Date object internal properties */ !isObjectDate(newOptions[i])) {
+
+                  //Object inside __dirtyChecking must be checked, it can be "scope=object" in subcontrol
+
+                  if(newOptions[i] !== oldOptions[i]) {
+                     changed = true;
+                     changedOptions[i] = newOptions[i];
+                     break;
+                  } else {
+                     var innerCh = getChangedOptions(
+                         newOptions[i],
+                         oldOptions[i],
+                         true,
+                         {},
+                         true
+                     );
+
+                     if (innerCh) {
+                        changed = true;
+                        changedOptions[i] = newOptions[i];
+                        break;
+                     }
+                  }
                } else {
-                  changed = true;
-                  changedOptions[i] = newOptions[i];
-                  if (checkIsVersionableObject(newOptions[i], oldOptionsVersions)) {
-                     oldOptionsVersions[i] = newOptions[i].getVersion();
+
+                  /*Есть такой кейс, когда объекты всегда новые, но они равны
+                  * поставим флажок в объект, который заставит нас смотреть только на версию*/
+                  if (newOptions[i] && newOptions[i]._preferVersionAPI) {
+                     let newVersion = newOptions[i].getVersion();
+                     let secCheckPrefix = prefix || '';
+                     if (oldOptionsVersions[secCheckPrefix + i] !== newVersion) {
+                        changed = true;
+                        changedOptions[i] = newOptions[i];
+                        oldOptionsVersions[secCheckPrefix + i] = newVersion;
+                        break;
+                     }
+                  } else if (newOptions[i] && newOptions[i]._isDeepChecking && oldOptions[i] && oldOptions[i]._isDeepChecking) {
+                     let innerCh = getChangedOptions(
+                        newOptions[i],
+                        oldOptions[i],
+                        true,
+                        {},
+                        true
+                     );
+                     if (innerCh) {
+                        changed = true;
+                        changedOptions[i] = newOptions[i];
+                        break;
+                     }
+                  } else {
+                     if (newOptions[i] && newOptions[i]._ignoreChanging) {
+                        continue;
+                     }
+                     changed = true;
+                     changedOptions[i] = newOptions[i];
+                     if (checkIsVersionableObject(newOptions[i], oldOptionsVersions)) {
+                        oldOptionsVersions[ (prefix || '') + i] = newOptions[i].getVersion();
+                     }
                   }
                }
             }
@@ -426,6 +503,11 @@ export function destroyReqursive(childControlNode, environment) {
          // этого не должно произойти, иначе синхронизатор упадет
          childControlNode.control.__$destroyFromDirtyChecking = true;
          childControlNode.control.destroy();
+         delete childControlNode.controlProperties;
+         delete childControlNode.oldOptions;
+         delete childControlNode.element;
+         delete childControlNode.fullMarkup;
+         delete childControlNode.markup;
          if (
             childControlNode.control._logicParent &&
             childControlNode.control._logicParent._template &&
@@ -505,7 +587,7 @@ export function rebuildNode(environment, dirties, node, force, isRoot) {
             try {
                // Forbid force update in the time between _beforeUpdate and _afterUpdate
                //newNode.control._canForceUpdate = false;
-               newNode.control._beforeUpdate(newNode.options, resolvedContext);
+               newNode.control.__beforeUpdate(newNode.options, resolvedContext);
             } catch (error) {
                Logger.catchLifeCircleErrors('_beforeUpdate', error);
             }
@@ -835,7 +917,7 @@ export function rebuildNode(environment, dirties, node, force, isRoot) {
                             childControlNode.parent.control._moduleName);
 
                         // Forbid force update in the time between _beforeUpdate and _afterUpdate
-                        childControl._beforeUpdate && childControl._beforeUpdate(newOptions, resolvedContext);
+                        childControl._beforeUpdate && childControl.__beforeUpdate(newOptions, resolvedContext);
                         childControl._options = newOptions;
                         shouldUpdate =
                            (childControl._shouldUpdate

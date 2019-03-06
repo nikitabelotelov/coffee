@@ -1,9 +1,8 @@
 define('Lib/Mixins/DataBoundMixin', [
    'Core/helpers/Number/randomId',
-   'Core/IoC',
-   'Core/ConsoleLogger',
+   'Env/Env',
    'i18n!Lib/Mixins/DataBoundMixin'
-], function(randomId, IoC) {
+], function(randomId, Env) {
 
    /**
     * @class Lib/Mixins/DataBoundMixin
@@ -17,7 +16,7 @@ define('Lib/Mixins/DataBoundMixin', [
        * @remark
        * Событие происходит как при удачном, так и неудачном прохождении валидации.
        * Оно несёт информирующую функцию и не является заменой самой валидации!
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Boolean} validationResult Результат валидации: пройдена успешно (true), возникли ошибки (false).
        * @param {Array} validationErrors С какими ошибками контрол прошёл валидацию.
        * @param {Boolean} previousValidation Результат предыдущей валидации: пройдена успешно (true), возникли ошибки (false).
@@ -36,7 +35,7 @@ define('Lib/Mixins/DataBoundMixin', [
        * @event onValueChange При изменении значения контрола
        * @remark
        * Событие происходит при любом изменении значения контрола: смена пользователем, через контекст или методом {@link setValue}.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {*} value Новое значение контрола.
        * @example
        * Запустим проверку прохождения валидации контролом при каждом изменении его значения.
@@ -471,7 +470,7 @@ define('Lib/Mixins/DataBoundMixin', [
             try {
                res = currValidator.validator.apply(this, currValidator.params || []);
             } catch(e) {
-               IoC.resolve('ILogger').log("Control with name " + this.getName(), "Exception while validating " + e.message);
+               Env.IoC.resolve('ILogger').log("Control with name " + this.getName(), "Exception while validating " + e.message);
             }
 
             if (res !== true) { // Валидация не успешна

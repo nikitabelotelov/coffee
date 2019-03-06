@@ -1,8 +1,8 @@
 define('Core/app-init',
    [
-      'Core/load-contents',
+      
       'Core/core-merge',
-      'Core/constants',
+      'Env/Env',
       'Core/Themes/ThemesController',
       'native-css',
       'Core/patchRequireJS',
@@ -10,12 +10,11 @@ define('Core/app-init',
       'View/_Request/createDefault',
       'Controls/Application/StateReceiver',
       'Core/polyfill',
-      'Core/polyfill/PromiseAPIDeferred',
-      'Core/ConsoleLogger'
+      'Core/polyfill/PromiseAPIDeferred'
    ], function(
-      loadContents,
+      
       cMerge,
-      _const,
+      Env,
       ThemesController,
       nativeCss,
       patchRequireJS,
@@ -118,7 +117,7 @@ define('Core/app-init',
 
 
       return function() {
-         cMerge(_const, window.wsConfig || {}, { rec: false });
+         cMerge(Env.constants, window.wsConfig || {}, { rec: false });
 
          //TODO: убрать этот костыль когда Дима пофиксит ошибку https://online.sbis.ru/opendoc.html?guid=a7c9a632-f24e-44e2-9a53-285879d789b1
          getAllComments(document.body).forEach(function(elem) {
@@ -126,7 +125,7 @@ define('Core/app-init',
          });
 
 
-         loadContents(window.contents, false, {
+         Env.loadContents(window.contents, false, {
             resources: wsConfig.resourceRoot
          });
       };

@@ -7,9 +7,7 @@
 import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
-interface MapFunc {
-   (item: any, index: number): any;
-}
+type MapFunc = (item: any, index: number) => any;
 
 export default class MappedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]' = true;
@@ -59,13 +57,10 @@ export default class MappedEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-MappedEnumerator.prototype.previous = null;
-// @ts-ignore
-MappedEnumerator.prototype.callback = null;
-// @ts-ignore
-MappedEnumerator.prototype.callbackContext = null;
-// @ts-ignore
-MappedEnumerator.prototype.enumerator = null;
-// @ts-ignore
-MappedEnumerator.prototype.current = null;
+Object.assign(MappedEnumerator.prototype, {
+   previous: null,
+   callback: null,
+   callbackContext: null,
+   enumerator: null,
+   current: null
+});

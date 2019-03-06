@@ -1,11 +1,6 @@
 /// <amd-module name="Vdom/_private/Synchronizer/resources/DOMEnvironment" />
-
-// @ts-ignore
-import * as coreDebug from 'Core/core-debug';
-// @ts-ignore
-import * as constants from 'Core/constants';
-// @ts-ignore
-import * as IoC from 'Core/IoC';
+//@ts-ignore
+import { constants, detection, IoC, coreDebug } from 'Env/Env';
 // @ts-ignore
 import * as findIndex from 'Core/helpers/Array/findIndex';
 // @ts-ignore
@@ -15,11 +10,9 @@ import { mapVNode } from './VdomMarkup';
 import * as Hooks from './Hooks';
 import SyntheticEvent from './SyntheticEvent';
 import * as TabIndex from './TabIndex';
-import { Event as EventExpression, Focus, RawMarkupNode } from 'View/Executor/Expressions';
+import { Event as EventExpression, RawMarkupNode } from 'View/Executor/Expressions';
 import { Common, Vdom } from 'View/Executor/Utils';
 import { GeneratorVdom } from 'View/Executor/Markup';
-// @ts-ignore
-import * as detection from 'Core/detection';
 import Environment from './Environment';
 import * as SwipeController from './SwipeController';
 import * as Logger from 'View/Logger';
@@ -278,6 +271,20 @@ function checkOpener(opener) {
 }
 
 /**
+ * Focus parent is a component that contains the given control
+ * "logically" and receives the focus whenever the given control
+ * is focused.
+ * @param control Control to get the focus parent for
+ * @returns Focus parent of the given control
+ */
+function getFocusParent(control) {
+   return (control.getOpener && control.getOpener()) ||
+      (control._options && control._options.opener) ||
+      (control.getParent && control.getParent()) ||
+      (control._options && control._options.parent);
+}
+
+/**
  * Recursively collect array of openers or parents
  * @param controlNode
  * @param array
@@ -303,10 +310,7 @@ function addControlsToFlatArray(controlNode, array) {
    if (next) {
       addControlsToFlatArray(next, array);
    } else {
-      next =
-         (control._options && control._options.opener) ||
-         (control.getOpener && control.getOpener()) ||
-         (control.getParent && control.getParent());
+      next = getFocusParent(control);
       checkOpener(next);
       // может мы уперлись в кореневой VDOM и надо посмотреть, есть ли на нем wsControl, если есть - начинаем вслпывать по старому
       if (next) {
@@ -319,10 +323,7 @@ function addControlsToFlatArrayOld(control, array) {
       array.push(control);
    }
 
-   var parent =
-      (control._options && control._options.opener) ||
-      (control.getOpener && control.getOpener()) ||
-      (control.getParent && control.getParent());
+   var parent = getFocusParent(control);
 
    checkOpener(parent);
 
@@ -403,6 +404,13 @@ const DOMEnvironment = Environment.extend({
       Environment.call(this, controlStateChangedCallback, rootAttrs);
    },
    destroy: function () {
+
+      //Кейс: в панели идет перерисовка. Панель что-то сообщает опенеру
+      //опенер передает данные в контрол, который лежит вне панели
+      //контрол дергает _forceUpdate и попадает в очередь перерисовки панели
+      //затем панель разрушается и заказанной перерисовки контрола вне панели не случается
+      this.runQueue();
+
       this.removeTabListener();
       this.removeCaptureEventHandler('focus');
       this.removeCaptureEventHandler('blur');
@@ -415,7 +423,8 @@ const DOMEnvironment = Environment.extend({
       this._rootVNode = undefined;
       this._captureEventHandlers = {};
       this._handleTabKey = undefined;
-
+      this.rootNodes = null;
+      this._savedFocusedElement = undefined;
       DOMEnvironment.superclass.destroy.call(this);
    }
 });
@@ -628,7 +637,7 @@ function detectStrangeElement(element) {
 proto._handleFocusEvent = function handleFocusEvent(e) {
    // запускаем обработчик только для правильного DOMEnvironment, в который прилетел фокус
    saveValueForChangeEvent(e.target);
-   if (this._rootDOMNode && Focus.closest(e.target, this._rootDOMNode) && !detectStrangeElement(e.target)) {
+   if (this._rootDOMNode && closest(e.target, this._rootDOMNode) && !detectStrangeElement(e.target)) {
       var relatedTarget = (!detectStrangeElement(e.relatedTarget) && e.relatedTarget) || this._savedFocusedElement;
 
       // if (relatedTarget && !isElementVisible(relatedTarget)) {
@@ -669,9 +678,8 @@ proto._handleBlurEvent = function _handleBlurEvent(e) {
       fireChange(e);
 
       if (e.relatedTarget === null) {
-         // в IE есть баг что relatedTarget вообще нет, в таком случае возьмем body.
-         // так события деактивации будут стрелять даже когда фокус уходит с браузера в другое приложение, но лучше так чем вообще никогда не стрелять
-         relatedTarget = document.body;
+         // в IE есть баг что relatedTarget вообще нет, в таком случае возьмем document.body, потому что фокус уходит на него.
+         relatedTarget = document.activeElement;
       }
    }
 
@@ -682,12 +690,12 @@ proto._handleBlurEvent = function _handleBlurEvent(e) {
    target = e.target;
    relatedTarget = relatedTarget || e.relatedTarget;
    if (!isNewEnvironment() && relatedTarget) {
-      var relatedArrayMaker = goUpByControlTree(relatedTarget);
-      var vdomControl = relatedArrayMaker.find(function (control) {
-         return control._template;
-      });
-      if (!vdomControl) {
-         notifyActivationEvents(null, target, this._isTabPressed);
+
+      // если у элемента, куда уходит фокус, сверху есть vdom-окружение, deactivated стрельнет в обработчике фокуса
+      // иначе мы уходим непонятно куда и нужно пострелять deactivated
+      var isVdomExists = closestVdom(relatedTarget);
+      if (!isVdomExists) {
+         notifyActivationEvents(relatedTarget, target, this._isTabPressed);
       }
    }
 
@@ -713,6 +721,22 @@ function notifyActivationEvents(target, relatedTarget, isTabPressed) {
    // Меняем состояние у тех компонентов, которые реально потеряли активность
    relatedArrayMaker.find(function (control) {
       if (control !== mutualTarget) {
+         var container = control._container;
+         if (container && container[0]) {
+            container = container[0];
+         }
+         // todo каким-то образом фокус улетает в IE на дочерний элемент, а deactivated зовется на его предке
+         // https://online.sbis.ru/opendoc.html?guid=3dceaf87-5f2a-4730-a7bc-febe297649c5
+         if (container && container.contains && container.contains(target)){
+            return false;
+         }
+         // todo если элемент не в доме, не стреляем для контрола deactivated, потому что он уже удален
+         // https://online.sbis.ru/opendoc.html?guid=0a8bd5b7-f809-4571-a6cf-ee605870594e
+         // тут перерисовывается popup и фокус слетает сам, потом зовут активацию и relatedTarget берется как
+         // savedFocusedElement который уже не в доме, потому что он был на попапе который удалили
+         if (!closest(container, document.body)) {
+            return false;
+         }
          control._notify('deactivated', [
             {
                //to: arrayMaker[0],
@@ -854,6 +878,13 @@ function closest(sourceElement, rootElement) {
    while (sourceElement.parentNode) {
       sourceElement = sourceElement.parentNode;
       if (sourceElement === rootElement) return true;
+   }
+   return false;
+}
+function closestVdom(sourceElement) {
+   while (sourceElement.parentNode) {
+      sourceElement = sourceElement.parentNode;
+      if (sourceElement.controlNodes) return true;
    }
    return false;
 }
@@ -1056,12 +1087,21 @@ proto.getDOMNode = function () {
 
 proto.runQueue = function () {
    if (this.queue) {
+      this.activateSubQueue = true;
       for (var i = 0; i < this.queue.length; i++) {
          this.forceRebuild(this.queue[i]);
       }
+      this.activateSubQueue = false;
    }
    this.queue = null;
    this.queueIds = {};
+
+   if (this.subQueue) {
+      this.queue = this.subQueue;
+      this.subQueueIds = this.queueIds;
+      this.subQueue = null;
+      this.subQueueIds = {};
+   }
 };
 
 function isArgsLengthEqual(controlNodesArgs, evArgs) {
@@ -1175,13 +1215,18 @@ function vdomEventBubbling(eventObject, controlNode, eventPropertiesStartId, arg
                   res.then(
                      (function (fn) {
                         return function (result) {
-                           fn.control._forceUpdate();
+                           if (!eventObject.blockUpdate) {
+                              fn.control._forceUpdate();
+                           }
                            return result;
                         };
-                     })(fn)
+                     })(fn),
+                     e => e
                   );
                } else {
-                  fn.control._forceUpdate();
+                  if (!eventObject.blockUpdate) {
+                     fn.control._forceUpdate();
+                  }
                }
             }
             res = undefined;

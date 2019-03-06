@@ -1,15 +1,13 @@
 define('Core/helpers/Hcontrol/saveToFile', [
-    'Core/constants',
-    'Core/cookie',
-    'Transport/RPCJSON',
+    'Env/Env',
+    'Browser/Transport',
     'Core/Deferred',
-    'Transport/prepareGetRPCInvocationURL'
+    'Browser/TransportOld'
 ], function(
-    _const,
-    cookie,
-    RPCJSON,
+    Env,
+    Transport,
     Deferred,
-    prepareGetRPCInvocationURL
+    TransportOld
 ) {
 
     /**
@@ -54,7 +52,7 @@ define('Core/helpers/Hcontrol/saveToFile', [
                 params['fileDownloadToken'] = Math.floor(1e16 * Math.random());
             }
             if (useGET) {
-                window.open(prepareGetRPCInvocationURL(object, methodName, params));
+                window.open(TransportOld.prepareGetRPCInvocationURL(object, methodName, params));
                 dResult.callback();
             } else {
                 var body = $('body'),
@@ -66,21 +64,21 @@ define('Core/helpers/Hcontrol/saveToFile', [
 
                 if (!form.length && !iframe.length) {
                     body.append(form = $('<form enctype="multipart/form-data" target="ws-upload-iframe" ' +
-                        'action="' + (url ? url : _const.defaultServiceUrl) +
+                        'action="' + (url ? url : Env.constants.defaultServiceUrl) +
                         '?raw_file_result" method="POST" class="ws-upload-form ws-hidden">' +
                         '<input type="hidden" name="Запрос"></form>'));
                     body.append(iframe = $('<iframe class="ws-upload-iframe ws-hidden" name="ws-upload-iframe"></iframe>'));
                 }
                 form.find('[name=Запрос]').val(
-                    RPCJSON.jsonRpcPreparePacket(object + '.' + methodName, params, parseInt(("" + Math.random()).substr(2),10)).reqBody
+                    Transport.RPCJSON.jsonRpcPreparePacket(object + '.' + methodName, params, parseInt(("" + Math.random()).substr(2),10)).reqBody
                 );
                 form.submit();
                 fileDownloadCheckTimer = setInterval(function() {
                     var iframeText = iframe.contents().find('pre');
-                    cookieValue = cookie.get(cookieName);
+                    cookieValue = Env.cookie.get(cookieName);
                     if (parseInt(cookieValue, 10) === params['fileDownloadToken']) {
                         clearInterval(fileDownloadCheckTimer);
-                        cookie.set(cookieName, null);
+                        Env.cookie.set(cookieName, null);
                         if (iframeText.length) {
                             dResult.errback(new Error(JSON.parse(iframeText.html()).error.details));
                             iframeText.remove('pre');
@@ -93,7 +91,7 @@ define('Core/helpers/Hcontrol/saveToFile', [
                             var html = JSON.parse(iframeText.html());
                             if (html.error) {
                                 clearInterval(fileDownloadCheckTimer);
-                                cookie.set(cookieName, null);
+                                Env.cookie.set(cookieName, null);
                                 dResult.errback(new Error(html.error.details));
                                 iframeText.remove('pre');
                             }

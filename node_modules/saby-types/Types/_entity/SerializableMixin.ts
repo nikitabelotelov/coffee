@@ -44,15 +44,15 @@ const isFunctionDefinitionSupported = typeof getFunctionDefinition === 'function
  */
 let instanceCounter = 0;
 
-interface IState {
-   $options?: Object
+export interface IState {
+   $options?: Object;
 }
 
 interface ISignature {
    '$serialized$': string;
    module: string;
    id: number;
-   state: IState
+   state: IState;
 }
 
 /**
@@ -67,9 +67,9 @@ function getInstanceId(): number {
  * Сериализует код модуля, чтобы его можно было идентифицировать.
  * @param {Object} instance Экземпляр модуля
  */
-function serializeCode(instance): string {
-   let proto = Object.getPrototypeOf(instance);
-   let processed = [];
+function serializeCode(instance: object): string {
+   const proto = Object.getPrototypeOf(instance);
+   const processed = [];
 
    return '{' + Object.keys(proto).map((name) => {
       return [name, JSON.stringify(proto[name], (key, value) => {
@@ -100,8 +100,9 @@ function serializeCode(instance): string {
  * @param {Boolean} [critical=false] Выбросить исключение либо предупредить
  * @param {Number} [skip=3] Сколько уровней пропустить при выводе стека вызова метода
  */
-function createModuleNameError(instance, critical?: boolean, skip?: number) {
-   let text = `Property "_moduleName" with module name for RequireJS's define() is not found in this prototype: "${serializeCode(instance)}"`;
+function createModuleNameError(instance: object, critical?: boolean, skip?: number): void {
+   const text = `Property "_moduleName" with module name for RequireJS's define() is not found` +
+      ` in this prototype: "${serializeCode(instance)}"`;
    if (critical) {
       throw new ReferenceError(text);
    } else {
@@ -109,7 +110,7 @@ function createModuleNameError(instance, critical?: boolean, skip?: number) {
    }
 }
 
-export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */{
+export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */ {
    /**
     * Уникальный номер инстанса
     */
@@ -123,36 +124,17 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    /**
     * Nonstandard prototype getter
     */
-   private __proto__: this;
+   private '__proto__': this;
 
    /**
     * Method implemented in OptionsToPropertyMixin
     */
    private _getOptions: () => Object;
 
-   //region Public methods
+   // region Public methods
 
-   constructor(options?) {};
-
-   /**
-    * Возвращает сериализованный экземпляр класса
-    * @return {Object}
-    * @example
-    * Сериализуем сущность:
-    * <pre>
-    *    var instance = new Entity(),
-    *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
-    * </pre>
-    */
-   toJSON(): ISignature {
-      this._checkModuleName(true);
-
-      return {
-         '$serialized$': 'inst',
-         module: this._moduleName,
-         id: getInstanceId.call(this),
-         state: this._getSerializableState({})
-      };
+   constructor(options?: any) {
+      // Just for signature
    }
 
    /**
@@ -169,43 +151,38 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
     * </pre>
     */
    static fromJSON(data: ISignature): SerializableMixin {
-      let initializer = this.prototype._setSerializableState(data.state);
-      let instance = new this(data.state.$options);
+      const initializer = this.prototype._setSerializableState(data.state);
+      const instance = new this(data.state.$options);
       if (initializer) {
          initializer.call(instance);
       }
       return instance;
    }
 
-   //endregion Public methods
-
-   //region Protected methods
-
    /**
-    * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
-    * @param critical Отсутствие имени модуля критично
-    * @param [skip] Сколько уровней пропустить при выводе стека вызова метода
-    * @protected
+    * Возвращает сериализованный экземпляр класса
+    * @return {Object}
+    * @example
+    * Сериализуем сущность:
+    * <pre>
+    *    var instance = new Entity(),
+    *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
+    * </pre>
     */
-   protected _checkModuleName(critical: boolean, skip?: number) {
-      let proto = this;
-      if (!proto._moduleName) {
-         createModuleNameError(this, critical, skip);
-         return;
-      }
+   toJSON(): ISignature {
+      this._checkModuleName(true);
 
-      //TODO: refactor to Object.getPrototypeOf(this) after migration to pure prototypes
-      if (!isProtoSupported) {
-         return;
-      }
-      proto = this.__proto__;
-      if (!proto.hasOwnProperty('_moduleName')) {
-         createModuleNameError(this, critical, skip);
-      }
+      return {
+         $serialized$: 'inst',
+         module: this._moduleName,
+         id: getInstanceId.call(this),
+         state: this._getSerializableState({})
+      };
    }
 
    /**
-    * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
+    * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в
+    * это же состояние
     * @param {Object} state Cостояние
     * @return {Object}
     * @protected
@@ -216,23 +193,53 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    }
 
    /**
-    * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
+    * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта
+    * после создания инстанса.
     * @param {Object} state Cостояние
     * @return {Function}
     * @protected
     */
-   _setSerializableState(state?: Object) {
-      return function() {
+   _setSerializableState(state?: Object): Function {
+      return function(): void {
          this[$unserialized] = true;
       };
    }
 
-   //endregion Protected methods
+   // endregion
+
+   // region Protected methods
+
+   /**
+    * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
+    * @param critical Отсутствие имени модуля критично
+    * @param [skip] Сколько уровней пропустить при выводе стека вызова метода
+    * @protected
+    */
+   protected _checkModuleName(critical: boolean, skip?: number): void {
+      let proto = this;
+      if (!proto._moduleName) {
+         createModuleNameError(this, critical, skip);
+         return;
+      }
+
+      // TODO: refactor to Object.getPrototypeOf(this) after migration to pure prototypes
+      if (!isProtoSupported) {
+         return;
+      }
+      proto = this.__proto__;
+      if (!proto.hasOwnProperty('_moduleName')) {
+         createModuleNameError(this, critical, skip);
+      }
+   }
+
+   // endregion
 }
 
-SerializableMixin.prototype['[Types/_entity/SerializableMixin]'] = true;
-//FIXME: Core/Serializer is looking for dynamic method
+Object.assign(SerializableMixin.prototype, {
+   '[Types/_entity/SerializableMixin]': true,
+   _instanceNumber: null
+});
+
+// FIXME: Core/Serializer is looking for dynamic method
 // @ts-ignore
 SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;
-// @ts-ignore
-SerializableMixin.prototype._instanceNumber = null;

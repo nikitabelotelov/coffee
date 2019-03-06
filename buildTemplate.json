@@ -9,8 +9,8 @@
   "htmlWml": true,
   "themes": true,
 
-  "minimize": true,
-  "wml": true,
+  "minimize": false,
+  "wml": false,
   "сustomPack": false,
   "dependenciesGraph": false,
 
@@ -31,21 +31,6 @@
       "required": true
     },
     {
-      "name": "Lib",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib",
-      "required": true
-    },
-    {
-      "name": "Ext",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/lib/Ext",
-      "required": true
-    },
-    {
-      "name": "Transport",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/transport",
-      "required": true
-    },
-    {
       "name": "View",
       "path": "%cd%/node_modules/sbis3-ws/View",
       "required": true
@@ -53,11 +38,6 @@
     {
       "name": "Inferno",
       "path": "%cd%/node_modules/sbis3-ws/Inferno",
-      "required": true
-    },
-    {
-      "name": "WS.Data",
-      "path": "%cd%/node_modules/ws-data/WS.Data",
       "required": true
     },
     {
@@ -82,6 +62,16 @@
     {
       "name": "cdn",
       "path": "%cd%/cdn"
+    },
+    {
+      "name": "Env",
+      "path": "%cd%/node_modules/rmi/src/client/Env",
+      "required": true
+    },
+    {
+      "name": "Browser",
+      "path": "%cd%/node_modules/rmi/src/client/Browser",
+      "required": true
     }
 
   ]

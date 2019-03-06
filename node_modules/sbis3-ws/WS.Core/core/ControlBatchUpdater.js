@@ -1,12 +1,12 @@
 define('Core/ControlBatchUpdater', [
    'Core/core-extend',
-   'Core/IoC',
+   'Env/Env',
    'Core/Deferred',
    'Core/ParallelDeferred',
    'Core/core-instance',
    'Core/helpers/Object/isEmpty',
    'Core/helpers/Function/runDelayed'
-], function(extend, ioc, Deferred, ParallelDeferred, cInstance, isEmptyObject, runDelayed) {
+], function(extend, Env, Deferred, ParallelDeferred, cInstance, isEmptyObject, runDelayed) {
 
    /**
     * @class Core/ControlBatchUpdater
@@ -284,7 +284,7 @@ define('Core/ControlBatchUpdater', [
 
             function makeEndHandler() { return function(res) { self.endBatchUpdate(hint); return res; }; }
             function logLockedError(descr) {
-               ioc.resolve('ILogger').error('ControlBatchUpdater',
+               Env.IoC.resolve('ILogger').error('ControlBatchUpdater',
                   '_runInBatchUpdate: ' + rk('нельзя добавить обработчик в') + ' ' + descr + ': ' + rk('обработчики заблокированы') + '. hint: ' + hint);
             }
 

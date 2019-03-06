@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var logger = requirejs('Core/IoC').resolve('ILogger');
+    var logger = requirejs('Env/Env').IoC.resolve('ILogger');
 
     function DepGraph() {
         this._nodes = {};

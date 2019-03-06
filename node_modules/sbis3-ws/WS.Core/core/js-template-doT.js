@@ -8,7 +8,7 @@
 // doT.js is an open source component of http://bebedo.com
 // Licensed under the MIT license.
 //
-define('Core/js-template-doT', ['Core/IoC', 'Core/helpers/Number/randomId'], function(IoC) {
+define('Core/js-template-doT', ['Env/Env', 'Core/helpers/Number/randomId'], function(Env) {
    "use strict";
 
    var doT = {
@@ -184,7 +184,7 @@ define('Core/js-template-doT', ['Core/IoC', 'Core/helpers/Number/randomId'], fun
          return new Function(c.varname, str);
       } catch (e) {
          if (!silent) {
-            IoC.resolve('ILogger').error("doT", "Could not create template function: " + str, e);
+            Env.IoC.resolve('ILogger').error("doT", "Could not create template function: " + str, e);
             throw e;
          }
       }

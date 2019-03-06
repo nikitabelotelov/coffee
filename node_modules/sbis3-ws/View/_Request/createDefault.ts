@@ -2,7 +2,7 @@
 import { Console } from 'View/_Request/Console';
 import StateReceiver from 'View/_Request/StateReceiver';
 //@ts-ignore
-import constants = require("Core/constants");
+import { constants } from 'Env/Env';
 
 import {
     Key as StorageKey,

@@ -1,7 +1,6 @@
 define('View/Builder/Tmpl/modules/data/object',
    [
-      'Core/helpers/Hcontrol/configStorage',
-      'Core/IoC',
+      'Env/Env',
       'View/Builder/Tmpl/expressions/dirtyCheckingPatch',
       'View/Builder/Tmpl/modules/utils/tag',
       'View/Builder/Tmpl/modules/data/utils/dataTypesCreator',
@@ -11,8 +10,7 @@ define('View/Builder/Tmpl/modules/data/object',
       'text!View/Builder/Tmpl/modules/templates/templateFunctionTemplate.jstpl',
       'text!View/Builder/Tmpl/modules/templates/templateObjectHtmlTemplate.jstpl',
       'text!View/Builder/Tmpl/modules/templates/templateObjectHtmlTemplateNew.jstpl'
-   ], function objectLoader(configStorage,
-                            IoC,
+   ], function objectLoader(Env,
                             dirtyCheckingPatch,
                             tagUtils,
                             DTC,
@@ -260,7 +258,6 @@ define('View/Builder/Tmpl/modules/data/object',
 
          var htmlPropertyName = root ? rootTemplateName : realInjected.rPropName;
          html = templateObject.html;
-         configStorage.merge(this._controlsData);
 
          if (tObject.type === 'string') {
 
@@ -274,7 +271,7 @@ define('View/Builder/Tmpl/modules/data/object',
                if (typeof window !== 'undefined' && window.leakDetectedMode) {
                   var num = result.indexOf('thelpers.templateError('),
                      numEnd = result.indexOf(';', num+1);
-                  IoC.resolve('ILogger').error('Deprecated', 'Вы пытаетесь создать компонент внутри опции type=string. ' +
+                  Env.IoC.resolve('ILogger').error('Deprecated', 'Вы пытаетесь создать компонент внутри опции type=string. ' +
                      'PropertyName=' + htmlPropertyName + '. ResultFunction=' + result.substring(num, numEnd));
                }
             }

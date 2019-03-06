@@ -4,25 +4,22 @@ define('Core/ContextBinder', [
    'Core/helpers/Object/isPlainObject',
    'Core/helpers/Object/isEmpty',
    'Core/helpers/Array/findIndex',
-   'Core/IoC',
+   'Env/Env',
    'Core/core-merge',
    'Core/core-clone',
    'Core/helpers/Function/shallowClone',
-   'Core/core-instance',
-   'Core/core-debug',
-   'Core/ConsoleLogger'
+   'Core/core-instance'
 ], function(
    Context,
    Abstract,
    isPlainObject,
    isEmptyObject,
    arrayFindIndex,
-   ioc,
+   Env,
    coreMerge,
    coreClone,
    cShallowClone,
-   cInstance,
-   cDebug
+   cInstance
 ) {
    'use strict';
 
@@ -68,7 +65,7 @@ define('Core/ContextBinder', [
       DEBUG_TRACE = 'trace',
       DEBUG_LOG = 'log',
       binderArray = [],
-      logger = ioc.resolve('ILogger'),
+      logger = Env.IoC.resolve('ILogger'),
       merge = coreMerge,
       clone = coreClone,
       shallowClone = cShallowClone,
@@ -473,7 +470,7 @@ define('Core/ContextBinder', [
                            equals = oldValue === fieldValue || (propType.equals && propType.equals(oldValue, fieldValue));
          
                            if (!equals) {
-                              cDebug.checkAssertion(oldValue === NonExistentValue);
+                              Env.coreDebug.checkAssertion(oldValue === NonExistentValue);
             
                               if (propValue === null || propValue === undefined) {
                                  control.initializeProperty(propName);

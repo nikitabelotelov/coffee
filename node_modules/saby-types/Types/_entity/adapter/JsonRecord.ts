@@ -33,36 +33,38 @@ export default class JsonRecord extends mixin(
    /**
     * @property {Object} Сырые данные
     */
-   _data: Object;
+   _data: object;
 
    /**
     * Конструктор
     * @param {*} data Сырые данные
     */
-   constructor(data) {
+   constructor(data: object) {
       super(data);
       GenericFormatMixin.constructor.call(this, data);
       JsonFormatMixin.constructor.call(this, data);
    }
 
-   //region IRecord
+   // region IRecord
 
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
-   getData: () => any;
+   getData: () => object;
    getFormat: (name: string) => Field;
    getSharedFormat: (name: string) => UniversalField;
    removeFieldAt: (index: number) => void;
 
-   //endregion IRecord
+   // endregion
 
-   //region Types/_entity/adapter/JsonFormatMixin
+   // region Types/_entity/adapter/JsonFormatMixin
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {
-         throw new TypeError(`${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`);
+         throw new TypeError(
+            `${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`
+         );
       }
-      let name = format.getName();
+      const name = format.getName();
       if (this.has(name)) {
          throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
       }
@@ -71,24 +73,24 @@ export default class JsonRecord extends mixin(
       this.set(name, format.getDefaultValue());
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       JsonFormatMixin.removeField.call(this, name);
       delete this._data[name];
    }
 
-   //endregion Types/_entity/adapter/JsonFormatMixin
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
-   has(name) {
+   has(name: string): boolean {
       return this._isValidData() ? this._data.hasOwnProperty(name) : false;
    }
 
-   get(name) {
+   get(name: string): any {
       return this._isValidData() ? this._data[name] : undefined;
    }
 
-   set(name, value) {
+   set(name: string, value: any): void {
       if (!name) {
          throw new ReferenceError(`${this._moduleName}::set(): field name is not defined`);
       }
@@ -96,35 +98,36 @@ export default class JsonRecord extends mixin(
       this._data[name] = value;
    }
 
-   clear() {
+   clear(): void {
       this._touchData();
-      let keys = Object.keys(this._data);
-      let count = keys.length;
+      const keys = Object.keys(this._data);
+      const count = keys.length;
       for (let i = 0; i < count; i++) {
          delete this._data[keys[i]];
       }
    }
 
-   getFields() {
+   getFields(): string[] {
       return this._isValidData() ? Object.keys(this._data) : [];
    }
 
-   getKeyField() {
+   getKeyField(): string {
       return undefined;
    }
 
-   //endregion Public methods
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
-   _has(name) {
+   _has(name: string): boolean {
       return this.has(name);
    }
 
-   //endregion Protected methods
+   // endregion
 }
 
-JsonRecord.prototype['[Types/_entity/adapter/JsonRecord]'] = true;
-// @ts-ignore
-JsonRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-JsonRecord.prototype._data = null;
+Object.assign(JsonRecord.prototype, {
+   '[Types/_entity/adapter/JsonRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   _data: null
+});

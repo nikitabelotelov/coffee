@@ -1,8 +1,10 @@
 /// <amd-module name="Lib/TabMessage/TabMessage" />
-import TabMessage = require("Lib/Tab/Message");
-import IoC = require("Core/IoC");
+//@ts-ignore
+import { Broadcast } from 'Browser/Event';
+//@ts-ignore
+import { IoC } from 'Env/Env';
 
-IoC.resolve('ILogger').log("Lib/TabMessage/TabMessage", 'module has been moved to "Lib/Tab/Message"');
+IoC.resolve('ILogger').log("Lib/TabMessage/TabMessage", 'module has been moved to "Browser/Event:Broadcast" and will be removed');
 
-export = TabMessage;
+export = Broadcast;
 

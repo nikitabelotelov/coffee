@@ -4,17 +4,16 @@ define('Lib/Control/Infobox/Infobox',
       'Core/helpers/Hcontrol/trackElement',
       'Core/Deferred',
       'Core/helpers/Hcontrol/isElementVisible',
-      'Core/constants',
+      'Env/Env',
       'Core/helpers/String/escapeTagsFromStr',
       'Core/Abstract',
-      'Core/detection',
       'Core/helpers/Function/debounce',
       'tmpl!Lib/Control/Infobox/Infobox',
       'Core/WindowManager',
       'css!Lib/Control/Infobox/Infobox',
       'is!browser?/cdn/jquery-ui/1.12.1.2/jquery-ui-position-min.js'
    ],
-   function(cInstance, trackElement, cDeferred, isElementVisible, constants, escapeTagsFromStr, Abstract, detection, debounce, dotTplFn) {
+   function(cInstance, trackElement, cDeferred, isElementVisible, Env, escapeTagsFromStr, Abstract, debounce, dotTplFn) {
 
    'use strict';
 
@@ -50,7 +49,7 @@ define('Lib/Control/Infobox/Infobox',
       /**
        *
        * @event onShow Происходит при открытии инфобокса.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {jQuery} element DOM-элемент, возле которого запрошено отображение инфобокса.
        * @see onBeforeShow
        * @see onHide
@@ -59,7 +58,7 @@ define('Lib/Control/Infobox/Infobox',
       /**
        *
        * @event onHide Происходит при скрытии инфобокса.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @see onBeforeShow
        * @see onShow
        * @see onChangeTarget
@@ -67,7 +66,7 @@ define('Lib/Control/Infobox/Infobox',
       /**
        *
        * @event onChangeTarget Происходит при смене элемента, возле которого отображается инфобокс.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {jQuery} previous DOM-элемент, с которого уходит инфобокс. Если он был ранее невидим, то параметр будет равен null.
        * @param {jQuery} next DOM-элемент, на который приходит инфобокс. Если он скрывается, параметр будет равен null.
        * @see onBeforeShow
@@ -77,7 +76,7 @@ define('Lib/Control/Infobox/Infobox',
       /**
        *
        * @event onBeforeShow Происходит перед отображением инфобокса.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {jQuery} element DOM-элемент, возле которого запрошено отображение инфобокса.
        * @return При возврате false показ инфобокса будет отменён.
        * @example
@@ -647,7 +646,7 @@ define('Lib/Control/Infobox/Infobox',
 
          if(newWidth == 'auto') {
             container.css('width', '');
-            container.css('max-width', constants.$win.width() * MAX_WIDTH_TO_SCREEN_RATIO);
+            container.css('max-width', Env.constants.$win.width() * MAX_WIDTH_TO_SCREEN_RATIO);
          }
          else{
             container.css('max-width', '');
@@ -792,7 +791,7 @@ define('Lib/Control/Infobox/Infobox',
          }
          this._setState('hide');
          this._clearWatchTimer();
-         if (noFade || detection.isIE10) { // ie10 не анимируется по нормальному, визуально на время исчезновения компонента ничего не происходит, не запускаю в нем анимацию
+         if (noFade || Env.detection.isIE10) { // ie10 не анимируется по нормальному, визуально на время исчезновения компонента ничего не происходит, не запускаю в нем анимацию
             this._hideCallback();
          }
          else {

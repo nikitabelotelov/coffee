@@ -4,10 +4,10 @@
  * @author NefedovAO
  */
 define('Lib/FloatAreaManager/FloatAreaManager', [
-   "Core/constants",
+   'Env/Env',
    "Core/Deferred",
    "Core/WindowManager",
-   "Core/EventBus",
+   'Env/Event',
    'Core/helpers/Function/shallowClone',
    "Core/core-instance",
    "Lib/LayoutManager/LayoutManager",
@@ -19,11 +19,11 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
    "Core/Abstract",
    "css!Lib/FloatAreaManager/FloatAreaManager"
 ],
-   function(cConstants, Deferred, WindowManager, EventBus, shallowClone, cInstance, LayoutManager, objectFind, arrayFindIndex, memoize, getScrollWidth, wheel) {
+   function(Env, Deferred, WindowManager, EnvEvent, shallowClone, cInstance, LayoutManager, objectFind, arrayFindIndex, memoize, getScrollWidth, wheel) {
    'use strict';
    //TODO Надо починить анимацию в IE9. Причина неработоспособности - переход на jQuery Position
    var CFloatArea = 'Lib/Control/FloatArea/FloatArea',
-       USE_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform,
+       USE_ANIMATION = Env.constants.browser.chrome && !Env.constants.browser.isMobilePlatform,
        MINIMUM_DISTANCE_MULTIPLIER = 0.05,
        MINIMAL_PANEL_DISTANCE      = 50,
        MINIMAL_PANEL_WIDTH         = 50,
@@ -31,10 +31,10 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
        MIN_CONTENT_WIDTH           = 1000,
        ANIMATION_MAX_WAIT = 700,
        USE_CSS3 = USE_ANIMATION &&
-                  !cConstants.browser.isMobileSafari && //на айпаде анимация через css3 при выдвижении панели глючит (сначала реестр выезжает, потом панель, а надо одновременно),
+                  !Env.constants.browser.isMobileSafari && //на айпаде анимация через css3 при выдвижении панели глючит (сначала реестр выезжает, потом панель, а надо одновременно),
                                                         // хотя в конечную точку приходит правильно.
                                                         //выключаем до лучших времён - когда дойдут руки отладить эту анимацию на айпаде.
-                  cConstants.compatibility.cssTransform && cConstants.compatibility.cssAnimations;
+                  Env.constants.compatibility.cssTransform && Env.constants.compatibility.cssAnimations;
 
    function BODY() {
       return typeof window !== 'undefined' && (BODY.value || (BODY.value = $('body')));
@@ -273,7 +273,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
          this._calcVariables();
          $(window).bind('resize.wsFloatAreaManager', this._resize.bind(this));
          WindowManager.subscribe('onAreaFocus', this._focusMoved.bind(this));
-         EventBus.channel('navigation').subscribe('onAccTransform', this._onAccTransform.bind(this));
+         EnvEvent.Bus.channel('navigation').subscribe('onAccTransform', this._onAccTransform.bind(this));
       },
 
       _calcVariables: function() {
@@ -388,7 +388,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
          wheel($(element), wheelCallback);
 
          return function() {
-            var wheelEvent = cConstants.compatibility.wheel;
+            var wheelEvent = Env.constants.compatibility.wheel;
             $(element).unbind(wheelEvent, wheelCallback);
          }
       },
@@ -462,7 +462,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
       },
 
       _getWindowHeight: memoize(function() {
-         return cConstants.$win.height();
+         return Env.constants.$win.height();
       }, '_getWindowHeight'),
        /**
         * Метод задания минимальной ширины содержимого страницы.
@@ -530,7 +530,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
       },
 
       _calcSizeParams: memoize(function() {
-         var winWidth = cConstants.$win.width() - getScrollWidth(),
+         var winWidth = Env.constants.$win.width() - getScrollWidth(),
              contentWidth = clamp(winWidth, this._minContentWidth, this._maxContentWidth),
              minimumPanelDistance = Math.floor(contentWidth * MINIMUM_DISTANCE_MULTIPLIER + this._sideBarWidth);
 
@@ -554,7 +554,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
             widthParams, maxWidth, isVisible, sideBarWidth, animationFunc, delay;
 
          function notifyNavigation(sideBarVisible) {
-            return EventBus.channel('navigation').notify('accordeonVisibilityStateChange', sideBarVisible);
+            return EnvEvent.Bus.channel('navigation').notify('accordeonVisibilityStateChange', sideBarVisible);
          }
 
          if (this._canHideSidebar()) {
@@ -693,7 +693,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
       },
       /**
        * Обрабатывает переход фокуса в другую область
-       * @param {Core/EventObject} event Событие
+       * @param {Env/Event:Object} event Событие
        * @param {Lib/Control/AreaAbstract/AreaAbstract} area Область, в которую перешёл фокус
        * @private
        */
@@ -743,14 +743,14 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
             info.preparedToShow = false;
             this._hideUnnecessaryAreas(info.control);
 
-            if(cConstants.browser.isMobilePlatform){
+            if(Env.constants.browser.isMobilePlatform){
                // task: 1173330288
                // im.dubrovin: перед добавлением флоат арии в стек верхней по z-index панели отключаю инерционную проктутку
                this._setTopFloatAreaWebkitOverflowScrolling('auto');
             }
             this._stack.push(info);
             // im.dubrovin: добавленной флоат арии в стек верхней по z-index панели включаем инерционную проктутку
-            if(cConstants.browser.isMobilePlatform){ // временные решения багов -webkit-overflow-scrolling
+            if(Env.constants.browser.isMobilePlatform){ // временные решения багов -webkit-overflow-scrolling
                var topFloatArea = this._setTopFloatAreaWebkitOverflowScrolling('touch'),
                $topFloatAreaContainer  = (topFloatArea === false)? false : topFloatArea.getContainer();
                this._strictOverflowScrollingOnScrollContainersUnderTopFloatArea($topFloatAreaContainer);
@@ -781,6 +781,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
             }
             info.preparedToShow = true;
          }
+         this._addOverflowScrollingClass(area);
       },
 
       _finishShow: function(area){
@@ -880,9 +881,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
          this._isCalculatingVariables = true;
          this._areas[area.getId()] = area;
 
-         BODY().addClass('ws-float-area-overflow-scrolling-auto'); //Убираем overflow-scrolling со всех скролл контейнеров
-         this._removeTouchFixClass();
-         area.getContainer().addClass('ws-float-area__touchScroll-fix'); //Включаем overflow-scrolling внутри новой панели
+         this._addOverflowScrollingClass(area);
       },
       /**
        *
@@ -896,16 +895,37 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
             delete this._areaInfos[id];
             this._removeAreaFromStack(info, true);
          }
+         delete this._areas[id];
 
-         if (!Object.keys(this._areas || {}).length) {
-            $(cConstants.$body).removeClass('ws-float-area-overflow-scrolling-auto');
+         this._removeOverflowScrollingClass();
+      },
+
+      _addOverflowScrollingClass: function(area) {
+         BODY().addClass('ws-float-area-overflow-scrolling-auto'); //Убираем overflow-scrolling со всех скролл контейнеров
+         this._removeTouchFixClass();
+         area.getContainer().addClass('ws-float-area__touchScroll-fix'); //Включаем overflow-scrolling внутри новой панели
+      },
+
+      _removeOverflowScrollingClass: function() {
+         if (!this._hasVisibleArea()) {
+            $(Env.constants.$body).removeClass('ws-float-area-overflow-scrolling-auto');
          } else {
             this._removeTouchFixClass();
             if (this._getTopFloatArea()) {
                this._getTopFloatArea().control.getContainer().addClass('ws-float-area__touchScroll-fix');
             }
          }
-         delete this._areas[id];
+      },
+
+      _hasVisibleArea: function() {
+         for (var i in this._areas) {
+            if (this._areas.hasOwnProperty(i)) {
+               if (this._areas[i].isVisible()) {
+                  return true;
+               }
+            }
+         }
+         return false;
       },
 
       _removeTouchFixClass: function() {
@@ -917,7 +937,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
       },
 
       _useTouch: function() {
-         return cConstants.compatibility.touch &&
+         return Env.constants.compatibility.touch &&
                 getScrollWidth() === 0;
       },
 
@@ -979,13 +999,13 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
          if (result) {
             // task: 1173330288
             // im.dubrovin: перед удалением флоат арии из стека верхней по z-index панели отключаю инерционную проктутку
-            if(cConstants.browser.isMobilePlatform){
+            if(Env.constants.browser.isMobilePlatform){
                this._setTopFloatAreaWebkitOverflowScrolling('auto');
             }
 
             this._stack.splice(index, 1);
 
-            if(cConstants.browser.isMobilePlatform){// временные решения багов -webkit-overflow-scrolling
+            if(Env.constants.browser.isMobilePlatform){// временные решения багов -webkit-overflow-scrolling
                // im.dubrovin: после удаления флоат арии из стека верхней по z-index панели включаю инерционную проктутку
                var topFloatArea = this._setTopFloatAreaWebkitOverflowScrolling('touch'),
                $topFloatAreaContainer  = (topFloatArea === false) ? false : topFloatArea.getContainer();
@@ -1000,6 +1020,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
                this._updateSideBarVisibility();
             }
          }
+         this._removeOverflowScrollingClass();
          return result;
       },
 
@@ -1075,7 +1096,7 @@ define('Lib/FloatAreaManager/FloatAreaManager', [
 
       // метод вызывается FloatArea'ей когда в нем появляется popup или закрываются все popup'ы
       _toggleHasPopupInside: function(parentAreaId, hasPopupInside){
-         if(cConstants.browser.isMobilePlatform){
+         if(Env.constants.browser.isMobilePlatform){
             if(this._topFloatArea && this._topFloatArea.getId() === parentAreaId){
                if(hasPopupInside){
                   this._setTopFloatAreaWebkitOverflowScrolling('auto');

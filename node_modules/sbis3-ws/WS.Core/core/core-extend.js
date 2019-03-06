@@ -13,8 +13,7 @@ define('Core/core-extend', [
    'Core/property-merge',
    'Core/core-classicExtend',
    'Core/core-simpleExtend',
-   'Core/detection',
-   'Core/IoC'
+   'Env/Env'
 ], function(
    require,
    coreInitializer,
@@ -30,8 +29,7 @@ define('Core/core-extend', [
    propertyMerge,
    classicExtend,
    simpleExtend,
-   detection,
-   IoC
+   Env
 ) {
     /**
      * @class Core/core-extend
@@ -195,7 +193,7 @@ define('Core/core-extend', [
 
                      // проверяем, что init был вызван для всех предков включая Abstract
                      if (this._isAbstractInitialized === false) {
-                        IoC.resolve('ILogger').error('core-extend', 'При инициализации компонента "' + (this.getName && this.getName()) + '" функция init не была вызвана для всех предков. ' +
+                        Env.IoC.resolve('ILogger').error('core-extend', 'При инициализации компонента "' + (this.getName && this.getName()) + '" функция init не была вызвана для всех предков. ' +
                            'Проверьте, что для всех init вызван init предка.');
                      }
                   }
@@ -298,7 +296,7 @@ define('Core/core-extend', [
                }
             }
             // IE 7-8 не видит при переборе через for-in свойства valueOf и toString
-            if (!detection.isModernIE) {
+            if (!Env.detection.isModernIE) {
                var props = ['valueOf', 'toString'];
                for (i = 0; i < props.length; i++) {
                   if (pluginConfig.hasOwnProperty(props[i])) {
@@ -365,7 +363,7 @@ define('Core/core-extend', [
 
          function addSpecialFunctionInIE(descriptionObject, position) {
             // IE 7-8 не видит при переборе через for-in свойства valueOf и toString
-            if (!detection.isModernIE) {
+            if (!Env.detection.isModernIE) {
                var props = ['valueOf', 'toString'];
                for (k = 0; k < props.length; k++) {
                   if (descriptionObject.hasOwnProperty(props[k]) && !(props[k] in {'$protected': 0, '$constructor': 0})) {

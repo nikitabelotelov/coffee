@@ -45,6 +45,9 @@ define('View/Builder/Tmpl/modules/template', [
             if (config.reservedWords.includes(name)) {
                errorHandling("Unexpected reserved word '" + name + "' in template attribute name", this.filename);
             }
+            if (!name.match(/^[a-zA-Z_]\w*$/g) && this.filename.includes(".wml")) {
+               errorHandling("Incorrect template name '" + name + "'", this.filename);
+            }
             return function templateReady() {
                var result;
                if (!this.includeStack[name]) {

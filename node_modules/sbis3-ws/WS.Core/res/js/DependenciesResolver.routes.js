@@ -7,7 +7,7 @@ var smartCache = {};
 
 module.exports = function (Component, Service) {
     var
-       IoC = global.requirejs('Core/IoC'),
+       IoC = global.requirejs('Env/Env').IoC,
        fn;
     try {
         var

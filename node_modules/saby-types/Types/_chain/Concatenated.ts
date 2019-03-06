@@ -15,14 +15,14 @@ export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain
    /**
     * @property {Array.<Array>|Array.<Types/_collection/IEnumerable>} Коллекции для объединения
     */
-   protected _items: Array<Array<T> | IEnumerable<T>>;
+   protected _items: Array<T[] | IEnumerable<T>>;
 
    /**
     * Конструктор объединяющего звена цепочки.
     * @param {Types/_chain/Abstract} source Предыдущее звено.
     * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
     */
-   constructor(source: Abstract<T>, items: Array<Array<T> | IEnumerable<T>>) {
+   constructor(source: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
       super(source);
       this._items = items;
    }
@@ -44,9 +44,9 @@ export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain
    // endregion Types/_collection/IEnumerable
 }
 
-Concatenated.prototype['[Types/_chain/Concatenated]'] = true;
-
-// @ts-ignore
-Concatenated.prototype._items = null;
+Object.assign(Concatenated.prototype, {
+   '[Types/_chain/Concatenated]': true,
+   _items: null
+});
 
 Object.defineProperty(Concatenated.prototype, 'shouldSaveIndices', { value: false });

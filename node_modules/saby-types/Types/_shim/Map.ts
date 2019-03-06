@@ -7,25 +7,29 @@
 
 import Set from './Set';
 
-//Use native implementation if supported
+// Use native implementation if supported
 let MapImplementation;
 
 if (typeof Map === 'undefined') {
    MapImplementation = class <K, V> {
       protected _hash: Object;
-      protected _objects: Array<V>;
+      protected _objects: V[];
       protected _objectPrefix: string;
 
       constructor() {
          this.clear();
       }
 
-      clear() {
+      static _getUnhashedKey(key: string): string {
+         return String(key).split('@', 2)[1];
+      }
+
+      clear(): void {
          this._hash = {};
          this._objects = [];
       }
 
-      delete(key: K) {
+      delete(key: K): void {
          let surrogate;
          if (this._isObject(key)) {
             surrogate = this._addObject(key);
@@ -39,17 +43,17 @@ if (typeof Map === 'undefined') {
          this._hash[Set._getHashedKey(surrogate)] = undefined;
       }
 
-      entries() {
+      entries(): any[] {
          throw new Error('Method is not supported');
       }
 
-      forEach(callbackFn: Function, thisArg?: Object) {
-         //FIXME: now not in insertion order
-         let hash = this._hash;
+      forEach(callbackFn: Function, thisArg?: Object): void {
+         // FIXME: now not in insertion order
+         const hash = this._hash;
          let ukey;
          let value;
 
-         for (let key in hash) {
+         for (const key in hash) {
             if (hash.hasOwnProperty(key) && hash[key] !== undefined) {
                value = hash[key];
                ukey = MapImplementation._getUnhashedKey(key);
@@ -91,7 +95,7 @@ if (typeof Map === 'undefined') {
          return this._hash.hasOwnProperty(surrogate) && this._hash[surrogate] !== undefined;
       }
 
-      keys() {
+      keys(): any[] {
          throw new Error('Method is not supported');
       }
 
@@ -128,29 +132,24 @@ if (typeof Map === 'undefined') {
          return Set.prototype._getObjectKey.call(this, value);
       }
 
-      _isObjectKey(key: any) {
+      _isObjectKey(key: any): boolean {
          return String(key).substr(0, this._objectPrefix.length) === this._objectPrefix;
       }
 
-      _getObject(key: string) {
-         let index = parseInt(key.substr(this._objectPrefix.length), 10);
+      _getObject(key: string): V {
+         const index = parseInt(key.substr(this._objectPrefix.length), 10);
          return this._objects[index];
-      }
-
-      static _getUnhashedKey(key: string): string {
-         return String(key).split('@', 2)[1];
       }
    };
 
-   // @ts-ignore
-   MapImplementation.prototype._hash = null;
-   // @ts-ignore
-   MapImplementation.prototype._objectPrefix = Set.prototype._objectPrefix;
-   // @ts-ignore
-   MapImplementation.prototype._objects = null;
+   Object.assign(MapImplementation.prototype, {
+      _hash: null,
+      _objectPrefix: Set.prototype._objectPrefix,
+      _objects: null
+   });
 
    Object.defineProperty(MapImplementation.prototype, 'size', {
-      get: function() {
+      get(): number {
          return Object.keys(this._hash).length;
       },
       enumerable: true,

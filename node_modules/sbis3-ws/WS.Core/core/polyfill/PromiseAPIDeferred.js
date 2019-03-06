@@ -135,7 +135,8 @@ define("Core/polyfill/PromiseAPIDeferred", ["require", "exports", "Core/Deferred
      */
     function logError(message) {
         // @ts-ignore
-        new Promise(function (resolve_1, reject_1) { require(['Core/IoC'], resolve_1, reject_1); }).then(function (IoC) {
+        new Promise(function (resolve_1, reject_1) { require(['Env/Env'], resolve_1, reject_1); }).then(function (_a) {
+            var IoC = _a.IoC;
             IoC.resolve('ILogger').warn('Core/polyfill/PromiseAPIDeferred', message);
         });
     }

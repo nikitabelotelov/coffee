@@ -1,7 +1,7 @@
 /// <amd-module name="View/Executor/_Expressions/ContextResolver" />
 
 // @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC } from 'Env/Env';
 // @ts-ignore
 import * as DataContext from 'Core/DataContext';
 

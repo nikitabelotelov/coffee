@@ -7,16 +7,14 @@
 import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
-interface ExtractFunc {
-   (item: any, index: string|number): string|number;
-}
+type ExtractFunc = (item: any, index: string|number) => string|number;
 
 export default class UniquelyEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]' = true;
    private previous: Abstract<T>;
    private idExtractor: ExtractFunc;
    private enumerator: IEnumerator<T>;
-   private objectsHash: Array<any>;
+   private objectsHash: any[];
    private keysHash: Object;
 
    /**
@@ -70,13 +68,10 @@ export default class UniquelyEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-UniquelyEnumerator.prototype.previous = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.enumerator = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.idExtractor = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.keysHash = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.objectsHash = null;
+Object.assign(UniquelyEnumerator.prototype, {
+   previous: null,
+   enumerator: null,
+   idExtractor: null,
+   keysHash: null,
+   objectsHash: null
+});

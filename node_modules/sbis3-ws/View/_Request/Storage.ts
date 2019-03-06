@@ -33,18 +33,35 @@ export enum Key {
  * @return {Core/Request/IStorage}
  */
 export let create = (storage: Key): IStorage => {
-    switch (storage){
+    switch (storage) {
         case Key.sessionStorage: {
-            return new NativeStorage(StorageType.session);
+            return createStorage(NativeStorage, StorageType.session);
         }
         case Key.localStorage: {
-            return new NativeStorage(StorageType.local);
+            return createStorage(NativeStorage, StorageType.local);
         }
         case Key.cookie: {
-            return new CookieStorage();
+            return createStorage(CookieStorage);
         }
         default: {
             return new ObjectStorage();
         }
     }
 };
+/**
+ * Пытается создать экземпляр хранилища, в случае неудачи возвращает экземпляр ObjectStorage
+ * @param Storage конструктор хранилища
+ * @param type тип создаваемого хранилища
+ * @returns экземпляр хранилища
+ */
+// tslint:disable:variable-name
+function createStorage(Storage, type?: StorageType): IStorage {
+    /** При блокировке сторонних кук в iframe sessionStorage недоступен */
+    try {
+        return new Storage(type);
+    } catch (e) {
+        // tslint:disable:no-console
+        console.warn(e); // eslint-disable-line no-console
+        return new ObjectStorage();
+    }
+}

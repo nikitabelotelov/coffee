@@ -1,14 +1,12 @@
 define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
    'Core/Abstract',
-   'Core/EventBus',
-   'Core/detection',
+   'Env/Event',
+   'Env/Env',
    'Core/helpers/Hcontrol/isElementVisible',
-   'Core/IoC',
    'Core/core-instance',
    'Core/helpers/Function/runDelayed',
-   'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
-   'Core/constants'
-], function(Abstract, EventBus, cDetection, isElementVisible, IoC, cInstance, runDelayed, StickyHeaderManager) {
+   'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager'
+], function(Abstract, EnvEvent, Env, isElementVisible, cInstance, runDelayed, StickyHeaderManager) {
    'use strict';
    /**
     * Связыватель фиксированной шапки.
@@ -44,7 +42,7 @@ define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
          // и настраивать sticky header смысла нет т.к. страница не функциональна
          // возможно до оживления ws-SwitchableArea дело не дошло и во время инициализации sticky header все упадет
          if (error) {
-            IoC.resolve('ILogger').error('StickyHeaderMediator', (error && error.message) || error);
+            Env.IoC.resolve('ILogger').error('StickyHeaderMediator', (error && error.message) || error);
          } else {
             this._subscribeCommonEvents();
             this._initFixation();
@@ -53,14 +51,14 @@ define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
       _subscribeCommonEvents: function(){
          if (!calcEventsBound){
             var self = this,
-               globalChannel = EventBus.globalChannel();
+               globalChannel = EnvEvent.Bus.globalChannel();
 
             // события, при которых возможно изменение позиции или ширины шапки
             var globalResizeHandler = function globalResizeHandler(){
                self._resizeHandler();
             };
             $(window).bind('resize', globalResizeHandler);
-            this.subscribeTo(EventBus.channel('navigation'), 'onAccTransform', globalResizeHandler);
+            this.subscribeTo(EnvEvent.Bus.channel('navigation'), 'onAccTransform', globalResizeHandler);
 
             this.subscribeTo(globalChannel, 'onWindowCreated', function(e, wsWindow){
                wsWindow.subscribe('onAfterShow', function() {
@@ -101,7 +99,7 @@ define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
             // В EDONavigationHandlers на переключение навигации дестроятся BrowserTabs и интанцируются новые.
             // Мы такое отловить автоматиески не можем отловить, поэтому введено данное глобальное событие.
             // FixMe: Когда EDO перейдут на роутинг с переключением областей при переключении навигации - убрать глоб.событие и ловить переключение автоматически
-            this.subscribeTo(EventBus.channel('stickyHeader'), 'onForcedStickHeader', function(e, $container){
+            this.subscribeTo(EnvEvent.Bus.channel('stickyHeader'), 'onForcedStickHeader', function(e, $container){
                self._initFixation($container);
             });
             calcEventsBound = true;
@@ -204,7 +202,7 @@ define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
                          * В safari requestAnimationFrame, работает не так как хотелось бы.
                          * drawHeadHandler происходит после перерисовки шапки, а долна совместно.
                          */
-                        if (cDetection.safari) {
+                        if (Env.detection.safari) {
                            drawHeadHandler(self, this, jqElem);
                         } else {
                            runDelayed(function () {
@@ -215,7 +213,7 @@ define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
                      // При асинхронном обновлении по onResize видно как данные перерисовываются.
                      // Синхронизируем размеры заголовка таблицы синхронно.
                      self.subscribeTo(wsControl, 'onDrawItems', function(){
-                        if (cDetection.safari) {
+                        if (Env.detection.safari) {
                            StickyHeaderManager.synchronizeTableHeaderColumnWidth(jqElem);
                         } else {
                            runDelayed(function () {
@@ -331,5 +329,5 @@ define('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator', [
    }))();
 
    // ждаем когда bootup выполнится, и только тогда запускаем инициализацию stickyHeader
-   EventBus.globalChannel().subscribe('bootupReady', stickyHeaderMediator.documentReady.bind(stickyHeaderMediator));
+   EnvEvent.Bus.globalChannel().subscribe('bootupReady', stickyHeaderMediator.documentReady.bind(stickyHeaderMediator));
 });

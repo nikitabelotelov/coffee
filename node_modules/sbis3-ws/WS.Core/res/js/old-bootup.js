@@ -1,47 +1,39 @@
 define('old-bootup', [
    'require',
-   'Core/detection',
-   'Core/constants',
-   'Core/IoC',
+   'Env/Env',
    'Core/core-merge',
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'Core/Context',
    'Core/Deferred',
    'Core/ParallelDeferred',
-   'Core/EventBus',
+   'Env/Event',
    'Core/CommandDispatcher',
    'Core/HashManager',
    'Core/WindowManager',
-   'Transport/deserializeURLData',
+   'Browser/Transport',
    'Deprecated/Record',
    'Deprecated/RecordSet',
-   'Transport/attachTemplate',
+   'Browser/TransportOld',
    'Lib/Control/Control',
-   'bootup',
-   'Transport/ReportPrinter',
-   'Transport/HTTPError'
+   'bootup'
 ], function(
    require,
-   detection,
-   constants,
-   ioc,
+   Env,
    cMerge,
    InformationPopupManager,
    Context,
    Deferred,
    ParallelDeferred,
-   EventBus,
+   EnvEvent,
    CommandDispatcher,
    HashManager,
    WindowManager,
-   deserializeURLData,
+   Transport,
    Record,
    RecordSet,
-   attach,
+   TransportOld,
    Control,
-   bootup,
-   ReportPrinter,
-   HTTPError
+   bootup
 ) {
    'use strict';
 
@@ -57,20 +49,20 @@ define('old-bootup', [
 
    function errorHandler(error) {
       $('body').toggleClass('ws-progress', false);
-      if (error instanceof HTTPError && error.httpError !== 0) {
+      if (error instanceof Transport.fetch.Errors.HTTP && error.httpError !== 0) {
          InformationPopupManager.showMessageDialog({
             status: 'error',
             message: error.message
          });
       }
-      ioc.resolve('ILogger').error('bootup', (error && error.message) || error);
+      Env.IoC.resolve('ILogger').error('bootup', (error && error.message) || error);
       return error;
    }
 
    function closeWindowWithIPadFix() {
       // на iPad просто так закрытие окна через window.close не работает, но можно попробовать сделать грязный хак
       // http://stackoverflow.com/questions/10712906/window-close-doesnt-work-on-ios
-      if (detection.isMobileSafari) {
+      if (Env.detection.isMobileSafari) {
          setTimeout(window.close, 301);
       } else {
          window.close();
@@ -92,7 +84,7 @@ define('old-bootup', [
    }
 
    function prepareData(result, transform, currentRootId, columns, titleColumn, params) {
-      var reportPrinter = new ReportPrinter({columns: columns, titleColumn: titleColumn}),
+      var reportPrinter = new TransportOld.ReportPrinter({columns: columns, titleColumn: titleColumn}),
           eventTransform = params._eventBusChannel.notify('onSelectReportTransform', params.idR, result, transform, params.list);
       reportPrinter.prepareReport(result, eventTransform || transform, currentRootId).addCallback(function(reportText) {
          return Control.ControlStorage.waitChildByName("ws-dataview-print-report").addCallback(function(htmlView) {
@@ -169,8 +161,8 @@ define('old-bootup', [
       }
 
       // Здесь поставить вторым аргументом true чтобы работать с новыми шаблонами
-      attach.attachTemplate(page, {
-         fast: hasMarkup || constants.fasttemplate,
+      TransportOld.attachTemplate.attachTemplate(page, {
+         fast: hasMarkup || Env.constants.fasttemplate,
          html: hasMarkup ? $container.get(0).outerHTML : ''
       }).addCallback(function(template) {
          var
@@ -314,7 +306,7 @@ define('old-bootup', [
 
    function getHandlers(params) {
       var pdHandlers = new ParallelDeferred();
-      params._eventBusChannel = EventBus.channel();
+      params._eventBusChannel = EnvEvent.Bus.channel();
       for (var event in params._events) {
          if (!params._events.hasOwnProperty(event)) {
             continue;
@@ -469,7 +461,7 @@ define('old-bootup', [
          } else {
             methodName += (params.readMethod || "Прочитать");
          }
-         if (error instanceof HTTPError && !error.processed && error.httpError !== 0 && params._eventBusChannel.notify('onLoadError', error, methodName) !== true) {
+         if (error instanceof Transport.fetch.Errors.HTTP && !error.processed && error.httpError !== 0 && params._eventBusChannel.notify('onLoadError', error, methodName) !== true) {
             InformationPopupManager.showMessageDialog({
                status: 'error',
                message: error.message
@@ -494,14 +486,14 @@ define('old-bootup', [
 
       var params = Context.global.getValue('editParams');
       if (params !== undefined) {
-         params = deserializeURLData(params);
+         params = Transport.URL.deserializeData(params);
          getHandlers(params).addCallback(function() {
             loadPageWithEditParams(page, container, areaTemplate, params);
          });
       } else {
          params = Context.global.getValue("printParams");
          if (params !== undefined) {
-            params = deserializeURLData(params);
+            params = Transport.URL.deserializeData(params);
             getHandlers(params).addCallback(function() {
                loadPage(page, container, undefined, params, undefined, true);
             });

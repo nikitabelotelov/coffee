@@ -1,25 +1,25 @@
 /// <amd-module name="Types/_formatter/jsonReviver" />
+
 import {logger} from '../util';
 
 const DataRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 let unresolvedInstances = [];
 let unresolvedInstancesId = [];
-let instanceStorage = {};
+const instanceStorage = {};
 
-function resolveInstances() {
-   var Module,
-      name;
+function resolveInstances(): void {
+   let Module;
+   let name;
 
    for (let i = 0; i < unresolvedInstances.length; i++) {
-      let item = unresolvedInstances[i];
+      const item = unresolvedInstances[i];
       let instance = null;
       if (instanceStorage[item.value.id]) {
          instance = instanceStorage[item.value.id];
       } else if (item.value.module) {
          try {
             name = item.value.module;
-            //@ts-ignore
-            Module = requirejs(name);
+            Module = require(name);
             if (!Module) {
                throw new Error(`The module "${name}" is not loaded yet.`);
             }
@@ -29,7 +29,9 @@ function resolveInstances() {
             if (typeof Module.prototype.fromJSON !== 'function') {
                throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
             }
-            instance = Module.fromJSON ? Module.fromJSON.call(Module, item.value) : Module.prototype.fromJSON.call(Module, item.value);
+            instance = Module.fromJSON
+               ? Module.fromJSON.call(Module, item.value)
+               : Module.prototype.fromJSON.call(Module, item.value);
          } catch (e) {
             logger.error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
             instance = null;
@@ -41,8 +43,8 @@ function resolveInstances() {
    }
 }
 
-export default function jsonReviver(name: string, value: any) {
-   var result = value;
+export default function jsonReviver(name: string, value: any): any {
+   let result = value;
 
    if ((value instanceof Object) &&
       value.hasOwnProperty('$serialized$')
@@ -51,8 +53,8 @@ export default function jsonReviver(name: string, value: any) {
          case 'inst':
             unresolvedInstances.push({
                scope: this,
-               name: name,
-               value: value
+               name,
+               value
             });
             unresolvedInstancesId.push(value.id);
             break;
@@ -75,12 +77,12 @@ export default function jsonReviver(name: string, value: any) {
 
    if (typeof result === 'string') {
       if (DataRegExp.test(result)) {
-         var dateValue = new Date(result);
+         const dateValue = new Date(result);
          return dateValue;
       }
    }
 
-   //Resolve links and instances at root
+   // Resolve links and instances at root
    if (name === '' && Object.keys(this).length === 1) {
       resolveInstances();
       unresolvedInstances = [];

@@ -1,10 +1,10 @@
 define('Core/helpers/String/wrapFileOpener', [
    'require',
-   'Core/constants',
+   'Env/Env',
    'Core/helpers/openFile'
 ], function (
    require,
-   cConstants,
+   Env,
    openFile
 ) {
    var fileOpener = {
@@ -28,7 +28,7 @@ define('Core/helpers/String/wrapFileOpener', [
          }
       }
    };
-   if (cConstants.isBrowserPlatform) {
+   if (Env.constants.isBrowserPlatform) {
       document.addEventListener('click', fileOpener.linkClickHandler, true);
    }
    return fileOpener;

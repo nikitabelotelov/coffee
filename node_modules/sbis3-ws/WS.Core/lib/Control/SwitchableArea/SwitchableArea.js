@@ -10,9 +10,8 @@ define('Lib/Control/SwitchableArea/SwitchableArea',
    "tmpl!Lib/Control/SwitchableArea/SwitchableArea",
    "tmpl!Lib/Control/SwitchableArea/SwitchableArea_area",
    'Core/helpers/Number/randomId',
-   "Core/constants",
-   "Core/Sanitize",
-   'Core/IoC'
+   'Env/Env',
+   "Core/Sanitize"
 ], function (
    cMerge,
    replaceContainer,
@@ -24,9 +23,8 @@ define('Lib/Control/SwitchableArea/SwitchableArea',
    mainTplFn,
    areaTplFn,
    randomId,
-   cConstants,
-   Sanitize,
-   IoC
+   Env,
+   Sanitize
 ) {
       'use strict';
 
@@ -49,14 +47,14 @@ define('Lib/Control/SwitchableArea/SwitchableArea',
       var SwitchableArea = CompoundControl.extend(/** @lends Lib/Control/SwitchableArea/SwitchableArea.prototype */{
           /**
            * @event onBeforeChangeActiveArea Происходит перед установкой новой отображаемой области в контроле.
-           * @param {Core/EventObject} eventObject Дескриптор события.
+           * @param {Env/Event:Object} eventObject Дескриптор события.
            * @param {Lib/Control/SwitchableArea/SwitchableAreaItem} currentArea Экземпляр класса переключаемой области, которая отображается в контроле. Если область не установлена, возвращается null.
            * @param {Lib/Control/SwitchableArea/SwitchableAreaItem} newArea Экземпляр класса области, которая будет установлена в контроле.
            * @see setActiveArea
            */
           /**
            * @event onAfterChangeActiveArea Происходит после установки новой отображаемой области в контроле.
-           * @param {Core/EventObject} eventObject Дескриптор события.
+           * @param {Env/Event:Object} eventObject Дескриптор события.
            * @param {Lib/Control/SwitchableArea/SwitchableAreaItem} currentArea Экземпляр класса области, которая установлена в контроле.
            * @see setActiveArea
            */
@@ -377,7 +375,7 @@ define('Lib/Control/SwitchableArea/SwitchableArea',
                            }, 10);
                            def.callback();
                         }, function(err) {
-                           IoC.resolve('ILogger').error('SwitchableArea::setActiveArea()', err);
+                           Env.IoC.resolve('ILogger').error('SwitchableArea::setActiveArea()', err);
                         });
                      }
                   }
@@ -388,7 +386,7 @@ define('Lib/Control/SwitchableArea/SwitchableArea',
                            return result;
                         });
                      }, function(err) {
-                        IoC.resolve('ILogger').error('SwitchableArea::setActiveArea()', err);
+                        Env.IoC.resolve('ILogger').error('SwitchableArea::setActiveArea()', err);
                      });
                   }
                   else {
@@ -402,7 +400,7 @@ define('Lib/Control/SwitchableArea/SwitchableArea',
                   //Интересный баг, возникает в safari на mac. Даже если нативными методами скрыть область, и нотифицировать
                   //об этом событием onAfterChangeActiveArea, то в итоге в обработчике события, область будет ещё не скрыта.
                   //Видимо связано с оптимизацией перерисовки DOM. Чтобы такого не было, стрельнем событием асинхронно.
-                  if (cConstants.browser.isMacOSDesktop && cConstants.browser.safari)  {
+                  if (Env.constants.browser.isMacOSDesktop && Env.constants.browser.safari)  {
                      setTimeout(function() {
                         def.callback();
                      }, 1);

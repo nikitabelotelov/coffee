@@ -5,10 +5,9 @@
  */
 define('Lib/Control/Control.compatible', [
    'Core/ControlBatchUpdater',
-   'Core/constants',
+   'Env/Env',
    'Core/helpers/Number/randomId',
    'Core/core-instance',
-   'Core/IoC',
    'Core/core-merge',
    'Core/ContextBinder',
    'Core/helpers/Object/find',
@@ -22,10 +21,9 @@ define('Lib/Control/Control.compatible', [
    'is!browser?jquery'
 ], function(
    ControlBatchUpdater,
-   Constants,
+   Env,
    randomId,
    cInstance,
-   IoC,
    merge,
    ContextBinder,
    objectFind,
@@ -144,7 +142,7 @@ define('Lib/Control/Control.compatible', [
    return /** @lends Lib/Control/Control.compatible.prototype */ {
 
       _needFocusOnActivated: function() {
-         var isMobile =  Constants.browser.isMobilePlatform,
+         var isMobile =  Env.constants.browser.isMobilePlatform,
             focusOpt = this._getOption('focusOnActivatedOnMobiles');
 
          return !isMobile || focusOpt === undefined || focusOpt;
@@ -1410,7 +1408,7 @@ define('Lib/Control/Control.compatible', [
                this._owner = owner = parent.getChildControlByName(ctrlName);
             } catch (e) {
                if (!silent) {
-                  IoC.resolve('ILogger').log('Control', 'Некорректно задано св-во owner или отсутствует owner c именем "' + ctrlName + '"');
+                  Env.IoC.resolve('ILogger').log('Control', 'Некорректно задано св-во owner или отсутствует owner c именем "' + ctrlName + '"');
                }
             }
          }

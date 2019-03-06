@@ -25,7 +25,7 @@
  * @author Бегунов А.В.
  * @deprecated
  */
-define('Lib/Mixins/LikeWindowMixin', ['Core/CommandDispatcher', "Core/IoC"], function(CommandDispatcher, IoC) {
+define('Lib/Mixins/LikeWindowMixin', ['Core/CommandDispatcher', 'Env/Env'], function(CommandDispatcher, Env) {
 
    return /** @lends Lib/Mixins/LikeWindowMixin.prototype */ {
       $protected: {
@@ -50,7 +50,7 @@ define('Lib/Mixins/LikeWindowMixin', ['Core/CommandDispatcher', "Core/IoC"], fun
          CommandDispatcher.declareCommand(this, 'resizeYourself', function () {
             this._resizeInner && this._resizeInner();
             if (!this._resizeInner) {
-               IoC.resolve('ILogger').error('LikeWindowMixin::_resizeInner', 'Необходимо реализовать метод перерисовки _resizeInner, вызываемый на команду resizeYourself');
+               Env.IoC.resolve('ILogger').error('LikeWindowMixin::_resizeInner', 'Необходимо реализовать метод перерисовки _resizeInner, вызываемый на команду resizeYourself');
             }
             return true; //останавливаю всплытие выше likeWindowMixin'a
          }.bind(this));

@@ -3,15 +3,14 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
    'Lib/Control/AreaAbstract/AreaAbstract.compatible',
    'Lib/Control/Control.compatible',
    'Core/Abstract.compatible',
-   'Core/EventBus',
-   'Core/IoC',
+   'Env/Event',
    'Core/helpers/Function/shallowClone',
    'Core/core-hash',
    "Core/CommandDispatcher",
    "Core/WindowManager",
    "Core/core-instance",
    'Core/helpers/Function/forAliveOnly',
-   'Core/constants',
+   'Env/Env',
    "Core/ParallelDeferred",
    'Core/Deferred',
    'Core/markup/parse',
@@ -31,15 +30,14 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
              AreaAbstractCompatible,
              ControlCompatible,
              AbstractCompatible,
-             EventBus,
-             IoC,
+             EnvEvent,
              shallowClone,
              hash,
              CommandDispatcher,
              WindowManager,
              cInstance,
              forAliveOnly,
-             constants,
+             Env,
              cParallelDeferred,
              Deferred,
              parseMarkup,
@@ -141,7 +139,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
         * @event onAfterVisibilityChange Происходит, когда для компонента изменена видимость.
         * @remark
         * Событие происходит при вызове методов {@link setVisible} и {@link finalRegToParent}.
-        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {Env/Event:Object} eventObject Дескриптор события.
         * @param {Boolean} value Видимость контрола: true - компонент отображает. false - компонент скрыт.
         */
 
@@ -166,7 +164,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
       _getMarkup: function(rootKey, isRoot, attributes, isVdom) {
 
          if (!this._template.stable) {
-            IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
+            Env.IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
             return '';
          }
 
@@ -321,7 +319,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
 
       render: function (redraw, attr, five) {
          if (!this._template.stable) {
-            IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
+            Env.IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
             return '';
          }
          this.repairOptions();
@@ -532,7 +530,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
                   cnstr = require(moduleName);
 
                   if(cnstr === '') {
-                     IoC.resolve('ILogger').info('BaseCompatible', 'Модуль "' + moduleName + '" отсутствует в списке загруженных');
+                     Env.IoC.resolve('ILogger').info('BaseCompatible', 'Модуль "' + moduleName + '" отсутствует в списке загруженных');
                   }
 
                   if (!cfg.element) {
@@ -549,7 +547,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
                   } else if (!cfg._thisIsInstance) {
                      cfg.eventBusId = randomId();
                      if (cfg.name) {
-                        EventBus.channel(cfg.eventBusId, {
+                        EnvEvent.Bus.channel(cfg.eventBusId, {
                            waitForPermit: true
                         });
                      } else {
@@ -609,7 +607,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
                this._markupDataBinding(true);
             }
          } catch(e){
-            IoC.resolve('ILogger').error("Revive compound control in VDom", "Component with name: " + this.getName(), e);
+            Env.IoC.resolve('ILogger').error("Revive compound control in VDom", "Component with name: " + this.getName(), e);
             throw e;
          }
 
@@ -887,8 +885,8 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
          this._childsTabindex = false;
          this._childsSizes = {};
          this._maxTabindex = 0;
-         this._keysWeHandle = [constants.key.tab,
-                               constants.key.enter];
+         this._keysWeHandle = [Env.constants.key.tab,
+                               Env.constants.key.enter];
 
          //Для getReadyDeferred
          this._dChildReady = new cParallelDeferred();
@@ -992,7 +990,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
          this._applyOptions && this._applyOptions();
 
          this.publishEvents();
-         if (!constants.isBuildOnServer) {
+         if (!Env.constants.isBuildOnServer) {
             this.initCompatibleFunc();
          }
 
@@ -1000,7 +998,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
 
          this._isVisible = this._options.visible;
 
-         if (constants.isBuildOnServer) {
+         if (Env.constants.isBuildOnServer) {
            /**
             * На сервере контекст используется исключительно как источник данных для
             * первичной отрисовки верстки
@@ -1496,7 +1494,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
          var self = this;
          self._children[control.getName()] = control;
 
-         if (!constants.isBuildOnServer) {
+         if (!Env.constants.isBuildOnServer) {
             control.once('onDestroy', function () {
                delete self._children[control.getName()];
             });
@@ -1510,7 +1508,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
                // находим и кэшируем владельца, но тихо, посколько владелец метки появляется позже
                this.getOwner(true);
             } else {
-               if (!constants.isBuildOnServer) {
+               if (!Env.constants.isBuildOnServer) {
                   // если родитель еще не готов, дождемся готовности и закэшируем овнера
                   topParent.subscribe('onReady', forAliveOnly(this.getOwner, this));
                }
@@ -1522,7 +1520,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
          /**
           * Не публикуем события на сервере
           */
-         if (!constants.isBuildOnServer) {
+         if (!Env.constants.isBuildOnServer) {
             AbstractCompatible._publish.apply(this, arguments);
          }
       },
@@ -1680,7 +1678,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
             return this._oldKeyboardHover.apply(this, arguments);
          }
          if(e.which in this._keysWeHandle){
-            if(e.which == constants.key.enter) {
+            if(e.which == Env.constants.key.enter) {
                if(!(e.altKey || e.shiftKey) && (e.ctrlKey || e.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
                   if (!this._defaultAction) {
                      return true;
@@ -1713,7 +1711,7 @@ define('Lib/Control/BaseCompatible/BaseCompatible', [
                }
                component = component._logicParent;
             }
-            if (constants.compat) {
+            if (Env.constants.compat) {
                throw new Error('environment не был найден среди предков');
             }
          }

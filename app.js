@@ -81,9 +81,9 @@ global.currentInfo = {};
 var INTERVALS = [];
 
 const wss = createServer(function connectionListener(ws) {
-   setTimeout(() => {
+   var initSettingsTmt = setTimeout(() => {
       ws.send(JSON.stringify(getInitialSettings()));
-   }, 10000);
+   }, 5000);
 
    setIntervalWrapper(() => {
       ws.send(JSON.stringify(getCurrentInfo()));
@@ -94,6 +94,7 @@ const wss = createServer(function connectionListener(ws) {
       ws.send(JSON.stringify({type: "alive"}));
    }, 2000);
    ws.on('close', () => {
+      clearTimeout(initSettingsTmt);
       stopAllIntervals();
    });
    ws.on('message', (data) => {
@@ -108,6 +109,7 @@ const wss = createServer(function connectionListener(ws) {
 function handleMessage(data) {
    switch (data.type) {
       case "newSettings":
+         global.settings = data.data;
          return sendSettings(data.data);
       default:
          return "wrong request";

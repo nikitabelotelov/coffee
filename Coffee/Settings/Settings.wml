@@ -1,28 +1,26 @@
 <div class="settings-page">
-   <div class="settings-menu-master">
-      <ws:for data="key, data in settingsInfo">
-         <Router.Link href="set/:id" id="{{ key }}">
-            <div class="settings-list-item">
-               {{ key }}
-            </div>
-         </Router.Link>
-      </ws:for>
-   </div>
-   <div class="content">
-      <Router.Route mask="set/:pageId">
-         <div class="settings-list-item">
-            <ws:if data="{{content.pageId !== undefined && settingsInfo[content.pageId]}}">
-               <ws:for data="name, fieldInfo in settingsInfo[content.pageId]">
-                  <div class="settings-detail-item">
-                     <div class="settings-detail-name">{{name}}</div>
-                     <Coffee.Settings.NumberInput bind:value="fieldInfo.value" on:valueChanged="settingChangedHandler()"/>
-                  </div>
-               </ws:for>
-            </ws:if>
-         </div>
+   <div class="coffee-application" >
+      <Router.Route mask="settingsPage/:pageId">
+         <Coffee.PageLoader base="Settings" default="SettingsMenu" templateOptions="{{settingsInfo}}">
+         </Coffee.PageLoader>
       </Router.Route>
    </div>
+
+   <!--<div class="settings-menu-master">-->
+   <!--<ws:for data="key, data in settingsInfo">-->
+   <!--<Router.Link href="set/:id" id="{{ key }}">-->
+   <!--<div class="settings-master-list-items">-->
+   <!--{{ key }}-->
+   <!--</div>-->
+   <!--</Router.Link>-->
+   <!--</ws:for>-->
+   <!--</div>-->
+   <!--<div class="content">-->
+   <!--<Router.Route mask="set/:pageId">-->
+   <!--<Coffee.Settings.SettingsDetail settingsInfo="{{settingsInfo}}"/>-->
+   <!--</Router.Route>-->
+   <!--</div>-->
    <!--<Router.Link href="page/:pageId" pageId="BlockPage">-->
-      <!--<div on:click="checkUpdate()">Check update</div>-->
+   <!--<div on:click="checkUpdate()">Check update</div>-->
    <!--</Router.Link>-->
 </div>

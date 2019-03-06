@@ -6,8 +6,7 @@ define('Core/Context', [
    'Core/helpers/Array/findIndex',
    'Core/helpers/Function/shallowClone',
    'Core/core-instance',
-   'Core/core-debug',
-   'Core/IoC'
+   'Env/Env'
 ], function(
    extend,
    Abstract,
@@ -16,8 +15,7 @@ define('Core/Context', [
    arrayFindIndex,
    shallowClone,
    cInstance,
-   cDebug,
-   IoC
+   Env
 ) {
 
       function unique(arr) {
@@ -546,14 +544,14 @@ define('Core/Context', [
           *    <li>Если поле существует в текущем контексте, то результатом поиска будет текущий контекст и это поле.</li>
           *    <li>Если поле существует в родительском контексте, то результатом поиска будет родительский контекст и это поле.</li>
           * </ul>
-          * @param {Core/EventObject} eventObject Дескриптор события.
+          * @param {Env/Event:Object} eventObject Дескриптор события.
           * @param {String} fieldName Имя поля контекста.
           */
          /**
           * @event onDataBind Происходит при полном изменении контекста, а не одного или нескольких полей.
           * @remark
           * Например, событие происходит при выполнении метода {@link setContextData}.
-          * @param {Core/EventObject} eventObject Дескриптор события.
+          * @param {Env/Event:Object} eventObject Дескриптор события.
           * @see setContextData
           */
          /**
@@ -565,7 +563,7 @@ define('Core/Context', [
           *    <li>с помощью метода {@link setValue};</li>
           *    <li>с помощью <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/databinding/#binding'>связывания опций контрола</a> с полем контекста.</li>
           * </ul>
-          * @param {Core/EventObject} eventObject Дескриптор события.
+          * @param {Env/Event:Object} eventObject Дескриптор события.
           * @param {String} fieldName Имя поля контекста.
           * @param {*} value Новое значение поля контекста.
           * @param {Lib/Control/Control} [initiator] Инициатор изменения поля контекста. Параметр передается, если изменение было вызвано из контрола.
@@ -577,7 +575,7 @@ define('Core/Context', [
           * @remark
           * Событие происходит при изменении значения в поле текущего или вышестоящего контекста (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/databinding/'>Контекст области</a>).
           * Если метод контекста (или группа методов, выполняемая через метод контекста runInBatchUpdate) делает несколько изменений в контексте, то событие onFieldsChanged произойдёт только один раз по окончании этого метода.
-          * @param {Core/EventObject} eventObject Дескриптор события.
+          * @param {Env/Event:Object} eventObject Дескриптор события.
           * @see setValue
           * @see setValueSelf
           * @see removeValue
@@ -588,7 +586,7 @@ define('Core/Context', [
           * @event onFieldRemove Происходит при удалении поля контекста.
           * @remark
           * Событие происходит при удалении поля текущего или вышестоящего контекста (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/databinding/'>Контекст области</a>).
-          * @param {Core/EventObject} eventObject Дескриптор события.
+          * @param {Env/Event:Object} eventObject Дескриптор события.
           * @param {String} fieldName Имя удалённого поля контекста.
           * @see removeValue
           */
@@ -619,7 +617,7 @@ define('Core/Context', [
          },
          $constructor: function() {
             if (!this._options._createdWithWrapper && !this._options.isGlobal) {
-               IoC.resolve('ILogger').error('Core/Context', 'Для создания контекста нужно использовать метод Context.createContext(control[, options[, previousContext]]).');
+               Env.IoC.resolve('ILogger').error('Core/Context', 'Для создания контекста нужно использовать метод Context.createContext(control[, options[, previousContext]]).');
             }
 
             this._context = new ContextObject();
@@ -982,7 +980,7 @@ define('Core/Context', [
                }
             }
 
-            cDebug.checkAssertion(!!result === !!context);
+            Env.coreDebug.checkAssertion(!!result === !!context);
 
             if (!result && isSetIntent) {
                context = this;
@@ -1119,7 +1117,7 @@ define('Core/Context', [
                var descr = this._getFieldDescr(fieldName, FindIntent.SET, RestrictFlags[toSelf ? 'SET' : 'NONE']);
 
                if (!descr) {
-                  var logger = IoC.resolve('ILogger');
+                  var logger = Env.IoC.resolve('ILogger');
                   logger.error('setValue', rk('Нельзя записывать значение в под-поле сложного поля контекста, если этого сложного поля в контексте не существует. Путь к под-полю:') + ' ' + fieldName);
                } else {
                   var context = descr.context;
@@ -1421,7 +1419,7 @@ define('Core/Context', [
          var ctx;
 
          if (!ctrlDef || (!cInstance.instanceOfMixin(ctrlDef, 'Lib/Control/Control.compatible') && !cInstance.instanceOfModule(ctrlDef, 'Core/Deferred'))) {
-            IoC.resolve('ILogger').info('Для создания контекста необходимо передать контрол, которому он будет принадлежать, или Deffered, который выстрелит, когда контекст перестанет быть нужным.');
+            Env.IoC.resolve('ILogger').info('Для создания контекста необходимо передать контрол, которому он будет принадлежать, или Deffered, который выстрелит, когда контекст перестанет быть нужным.');
          }
          options = options || {};
          if (previousContext && !(previousContext instanceof Context)) {

@@ -1,6 +1,6 @@
 define('Core/deprecated', [
-   'Core/constants'
-], function (constants) {
+   'Env/Env'
+], function (Env) {
 
    var deprecatedMessages = [];
    function callNext(fn, after) {
@@ -17,7 +17,7 @@ define('Core/deprecated', [
    }
 
    function showErrorLog(message) {
-      if (constants.isBrowserPlatform) {
+      if (Env.constants.isBrowserPlatform) {
          if (deprecatedMessages.indexOf(message) == -1) {
             deprecatedMessages.push(message);
             console.error('Deprecated', message);// eslint-disable-line no-console
@@ -26,7 +26,7 @@ define('Core/deprecated', [
    }
 
    function showInfoLog(message) {
-      if (constants.isBrowserPlatform) {
+      if (Env.constants.isBrowserPlatform) {
          if (deprecatedMessages.indexOf(message) == -1) {
             deprecatedMessages.push(message);
              console.info('Deprecated', message);// eslint-disable-line no-console
@@ -53,9 +53,9 @@ define('Core/deprecated', [
 
          deprecMessage = customMessage || 'Функция ' + funcName + ' помечена как deprecated и будет удалена в ' + ver + '.' + (use ? ' Используйте ' + use : '');
          return callNext(func, function () {
-            if (constants.isBrowserPlatform) {
+            if (Env.constants.isBrowserPlatform) {
                if (minimalOnly) {
-                  if (constants._isMinimalCore) {
+                  if (Env.constants._isMinimalCore) {
                      console.error('Deprecated', deprecMessage); // eslint-disable-line no-console
                   }
                } else {

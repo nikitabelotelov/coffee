@@ -7,17 +7,14 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
    'Core/helpers/Object/find',
    'Core/helpers/Hcontrol/getElementCachedDim',
    "Core/WindowManager",
-   "Core/IoC",
    "Core/ParallelDeferred",
    "Core/Deferred",
-   "Core/constants",
+   'Env/Env',
    "Lib/Control/Control",
    "Core/core-instance",
-   "Core/core-debug",
-   "Core/detection",
    "Core/CommandDispatcher",
    "Lib/Mixins/BreakClickBySelectMixin",
-   "Transport/HTTPError",
+   'Browser/Transport',
    'Core/helpers/Object/isPlainObject',
    'Core/helpers/Array/findIndex',
    "Core/Context",
@@ -33,17 +30,14 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
       objectFind,
       getElementCachedDim,
       WindowManager,
-      IoC,
       cParallelDeferred,
       cDeferred,
-      cConstants,
+      Env,
       baseControl,
       cInstance,
-      coreDebug,
-      detection,
       CommandDispatcher,
       BreakClickBySelectMixin,
-      HTTPError
+      Transport
    ) {
 
    'use strict';
@@ -138,7 +132,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
    var AreaAbstract = baseControl.Control.extend([AreaAbstractcompatible, CompatibleBreakClickBySelectMixin], /** @lends Lib/Control/AreaAbstract/AreaAbstract.prototype */{
       /**
        * @event onResize При изменении размеров контейнера
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onResize', function(event) {
@@ -150,7 +144,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
       /**
        * @event onReady При полной готовности области
        * Все контролы внутри уже построились и готовы.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onReady', function(event) {
@@ -161,7 +155,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
       /**
        *
        * @event onActivate При переходе фокуса в область
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onActivate', function(event) {
@@ -173,7 +167,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
        */
       /**
        * @event onBeforeControlsLoad Перед началом загрузки контролов
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onBeforeControlsLoad', function(event) {
@@ -185,7 +179,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
        */
       /**
        * @event onBeforeShow Перед открытием области
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onBeforeShow', function(event) {
@@ -196,7 +190,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
        */
       /**
        * @event onAfterShow После открытия области
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onAfterShow', function(event) {
@@ -207,7 +201,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
        */
       /**
        * @event onBeforeLoad Перед загрузкой данных области
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onBeforeLoad', function(event) {
@@ -219,7 +213,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
        */
       /**
        * @event onAfterLoad После загрузки данных области
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    control.subscribe('onAfterLoad', function(event) {
@@ -359,8 +353,8 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
          this._childsMapIdCache = this._childsMapIdCache || {};
 
          this._keysWeHandle = this._keysWeHandle || [
-            cConstants.key.tab,
-            cConstants.key.enter
+            Env.constants.key.tab,
+            Env.constants.key.enter
          ];
          this._toolbarCount = {top: 0, right: 0, bottom: 0, left: 0};
          this._waitersByName = {};
@@ -411,18 +405,18 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
             }
          });
 
-         // Если внутри vdom появляется CompoundControl, могло случиться так, что Core/constants
+         // Если внутри vdom появляется CompoundControl, могло случиться так, что Env/Env:constants
          // уже подгружен, и в нем нет jQuery-элемента $doc
-         if (!cConstants.$doc) {
+         if (!Env.constants.$doc) {
             // Если он отсутствует, добавляем его
-            cConstants.$doc = $(document);
-         } else if (!cConstants.$doc.bind) {
+            Env.constants.$doc = $(document);
+         } else if (!Env.constants.$doc.bind) {
             // Если он уже есть, но не является jQuery-элементом, оборачиваем его, так как
             // дальше он будет использоваться как jQuery-документ
-            cConstants.$doc = $(cConstants.$doc);
+            Env.constants.$doc = $(Env.constants.$doc);
          }
 
-         cConstants.$doc.bind('mousedown.' +  this.getId(), function() {
+         Env.constants.$doc.bind('mousedown.' +  this.getId(), function() {
              //локализую проблему во время перехода на jQuery 3
              if(!$.event.props) {
                  $.event.props = [];
@@ -432,7 +426,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
             }
          });
          // Firefox по Ctrl+клик выделяет всю страницу, сбрасываем его выделение по mousedown
-         if (detection.firefox) {
+         if (Env.detection.firefox) {
             this._container.bind('mousedown.fxselect', function(e) {
                if (e.ctrlKey) {
                   e.preventDefault();
@@ -452,7 +446,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
          }
 
          this._dChildReady.getResult().addCallback(function() {
-            self._childNonControls = self._container.children(cConstants.NON_CTRL);
+            self._childNonControls = self._container.children(Env.constants.NON_CTRL);
          });
 
          this.setOpener(cfg && cfg.opener);
@@ -517,7 +511,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
        * @private
        */
       _subscribeToWindowResize: function() {
-         cConstants.$win.bind('resize.' + this.getId(), this._onResizeHandler.bind(this));
+         Env.constants.$win.bind('resize.' + this.getId(), this._onResizeHandler.bind(this));
       },
 
       /**
@@ -531,7 +525,7 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
          var result = !!(dOperation && (dOperation instanceof cDeferred));
          if (result) {
             this._pending.push(dOperation);
-            this._pendingTrace.push(coreDebug.getStackTrace());
+            this._pendingTrace.push(Env.coreDebug.getStackTrace());
             dOperation.addBoth(this._checkPendingOperations.bind(this));
          }
          return result;
@@ -758,11 +752,11 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
                    notifierDivContent = notifierDiv.find('#warningText'),
                    isOnline = window.navigator.onLine;
 
-               if(e instanceof HTTPError){
+               if(e instanceof Transport.fetch.Errors.HTTP){
                   message += ', ' + e.url;
                }
 
-               IoC.resolve('ILogger').error("AreaAbstract", rk("Ошибка при загрузке дочерних компонентов") + " (" + message + ")", e);
+               Env.IoC.resolve('ILogger').error("AreaAbstract", rk("Ошибка при загрузке дочерних компонентов") + " (" + message + ")", e);
                if(isOnline) {
                   notifierDivContent.text(rk('Произошла ошибка при попытке загрузки ресурса. Пожалуйста, обновите страницу'));
                   notifierDiv.css('display', '');
@@ -851,8 +845,8 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
                    result,
                    coreModules =  ['Deprecated', 'Lib'],
                    moduleName = type.indexOf('/') > 0 ? type.split('/')[0] : false;
-               if (moduleName && (coreModules.indexOf(moduleName) > -1 || Object.keys(cConstants.modules).some(function (name) {
-                      return cConstants.modules[name] === moduleName;
+               if (moduleName && (coreModules.indexOf(moduleName) > -1 || Object.keys(Env.constants.modules).some(function (name) {
+                      return Env.constants.modules[name] === moduleName;
                    })) ||
                    (type.indexOf('SBIS3.') === -1 && type.indexOf('/') > -1) && type.indexOf('Control/') == -1
                ) {
@@ -891,9 +885,13 @@ define('Lib/Control/AreaAbstract/AreaAbstract', [
                   if (typeof instance.getReadyDeferred === 'function') {
                      self._dChildReady.push(instance.getReadyDeferred());
                   }
-                  var alignment = instance.getAlignment();
-                  if (alignment.horizontalAlignment != 'Stretch' || alignment.verticalAlignment != 'Stretch') {
-                     self._doGridCalculation = true;
+
+                  // На VDOM контролах нет метода getAlignment, поэтому для vdom контролов ничего не делаем
+                  if (!instance._template) {
+                     var alignment = instance.getAlignment();
+                     if (alignment.horizontalAlignment != 'Stretch' || alignment.verticalAlignment != 'Stretch') {
+                        self._doGridCalculation = true;
+                     }
                   }
                }
                finally {

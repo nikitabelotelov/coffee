@@ -1,13 +1,13 @@
 define('Core/moduleStubs', [
    'require',
-   'Core/constants',
+   'Env/Env',
    'Core/Deferred',
    'View/Executor/Utils',
    'Core/patchRequireJS',
    'Core/library'
 ], function(
    require,
-   constants,
+   Env,
    Deferred,
    Utils,
    patchRequireJS,
@@ -95,7 +95,7 @@ define('Core/moduleStubs', [
          mods.forEach(function(mod, idx) {
             var lib = library.parse(mod);
             // На серверном скрипте не надо проверять defined. работаем как есть
-            if (!constants.isServerScript && Utils.RequireHelper.defined(mod)) {
+            if (!Env.constants.isServerScript && Utils.RequireHelper.defined(mod)) {
                resultMods[idx] = require(lib.name);
             } else {
                idsToLoad.push(idx);

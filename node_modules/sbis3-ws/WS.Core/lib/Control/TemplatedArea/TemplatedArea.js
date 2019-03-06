@@ -29,11 +29,11 @@ define("Lib/Control/TemplatedArea/TemplatedArea", [
    var TemplatedArea = TemplatedAreaAbstract.extend(/** @lends Lib/Control/TemplatedArea/TemplatedArea.prototype */{
       /**
        * @event onBeforeClose Событие, возникающее перед разрушением области
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        */
       /**
        * @event onAfterClose Событие, возникающее после разрушения области
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        */
       $protected: {
          _width: '',

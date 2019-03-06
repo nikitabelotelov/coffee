@@ -1,5 +1,6 @@
 /// <amd-module name="Core/pathResolver" />
-import * as constants from './constants';
+//@ts-ignore
+import { constants } from 'Env/Env';
 
 let // Global variables root
    global = (function() {
@@ -36,50 +37,6 @@ function resolveModulePath(moduleName) {
 }
 
 /**
- * @name Core/pathResolver#resolveModule
- * @function
- * @description
- * Возвращает путь до модуля по его имени
- * @param {String} name имя модуля
- * @returns {string}
- */
-function resolveModule(name, plugin, clearAlias) {
-   let path = '',
-      isSplitted = true,
-      checkInJsCoreModules = function(path) {
-         if (name in constants.jsCoreModules) {
-            path = constants.wsRoot + constants.jsCoreModules[name];
-         }
-         return path;
-      },
-      checkInJsModules = function(path) {
-         if (name in constants.jsModules) {
-            const jsMod = constants.jsModules[name];
-            if (jsMod) {
-               if (jsMod.charAt(0) === '/' || isRemote.test(jsMod) || jsMod.charAt(1) === ':') {
-                  path = jsMod;
-               } else {
-                  path = constants.resourceRoot + jsMod;
-               }
-            } else {
-               path = constants.resourceRoot + resolveModulePath(name);
-            }
-         }
-         return path;
-      };
-   if (isSplitted) {
-      path = checkInJsModules(path);
-   } else {
-      path = checkInJsCoreModules(path);
-      if (!path) {
-         path = checkInJsModules(path);
-      }
-   }
-
-   return path;
-}
-
-/**
  * @name Core/pathResolver#resolveComponentPath
  * @function
  * @description
@@ -95,17 +52,8 @@ function resolveModule(name, plugin, clearAlias) {
  * @return {String} Полный путь.
  */
 function resolveComponentPath(path) {
-   const
-      pA = path.split('/'),
-      componentName = pA.shift(),
-      //@ts-ignore
-      relativePath = constants.requirejsPaths && constants.requirejsPaths[componentName] ? `/${constants.requirejsPaths[componentName]}/` : resolveModule(componentName).replace(/\/[^\/]*$/, '/');
-
-   if (!relativePath) {
-      return '';
-   }
-
-   return relativePath + pA.join('/');
+   const url = require.toUrl(path);
+   return url || '';
 }
 
 /**
@@ -130,7 +78,7 @@ function pathResolver(name, plugin, clearAlias?) {
       const paths = name.split('/'),
          moduleName = paths.shift();
 
-      path = resolveModule(moduleName, plugin, clearAlias);
+      path = '';
       if (path) {
          // TODO Для совместимости новых и старых имён.
          /* При переходе к новым именнам возникла проблема при вложенных ресурсах.
@@ -148,7 +96,7 @@ function pathResolver(name, plugin, clearAlias?) {
          path = name + ((plugin === 'js' || regexp.test(name)) ? '' : ext);
       }
    } else {
-      path = resolveModule(name, plugin, clearAlias);
+      path = '';
 
       if (!path) {
          throw new Error(`Module ${name} is not defined`);
@@ -177,7 +125,7 @@ let requirejsPathResolver:any = function(name, plugin, clearAlias?) {
 
 
 requirejsPathResolver.resolveModulePath = resolveModulePath;
-requirejsPathResolver.resolveModule = resolveModule;
+requirejsPathResolver.resolveModule = () => '';
 requirejsPathResolver.resolveComponentPath = resolveComponentPath;
 
 /**

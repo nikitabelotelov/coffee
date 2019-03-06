@@ -1,4 +1,4 @@
-define('Core/utf8-base64', ['Core/constants'], function() {
+define('Core/utf8-base64', ['Env/Env'], function() {
    /**
     * @class Core/utf8-base64
     * @public

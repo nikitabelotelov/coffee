@@ -1,12 +1,12 @@
 define('Core/helpers/vdomCtxFields', [
    'View/Executor/Utils',
-   'Core/compatibility',
+   'Env/Env',
    'optional!Controls/Container/Scroll/Context',
    'optional!Controls/Context/TouchContextField',
    'optional!UserActivity/ActivityContextField'
 ], function(
    Utils,
-   compability,
+   Env,
    ScrollData,
    TouchContextField,
    ActivityContextField) {
@@ -28,7 +28,7 @@ define('Core/helpers/vdomCtxFields', [
          hash.ScrollData = new ScrollData({pagingVisible: false});
       }
       if (TouchContextField) {
-         hash.isTouch = new TouchContextField(compability.touch);
+         hash.isTouch = new TouchContextField(Env.compatibility.touch);
       }
       if (ActivityContextField) {
          hash.activityContextField = new ActivityContextField();

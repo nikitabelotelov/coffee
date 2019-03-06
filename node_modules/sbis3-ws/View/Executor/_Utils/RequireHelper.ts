@@ -1,6 +1,6 @@
 /// <amd-module name="View/Executor/_Utils/RequireHelper" />
 
-var myRequireHash = {};
+const myRequireHash = {};
 
 // require.defined returns current module if you call it with '.'
 function checkModuleName(name) {
@@ -8,7 +8,7 @@ function checkModuleName(name) {
 }
 
 export function defined(name) {
-   var res = false;
+   let res = false;
 
    if (typeof name !== 'string') {
       return false;
@@ -21,7 +21,16 @@ export function defined(name) {
       res = require.defined(name);
       if (res) {
          // @ts-ignore
-         myRequireHash[name] = require(name);
+         const mod = require(name);
+
+         //It's possible that module is defined but not ready yet because it waits for its own dependencies.
+         //If we start to build templates until this process ends we'd receive not exactly module body here.
+         //We can get undefined or an empty object instead.
+         if (mod === undefined || (mod && typeof mod === 'object' && Object.keys(mod).length === 0)) {
+            return false;
+         }
+
+         myRequireHash[name] = mod;
       }
    }
    return res;
@@ -34,4 +43,5 @@ function _require(name) {
    }
    return myRequireHash[name];
 }
+
 export { _require as require };

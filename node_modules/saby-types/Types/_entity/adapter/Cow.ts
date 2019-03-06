@@ -19,20 +19,26 @@ import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
 import CowTable from './CowTable';
 import CowRecord from './CowRecord';
-import SerializableMixin from '../SerializableMixin';
+import SerializableMixin, {IState as ICommonState} from '../SerializableMixin';
 import {register} from '../../di';
 import {mixin} from '../../util';
 
-export default class Cow extends mixin(Abstract, SerializableMixin) implements IDecorator /** @lends Types/_entity/adapter/Cow.prototype */{
-   /**
-    * @property {Types/_entity/adapter/IAdapter} Оригинальный адаптер
-    */
+interface ISerializableState extends ICommonState {
    _original: IAdapter;
+}
+
+export default class Cow extends mixin(
+   Abstract, SerializableMixin
+) implements IDecorator /** @lends Types/_entity/adapter/Cow.prototype */{
+   /**
+    * @property Оригинальный адаптер
+    */
+   protected _original: IAdapter;
 
    /**
-    * @property {Function} Ф-я обратного вызова при событии записи
+    * @property Ф-я обратного вызова при событии записи
     */
-   _writeCallback: Function;
+   protected _writeCallback: Function;
 
    /**
     * Конструктор
@@ -48,68 +54,69 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
       }
    }
 
-   //region IAdapter
+   // region IAdapter
 
-   forTable(data) {
+   forTable(data: any): CowTable {
       return new CowTable(data, this._original, this._writeCallback);
    }
 
-   forRecord(data) {
+   forRecord(data: any): CowRecord {
       return new CowRecord(data, this._original, this._writeCallback);
    }
 
-   getKeyField(data) {
+   getKeyField(data: any): string {
       return this._original.getKeyField(data);
    }
 
-   getProperty(data, property) {
+   getProperty(data: object, property: string): any {
       return this._original.getProperty(data, property);
    }
 
-   setProperty(data, property, value) {
+   setProperty(data: object, property: string, value: any): void {
       return this._original.setProperty(data, property, value);
    }
 
-   serialize(data) {
+   serialize(data: any): any {
       return this._original.serialize(data);
    }
 
-   //endregion IAdapter
+   // endregion
 
-   //region IDecorator
+   // region IDecorator
 
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
 
-   getOriginal() {
+   getOriginal(): IAdapter {
       return this._original;
    }
 
-   //endregion IDecorator
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-      state._original = this._original;
-      return state;
+   _getSerializableState(state: ICommonState): ISerializableState {
+      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
+      resultState._original = this._original;
+      return resultState;
    }
 
-   _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          fromSerializableMixin.call(this);
          this._original = state._original;
       };
    }
 
-   //endregion SerializableMixin
+   // endregion
 }
 
-Cow.prototype['[Types/_entity/adapter/Cow]'] = true;
-// @ts-ignore
-Cow.prototype['[Types/_entity/adapter/IDecorator]'] = true;
-Cow.prototype._moduleName = 'Types/entity:adapter.Cow';
-Cow.prototype._original = null;
-Cow.prototype._writeCallback = null;
+Object.assign(Cow.prototype, {
+   '[Types/_entity/adapter/Cow]': true,
+   '[Types/_entity/adapter/IDecorator]': true,
+   _moduleName: 'Types/entity:adapter.Cow',
+   _original: null,
+   _writeCallback: null
+});
 
 register('Types/entity:adapter.Cow', Cow, {instantiate: false});

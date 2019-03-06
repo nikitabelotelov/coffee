@@ -30,7 +30,15 @@ function startCoffeeServer() {
                }
                console.log(`stdout: ${stdout}`);
                console.log(`stderr: ${stderr}`);
-               coffeeServerProcess = startCoffeeServer();
+               exec('git submodule update --remote serial-helper', (error, stdout, stderr) => {
+                  if (error) {
+                     console.error(`exec error: ${error}`);
+                     return;
+                  }
+                  console.log(`stdout: ${stdout}`);
+                  console.log(`stderr: ${stderr}`);
+                  coffeeServerProcess = startCoffeeServer();
+               });
             });
             break;
          case EXIT_CODES.ERROR:
@@ -45,6 +53,7 @@ process.on("SIGINT", function() {
    console.log('beforeExit event');
    try {
       coffeeServerProcess.kill();
+      global.SerialHelper.close();
    } catch(e) {
       console.error("Couldn\'t kill server process: " + e);
    }

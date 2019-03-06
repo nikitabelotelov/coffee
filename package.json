@@ -66,6 +66,7 @@
       "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.200",
       "saby-units": "git+https://github.com/saby/Units.git#rc-19.200",
       "ws-data": "git+http://git.sbis.ru/ws/data.git#rc-19.200",
-      "saby-ui": "https://github.com/saby/UI.git#rc-19.200"
+      "saby-ui": "https://github.com/saby/UI.git#rc-19.200",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.200"
    }
 }

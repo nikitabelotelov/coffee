@@ -4,14 +4,14 @@
    var global = (function(){ return this || (0,eval)('this'); }()),
        define = global.define || (global.requirejs && global.requirejs.define) || (requirejsVars && requirejsVars.define);
 
-   define('optional', ['Core/constants', 'Core/IoC'], function(constants, IoC) {
+   define('optional', ['Env/Env'], function(Env) {
       return {
          load: function (name, require, onLoad) {
             //Skip if module name isn't available in constants.modules
             if (
-               constants &&
-               constants.buildMode === 'release' &&
-               constants.modules
+               (Env && Env.constants) &&
+               Env.constants.buildMode === 'release' &&
+               Env.constants.modules
             ) {
                var moduleName = name.split('/')[0],
                   plugins = moduleName.split(/[!?]/);
@@ -32,7 +32,7 @@
                   plugins.indexOf('xhtml') === -1 &&
                   plugins.indexOf('remote') === -1
                ) {
-                  if (!(moduleName in constants.modules)) {
+                  if (!(moduleName in Env.constants.modules)) {
                      onLoad(null);
                      return;
                   }
@@ -42,7 +42,7 @@
             require([name], onLoad, function(error) {
                if (error && error.requireType) {
                   if (error.requireType !== 'scripterror') {
-                     IoC.resolve('ILogger').error(
+                     Env.IoC.resolve('ILogger').error(
                         'optional.js: optional dependency "' + name + '" has not been loaded',
                         error.message,
                         error

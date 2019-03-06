@@ -13,11 +13,9 @@ define('Lib/Control/Control', [
    "Core/core-instance",
    'Core/helpers/String/unEscapeHtml',
    'Core/helpers/Function/memoize',
-   "Core/IoC",
-   "Core/EventBus",
+   'Env/Event',
    "Core/Deferred",
    "Core/CommandDispatcher",
-   "Core/detection",
    "Core/Abstract",
    "Lib/Mixins/DataBoundMixin",
    'Core/markup/ParserUtilities',
@@ -25,7 +23,7 @@ define('Lib/Control/Control', [
    "Core/ControlBatchUpdater",
    'Core/helpers/Hcontrol/configStorage',
    "Core/Context",
-   "Core/constants",
+   'Env/Env',
    'Core/helpers/Hcontrol/replaceContainer',
    'Core/helpers/Hcontrol/focusControl',
    "Lib/Control/ControlGoodCode",
@@ -40,11 +38,9 @@ define('Lib/Control/Control', [
    cInstance,
    unEscapeHtml,
    memoize,
-   IoC,
-   cEventBus,
+   EnvEvent,
    cDeferred,
    CommandDispatcher,
-   cDetection,
    Abstract,
    DataBoundMixin,
    ParserUtilities,
@@ -52,7 +48,7 @@ define('Lib/Control/Control', [
    ControlBatchUpdater,
    configStorage,
    Context,
-   Constants,
+   Env,
    replaceContainer,
    focusControl,
    ControlGoodCode,
@@ -94,7 +90,7 @@ define('Lib/Control/Control', [
        * @event onChange При изменении значения пользователем или из контекста
        * @remark
        * Событие происходит, когда пользователь изменяет значение контрола.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {*} value Текущее значение контрола.
        * @see value
        * @see onValueChange
@@ -104,7 +100,7 @@ define('Lib/Control/Control', [
        * @remark
        * Событие происходит, когда контрол получает фокус: клик по контролу, через клавишу Tab или с помощью метода {@link setActive}.
        * Не происходит второй раз, если фокус уже установлен на контроле.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * 1. При переходе фокуса на поле ввода (fieldString) открыть подсказку Инфобокс.
        * <pre>
@@ -137,7 +133,7 @@ define('Lib/Control/Control', [
        *    <li>другой контрол получил фокус;</li>
        *    <li>контрол, на который установлен фокус, разрушен с помощью метода {@link destroy}.</li>
        * </ol>
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Boolean|undefined} destroyed Произошла ли потеря фокуса вследствие разрушения контрола методом {@link destroy}.
        * @param {Lib/Control/Control|undefined} focusedControl Контрол, на который перешёл фокус. Если контрол неизвестен, то undefined.
        * @example
@@ -169,7 +165,7 @@ define('Lib/Control/Control', [
       /**
        * @event onKeyPressed Происходит при нажатии клавиши, когда на котороле установлен фокус.
        * @remark
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Event} event Произошедшее JavaScript событие. Содержит код клавиши в поле which.
        * @return Для отмены обработки нажатия клавиши установить результат false (см. Пример № 3).
        * @example
@@ -201,7 +197,7 @@ define('Lib/Control/Control', [
        */
       /**
        * @event onClick Происходит при клике на контрол.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Object} originalEvent Оригинальное событие, пришедшее в обработчик из jQuery.
        * @example
        * 1. При клике по полю связи (SBIS3.CONTROLS/FieldLink) сбросить значение связи.
@@ -224,7 +220,7 @@ define('Lib/Control/Control', [
        * Событие происходит при смене состояния контрола.
        * Поднимается первый раз без аргументов, тем самым контрол сообщает, что готов к приёму состояния.
        * Последующие события поднимаются с аргументом, который соответствует состоянию контрола.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {*}                     state     Состояние контрола.
        * @param {Boolean}               replace     Не записывать состояние в историю браузера
        * @param {Boolean}               force       Игнорировать флаг applied
@@ -245,7 +241,7 @@ define('Lib/Control/Control', [
        * @event onTooltipContentRequest Происходит при получении содержимого расширенной подсказки поля.
        * @remark
        * Обработчик события применяется для отмены или модификации текста подсказки.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {String} message Сообщение для отображения.
        * @return
        * <ol>
@@ -283,7 +279,7 @@ define('Lib/Control/Control', [
        *
        * Извещение об изменении свойства нужно производить с помощью метода {@link _notifyOnPropertyChanged}, а не просто _notify('onPropertyChanged').
        * Это требуется, чтобы обеспечить поддержку события на обновление группы свойств - {@link onPropertiesChanged}, и отложенного запуска этого события до окончания обновления всей группы свойств (см. метод {@link runInPropertiesUpdate}).
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {String}                propName    Имя изменённого свойства.
        * @see _notifyOnPropertyChanged
        * @see setProperty
@@ -297,7 +293,7 @@ define('Lib/Control/Control', [
        * @remark
        * Изменение группы свойств происходит тогда, когда методы, вызывающие это изменение, выполняются из метода-обёртки {@link runInPropertiesUpdate}.
        * Он позволяет группировать изменения свойств и откладывать событие onPropertiesChanged до окончания группы так, что для нескольких изменений разных свойств в группе произойдёт только одно событие onPropertiesChanged - в момент окончания группы.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * <pre>
        *    //Начинаем группу изменений свойств
@@ -325,7 +321,7 @@ define('Lib/Control/Control', [
 
       /**
        * @event onCommandCatch Событие, позволяющее перехватывать команду
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {string} commandName Дескриптор события.
        * @param {*} arg1 Остальные аргументы команды: onCommandCatch(eventObject, commandName, arg1, arg2...)
        */
@@ -980,7 +976,7 @@ define('Lib/Control/Control', [
          // It may lead to memory leak on presentation service.
          // To prevent this it is necessary to check that Control is not created on server.
          if(typeof window === 'undefined') {
-            IoC.resolve('ILogger').error(new Error('Creating Lib/Control/Control on server side is forbidden'));
+            Env.IoC.resolve('ILogger').error(new Error('Creating Lib/Control/Control on server side is forbidden'));
          }
 
          for(var opt in cfg) {
@@ -1178,8 +1174,8 @@ define('Lib/Control/Control', [
             this._container.bind('click touchend', this._onActionHandler.bind(this));
 
             //if (Constants.compatibility.touch && this._checkClickByTap) {
-               this._container[0].addEventListener('touchmove', this._onActionHandler.bind(this), Constants.compatibility.supportPassive ? {passive: true} : false);
-               this._container[0].addEventListener('touchstart', this._onActionHandler.bind(this), Constants.compatibility.supportPassive ? {passive: true} : false);
+               this._container[0].addEventListener('touchmove', this._onActionHandler.bind(this), Env.constants.compatibility.supportPassive ? {passive: true} : false);
+               this._container[0].addEventListener('touchstart', this._onActionHandler.bind(this), Env.constants.compatibility.supportPassive ? {passive: true} : false);
             //}
 
             this._initKeyboardMonitor();
@@ -1402,7 +1398,7 @@ define('Lib/Control/Control', [
             }
          }
          else if(parent){
-            IoC.resolve('ILogger').error('Control', 'Incorrect parent (' + ((parent instanceof Object && parent.getId) ? parent.getId() : 'not object') + ') for control (' + this.getId() + '), parent must be instanceof $ws.proto.AreaAbstract');
+            Env.IoC.resolve('ILogger').error('Control', 'Incorrect parent (' + ((parent instanceof Object && parent.getId) ? parent.getId() : 'not object') + ') for control (' + this.getId() + '), parent must be instanceof $ws.proto.AreaAbstract');
          }
          this.onAfterVisibilityChange = this.onAfterVisibilityChange.bind(this);
 
@@ -1458,7 +1454,7 @@ define('Lib/Control/Control', [
          }
          // Добавим в ControlStorage только после прохождения всей инициализации
          ControlStorage.store(this);
-         cEventBus.channel('luntik').notify('onInit', this);
+         EnvEvent.Bus.channel('luntik').notify('onInit', this);
          // В родительском классе будет сделан _notify('onInit') - все кто подписался смогут получить контрол из ControlStorage
          Control.superclass._initComplete.apply(this, arguments);
       },
@@ -1728,7 +1724,7 @@ define('Lib/Control/Control', [
          if (container) {
             var checkingControl = ("jquery" in container) ? (container[0] && container[0].wsControl) : container.wsControl;
             if (checkingControl && checkingControl !== this) {
-               IoC.resolve('ILogger').error('Control', 'Вы пытаетесь привязать компоненту (id: ' + this.getId() + ', module: ' + this._moduleName + ', ' +
+               Env.IoC.resolve('ILogger').error('Control', 'Вы пытаетесь привязать компоненту (id: ' + this.getId() + ', module: ' + this._moduleName + ', ' +
                   'name: ' + this.getName() + ') элемент, который уже привязан к другому компоненту (id: ' + this.getId() + ' , module: ' + checkingControl._moduleName + ', ' +
                   'name: ' + checkingControl.getName() + ')');
             }
@@ -1807,6 +1803,9 @@ define('Lib/Control/Control', [
          if (this._hasOption('opener') && this._getOption('opener')) {
             this._setOption('opener', null);
          }
+         if (this._hasOption('parent') && this._getOption('parent')) {
+            this._setOption('parent', null);
+         }
 
          this._parent = null;
          this._owner = null;
@@ -1881,7 +1880,7 @@ define('Lib/Control/Control', [
                // Откладываем фокусировку до подняния вверх myParent.activate, иначе там очищалось выделение
                // _isControlActive надо проверить - какой-то onFocusIn/onFocusOut мог отменить активность - тогда фокус ставить не надо
                if(this._isControlActive && !noFocus){
-                  if (cDetection.isMobilePlatform) {
+                  if (Env.detection.isMobilePlatform) {
                      focusControl(this);
                   } else {
                      ControlBatchUpdater.runBatchedDelayedAction('Control.focus', [this]);
@@ -2265,7 +2264,7 @@ define('Lib/Control/Control', [
          if(hasMethod) {
             this[methodName]();
          } else {
-            IoC.resolve('ILogger').error('Control', 'Метод initializeProperty вызвали для несуществующего свойства "' + propName + '" (не определено соответствующего ему метода ' + methodName + ' ) "');
+            Env.IoC.resolve('ILogger').error('Control', 'Метод initializeProperty вызвали для несуществующего свойства "' + propName + '" (не определено соответствующего ему метода ' + methodName + ' ) "');
          }
       }
    });

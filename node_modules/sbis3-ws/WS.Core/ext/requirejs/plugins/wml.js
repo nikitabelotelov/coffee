@@ -12,18 +12,16 @@
       'text',
       'View/config',
       'Core/pathResolver',
-      'Core/constants',
-      'Core/IoC'
+      'Env/Env'
    ], function(
       text,
       config,
       pathResolver,
-      constants,
-      IoC
+      Env
    ) {
 
       function createLostFunction(err, ext) {
-         IoC.resolve('ILogger').error(ext+'!', err.message, err);
+         Env.IoC.resolve('ILogger').error(ext+'!', err.message, err);
          var f = function () {
             return '<div>' + err.message + '</div>';
          };
@@ -85,7 +83,7 @@
 
                // для Сервиса Представлений необходимы именно сбилженные шаблоны(для здоровья локализации)
                // Также проверяем наличие process - на Серверном скрипте должны просится шаблоны без .min
-               if (isServerSide && constants.buildMode === 'release' && constants.isNodePlatform) {
+               if (isServerSide && Env.constants.buildMode === 'release' && Env.constants.isNodePlatform) {
                   path = path.replace(/(\.min)?\.tmpl$/, '.min.tmpl');
                   path = path.replace(/(\.min)?\.wml/, '.min.wml');
                }

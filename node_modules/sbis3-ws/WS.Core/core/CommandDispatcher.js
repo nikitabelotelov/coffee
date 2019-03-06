@@ -1,7 +1,7 @@
 define('Core/CommandDispatcher', ['Core/core-extend',
-   'Core/constants'],
+   'Env/Env'],
 function(coreExtend,
-         constants) {
+         Env) {
    var ControlClass = null;
    function isControl(inst) {
       /**
@@ -9,7 +9,7 @@ function(coreExtend,
        * этого можно упустить, чтобы не расходовать серверные ресурсы. Плюсом ко всему,
        * команды никогда не декларировались на сервере до смены жизненного цикла компонентов.
        */
-      if (constants.isBuildOnServer) {
+      if (Env.constants.isBuildOnServer) {
          return false;
       }
       if (!ControlClass) {

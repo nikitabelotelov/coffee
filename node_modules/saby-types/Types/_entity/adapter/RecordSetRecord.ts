@@ -29,7 +29,7 @@ import {Field, UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
 import Record from '../Record';
-import {RecordSet} from '../../collection';
+import {RecordSet, format} from '../../collection';
 
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
@@ -44,12 +44,20 @@ export default class RecordSetRecord extends mixin(
     */
    _tableData: RecordSet<Record>;
 
+   // region IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
+
+   getData: () => any;
+   getFormat: (name: string) => Field;
+   getSharedFormat: (name: string) => UniversalField;
+
    /**
     * Конструктор
     * @param {Types/_entity/Record} data Сырые данные
     * @param {Types/_collection/RecordSet} [tableData] Таблица
     */
-   constructor(data, tableData?) {
+   constructor(data: Record, tableData?: RecordSet<Record>) {
       if (data && !data['[Types/_entity/Record]']) {
          throw new TypeError('Argument "data" should be an instance of Types/entity:Record');
       }
@@ -58,23 +66,15 @@ export default class RecordSetRecord extends mixin(
       this._tableData = tableData;
    }
 
-   //region IRecord
-
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   getData: () => any;
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
-
-   has(name) {
+   has(name: string): boolean {
       return this._isValidData() ? this._data.has(name) : false;
    }
 
-   get(name) {
+   get(name: string): any {
       return this._isValidData() ? this._data.get(name) : undefined;
    }
 
-   set(name, value) {
+   set(name: string, value: any): void {
       if (!name) {
          throw new ReferenceError(`${this._moduleName}::set(): argument "name" is not defined`);
       }
@@ -86,14 +86,14 @@ export default class RecordSetRecord extends mixin(
       return this._data.set(name, value);
    }
 
-   clear() {
+   clear(): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
 
-      let fields = this.getFields();
-      let format = this._data.getFormat();
+      const fields = this.getFields();
+      const format = this._data.getFormat();
       if (format) {
          let field;
          let index;
@@ -107,8 +107,8 @@ export default class RecordSetRecord extends mixin(
       }
    }
 
-   getFields() {
-      let fields = [];
+   getFields(): string[] {
+      const fields = [];
       if (this._isValidData()) {
          this._data.getFormat().each((field) => {
             fields.push(field.getName());
@@ -117,7 +117,7 @@ export default class RecordSetRecord extends mixin(
       return fields;
    }
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -126,7 +126,7 @@ export default class RecordSetRecord extends mixin(
       this._data.addField(format, at);
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -135,7 +135,7 @@ export default class RecordSetRecord extends mixin(
       this._data.removeField(name);
    }
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -144,37 +144,40 @@ export default class RecordSetRecord extends mixin(
       this._data.removeFieldAt(index);
    }
 
-   //endregion IRecord
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
-   _touchData() {
+   _touchData(): void {
       if (!this._data &&
          this._tableData &&
          this._tableData['[Types/_entity/FormattableMixin]']
       ) {
-         let model = this._tableData.getModel();
-         let adapter = this._tableData.getAdapter();
+         const model = this._tableData.getModel();
+         const adapter = this._tableData.getAdapter();
 
          this._data = create(model, {
-            adapter: adapter
+            adapter
          });
       }
    }
 
-   _isValidData() {
+   _isValidData(): boolean {
       return this._data && this._data['[Types/_entity/Record]'];
    }
 
-   _getFieldsFormat() {
-      return this._isValidData() ? this._data.getFormat() : create('Types/collection:format.Format');
+   _getFieldsFormat(): format.Format<Field> {
+      return this._isValidData()
+         ? this._data.getFormat()
+         : create<format.Format<Field>>('Types/collection:format.Format');
    }
 
-   //endregion Protected methods
+   // endregion
 }
 
-RecordSetRecord.prototype['[Types/_entity/adapter/RecordSetRecord]'] = true;
-// @ts-ignore
-RecordSetRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-RecordSetRecord.prototype._data = null;
-RecordSetRecord.prototype._tableData = null;
+Object.assign(RecordSetRecord.prototype, {
+   '[Types/_entity/adapter/RecordSetRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   _data: null,
+   _tableData: null
+});

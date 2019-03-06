@@ -3,7 +3,7 @@
 // @ts-ignore
 import * as flatten from 'Core/helpers/Array/flatten';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC } from 'Env/Env';
 // @ts-ignore
 import * as Logger from 'View/Logger';
 

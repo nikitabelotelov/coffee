@@ -1,8 +1,8 @@
 define('Core/helpers/Hcontrol/doAutofocus', [
-   'Core/IoC',
+   'Env/Env',
    'Core/helpers/Hcontrol/isElementVisible'
 ], function (
-   IoC,
+   Env,
    isElementVisible
 ) {
    /**
@@ -37,16 +37,16 @@ define('Core/helpers/Hcontrol/doAutofocus', [
          mainContainer = find(findContainer, '.ws-autofocus');
          if (mainContainer.length) {
             if (mainContainer.length > 1) {
-               IoC.resolve('ILogger').info('doAutofocus', 'Внимание, потенциальная ошибка! В процессе автофокусировки было найдено несколько элементов с классом ws-autofocus');
+               Env.IoC.resolve('ILogger').info('doAutofocus', 'Внимание, потенциальная ошибка! В процессе автофокусировки было найдено несколько элементов с классом ws-autofocus');
             }
          } else {
             // todo удалить, когда все перейдут на ws-autofocus
             mainContainer = find(findContainer, '.ws-bootup-autofocus');
             if (mainContainer.length) {
-               IoC.resolve('ILogger').info('doAutofocus', 'Пожалуйста замените класс ws-bootup-autofocus на класс ws-autofocus');
+               Env.IoC.resolve('ILogger').info('doAutofocus', 'Пожалуйста замените класс ws-bootup-autofocus на класс ws-autofocus');
             }
             if (mainContainer.length > 1) {
-               IoC.resolve('ILogger').info('doAutofocus', 'Внимание, потенциальная ошибка! В процессе автофокусировки было найдено несколько элементов с классом ws-bootup-autofocus');
+               Env.IoC.resolve('ILogger').info('doAutofocus', 'Внимание, потенциальная ошибка! В процессе автофокусировки было найдено несколько элементов с классом ws-bootup-autofocus');
             }
          }
          return mainContainer;

@@ -6,7 +6,7 @@ define('Core/Control',
       'tmpl!Core/Control',
       'Core/core-extend',
       'Vdom/Vdom',
-      'Core/IoC',
+      'Env/Env',
       'Core/helpers/Hcontrol/doAutofocus',
       'Core/Themes/ThemesControllerNew',
       'Core/PromiseLib/PromiseLib',
@@ -19,7 +19,7 @@ define('Core/Control',
       tmplControl,
       extend,
       Vdom,
-      IoC,
+      Env,
       doAutofocus,
       ThemesController,
       PromiseLib,
@@ -75,6 +75,61 @@ define('Core/Control',
                return false;
             }
             return true;
+         },
+         _loadNewStyles: function(self, themesController, theme, themedStyles, styles) {
+            var promiseArray = [];
+            if (typeof window === 'undefined') {
+               styles.forEach(function(name) {
+                  themesController.pushCss(name);
+               });
+               themedStyles.forEach(function(name) {
+                  themesController.pushThemedCss(name, theme);
+               });
+            } else {
+               styles.forEach(function(name) {
+                  // Wrap promise with timeout and reflect
+                  if (themesController.isCssLoaded(name)) {
+                     themesController.pushCssLoaded(name);
+                  } else {
+                     var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssAsync(name), 2000));
+                     loadPromise.then(function(res) {
+                        if(res.status === 'rejected') {
+                           Env.IoC.resolve('ILogger').error('Styles loading error', 'Could not load style '
+                              + name + ' for control ' + self._moduleName);
+                        }
+                     });
+                     promiseArray.push(loadPromise);
+                  }
+               });
+               themedStyles.forEach(function(name) {
+                  // Wrap promise with timeout and reflect
+                  if (themesController.isThemedCssLoaded(name, theme)) {
+                     themesController.pushCssThemedLoaded(name, theme);
+                  } else {
+                     var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssThemedAsync(name, theme), 2000));
+                     loadPromise.then(function(res) {
+                        if(res.status === 'rejected') {
+                           Env.IoC.resolve('ILogger').error('Styles loading error', 'Could not load style '
+                              + name + ' for control ' + self._moduleName
+                              + ' with theme ' + theme);
+                        }
+                     });
+                     promiseArray.push(loadPromise);
+                  }
+               });
+               if (promiseArray.length) {
+                  return Promise.all(promiseArray);
+               }
+            }
+            return true;
+         },
+         _removeOldStyles: function(themesController, theme, themedStyles, styles) {
+            styles.forEach(function(name) {
+               themesController.removeCss(name);
+            });
+            themedStyles.forEach(function(name) {
+               themesController.removeCssThemed(name, theme);
+            });
          }
       };
 
@@ -279,7 +334,7 @@ define('Core/Control',
                 */
             this._getMarkup = function _getMarkup(rootKey, isRoot, attributes, isVdom) {
                if (!this._template.stable) {
-                  IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
+                  Env.IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
                   return '';
                }
                var res;
@@ -366,7 +421,7 @@ define('Core/Control',
          _setInternalOption: function(name, value) {
             if (!this._internalOptions) {
                this._internalOptions = {};
-               IoC.resolve('ILogger').error('Component with ' + (this._options ? ('name ' + this._options.name + ' config ' + this._options.__$config) : ('maybe id ' + this._$id)), 'Control.constructor wasn\'t called');
+               Env.IoC.resolve('ILogger').error('Component with ' + (this._options ? ('name ' + this._options.name + ' config ' + this._options.__$config) : ('maybe id ' + this._$id)), 'Control.constructor wasn\'t called');
             }
             this._internalOptions[name] = value;
          },
@@ -395,7 +450,7 @@ define('Core/Control',
                   }
                }
                if (this._mounted) {
-                  this._beforeUnmount();
+                  this.__beforeUnmount();
                   Vdom.Synchronizer.cleanControlDomLink(this._container);
                }
             } catch (error) {
@@ -588,54 +643,17 @@ define('Core/Control',
          _beforeMount: function() {
          },
 
-         _manageStyles: function(theme) {
-            var self = this;
-            if(!_private._checkNewStyles(self)) {
+         _manageStyles: function(theme, oldTheme) {
+            if(!_private._checkNewStyles(this)) {
                return true;
             }
             var themesController = ThemesController.getInstance();
-            var styles = this._styles || [];
-            var themedStyles = this._theme || [];
-            var promiseArray = [];
-            if (typeof window === 'undefined') {
-               styles.forEach(function(name) {
-                  themesController.pushCss(name);
-               });
-               themedStyles.forEach(function(name) {
-                  themesController.pushThemedCss(name, theme);
-               });
-               return true;
-            } else {
-               styles.forEach(function(name) {
-                  // Wrap promise with timeout and reflect
-                  if (!themesController.isCssLoaded(name)) {
-                     var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssAsync(name), 2000));
-                     loadPromise.then(function(res) {
-                        if(res.status === 'rejected') {
-                           IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName);
-                        }
-                     });
-                     promiseArray.push(loadPromise);
-                  }
-               });
-               themedStyles.forEach(function(name) {
-                  // Wrap promise with timeout and reflect
-                  if (!themesController.isThemedCssLoaded(name, theme)) {
-                     var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssThemedAsync(name, theme), 2000));
-                     loadPromise.then(function(res) {
-                        if(res.status === 'rejected') {
-                           IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName + ' with theme ' + theme);
-                        }
-                     });
-                     promiseArray.push(loadPromise);
-                  }
-               });
-               if (promiseArray.length) {
-                  return Promise.all(promiseArray);
-               } else {
-                  return true;
-               }
+            var styles = this.constructor._styles || this._styles || [];
+            var themedStyles = this.constructor._theme || this._theme || [];
+            if(oldTheme) {
+               _private._removeOldStyles(themesController, oldTheme, themedStyles, []);
             }
+            return _private._loadNewStyles(this, themesController, theme, themedStyles, styles);
          },
 
          _beforeMountLimited: function(opts) {
@@ -664,9 +682,9 @@ define('Core/Control',
                            /* Change _template and _afterMount
                                *  if execution was longer than 2 sec
                                * */
-                           IoC.resolve('ILogger').error('_beforeMount', 'Wait 20000 ms ' + self._moduleName);
+                           Env.IoC.resolve('ILogger').error('_beforeMount', 'Wait 20000 ms ' + self._moduleName);
                            timeout = 1;
-                           require(['View/Runner/tclosure'], function(thelpers) {
+                           require(['View/Executor/TClosure'], function(thelpers) {
                               self._originTemplate = self._template;
                               self._template = function(data, attr, context, isVdom, sets) {
                                  try {
@@ -751,6 +769,13 @@ define('Core/Control',
              */
          _beforeUpdate: function() {
             // Do
+         },
+
+         __beforeUpdate: function(options) {
+            if(options.theme !== this._options.theme) {
+               this._manageStyles(options.theme, this._options.theme);
+            }
+            this._beforeUpdate.apply(this, arguments);
          },
 
          /**
@@ -840,6 +865,20 @@ define('Core/Control',
              * @see Documentation: Context
              * @private
              */
+
+         _removeStyles: function(theme) {
+            if(!_private._checkNewStyles(self)) {
+               return true;
+            }
+            var themesController = ThemesController.getInstance();
+            var styles = this._styles || [];
+            var themedStyles = this._theme || [];
+            _private._removeOldStyles(themesController, theme, themedStyles, styles);
+         },
+         __beforeUnmount: function() {
+            this._removeStyles(this._options.theme);
+            this._beforeUnmount.apply(this, arguments);
+         },
          _beforeUnmount: function() {
             //Do
          }
@@ -863,6 +902,7 @@ define('Core/Control',
          Expressions.Focus.patchDom(domElement, cfg);
          ctr.saveFullContext(Expressions.ContextResolver.wrapContext(ctr, { asd: 123 }));
          ctr.mountToDom(ctr._container, cfg, ctor);
+         ctr._$createdFromCode = true;
          return ctr;
       };
 
@@ -872,7 +912,7 @@ define('Core/Control',
             inherit.readOnly = false;
          }
          if (!inherit.hasOwnProperty('theme')) {
-            inherit.theme = '';
+            inherit.theme = 'default';
          }
 
          return inherit;
@@ -880,6 +920,8 @@ define('Core/Control',
 
 
       Base.isWasaby = true;
+
+      Base._private = _private;
 
       return Base;
    });

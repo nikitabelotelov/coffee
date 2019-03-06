@@ -1,11 +1,11 @@
 define('Core/AuthError', [
     'Core/UserInfo',
-    'Core/EventBus',
-    'Lib/Tab/Message'
+    'Env/Event',
+    'Browser/Event'
 ], function(
     UserInfo,
-    EventBus,
-    TabMessage
+    EnvEvent,
+    BrowserEvent
 ) {
     /**
      * Компонент, отвечающий за перезагрузку страницы при обнаружении ошибке авторизации
@@ -17,8 +17,8 @@ define('Core/AuthError', [
      * @name Core/AuthError
      * @author Заляев А.В.
      */
-    var tm = new TabMessage();
-    EventBus.channel('errors').subscribe('onAuthError', function () {
+    var tm = new BrowserEvent.Broadcast();
+    EnvEvent.Bus.channel('errors').subscribe('onAuthError', function () {
         tm.notify('authError');
         window.location.reload();
     });

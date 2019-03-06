@@ -1,15 +1,13 @@
 define('Core/helpers/Hcontrol/trackElement', [
-    'Core/constants',
+    'Env/Env',
    'Core/helpers/Number/randomId',
-    'Core/EventBus',
-    'Core/detection',
+    'Env/Event',
     'Core/helpers/Hcontrol/isElementVisible',
     'Core/ControlBatchUpdater'
 ], function(
-    constants,
+    Env,
     randomId,
-    EventBus,
-    detection,
+    EnvEvent,
     isElementVisible,
     ControlBatchUpdater
 ) {
@@ -53,7 +51,7 @@ define('Core/helpers/Hcontrol/trackElement', [
         function attachChannel($element) {
             var
                 id = randomId('tracker-'),
-                channel = EventBus.channel(id);
+                channel = EnvEvent.Bus.channel(id);
             setData($element, CHANNEL_HOLDER, id);
             channel.setEventQueueSize('*', 1);
             return channel;
@@ -75,7 +73,7 @@ define('Core/helpers/Hcontrol/trackElement', [
                 isVisible = isElementVisible($element),
                 isFixed = isFixedState($element),
                 el = $element.get(0),
-                win = constants.$win,
+                win = Env.constants.$win,
                 bcr = isVisible && el && el.getBoundingClientRect(),
                 isElementHasSize = bcr && bcr.width !== 0 && bcr.height !== 0;
 
@@ -83,7 +81,7 @@ define('Core/helpers/Hcontrol/trackElement', [
             //getBoundingClientRect возврашает все значения по 0, хотя элемент видим и имеет свои размеры
             //Для ie11, если прошла наша проверка на видимость(isVisible), но width == 0 или height == 0, то
             //говорим, что позиция не изменилась, т.к. из кода не понять, что сейчас вообще происходит с таргетом
-            if ((detection.isIE10 || detection.isIE11) && isVisible && !isElementHasSize) {
+            if ((Env.detection.isIE10 || Env.detection.isIE11) && isVisible && !isElementHasSize) {
                var lastState = getData($element, STATE_HOLDER);
                return lastState || {};
             }
@@ -119,7 +117,7 @@ define('Core/helpers/Hcontrol/trackElement', [
             }
 
             currentState = getState($element);
-            channel = EventBus.channel(channelId);
+            channel = EnvEvent.Bus.channel(channelId);
 
             if (currentState.visible !== lastState.visible) {
                 channel.notify('onVisible', currentState.visible);
@@ -185,7 +183,7 @@ define('Core/helpers/Hcontrol/trackElement', [
 
             // Кому-то уже выдан канал
             if (channelId) {
-                channel = EventBus.channel(channelId);
+                channel = EnvEvent.Bus.channel(channelId);
             } else {
                 channel = attachChannel($element);
             }

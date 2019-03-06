@@ -1,9 +1,9 @@
 define('Core/HashManager', [
    'require',
    'Core/helpers/Object/isEmpty',
-   'Core/EventBus',
-   'Core/constants'
-], function(require, isEmptyObject, EventBus) {
+   'Env/Event',
+   'Env/Env'
+], function(require, isEmptyObject, EnvEvent) {
    /**
     * Инструмент управления location.hash
     * @author Бегунов А.В.
@@ -16,7 +16,7 @@ define('Core/HashManager', [
    var HashManager = /** @lends Core/HashManager.prototype */{
       /**
        * @event onChange Событие, происходящее при изменении хэша
-       * @param {Core/EventObject} eventObject Дескриптор события
+       * @param {Env/Event:Object} eventObject Дескриптор события
        */
       _eventBusChannel: null,
       eventBusId: 'HashManager',
@@ -201,7 +201,7 @@ define('Core/HashManager', [
 
       _getChannel: function() {
          if (!this._eventBusChannel) {
-            this._eventBusChannel = EventBus.channel(this.eventBusId);
+            this._eventBusChannel = EnvEvent.Bus.channel(this.eventBusId);
          }
          return this._eventBusChannel;
       },

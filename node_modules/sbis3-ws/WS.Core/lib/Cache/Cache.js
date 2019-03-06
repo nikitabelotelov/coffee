@@ -1,4 +1,4 @@
-define('Lib/Cache/Cache', ['Core/core-extend', 'Core/IoC', 'Core/Deferred', 'Core/ConsoleLogger'], function(cExtend, IoC, Deferred){
+define('Lib/Cache/Cache', ['Core/core-extend', 'Env/Env', 'Core/Deferred'], function(cExtend, Env, Deferred){
 
    function retTrue() {
       return true;
@@ -114,10 +114,10 @@ define('Lib/Cache/Cache', ['Core/core-extend', 'Core/IoC', 'Core/Deferred', 'Cor
       }
    });
 
-   IoC.bind('ICache', 'Cache');
+   Env.IoC.bind('ICache', 'Cache');
 
    function mkCacheInstance(impl, config) {
-      return impl ? new impl(config) : IoC.resolve('ICache', config);
+      return impl ? new impl(config) : Env.IoC.resolve('ICache', config);
    }
 
    /**

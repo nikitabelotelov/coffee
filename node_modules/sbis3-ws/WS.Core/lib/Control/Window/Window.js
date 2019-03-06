@@ -7,13 +7,12 @@ define('Lib/Control/Window/Window', [
    "Core/core-extend",
    'Core/helpers/isNewEnvironment',
    'require',
-   "Core/IoC",
    "Core/core-instance",
    'Core/helpers/Function/callNext',
    'Core/helpers/Function/forAliveOnly',
    "Core/WindowManager",
    "Core/CommandDispatcher",
-   "Core/constants",
+   'Env/Env',
    'Core/helpers/Hcontrol/doAutofocus',
    "Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract",
    "Lib/Control/ModalOverlay/ModalOverlay",
@@ -21,25 +20,22 @@ define('Lib/Control/Window/Window', [
    "Lib/Mixins/LikeWindowMixin",
    "Lib/Mixins/PendingOperationParentMixin",
    "Core/Deferred",
-   "Core/EventBus",
+   'Env/Event',
    'Core/dom/wheel',
    'Core/dom/getTouchEventCoords',
    'Core/dom/getTouchEventClientCoords',
-   "Core/detection",
-   "Core/compatibility",
    "css!Lib/Control/FloatArea/FloatArea",
    "i18n!Lib/Control/Window/Window"
 ], function(
    cExtend,
    isNewEnvironment,
    require,
-   IoC,
    cInstance,
    callNext,
    forAliveOnly,
    WindowManager,
    CommandDispatcher,
-   cConstants,
+   Env,
    doAutofocus,
    TemplatedAreaAbstract,
    ModalOverlay,
@@ -47,18 +43,17 @@ define('Lib/Control/Window/Window', [
    LikeWindowMixin,
    PendingOperationParentMixin,
    Deferred,
-   EventBus,
+   EnvEvent,
    wheel,
    getTouchEventCoords,
-   getTouchEventClientCoords,
-   detection
+   getTouchEventClientCoords
 ) {
 
    'use strict';
 
    var PADDING = 10,
        ANIMATION_LENGTH = 150;
-   var defaultOptions = (cConstants.defaultOptions || {})['Lib/Control/Window/Window'] || {};
+   var defaultOptions = (Env.constants.defaultOptions || {})['Lib/Control/Window/Window'] || {};
 
    function withRecalc(func, self) {
       var result = function() {
@@ -109,7 +104,7 @@ define('Lib/Control/Window/Window', [
        * @event onBeforeClose Перед закрытием окна
        *
        * Событие, возникающее перед закрытием окна.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Boolean} arg "результат работы" окна, заданный при вызове {@link Lib/Control/Window/Window#close}
        * @return При возврате false из события окно не будет закрыто.
        * @example
@@ -127,7 +122,7 @@ define('Lib/Control/Window/Window', [
        * @event onAfterClose После закрытия окна.
        *
        * Событие, возникающее после закрытия окна
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Boolean} arg "Результат работы" окна.
        * <pre>
        *    window.subscribe('onAfterClose',function(event){
@@ -139,7 +134,7 @@ define('Lib/Control/Window/Window', [
        * @event onMove Во время перемещения окна
        *
        * Событие, возникающее во время перемещения окна.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Number} x Координата x (абсцисса).
        * @param {Number} y Координата y (ордината).
        * <pre>
@@ -288,11 +283,11 @@ define('Lib/Control/Window/Window', [
             adjustPositionAfterResize: false // Обновлять позицию окна при ресайзе контента и смене ориентации на моб. устройствах
          },
          _keysWeHandle : [
-            cConstants.key.esc,
-            cConstants.key.tab,
-            cConstants.key.enter,
-            cConstants.key.left,
-            cConstants.key.right
+            Env.constants.key.esc,
+            Env.constants.key.tab,
+            Env.constants.key.enter,
+            Env.constants.key.left,
+            Env.constants.key.right
          ],
          _haveTitle: false,
          _haveContentTitleBlock: false,
@@ -332,7 +327,7 @@ define('Lib/Control/Window/Window', [
          //На ios для размеров компонента во все окно браузера делаем фиксированную позицию. Если позиция абсолютная, то идет логика расчета top позиции относительно окна браузера и,
          //из-за наличия клавиатуры, window.scrollTop возращает значение > 0, хотя по факту пользователь не скролил страницу. В следствие этого компонент находится не в самом верху.
          //Фиксированная позиция решит эту проблему и избавит от ненужных в данном случае рассчетов, т.к. окно должно занимать всю видимую часть страницы и иметь фиксированную позицию left:0, top: 0
-         if (cConstants.browser.isMobileSafari && !this._options.resizable && this._options.maximize){
+         if (Env.constants.browser.isMobileSafari && !this._options.resizable && this._options.maximize){
             this._absolutePosition = false;
             positionConfig.right = 0;
          } else {
@@ -355,7 +350,7 @@ define('Lib/Control/Window/Window', [
             }
          });
 
-         if (cConstants.browser.isIE) {
+         if (Env.constants.browser.isIE) {
             this.subscribe('onBatchFinished', function(){
                // Очистим тень
                this._window.addClass('clear-box-shadow');
@@ -368,9 +363,9 @@ define('Lib/Control/Window/Window', [
 
          //при показе/скрытии клавы - перепозиционируемся по центру
          this._adjustWindowPositionSelf = this._mobileInput.bind(this);
-         if (cConstants.compatibility.touch){
-            EventBus.globalChannel().subscribe('MobileInputFocus', this._adjustWindowPositionSelf);
-            EventBus.globalChannel().subscribe('MobileInputFocusOut', this._adjustWindowPositionSelf);
+         if (Env.constants.compatibility.touch){
+            EnvEvent.Bus.globalChannel().subscribe('MobileInputFocus', this._adjustWindowPositionSelf);
+            EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', this._adjustWindowPositionSelf);
          }
 
          if (this._isModal && this._options.closeOnOverlayClick) {
@@ -383,7 +378,7 @@ define('Lib/Control/Window/Window', [
                }
             }.bind(this));
          }
-         EventBus.globalChannel().notify('onWindowCreated', this);
+         EnvEvent.Bus.globalChannel().notify('onWindowCreated', this);
          this._checkOpener();
 
          if (this._options.adjustPositionAfterResize) {
@@ -394,7 +389,7 @@ define('Lib/Control/Window/Window', [
 
       _checkOpener: function() {
          if (isNewEnvironment() && !this._options._openFromAction) {
-            IoC.resolve('ILogger').error('Window', 'Компонент открыт напрямую без использования хэлперов открытия. \n' +
+            Env.IoC.resolve('ILogger').error('Window', 'Компонент открыт напрямую без использования хэлперов открытия. \n' +
                'Для правильной работы компонента окно должно быть открыто через action. \n' +
                'Подробности: https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws4/components/templates/open-compound-template/');
          }
@@ -537,11 +532,11 @@ define('Lib/Control/Window/Window', [
        */
       _keyboardHover: function(e){
          if (e.which in this._keysWeHandle) {
-            if (e.which == cConstants.key.esc) {
+            if (e.which == Env.constants.key.esc) {
                this.close();
                return false;
             }
-            if (e.which == cConstants.key.left || e.which == cConstants.key.right) {
+            if (e.which == Env.constants.key.left || e.which == Env.constants.key.right) {
                return this._switchingBetweenButtons(e);
             }
 
@@ -579,10 +574,10 @@ define('Lib/Control/Window/Window', [
                break;
             }
          }
-         if (event.which == cConstants.key.left) {
+         if (event.which == Env.constants.key.left) {
             newIndex = indexOfActiveBtn - 1;
          }
-         if (event.which == cConstants.key.right) {
+         if (event.which == Env.constants.key.right) {
             newIndex = indexOfActiveBtn + 1;
          }
 
@@ -870,7 +865,7 @@ define('Lib/Control/Window/Window', [
          if (!this._isShow) {
             //Для ie с его рендером: перед позиционированием вешаю visibility: hidden, чтобы не было видно прыжков окна,
             //после того, как позиция пересчитается
-            if (detection.isIE) {
+            if (Env.detection.isIE) {
                this._window.addClass('ws-invisible');
             }
             this._dRender.addCallback(callNext.call(this._showRenderCallback.bind(this,noBringToTop),
@@ -903,7 +898,7 @@ define('Lib/Control/Window/Window', [
                // уведомляем о изменении видимости компонента
                this._notify('onAfterVisibilityChange', true);
          }, this)();
-         if (detection.isIE) {
+         if (Env.detection.isIE) {
             this._window.removeClass('ws-invisible');
          }
       },
@@ -919,7 +914,7 @@ define('Lib/Control/Window/Window', [
 
       _restoreLastActiveOnHide: function() {
          // хак для ipad, чтобы клавиатура закрывалась когда дестроится окно
-         if (detection.isMobileIOS) {
+         if (Env.detection.isMobileIOS) {
             $(document.activeElement).trigger('blur');
          }
          //Отдаём фокус последней активированной области
@@ -1076,9 +1071,9 @@ define('Lib/Control/Window/Window', [
          this._resizeUnsub && this._resizeUnsub();
          this._releaseZIndex();
 
-         if (cConstants.compatibility.touch){
-            EventBus.globalChannel().unsubscribe('MobileInputFocus', this._adjustWindowPositionSelf);
-            EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._adjustWindowPositionSelf);
+         if (Env.constants.compatibility.touch){
+            EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocus', this._adjustWindowPositionSelf);
+            EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocusOut', this._adjustWindowPositionSelf);
          }
 
          if (this._options.adjustPositionAfterResize) {
@@ -1165,7 +1160,7 @@ define('Lib/Control/Window/Window', [
 
          if (tmpZIndex !== this._zIndex) {
             // в IE10 что-то плохо применяется z-index, а если его сначала сбрасывать все работает
-            if (detection.isIE10) {
+            if (Env.detection.isIE10) {
                this._window.css('z-index', 0);
                setTimeout(function() {
                   this._window.css('z-index', this._zIndex);
@@ -1379,7 +1374,7 @@ define('Lib/Control/Window/Window', [
                 });
          }
 
-         cConstants.$doc
+         Env.constants.$doc
             .bind('mousemove touchmove', this._mouseMoveHandler)
             .bind('mouseup touchend', this._mouseUpHandler);
 
@@ -1424,12 +1419,12 @@ define('Lib/Control/Window/Window', [
          // iii
          // this._titleBar.css('visibility', 'visible');
          // this._windowContent.css('visibility', 'visible');
-         if (!cConstants.browser.isIE) {
+         if (!Env.constants.browser.isIE) {
             this._window.fadeTo(0, 1);
          }
 
          this._window.removeClass('move');
-         cConstants.$doc.unbind('mousemove touchmove', this._mouseMoveHandler).unbind('mouseup touchend', this._mouseUpHandler);
+         Env.constants.$doc.unbind('mousemove touchmove', this._mouseMoveHandler).unbind('mouseup touchend', this._mouseUpHandler);
          this._mouseStarted = false;
    
          this.onBringToFront();
@@ -1494,7 +1489,7 @@ define('Lib/Control/Window/Window', [
             this._notifyMaximizedChange(this._isMaximized);
          }
 
-         var isMobileSafari = cConstants.browser.isMobileSafari,
+         var isMobileSafari = Env.constants.browser.isMobileSafari,
              winWidth = isMobileSafari ? window.innerWidth : $(window).width(),
              winHeight = isMobileSafari ? window.innerHeight : $(window).height(),
              minMinWidth = this._options.border ? 100 : 0,
@@ -1527,7 +1522,7 @@ define('Lib/Control/Window/Window', [
                   this._container.css('height', 'auto');
                   //FireFox после установки на блок height: auto не перерасчитывает высоту.
                   //Нужно явно запустить перерасчёт.
-                  if (detection.firefox) {
+                  if (Env.detection.firefox) {
                      this._container.resize();
                   }
                   contentBlock.height = this._container.height() < maxHeight ? 'auto' : maxHeight;
@@ -1591,7 +1586,7 @@ define('Lib/Control/Window/Window', [
          //на _windowContent стоит width: auto, в Edje после перетаскивания окна, контейнер ужимается до минимума,
          // хотя на дочернем узле стоит правильный width.
          //На всякий случай сделал только для ie, по идее безболезненно можно для всех браузеров выставлять
-         if (detection.isIE12) {
+         if (Env.detection.isIE12) {
             this._windowContent.css('width', contentBlock.width);
          }
 
@@ -1608,7 +1603,7 @@ define('Lib/Control/Window/Window', [
             hasXScroll = true;
          }
 
-         if (cConstants.compatibility.touch && (hasXScroll || hasYScroll)) {
+         if (Env.constants.compatibility.touch && (hasXScroll || hasYScroll)) {
             fixCss['-webkit-overflow-scrolling'] = 'touch';
          }
 
@@ -1700,7 +1695,7 @@ define('Lib/Control/Window/Window', [
          // Баг воспроизводится так: мы открываем окно, оно позиционируется по центру, потом кликаем на выпадающий список, появляется клавиатура, которая пододвигает
          // окно вверх нативно, а потом _adjustWindowPosition ставит его обратно по центру. Тут мы исключаем этот сценарий. Позиционирование окна при инициализации
          // не должны пострадать, так как там есть свой вызов _adjustWindowPosition на завершении отображения окна.
-         var ignoreAdjust = cConstants.browser.isMobilePlatform && $(document.activeElement).is('input[type="text"], textarea, *[contentEditable=true]');
+         var ignoreAdjust = Env.constants.browser.isMobilePlatform && $(document.activeElement).is('input[type="text"], textarea, *[contentEditable=true]');
          if (!ignoreAdjust && this._options.needRecalcPositionOnSizeChange) {
             this._adjustWindowPosition();
          }
@@ -1710,9 +1705,9 @@ define('Lib/Control/Window/Window', [
       _subscribeToWindowResize: function() {
          //Тут нужно делать пересчёт - обёртка withRecalc сделает его сама
          var windowResizeHandler = withRecalc(function () {}, this);
-         cConstants.$win.bind('resize', windowResizeHandler);
+         Env.constants.$win.bind('resize', windowResizeHandler);
          this._resizeUnsub = function() {
-            cConstants.$win.unbind('resize', windowResizeHandler);
+            Env.constants.$win.unbind('resize', windowResizeHandler);
          }
       },
 

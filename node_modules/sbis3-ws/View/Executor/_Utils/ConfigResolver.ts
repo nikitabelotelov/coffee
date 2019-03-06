@@ -3,7 +3,7 @@
 // @ts-ignore
 import * as cMerge from 'Core/core-merge';
 // @ts-ignore
-import * as cConstants from 'Core/constants';
+import { constants as cConstants } from 'Env/Env';
 
 import { plainMerge } from './Common';
 import { Scope } from '../Expressions';

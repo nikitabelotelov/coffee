@@ -5,33 +5,37 @@
  * @author Мальцев А.А.
  */
 
-//Use native implementation if supported
+// Use native implementation if supported
 let SetImplementation;
 
 if (typeof Set === 'undefined') {
    SetImplementation = class <T> {
       protected _hash: Object;
-      protected _objects: Array<T>;
+      protected _objects: T[];
       protected _objectPrefix: string;
 
       constructor() {
          this.clear();
       }
 
+      static _getHashedKey(key: string): string {
+         return (typeof key) + '@' + key;
+      }
+
       add(value: T): this {
-         let key = this._isObject(value) ? this._addObject(value) : value;
+         const key = this._isObject(value) ? this._addObject(value) : value;
 
          this._hash[SetImplementation._getHashedKey(key)] = value;
 
          return this;
       }
 
-      clear() {
+      clear(): void {
          this._hash = {};
          this._objects = [];
       }
 
-      delete(value: T) {
+      delete(value: T): void {
          let key;
          if (this._isObject(value)) {
             key = this._deleteObject(value);
@@ -45,14 +49,14 @@ if (typeof Set === 'undefined') {
          this._hash[SetImplementation._getHashedKey(key)] = undefined;
       }
 
-      entries() {
+      entries(): any[] {
          throw new Error('Method is not supported');
       }
 
-      forEach(callbackFn: Function, thisArg?: Object) {
-         //FIXME: now not in insertion order
-         let hash = this._hash;
-         for (let key in hash) {
+      forEach(callbackFn: Function, thisArg?: Object): void {
+         // FIXME: now not in insertion order
+         const hash = this._hash;
+         for (const key in hash) {
             if (hash.hasOwnProperty(key) && hash[key] !== undefined) {
                callbackFn.call(thisArg, hash[key], hash[key], this);
             }
@@ -74,11 +78,11 @@ if (typeof Set === 'undefined') {
          return this._hash.hasOwnProperty(key) && this._hash[key] !== undefined;
       }
 
-      keys() {
+      keys(): any[] {
          throw new Error('Method is not supported');
       }
 
-      values() {
+      values(): any[] {
          throw new Error('Method is not supported');
       }
 
@@ -96,7 +100,7 @@ if (typeof Set === 'undefined') {
       }
 
       _deleteObject(value: T): string|undefined {
-         let index = this._objects.indexOf(value);
+         const index = this._objects.indexOf(value);
          if (index > -1) {
             this._objects[index] = null;
             return this._objectPrefix + index;
@@ -105,27 +109,22 @@ if (typeof Set === 'undefined') {
       }
 
       _getObjectKey(value: T): string|undefined {
-         let index = this._objects.indexOf(value);
+         const index = this._objects.indexOf(value);
          if (index === -1) {
             return undefined;
          }
          return this._objectPrefix + index;
       }
-
-      static _getHashedKey(key: string): string {
-         return (typeof key) + '@' + key;
-      }
    };
 
-   // @ts-ignore
-   SetImplementation.prototype._hash = null;
-   // @ts-ignore
-   SetImplementation.prototype._objectPrefix = '{[object]}:';
-   // @ts-ignore
-   SetImplementation.prototype._objects = null;
+   Object.assign(SetImplementation.prototype, {
+      _hash: null,
+      _objectPrefix: '{[object]}:',
+      _objects: null
+   });
 
    Object.defineProperty(SetImplementation.prototype, 'size', {
-      get: function() {
+      get(): number {
          return Object.keys(this._hash).length;
       },
       enumerable: true,

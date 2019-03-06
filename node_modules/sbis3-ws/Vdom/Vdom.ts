@@ -14,7 +14,7 @@ import * as Functional from './_private/Utils/Functional';
 import * as Monad from './_private/Utils/Monad';
 
 // @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC } from 'Env/Env';
 
 export { default as Synchronizer } from './_private/Synchronizer/Synchronizer';
 export { Debug };
@@ -23,7 +23,7 @@ export { DirtyCheckingCompatible };
 export { default as DOMEnvironment } from './_private/Synchronizer/resources/DOMEnvironment';
 export { default as Environment } from './_private/Synchronizer/resources/Environment';
 export { Hooks };
-export { default as runDelayedRebuild } from './_private/Synchronizer/resources/runDelayedRebuild';
+export { default as runDelayedRebuild, animationWaiter } from './_private/Synchronizer/resources/runDelayedRebuild';
 export { SwipeController };
 export { default as SyntheticEvent } from './_private/Synchronizer/resources/SyntheticEvent';
 export { TabIndex };

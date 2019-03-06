@@ -1,124 +1,70 @@
 /// <amd-module name="Router/History" />
 
-import RouterHelper from 'Router/Helper';
-import UrlRewriter from 'Router/UrlRewriter';
+import * as UrlRewriter from 'Router/UrlRewriter';
+import * as Data from 'Router/Data';
 
-interface IHistoryState {
-   id?: number;
-   url: string;
-   prettyUrl?: string;
+export function getPrevState(): Data.IHistoryState {
+   return Data.getHistory()[Data.getHistoryPosition() - 1];
+}
+export function getCurrentState(): Data.IHistoryState {
+   return Data.getHistory()[Data.getHistoryPosition()];
+}
+export function getNextState(): Data.IHistoryState {
+   return Data.getHistory()[Data.getHistoryPosition() + 1];
 }
 
-class RouterHistoryManager {
-   private _localHistory: IHistoryState[] = [];
-   private _currentPosition = 0;
+export function back(): void {
+   const history = Data.getHistory();
+   const historyPosition = Data.getHistoryPosition();
 
-   constructor() {
-      if (typeof window !== 'undefined') {
-         const currentUrl = RouterHelper.getRelativeUrl();
-         let firstStateId = 0;
-
-         // window can already have state (for example if we reload the page
-         // that has RouterController on it). In this case, copy the state
-         // id and start local history with it
-         if (window.history.state && typeof window.history.state.id === 'number') {
-            firstStateId = window.history.state.id;
-         }
-
-         // Initialize local history by pushing the current state into it
-         this._pushToHistory(
-            firstStateId,
-            UrlRewriter.get(currentUrl),
-            currentUrl
-         );
-
-         // If window doesn't have state, set it to our current state
-         if (!window.history.state) {
-            window.history.replaceState(this.getCurrentState(), currentUrl, currentUrl);
-         }
-      }
+   if (historyPosition === 0) {
+      const currentUrl = Data.getVisibleRelativeUrl();
+      history.unshift({
+         id: history[0].id - 1,
+         state: UrlRewriter.get(currentUrl),
+         href: currentUrl
+      });
+   } else {
+      Data.setHistoryPosition(historyPosition - 1);
    }
 
-   public getCurrentState(): IHistoryState {
-      return this._localHistory[this._currentPosition];
+   _updateRelativeUrl();
+}
+export function forward(): void {
+   const history = Data.getHistory();
+   const newHistoryPosition = Data.getHistoryPosition() + 1;
+
+   Data.setHistoryPosition(newHistoryPosition);
+   if (newHistoryPosition === history.length) {
+      const currentUrl = Data.getRelativeUrl();
+      history.push({
+         id: history[newHistoryPosition - 1].id + 1,
+         state: UrlRewriter.get(currentUrl),
+         href: currentUrl
+      });
    }
 
-   public getPrevState(): IHistoryState {
-      return this._localHistory[this._currentPosition - 1];
-   }
-
-   public getNextState(): IHistoryState {
-      return this._localHistory[this._currentPosition + 1]
-   }
-
-   public back(): void {
-      if (this._currentPosition === 0) {
-         const goToUrl = RouterHelper.getRelativeUrl(true);
-
-         // Make new state the first state in local history and update
-         // (increase) ids of states that are stored already
-         let newState = this._generateHistoryObject(
-            this.getCurrentState().id,
-            UrlRewriter.get(goToUrl),
-            goToUrl
-         );
-         this._localHistory.forEach(state => state.id++);
-
-         // Save the new state in the start of the local history
-         this._localHistory.unshift(newState);
-      } else {
-         this._currentPosition--;
-      }
-
-      RouterHelper.setRelativeUrl(this.getCurrentState().url);
-   }
-
-   public forward(): void {
-      this._currentPosition++;
-      if (this._currentPosition === this._localHistory.length) {
-         const goToUrl = RouterHelper.getRelativeUrl();
-
-         this._pushToHistory(
-            this.getPrevState().id,
-            UrlRewriter.get(goToUrl),
-            goToUrl
-         );
-      }
-
-      RouterHelper.setRelativeUrl(this.getCurrentState().url);
-   }
-
-   public push(newUrl: string, newPrettyUrl: string): void {
-      let newStateId;
-      if (this.getCurrentState()) {
-         newStateId = this.getCurrentState().id + 1;
-      } else {
-         newStateId = 0;
-      }
-
-      this._currentPosition++;
-      this._localHistory.splice(this._currentPosition);
-      this._pushToHistory(
-         newStateId,
-         newUrl,
-         newPrettyUrl
-      );
-
-      RouterHelper.setRelativeUrl(newUrl);
-      window.history.pushState(this.getCurrentState(), newPrettyUrl, newPrettyUrl);
-   }
-
-   private _generateHistoryObject(id: number, url: string, prettyUrl: string): IHistoryState {
-      return {
-         id,
-         url,
-         prettyUrl
-      };
-   }
-
-   private _pushToHistory(id: number, url: string, prettyUrl: string): void {
-      this._localHistory.push(this._generateHistoryObject(id, url, prettyUrl));
-   }
+   _updateRelativeUrl();
 }
 
-export default new RouterHistoryManager();
+export function push(newState: Data.IHistoryState): void {
+   const history = Data.getHistory();
+   const historyPosition = Data.getHistoryPosition();
+
+   // remove all states after the current state
+   history.length = historyPosition + 1;
+
+   // add new history state to the store
+   newState.id = history[historyPosition].id + 1;
+   history.push(newState);
+   Data.setHistoryPosition(historyPosition + 1);
+
+   // update the URL
+   _updateRelativeUrl();
+   const displayUrl = newState.href || newState.state;
+   window.history.pushState(newState, displayUrl, displayUrl);
+}
+
+function _updateRelativeUrl(): void {
+   Data.setRelativeUrl(Data.getHistory()[Data.getHistoryPosition()].state);
+}

@@ -120,7 +120,7 @@
    function buildHandlers() {
       var FILE_EXTENSION = /\.([A-z0-9]+($|\?))/;
       var STATIC_DOMAINS_EXT = ['js'];
-      var IGNORE_PART = '((?!\\/(cdn|rtpackage|demo_src)\\/).)*';
+      var IGNORE_PART = '((?!\\/(cdn|rtpackage|rtpack|demo_src)\\/).)*';
       var WITH_VERSION_MATCH = new RegExp('^' + IGNORE_PART + '\\.[A-z0-9]+(\\?|$)');
       var WITH_SUFFIX_MATCH = new RegExp('^' + IGNORE_PART + '\\.(js|xhtml|tmpl|wml|css|json|jstpl)(\\?|$)');
       var FILES_SUFFIX = IS_DEBUG || BUILD_MODE !== RELEASE_MODE ? '' : '.min';
@@ -306,7 +306,7 @@
       global.wsConfig.getWithVersion = requireHandlers.getWithVersion;
       global.wsConfig.getWithDomain = requireHandlers.getWithDomain;
       global.wsConfig.getWithSuffix = requireHandlers.getWithSuffix;
-
+      options = options || global.contents;
       //Build config
       var config = {
          baseUrl: baseUrl,
@@ -316,6 +316,7 @@
             'Lib': pathJoin(wsPath, 'lib'),
             'Ext': pathJoin(wsPath, 'lib/Ext'),
             'Deprecated': pathJoin(resourcesPath, 'WS.Deprecated'),
+
             'Helpers': pathJoin(wsPath, 'core/helpers'),
             'Transport': pathJoin(wsPath, 'transport'),
             'bootup' : pathJoin(wsPath, 'res/js/bootup'),
@@ -348,6 +349,7 @@
             'router': pathJoin(resourcesPath, 'router'),
 
             'jquery': '/cdn/jquery/3.3.1/jquery-min'
+
          },
          map: {
             //Aliases
@@ -407,8 +409,7 @@
       var config = createConfig(
          baseUrl,
          wsPath,
-         resourcesPath,
-         global.contents
+         resourcesPath
       );
       require.config(config);
 

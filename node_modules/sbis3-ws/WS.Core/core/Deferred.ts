@@ -160,12 +160,7 @@
  * @author Бегунов А.В.
  */
 //@ts-ignore
-import constants = require('Core/constants');
-//@ts-ignore
-import cDebug = require('Core/core-debug');
-//@ts-ignore
-import IoC = require('Core/IoC');
-
+import { constants, IoC, coreDebug as cDebug } from 'Env/Env';
 
 function DeferredCanceledError(message) {
    this.message = message;
@@ -190,18 +185,26 @@ STATE_NAMES[FAILED] = 'failed';
 STATE_NAMES[CANCELED] = 'canceled';
 
 class Deferred {
-   _chained:boolean;
-   _chain:Array<Array<Function>>;
-   _fired:number;
-   _paused:number;
-   _results:any[];
-   _running:boolean;
-   __parentPromise:any;
-   _cancelCallback:any;
-   _logCallbackExecutionTime:boolean;
+   protected _chained: boolean;
+   protected _chain: Array<Array<Function>>;
+   protected _fired: number;
+   protected _paused: number;
+   protected _results: any[];
+   protected _running: boolean;
+   protected __parentPromise: any;
+   protected _cancelCallback: any;
+   protected _hasErrback: boolean;
+   protected _logger: any;
+   protected _loggerAwait: Function;
+   protected _logCallbackExecutionTime: boolean;
+
+   protected get logger() {
+      return this._logger || IoC.resolve('ILogger');
+   }
+
    /**
     * @param {Object} [cfg] Конфигурация. Содержит опцию: cancelCallback - функция,
-    *    реализующая отмену на уровне кода, управляющего этим Deferred-ом.
+    * реализующая отмену на уровне кода, управляющего этим Deferred-ом.
     * @example
     * <pre>
     *    var dfr;
@@ -231,6 +234,9 @@ class Deferred {
       this._paused = 0;
       this._results = [null, null];
       this._running = false;
+      this._hasErrback = false;
+      this._logger = cfg && cfg.logger;
+      this._loggerAwait = cfg && cfg.loggerAwait || setTimeout;
    }
 
    /**
@@ -270,7 +276,7 @@ class Deferred {
             try {
                cbk();
             } catch (err) {
-               IoC.resolve('ILogger').error(
+               this.logger.error(
                   'Deferred',
                   `Cancel function throwing an error: ${err.message}`,
                   err
@@ -304,12 +310,11 @@ class Deferred {
     * На отменённом объекте (после вызова метода cancel) callback/errback можно вызывать сколько угодно -
     * ошибки не будет, метод отработает вхолостую.
     * @param [res] результат асинхронной операции.
-    * @param checkCallback включить проверку наличия callback обработки ошибок
     * @returns {Core/Deferred}
     */
-   errback(res, checkCallback?) {
+   errback(res) {
       if (!isCanceled(this)) {
-         this._resback(this._check(res, true, checkCallback));
+         this._resback(this._check(res, true));
       }
       return this;
    }
@@ -325,7 +330,7 @@ class Deferred {
       this._fire();
    }
 
-   _check(res, isError?, checkCallback?) {
+   _check(res, isError?) {
       let result = res;
       if (this._fired !== WAITING) {
          throw new Error(
@@ -352,19 +357,25 @@ class Deferred {
             }
          }
 
-         if (checkCallback !== false &&
-            constants.isNodePlatform &&
-            !this._chain.some(pair => typeof pair[1] === 'function')
-         ) {
-            IoC.resolve('ILogger').error(
-               'Deferred',
-               'There is no callbacks attached to handle error'
-            );
-            IoC.resolve('ILogger').error(
-               'Deferred',
-               'Unhandled error:',
-               result
-            );
+         if (!constants.isBrowserPlatform) {
+            //Save call stack use Error instance
+            const rejectionError = new Error(`"${result.message}"`);
+            const rejectionAwait = this._loggerAwait;
+            //Just wait for the next event loop because error handler can be attached after errback() call
+            rejectionAwait(() => {
+               if (!this._hasErrback) {
+                  this.logger.error(
+                     'Deferred',
+                     'There is no callbacks attached to handle error',
+                     rejectionError
+                  );
+                  this.logger.error(
+                     'Deferred',
+                     'Unhandled error',
+                     result
+                  );
+               }
+            });
          }
       }
 
@@ -483,6 +494,10 @@ class Deferred {
          throw new Error('Both arguments required in addCallbacks');
       }
 
+      if (eb) {
+         this._hasErrback = true;
+      }
+
       const fired = this._fired,
          waiting = fired === WAITING || this._running || this._paused > 0;
 
@@ -539,7 +554,7 @@ class Deferred {
          } catch (err) {
             fired = FAILED;
             res = isErrorValue(err) ? err : new Error(err);
-            IoC.resolve('ILogger').error(
+            this.logger.error(
                'Deferred',
                `Callback function throwing an error: ${err.message}`,
                err
@@ -685,7 +700,7 @@ class Deferred {
    static fail(result) {
       const err =
          result instanceof Error ? result : new Error(result ? String(result) : '');
-      return new Deferred().errback(err, false);
+      return new Deferred().errback(err);
    }
 
    /**

@@ -13,9 +13,16 @@ import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
 import {mixin} from '../../util';
 // @ts-ignore
-import RpcJson = require('Transport/RPCJSON');
+import { RPCJSON as RpcJson } from 'Browser/Transport';
 
-export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMixin) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */{
+interface IEndPoint {
+   contract?: string;
+   address?: string;
+}
+
+export default class SbisBusinessLogic extends mixin(
+   Object, OptionsToPropertyMixin
+) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */ {
    readonly '[Types/_source/provider/IAbstract]': boolean = true;
 
    /**
@@ -32,7 +39,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
     *    });
     * </pre>
     */
-   _$endpoint: any = {};
+   _$endpoint: IEndPoint = {};
 
    /**
     * @cfg {Function} Конструктор сетевого транспорта
@@ -44,7 +51,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
     */
    _nameSpaceSeparator: string;
 
-   constructor(options?) {
+   constructor(options?: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
    }
@@ -54,17 +61,17 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
     * @return {Endpoint}
     * @see endpoint
     */
-   getEndpoint() {
+   getEndpoint(): IEndPoint {
       return this._$endpoint;
    }
 
-   call(name: string, args: Array<string> | Object): ExtendPromise<any> {
+   call(name: string, args: string[] | Object): ExtendPromise<any> {
       name = name + '';
       args = args || {};
 
       const Transport = this._$transport;
-      let endpoint = this.getEndpoint();
-      let overrideContract = name.indexOf('.') > -1;
+      const endpoint = this.getEndpoint();
+      const overrideContract = name.indexOf('.') > -1;
 
       if (!overrideContract && endpoint.contract) {
          name = endpoint.contract + this._nameSpaceSeparator + name;

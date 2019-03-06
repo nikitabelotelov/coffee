@@ -1,7 +1,7 @@
 define('Core/helpers/openFile',[
     "Core/moduleStubs",
-    "Core/IoC"
-], function (moduleStubs, IoC) {
+    'Env/Env'
+], function (moduleStubs, Env) {
     var pluginDef;
     function getPlugin() {
         if (!pluginDef) {
@@ -38,7 +38,7 @@ define('Core/helpers/openFile',[
             });
             return service.call('OpenLink', {path: fileName});
         }).addErrback(function(err) {
-            IoC.resolve('ILogger').log('Core/helpers/openFile', 'error opening file "' + fileName + '".');
+            Env.IoC.resolve('ILogger').log('Core/helpers/openFile', 'error opening file "' + fileName + '".');
             return err;
         });
     }

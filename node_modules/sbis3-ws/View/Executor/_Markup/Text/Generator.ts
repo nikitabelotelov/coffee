@@ -3,11 +3,7 @@
 // @ts-ignore
 import * as randomId from 'Core/helpers/Number/randomId';
 // @ts-ignore
-import * as configStorage from 'Core/helpers/Hcontrol/configStorage';
-// @ts-ignore
-import * as IoC from 'Core/IoC';
-// @ts-ignore
-import * as cConstants from 'Core/constants';
+import { IoC, constants as cConstants } from 'Env/Env';
 // @ts-ignore
 import * as Serializer from 'Core/Serializer';
 // @ts-ignore
@@ -199,7 +195,7 @@ function buildForNewControl(scope, cnstr, decOptions) {
          inst.saveFullContext(ContextResolver.wrapContext(inst, scope.templateContext || {}));
       }
    }
-   result = inst._template ? inst.render(undefined, decOptions) : '';
+   result = inst._template ? Generator.invisibleNodeCompat(inst.render(undefined, decOptions)) : '';
    return result;
 }
 
@@ -306,6 +302,8 @@ GeneratorText.createWsControl = function createWsControl(tpl, scope, attributes,
       resultingFn = cnstr && cnstr.prototype && cnstr.prototype._template;
 
    if (!cnstr && !resultingFn) {
+      var e = new Error('Попытка создания контрола, у которого отсутствует конструктор и шаблон');
+      IoC.resolve('ILogger').error(e.message, e.stack);
       return '';
    }
 
@@ -530,17 +528,6 @@ GeneratorText.serializeReceivedState = function serializeReceivedState(receivedS
       ser = ser.replace(re.toFind, re.toReplace);
    });
    return ser;
-};
-
-GeneratorText.saveConfig = function saveConfig(configId, inst) {
-   /**
-    * Сохраним инстанс в configStorage
-    */
-   if (typeof window !== "undefined") {
-      var configObj = {};
-      configObj[configId] = inst;
-      configStorage.merge(configObj);
-   }
 };
 
 GeneratorText.calculateScope = function calculateScope(scope) {

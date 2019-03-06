@@ -2,10 +2,12 @@
  * Created by ps.borisov on 05.05.2017.
  */
 define('Core/helpers/vital/processImagePath', [
-   'Core/constants',
+   'require',
+   'Env/Env',
    'Core/helpers/getVersionedLink'
 ], function(
-   constants,
+   requirejs,
+   Env,
    getVersionedLink
 ) {
    /**
@@ -15,31 +17,41 @@ define('Core/helpers/vital/processImagePath', [
     * @public
     * @author Крайнов Д.О.
     */
+
+   var global = this || (0, eval)('this');// eslint-disable-line no-eval
+   var isServer = typeof window === 'undefined';
+
    return function processImagePath(path) {
-      if (typeof path == 'string') {
-         if (typeof window == 'undefined') {
+      if (typeof path === 'string') {
+         if (isServer) {
             var nodePath = require('path');
          }
 
          if (path.indexOf('ws:/') === 0) {
-            var replaceTo = constants.wsRoot + 'img/themes/wi_scheme';
-            if (typeof window == 'undefined') {
+            var replaceTo = Env.constants.wsRoot + 'img/themes/wi_scheme';
+            if (isServer) {
                //constants.wsRoot начинается со слеша
-               replaceTo = nodePath.join(constants.wsRoot, 'img/themes/wi_scheme');
+               replaceTo = nodePath.join(Env.constants.wsRoot, 'img/themes/wi_scheme');
             }
             path = path.replace('ws:', replaceTo);
+
+            if (/(jpg|png|gif|svg)$/.test(path)) {
+               path = getVersionedLink(path);
+            }
          } else if (path.indexOf('/') > -1) {
-            var moduleName = path.split('/')[0],
-               modulePath =  constants.requirejsPaths[moduleName];
-            if (modulePath) {
-               path = '/' + path.replace(moduleName, modulePath)
+            path = requirejs.toUrl(path);
+            if (isServer) {
+               var baseUrl = global.wsConfig._baseUrl || '';
+               if (path.startsWith(baseUrl)) {
+                  path = path.slice(baseUrl.length);
+               }
+               if (!path.startsWith('/')) {
+                  path = '/' + path;
+               }
             }
          }
-
-         if (/(jpg|png|gif|svg)$/.test(path)) {
-            path = getVersionedLink(path);
-         }
       }
+
       return path;
-   }
+   };
 });

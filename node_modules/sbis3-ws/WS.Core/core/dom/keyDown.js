@@ -1,6 +1,6 @@
 define('Core/dom/keyDown', [
-   'Core/constants'
-], function(constants) {
+   'Env/Env'
+], function(Env) {
    //MOVE_TO КРАЙНОВ
 
    /**
@@ -16,14 +16,14 @@ define('Core/dom/keyDown', [
     * @see getTouchEventClientCoords
     */
    return function (object, callback) {
-      object[constants.compatibility.correctKeyEvents ? 'keydown' : 'keypress'](function (e) {
-         if (!constants.compatibility.correctKeyEvents) {
+      object[Env.constants.compatibility.correctKeyEvents ? 'keydown' : 'keypress'](function (e) {
+         if (!Env.constants.compatibility.correctKeyEvents) {
             if (e.which === e.keyCode) {
                if (e.which >= 97 && e.which <= 122) {
                   e.which = e.keyCode - 32;
                }
-               else if (e.which in constants.operaKeys) {
-                  e.which = constants.key[constants.operaKeys[e.which]];
+               else if (e.which in Env.constants.operaKeys) {
+                  e.which = Env.constants.key[Env.constants.operaKeys[e.which]];
                }
             }
             if (e.which === 0) {

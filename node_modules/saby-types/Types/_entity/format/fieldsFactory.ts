@@ -25,6 +25,7 @@ import UuidField from './UuidField';
 import RpcFileField from './RpcFileField';
 import ObjectField from './ObjectField';
 import ArrayField from './ArrayField';
+import Field from './Field';
 import {isRegistered, resolve} from '../../di';
 import {logger} from '../../util';
 
@@ -59,15 +60,23 @@ import {logger} from '../../util';
  * @property {FieldType|Function|String} type Тип поля (название или конструктор)
  * @property {*} defaultValue Значение поля по умолчанию
  * @property {Boolean} nullable Значение может быть null
- * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
+ * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного
+ * типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}:
+ * {name: 'amount', type: 'money', precision: 4}
  */
+
+export interface IDeclaration {
+   name: string;
+   type: string | Function;
+   kind?: string;
+}
 
 /**
  * Конструирует формат поля по декларативному описанию
  * @param {FieldDeclaration} declaration Декларативное описание
  * @return {Types/_entity/format/Field}
  */
-export default function (declaration) {
+export default function(declaration: IDeclaration): Field {
    if (Object.getPrototypeOf(declaration) !== Object.prototype) {
       throw new TypeError('Types/_entity/format/FieldsFactory::create(): declaration should be an instance of Object');
    }
@@ -86,7 +95,10 @@ export default function (declaration) {
          case 'string':
             return new StringField(declaration);
          case 'text':
-            logger.error('Types/_entity/format/FieldsFactory::create()', 'Type "text" has been removed in 3.18.10. Use "string" instead.');
+            logger.error(
+               'Types/_entity/format/FieldsFactory::create()',
+               'Type "text" has been removed in 3.18.10. Use "string" instead.'
+            );
             declaration.type = 'string';
             return new StringField(declaration);
          case 'xml':
@@ -119,7 +131,10 @@ export default function (declaration) {
          case 'rpcfile':
             return new RpcFileField(declaration);
          case 'hierarchy':
-            logger.error('Types/_entity/format/FieldsFactory::create()', 'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.');
+            logger.error(
+               'Types/_entity/format/FieldsFactory::create()',
+               'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.'
+            );
             declaration.type = 'identity';
             return new IdentityField(declaration);
          case 'object':
@@ -134,12 +149,12 @@ export default function (declaration) {
    }
 
    if (typeof type === 'function') {
-      let inst = Object.create(type.prototype);
+      const inst = Object.create(type.prototype);
       if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
-         //Yes it's Types/_entity/Record
+         // Yes it's Types/_entity/Record
          return new RecordField(declaration);
       } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
-         //Yes it's Types/_collection/RecordSet
+         // Yes it's Types/_collection/RecordSet
          return new RecordSetField(declaration);
       } else if (inst['[Types/_collection/IEnum]']) {
          return new EnumField(declaration);
@@ -158,5 +173,6 @@ export default function (declaration) {
       }
    }
 
+   // tslint:disable-next-line:max-line-length
    throw new TypeError(`Types/_entity/format/fieldsFactory(): unsupported field type ${typeof type === 'function' ? type.name : '"' + type + '"'}`);
 }

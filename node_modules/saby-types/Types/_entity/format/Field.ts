@@ -22,7 +22,6 @@ import SerializableMixin from '../SerializableMixin';
 import CloneableMixin from '../CloneableMixin';
 import {isEqual} from '../../object';
 
-// @ts-ignore
 export default abstract class Field extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements ICloneable, IEquatable /** @lends Types/_entity/format/Field.prototype */{
@@ -67,20 +66,21 @@ export default abstract class Field extends mixin(
       OptionsToPropertyMixin.call(this, options);
    }
 
-   //region ICloneable
+   // region ICloneable
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone: (shallow?: boolean) => Field;
+   clone: <Field>(shallow?: boolean) => Field;
 
-   //endregion
+   // endregion
 
-   //region Types/_entity/IEquatable
+   // region Types/_entity/IEquatable
 
    readonly '[Types/_entity/IEquatable]': boolean;
 
    /**
-    * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
+    * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable.
+    * Для полей со словарем - словарь.
     * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
     * @return {Boolean}
     */
@@ -88,8 +88,8 @@ export default abstract class Field extends mixin(
       if (to === this) {
          return true;
       }
-      let selfProto = Object.getPrototypeOf(this);
-      let toProto = Object.getPrototypeOf(to);
+      const selfProto = Object.getPrototypeOf(this);
+      const toProto = Object.getPrototypeOf(to);
 
       return selfProto === toProto &&
          this.getName() === to.getName() &&
@@ -97,15 +97,15 @@ export default abstract class Field extends mixin(
          this.isNullable() === to.isNullable();
    }
 
-   //endregion Types/_entity/IEquatable
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает модуль, который является конструктором значения поля
     * @return {String|Function}
     */
-   getType() {
+   getType(): string | Function {
       return this._$type || this.getTypeName();
    }
 
@@ -113,7 +113,7 @@ export default abstract class Field extends mixin(
     * Возвращает название типа поля
     * @return {String}
     */
-   getTypeName() {
+   getTypeName(): string {
       return this._typeName;
    }
 
@@ -123,7 +123,7 @@ export default abstract class Field extends mixin(
     * @see name
     * @see setName
     */
-   getName() {
+   getName(): string {
       return this._$name;
    }
 
@@ -133,7 +133,7 @@ export default abstract class Field extends mixin(
     * @see name
     * @see getName
     */
-   setName(name) {
+   setName(name: string): void {
       this._$name = name;
    }
 
@@ -143,7 +143,7 @@ export default abstract class Field extends mixin(
     * @see defaultValue
     * @see setDefaultValue
     */
-   getDefaultValue() {
+   getDefaultValue(): any {
       return this._$defaultValue;
    }
 
@@ -153,7 +153,7 @@ export default abstract class Field extends mixin(
     * @see defaultValue
     * @see getDefaultValue
     */
-   setDefaultValue(value) {
+   setDefaultValue(value: any): void {
       this._$defaultValue = value;
    }
 
@@ -163,7 +163,7 @@ export default abstract class Field extends mixin(
     * @see name
     * @see setNullable
     */
-   isNullable() {
+   isNullable(): boolean {
       return this._$nullable;
    }
 
@@ -173,7 +173,7 @@ export default abstract class Field extends mixin(
     * @see name
     * @see isNullable
     */
-   setNullable(nullable) {
+   setNullable(nullable: boolean): void {
       this._$nullable = nullable;
    }
 
@@ -181,10 +181,10 @@ export default abstract class Field extends mixin(
     * Копирует формат поля из другого формата
     * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
     */
-   copyFrom(format) {
-      let formatOptions = format._getOptions();
+   copyFrom(format: Field): void {
+      const formatOptions = format._getOptions();
       let key;
-      for (let option in formatOptions) {
+      for (const option in formatOptions) {
          if (formatOptions.hasOwnProperty(option)) {
             key = '_$' + option;
             if (key in this) {
@@ -194,7 +194,7 @@ export default abstract class Field extends mixin(
       }
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 Field.prototype['[Types/_entity/format/DestroyableMixin]'] = true;

@@ -1,19 +1,21 @@
 /// <amd-module name="Router/ServerRouting" />
 
-import RouterHelper from 'Router/Helper';
+// TODO Move this file to Presentation Service?
+import { getAppNameByUrl } from 'Router/MaskResolver';
 
-function getAppName(request) {
-   return RouterHelper.getAppNameByUrl(request.path);
+let _baseTemplate = 'wml!Controls/Application/Route';
+
+export function getAppName(request): string {
+   return getAppNameByUrl(request.path);
 }
 
-function renderApp(request, response, appName) {
+export function renderApp(request, response, appName): void {
    request.compatible = false;
-   response.render('wml!Controls/Application/Route', {
+   response.render(_baseTemplate, {
       application: appName
    });
 }
 
-export = {
-   getAppName,
-   renderApp
-};
+export function setBaseTemplate(newBaseTemplate) {
+   _baseTemplate = newBaseTemplate;
+}

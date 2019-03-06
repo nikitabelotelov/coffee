@@ -8,19 +8,18 @@ define('Lib/Control/FloatArea/FloatArea', [
    'require',
    "Core/helpers/Object/isEmpty",
    "Core/WindowManager",
-   "Core/EventBus",
+   'Env/Event',
    "Core/CommandDispatcher",
-   "Core/constants",
+   'Env/Env',
    "Lib/Control/TemplatedArea/TemplatedArea",
    "Lib/FloatAreaManager/FloatAreaManager",
    "Lib/Control/ModalOverlay/ModalOverlay",
    "Lib/Mixins/LikeWindowMixin",
-   "Transport/Templates/CompoundControlTemplate",
+   'Browser/TransportOld',
    'Core/markup/ParserUtilities',
    "Core/core-instance",
    'Core/core-clone',
    'Core/helpers/Function/shallowClone',
-   "Core/IoC",
    "Core/ControlBatchUpdater",
    "Lib/Mixins/PendingOperationParentMixin",
    "Core/Deferred",
@@ -29,7 +28,6 @@ define('Lib/Control/FloatArea/FloatArea', [
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/getScrollWidth',
    "is!browser?Lib/LayoutManager/LayoutManager",
-   "Core/detection",
    'Vdom/Vdom',
    'Core/helpers/Array/findIndex',
    "Core/Context",
@@ -46,19 +44,18 @@ define('Lib/Control/FloatArea/FloatArea', [
    require,
    isEmptyObject,
    WindowManager,
-   cEventBus,
+   EnvEvent,
    CommandDispatcher,
-   cConstants,
+   Env,
    TemplatedArea,
    FloatAreaManager,
    ModalOverlay,
    LikeWindowMixin,
-   CompoundControlTemplate,
+   TransportOld,
    ParserUtilities,
    cInstance,
    coreClone,
    cShallowClone,
-   ioc,
    ControlBatchUpdater,
    PendingOperationParentMixin,
    Deferred,
@@ -67,7 +64,6 @@ define('Lib/Control/FloatArea/FloatArea', [
    doAutofocus,
    getScrollWidth,
    LayoutManager,
-   detection,
    Vdom
 ) {
    'use strict';
@@ -76,7 +72,7 @@ define('Lib/Control/FloatArea/FloatArea', [
       USE_ANIMATION = FloatAreaManager._useAnimation(),
       nop = function () {},
       USE_CSS3 = FloatAreaManager._useCss3(),
-      BROWSER = cConstants.browser,
+      BROWSER = Env.constants.browser,
       USE_SHADOWS = !BROWSER.isIE || BROWSER.IEVersion > 8, //В IE8 тени не работают - используем вместо них бордюр
       //см. комментарий у класса ws-float-area-no-height-calc
       //и ещё: у IE 10 (не говоря уже о <= 9) не работает табличная вёрстка тут - (ws-float-area-no-height-calc)
@@ -93,7 +89,7 @@ define('Lib/Control/FloatArea/FloatArea', [
       DEFAULT_SIZE = 200,    //Значение, которое будет использоваться для размеров области по-умолчанию
       HOVER_TIMEOUT = 1000,  //Длительность таймера, по истечении которого панель будет скрыта (при использовании опции {@link Lib/Control/FloatArea/FloatArea#hoverTarget})
       SHOW_DELAY = 300,      //Дефолтная задержка показа панели. Используется это значение, если указана опция {@link Lib/Control/FloatArea/FloatArea#hoverTarget}, иначе - 0
-      logger = ioc.resolve('ILogger'),
+      logger = Env.IoC.resolve('ILogger'),
       logError = logger.error.bind(logger, 'Lib/Control/FloatArea/FloatArea'),
       CommandDispatcher = CommandDispatcher,
       positionResult = {},
@@ -101,7 +97,7 @@ define('Lib/Control/FloatArea/FloatArea', [
 
    function getBody() {
       if (!BODY) {
-         BODY = cConstants.isBrowserPlatform && $('body');
+         BODY = Env.constants.isBrowserPlatform && $('body');
       }
       return BODY.length && BODY;
    }
@@ -543,11 +539,11 @@ define('Lib/Control/FloatArea/FloatArea', [
        * @event onClose Происходит перед закрытием панели.
        * @remark
        * Событие происходит в момент начала анимации закрытия всплывающей панели.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        */
       /**
        * @event onBeforeShow Происходит перед началом показа панели или при первой загрузке шаблона.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @example
        * Перед началом анимации открытия панели проверяем отступы - не превышают ли они размеры текущего документа.
        * <pre>
@@ -565,7 +561,7 @@ define('Lib/Control/FloatArea/FloatArea', [
        */
       /**
        * @event onAfterShow Происходит при показаной панели и готовых контролах.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @remark
        * Событие срабатывает после выполнения обоих пунктов:
        * <ol>
@@ -587,7 +583,7 @@ define('Lib/Control/FloatArea/FloatArea', [
        * @event onAfterClose Происходит после закрытия панели.
        * @remark
        * Событие срабатывает после окончания анимации закрытия панели, когда её больше не видно.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param [result] Параметр приходит из команды {@link close}, передаётся в обработчик события.
        * @example
        * По окончании анимации закрытия панели откроем другую всплывающую панель:
@@ -608,7 +604,7 @@ define('Lib/Control/FloatArea/FloatArea', [
        * @event onBeforeClose Происходит перед началом закрытия панели.
        * @remark
        * Событие срабатывает перед началом анимации закрытия всплывающей панели.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param [result] Параметр приходит из команды {@link close}, передаётся в обработчик события.
        * @return {Boolean} Можно запретить закрытие панели, если передать false.
        * @see hide
@@ -624,7 +620,7 @@ define('Lib/Control/FloatArea/FloatArea', [
        * @event onTargetVisibilityChange Происходит после смены видимости элемента, установленного в опции {@link target}.
        * @remark
        * Событие срабатывает после смены элемента, установленного в опции {@link target}. После того как событие произошло, Lib/Control/FloatArea/FloatArea закрывается.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @return {Boolean} Можно отключить закрытие панели при смене видимости элемента, установленного в опции {@link target}. Это производят в обработчике события:
        * <pre>
        *     myObj.subscribe('onTargetVisibilityChange', function(eventObject){
@@ -634,7 +630,7 @@ define('Lib/Control/FloatArea/FloatArea', [
        */
       /**
        * @event onScroll Происходит на прокрутку панели из стека.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Object} scrollData Объект с данными прокрутки.
        * @param {jQuery} scrollData.element Блок, оборачивающий и прокручивающий содержимое панели.
        * @param {Number} scrollData.clientHeight Клиентская высота (высота видимой области) у блока прокрутки.
@@ -1460,9 +1456,9 @@ define('Lib/Control/FloatArea/FloatArea', [
          _childWindows: [],   // Используем массив, на случай одинаковых id. Если когда-то будут обязательно уникальные id, то это можно будет переделать
          _showTimer: undefined,
          _keysWeHandle: [
-            cConstants.key.tab,
-            cConstants.key.enter,
-            cConstants.key.esc
+            Env.constants.key.tab,
+            Env.constants.key.enter,
+            Env.constants.key.esc
          ],
          _zIndex: 0,
          _caption: undefined,
@@ -1500,7 +1496,7 @@ define('Lib/Control/FloatArea/FloatArea', [
 
          this._publish('onClose', 'onShow', 'onBeforeClose', 'onAfterClose', 'onScroll', 'onTargetVisibilityChange');
 
-         this.subscribeTo(cEventBus.channel('navigation'), 'onBeforeNavigate', forAliveOnly(this._onBeforeNavigate, this));
+         this.subscribeTo(EnvEvent.Bus.channel('navigation'), 'onBeforeNavigate', forAliveOnly(this._onBeforeNavigate, this));
 
          var declCmd = function(command, fn) {
             var handler = function() {
@@ -1515,7 +1511,7 @@ define('Lib/Control/FloatArea/FloatArea', [
          declCmd('close', this.close);
 
          FloatAreaManager._addArea(this);
-         cEventBus.globalChannel().notify('onFloatAreaCreating', this);
+         EnvEvent.Bus.globalChannel().notify('onFloatAreaCreating', this);
          this._captionClickHandler = this._captionClickHandler.bind(this);
 
          this._overflow[0].wsControl = this;
@@ -1575,7 +1571,7 @@ define('Lib/Control/FloatArea/FloatArea', [
 
        _checkOpener: function() {
          if (isNewEnvironment() && !this._options._openFromAction) {
-            ioc.resolve('ILogger').error('FloatArea', 'Компонент открыт напрямую без использования хэлперов открытия. \n' +
+            Env.IoC.resolve('ILogger').error('FloatArea', 'Компонент открыт напрямую без использования хэлперов открытия. \n' +
                'Для правильной работы компонента окно должно быть открыто через action. \n' +
                'Подробности: https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws4/components/templates/open-compound-template/');
          }
@@ -2039,7 +2035,7 @@ define('Lib/Control/FloatArea/FloatArea', [
             events = 'click touchend';
          //ipad генерирует клик на элементе который расположен под кнопкой, если закрывать панель на touch события и ни какие prevetDefaul его не останавливают
          //по ссылке с href клик генерируется всегда
-         if (detection.isMobileSafari) {
+         if (Env.detection.isMobileSafari) {
             this._closeButton = $('<a sbisname="floatAreaCloseButton" href="javascript:void(0)" class="ws-float-close sbisname-window-title-close ws-float-close-' + side + '"></a>');
             events = 'click';
          } else {
@@ -2051,7 +2047,7 @@ define('Lib/Control/FloatArea/FloatArea', [
                e.preventDefault();
             }
             // в случае firefox при клике на кнопку событие focusout не содержит relatedTarget, и setActive(false) мы не зовем, поэтому позовем его тут
-            if (detection.firefox) {
+            if (Env.detection.firefox) {
                var activeControl = this.getActiveChildControl(undefined, true);
                if (activeControl) {
                   activeControl.setActive(false);
@@ -2182,10 +2178,7 @@ define('Lib/Control/FloatArea/FloatArea', [
          this._visibleRoot.toggleClass('ws-float-area-maximized-mode', mode);
          this._visibleRootWrapper.toggleClass('ws-float-area-maximized-mode', mode);
 
-         //внутри контейнера ws-float-area лежит контейнер, равный ему по ширине, но с бордером слева
-         //Внутри контейнера с бордером лежит контент. Получается, что контент размещается в контейнере на 1px меньше чем он сам => newWidth + ширина бордера
-         this._visibleRoot.find('.ws-float-area').css('width', newWidth + this._getBorderLeftWidth());
-         this.getContainer().css('width', newWidth);
+         this._updateAreaWidth(newWidth);
          this._updateStickyHeaderWidth();
 
          FloatAreaManager._changeMaximizeMode();
@@ -2198,7 +2191,7 @@ define('Lib/Control/FloatArea/FloatArea', [
          }
          this._notify('onChangeMaximizeState', mode);
 
-         if (detection.isIE10) {
+         if (Env.detection.isIE10) {
             //После смены ширины панели, у флексового родительского контейнера вкладок, для дочерних НЕ флексовых контейнеров не всегда
             //пересчитывается доступная ширина, из-за чего они ужимаются там где не должны.
             //Можно сделать дочерние контейнеры флексовыми и тогда баг IE уходит (но это не точно). в итоге вызываю пересчет размеров узла для IE напрямую.
@@ -2208,6 +2201,13 @@ define('Lib/Control/FloatArea/FloatArea', [
                tabs.css('width', '');
             }, 150);
          }
+      },
+
+      _updateAreaWidth: function(newWidth) {
+         //внутри контейнера ws-float-area лежит контейнер, равный ему по ширине, но с бордером слева
+         //Внутри контейнера с бордером лежит контент. Получается, что контент размещается в контейнере на 1px меньше чем он сам => newWidth + ширина бордера
+         this._visibleRoot.find('.ws-float-area').css('width', newWidth + this._getBorderLeftWidth());
+         this.getContainer().css('width', newWidth);
       },
 
       _getBorderLeftWidth: function() {
@@ -2261,7 +2261,7 @@ define('Lib/Control/FloatArea/FloatArea', [
             var popupInstance = popupContainer.controlNodes[0] && popupContainer.controlNodes[0].control;
             var popupOpener = popupInstance && popupInstance._options.opener;
             if (popupOpener) {
-               var popupOpenerContainer = popupOpener._container.closest('.ws-float-area-show-complete')[0];
+               var popupOpenerContainer = $(popupOpener._container.closest('.ws-float-area-show-complete'))[0];
                var popupOpenerInstance = popupOpenerContainer && popupOpenerContainer.wsControl;
                return popupOpenerInstance === this;
             }
@@ -2462,7 +2462,7 @@ define('Lib/Control/FloatArea/FloatArea', [
       _loadControls: createBatchUpdateWrapper('FloatArea.loadControls', function(pdResult, template, parentId, checkDestroyed, errorHandler) {
          var
             loadControlsBase = FloatArea.superclass._loadControls,
-            isCompoundControl = template instanceof CompoundControlTemplate,
+            isCompoundControl = template instanceof TransportOld.CompoundControlTemplate,
             controlConfig, constructor, vStorage, markup, markupContext, contextCreated,
             args, timeout, result;
 
@@ -2610,7 +2610,7 @@ define('Lib/Control/FloatArea/FloatArea', [
                      bottom: ''
                   },
                   ovr = this._overflow,
-                  win = cConstants.$win,
+                  win = Env.constants.$win,
                   sideSigns = {left: -1, right: 1, top: -1, bottom: 1},
                   offsetXSign = sideSigns[options.side] * -1,
                   offsetYSign = sideSigns[options.verticalAlign] * -1,
@@ -2803,7 +2803,7 @@ define('Lib/Control/FloatArea/FloatArea', [
                this._stateStage = 'delay';
 
                //На ios не даем открыть больше 8 панелей, т.к. большее количество приводит к падению вкладки браузера
-               if (cConstants.browser.isMobileIOS && FloatAreaManager._stack.length >= MAX_STACK_PANEL_COUNT) { //>=, т.к. в _stack новую панель еще не положили
+               if (Env.constants.browser.isMobileIOS && FloatAreaManager._stack.length >= MAX_STACK_PANEL_COUNT) { //>=, т.к. в _stack новую панель еще не положили
                   require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
                      InformationPopupManager.showMessageDialog({
                         status: 'error',
@@ -3063,7 +3063,7 @@ define('Lib/Control/FloatArea/FloatArea', [
       _notifyFloatAreaZIndexChanged: function() {
          if (this._options.isStack) {
             var zIndex = FloatAreaManager._getMaxZIndex();
-            cEventBus.globalChannel().notify('FloatAreaZIndexChanged', zIndex);
+            EnvEvent.Bus.globalChannel().notify('FloatAreaZIndexChanged', zIndex);
          }
       },
 
@@ -3127,7 +3127,7 @@ define('Lib/Control/FloatArea/FloatArea', [
             this._state = 'hide';
 
             // хак для ipad, чтобы клавиатура закрывалась когда дестроится панель
-            if (detection.isMobileIOS) {
+            if (Env.detection.isMobileIOS) {
                $(document.activeElement).trigger('blur');
             }
 
@@ -3261,6 +3261,7 @@ define('Lib/Control/FloatArea/FloatArea', [
          result = flag !== false;
 
          if (result && this._state === 'hide') {
+            this._closeVDOMInfobox();
             this._state = '';
             result = this._loaded;
 
@@ -3297,6 +3298,20 @@ define('Lib/Control/FloatArea/FloatArea', [
             //если же поменял, то трогать его не надо
             this._state = '';
             return false;
+         }
+      },
+
+      _closeVDOMInfobox: function() {
+         // Перед закрытием окна закрываем вдомные инфобоксы, которые на нем открыты
+         // Вызываем обработчик, который в вдоме вызывается перед закрытием окна
+         if (!isNewEnvironment()) {
+            var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+            if (requirejs.defined(ManagerWrapperControllerModule)) {
+               var ManagerWrapperController = requirejs(ManagerWrapperControllerModule);
+               if (ManagerWrapperController.getGlobalPopup()) {
+                  ManagerWrapperController.getGlobalPopup()._popupBeforeDestroyedHandler(null, null, null, this.getContainer()[0]);
+               }
+            }
          }
       },
 
@@ -3652,7 +3667,7 @@ define('Lib/Control/FloatArea/FloatArea', [
 
             // После инициализайии убираем фикс сделанный по ошибке https://inside.tensor.ru/opendoc.html?guid=18b57e4c-234c-4f85-9062-135330879d46&des=
             // Скролбары уже инициализарованы и фикс больше не нужен. Навешиваем класс убирающий фикс. См core.less.
-            if (detection.isMobileSafari) {
+            if (Env.detection.isMobileSafari) {
                setTimeout(forAliveOnly(function () {
                   this.getContainer().closest('.ws-float-area-stack-panel-overflow').addClass('ws-ipad-scrolling-content-fix');
                }.bind(this), this), 2000);
@@ -3757,7 +3772,7 @@ define('Lib/Control/FloatArea/FloatArea', [
             topFloatArea;
 
          //Если зажат shift - открываем диспетчер задач хрома
-         if(!e.shiftKey && e.which === cConstants.key.esc){
+         if(!e.shiftKey && e.which === Env.constants.key.esc){
             e.stopPropagation();
             e.stopImmediatePropagation();
 
@@ -3785,7 +3800,7 @@ define('Lib/Control/FloatArea/FloatArea', [
 
       _toggleTrackTarget: forNonStackOnly(function(toggle) {
          var haveTarget = this._target && this._target.length,
-            win = cConstants.$win,
+            win = Env.constants.$win,
             untrack = function() {
                win.unbind('resize', this._windowResizeHandler);
                if (haveTarget) {
@@ -3911,6 +3926,10 @@ define('Lib/Control/FloatArea/FloatArea', [
             haveMaxWidth = this._options.maxWidth !== Infinity,
             containerMinHeight;
 
+         if (this._options._isCompatibleArea && this._options.minimizedWidth && this._options.maximized === false) {
+            minWidth = maxWidth = this._options.minimizedWidth;
+         }
+
          if (this._maxWidthSet !== maxWidth) {
             containerStyle = this._container.prop('style');
 
@@ -3926,7 +3945,7 @@ define('Lib/Control/FloatArea/FloatArea', [
             else if (haveMaxWidth) {
                containerStyle.width = Math.max(minWidth, Math.min(this._options.maxWidth, maxWidth)) + 'px';
             }
-            else if (cConstants.browser.isIE && minWidth > 0 && containerStyle.width === '' && getBody().hasClass('engine-OnlineBaseInnerMinCoreView')) {
+            else if (Env.constants.browser.isIE && minWidth > 0 && containerStyle.width === '' && getBody().hasClass('engine-OnlineBaseInnerMinCoreView')) {
                //В нормальных браузерах если не задано свойтсво width - ширина панели будет равна значению min-width, если дочерние компоненты не растягивают контейнер шире.
                //В IE вылезла бага - если дочерние узлы имеют display:flex, то ширина задается по свойству max-width. //Flex используется на minCore
                //Устанавливаю для IE поведения как и во всех браузерах
@@ -4366,7 +4385,7 @@ define('Lib/Control/FloatArea/FloatArea', [
       // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
       // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
       setHasPopupInside: function(hasPopupInside){
-         if (this._options.isStack && detection.isMobileIOS){
+         if (this._options.isStack && Env.detection.isMobileIOS){
             FloatAreaManager._toggleHasPopupInside(this.getId() , hasPopupInside);
             //this._visibleRoot.toggleClass('ws-ios-overflow-scrolling-auto', hasPopupInside);
          }

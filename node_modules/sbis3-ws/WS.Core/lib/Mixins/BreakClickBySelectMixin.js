@@ -1,6 +1,6 @@
 define('Lib/Mixins/BreakClickBySelectMixin', [
-   'Core/detection'
-], function(detection) {
+   'Env/Env'
+], function(Env) {
     /**
      * Миксин, предотвращающий вызов обработчика клика, при выделении текста внутри контрола.
      * @mixin Lib/Mixins/BreakClickBySelectMixin
@@ -13,7 +13,7 @@ define('Lib/Mixins/BreakClickBySelectMixin', [
         _hasSelectionInContainer: function() {
             var selection = this._getSelection();
 
-            if (detection.firefox) {
+            if (Env.detection.firefox) {
                // костыль. Так случилось, что если кликаем на элемент, который display=flex, находится selection типа Range, будто бы есть выделение, а его нет
                // https://jsfiddle.net/xz54ngvy/3/ - если убрать флексы, и кликать на область справа от текста, все будет ок
                if (selection && selection.focusNode instanceof Element) {

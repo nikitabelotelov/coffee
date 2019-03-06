@@ -1,5 +1,5 @@
 define('Core/core-extensions', [
-   'Core/constants',
+   'Env/Env',
    'Core/Deferred',
    'Core/ParallelDeferred',
    'Core/RightsManager',
@@ -10,7 +10,7 @@ define('Core/core-extensions', [
    'is!browser?Core/ContextField/Enum',
    'is!browser?Core/ContextField/List'
 ], function(
-   _const,
+   Env,
    Deferred,
    ParallelDeferred,
    RightsManager,
@@ -22,7 +22,7 @@ define('Core/core-extensions', [
       resultDef.push(ExtensionsManager.loadExtensions());
    }
 
-   if (_const.rights) {
+   if (Env.constants.rights) {
       var rights = RightsManager.getRights();
       if (rights instanceof Deferred) {
          resultDef.push(rights.addCallback(function (rights) {

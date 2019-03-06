@@ -4,13 +4,14 @@
  * @author Мальцев А.А.
  */
 
+const SINGLETONE_MAP_INDEX = 2;
 const map = {};
 
 /**
  * Проверяет валидность названия зависимости
  * @param {String} alias Название зависимости
  */
-function checkAlias(alias: string) {
+function checkAlias(alias: string): void {
    if (typeof alias !== 'string') {
       throw new TypeError('Alias should be a string');
    }
@@ -63,7 +64,7 @@ function checkAlias(alias: string) {
  *    });
  * </pre>
  */
-export function register(alias: string, factory: Function|Object, options?: Object) {
+export function register(alias: string, factory: Function|Object, options?: Object): void {
    checkAlias(alias);
    map[alias] = [factory, options];
 }
@@ -76,7 +77,7 @@ export function register(alias: string, factory: Function|Object, options?: Obje
  *    di.unregister('model.user');
  * </pre>
  */
-export function unregister(alias: string) {
+export function unregister(alias: string): void {
    checkAlias(alias);
    delete map[alias];
 }
@@ -110,8 +111,8 @@ export function isRegistered(alias: string): boolean {
  *    });
  * </pre>
  */
-export function create(alias: string|Function|Object, options?: Object): any {
-   const result = resolve(alias, options);
+export function create<T>(alias: string|Function|Object, options?: Object): T {
+   const result = resolve<T>(alias, options);
    if (typeof result === 'function') {
       return resolve(result, options);
    }
@@ -139,11 +140,11 @@ export function create(alias: string|Function|Object, options?: Object): any {
  *    });
  * </pre>
  */
-export function resolve(alias: string|Function|Object, options?: Object): any {
-   let aliasType = typeof alias,
-      Factory,
-      config,
-      singleInst;
+export function resolve<T>(alias: string|Function|Object, options?: Object): T {
+   const aliasType = typeof alias;
+   let Factory;
+   let config;
+   let singleInst;
 
    switch (aliasType) {
       case 'function':
@@ -154,12 +155,10 @@ export function resolve(alias: string|Function|Object, options?: Object): any {
          config = { instantiate: false };
          break;
       default:
-         if (!isRegistered(<string>alias)) {
+         if (!isRegistered(alias as string)) {
             throw new ReferenceError(`Alias "${alias}" does not registered`);
          }
-         Factory = map[<string>alias][0];
-         config = map[<string>alias][1];
-         singleInst = map[<string>alias][2];
+         [Factory, config, singleInst] = map[alias as string];
    }
 
    if (config) {
@@ -168,7 +167,7 @@ export function resolve(alias: string|Function|Object, options?: Object): any {
       }
       if (config.single === true) {
          if (singleInst === undefined) {
-            singleInst = map[<string>alias][2] = new Factory(options);
+            singleInst = map[alias as string][SINGLETONE_MAP_INDEX] = new Factory(options);
          }
          return singleInst;
       }

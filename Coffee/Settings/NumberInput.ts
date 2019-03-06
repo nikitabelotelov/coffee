@@ -13,13 +13,14 @@ class Info extends Control {
     protected _beforeMount(opts) {
        this.inputValue = opts.value;
     };
+    protected _beforeUpdate(opts) {
+        this.inputValue = opts.value;
+    };
     private increment(): void {
-        this.inputValue = this.inputValue + 1;
-        this._notify('valueChanged', [this.inputValue]);
+        this._notify('valueChanged', [this.inputValue + 1]);
     };
     private decrement(): void {
-        this.inputValue = this.inputValue - 1;
-        this._notify('valueChanged', [this.inputValue]);
+        this._notify('valueChanged', [this.inputValue - 1]);
     }
 }
 

@@ -4,17 +4,15 @@ define('Core/Serializer', [
    'Core/helpers/Object/isPlainObject',
    'Core/helpers/Number/randomId',
    'Core/library',
-   'Core/detection',
-   'View/Executor/Utils',
-   'Core/IoC'
+   'Env/Env',
+   'View/Executor/Utils'
 ], function(
    require,
    isPlainObject,
    randomId,
    library,
-   detection,
-   Utils,
-   IoC
+   Env,
+   Utils
 ) {
    var getObjectFunctionHeaderTemplate = function() {
          if (objectFunctionHeaderTemplate === undefined) {
@@ -305,7 +303,7 @@ define('Core/Serializer', [
                   switch (key) {
                      case 'Date':
                         var dateValue = new Date(result);
-                        if (dateValue.toString() === 'Invalid Date' && detection.isIE) {
+                        if (dateValue.toString() === 'Invalid Date' && Env.detection.isIE) {
                            dateValue = Date.fromSQL(result);
                         }
                         return dateValue;
@@ -623,7 +621,7 @@ define('Core/Serializer', [
                }
                instance = Module.prototype.fromJSON.call(Module, item.value);
             } catch(e){
-               IoC.resolve('ILogger').error('Core/Serializer', e.stack || e);
+               Env.IoC.resolve('ILogger').error('Core/Serializer', e.stack || e);
                instance = null;
             }
             this._instanceStorage[item.value.id] = instance;

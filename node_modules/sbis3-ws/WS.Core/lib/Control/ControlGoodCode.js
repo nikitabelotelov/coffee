@@ -1,11 +1,10 @@
 define('Lib/Control/ControlGoodCode', [
-      "Core/constants",
+      'Env/Env',
       "Core/Deferred",
       "Core/core-merge",
       "Core/ControlBatchUpdater",
-      'Core/core-instance',
-      "Core/IoC"
-   ], function (Constants,
+      'Core/core-instance'
+   ], function (Env,
                 cDeferred,
                 cMerge) {
       return {
@@ -136,7 +135,7 @@ define('Lib/Control/ControlGoodCode', [
           */
          _isCanShowExtendedTooltip: function () {
             var isCanShow = false;
-            if (!Constants.browser.isMobilePlatform && this._getOption('extendedTooltip')) {
+            if (!Env.constants.browser.isMobilePlatform && this._getOption('extendedTooltip')) {
                // для неактивного контрола проверям опцию alwaysShowExtendedTooltip
                if (!this.isEnabled()) {
                   isCanShow = !!this._getOption('alwaysShowExtendedTooltip');

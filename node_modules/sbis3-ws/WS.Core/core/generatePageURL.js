@@ -1,13 +1,11 @@
 define('Core/generatePageURL', [
-   'Core/constants',
-   'Core/IoC',
+   'Env/Env',
    'Core/helpers/Object/isEmpty',
-   'Transport/serializeURLData'
+   'Browser/Transport'
 ], function(
-   constants,
-   IoC,
+   Env,
    isEmptyObject,
-   serializeURLData
+   Transport
 ) {
 
    /**
@@ -50,7 +48,7 @@ define('Core/generatePageURL', [
     * @see createGUID
     */
    return function (cfg, retParams, url) {
-      if ((cfg.editDialogTemplate && (constants.htmlNames[cfg.editDialogTemplate] || constants.xmlContents[cfg.editDialogTemplate]))) {
+      if ((cfg.editDialogTemplate && (Env.constants.htmlNames[cfg.editDialogTemplate] || Env.constants.xmlContents[cfg.editDialogTemplate]))) {
          var isHierarchyMode = !!(cfg.isBranch),
             hdlIsObject = cfg.handlers && Object.prototype.toString.call(cfg.handlers) == "[object Object]",
             params = {
@@ -67,19 +65,19 @@ define('Core/generatePageURL', [
          if (url) {
             pageURL = url;
          }
-         else if (constants.htmlNames[cfg.editDialogTemplate]) {
-            var arr = constants.htmlNames[cfg.editDialogTemplate].split('/');
+         else if (Env.constants.htmlNames[cfg.editDialogTemplate]) {
+            var arr = Env.constants.htmlNames[cfg.editDialogTemplate].split('/');
             pageURL = arr[arr.length - 1];
          }
          else {
-            editTemplate = constants.xmlContents[cfg.editDialogTemplate].split('/');
-            pageURL = constants.appRoot + editTemplate[editTemplate.length - 1] + ".html";
+            editTemplate = Env.constants.xmlContents[cfg.editDialogTemplate].split('/');
+            pageURL = Env.constants.appRoot + editTemplate[editTemplate.length - 1] + ".html";
          }
          params["changedRecordValues"] = cfg.changedRecordValues;
          params["history"] = cfg.history;
          params["format"] = cfg.dataSource.readerParams.format;
          params["type"] = cfg.dataSource.readerType;
-         if (cfg.dataSource.readerParams.otherURL !== constants.defaultServiceUrl) {
+         if (cfg.dataSource.readerParams.otherURL !== Env.constants.defaultServiceUrl) {
             params["url"] = cfg.dataSource.readerParams.otherURL;
          }
          params["db"] = cfg.dataSource.readerParams.dbScheme;
@@ -113,12 +111,12 @@ define('Core/generatePageURL', [
             return params;
          }
          else {
-            pageURL += "?editParams=" + encodeURIComponent(serializeURLData(params));
+            pageURL += "?editParams=" + encodeURIComponent(Transport.URL.serializeData(params));
             return pageURL;
          }
       } else {
-         if (!constants.htmlNames[cfg.editDialogTemplate] && !constants.xmlContents[cfg.editDialogTemplate]) {
-            IoC.resolve('ILogger').log('Core/generatePageURL', 'ВНИМАНИЕ! Диалог "' + cfg.editDialogTemplate + '" отсутствует в оглавлении!');
+         if (!Env.constants.htmlNames[cfg.editDialogTemplate] && !Env.constants.xmlContents[cfg.editDialogTemplate]) {
+            Env.IoC.resolve('ILogger').log('Core/generatePageURL', 'ВНИМАНИЕ! Диалог "' + cfg.editDialogTemplate + '" отсутствует в оглавлении!');
          }
          return false;
       }

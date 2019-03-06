@@ -129,6 +129,9 @@ define('Core/Sanitize', [
          return content;
       }
 
+      // если есть символ < который не закрвыается, нужно его заэскейпить, чтобы он не был воспинят парсером как тег
+      content = content.replace(/<([^>]*)$/g, '&lt;$1');
+
       try {
          parsed = Parser.parse(content);
          canParse = true;

@@ -1,4 +1,4 @@
-define('Inferno/third-party/index.dev', ['View/Executor/Expressions', 'Core/helpers/String/unEscapeASCII','Core/detection','Core/IoC'], function (Expressions, unEscapeASCII, detection, IoC) {var exports = {}, RawMarkupNode = Expressions.RawMarkupNode; 'use strict';
+define('Inferno/third-party/index.dev', ['View/Executor/Expressions', 'Core/helpers/String/unEscapeASCII','Env/Env'], function (Expressions, unEscapeASCII, Env) {var exports = {}, RawMarkupNode = Expressions.RawMarkupNode; 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -42,7 +42,7 @@ function throwError(message) {
 function warning(message) {
     // tslint:disable-next-line:no-console
     // @ts-ignore
-    IoC.resolve("ILogger").log("Inferno core", message);
+    Env.IoC.resolve("ILogger").log("Inferno core", message);
 }
 function combineFrom(first, second) {
     var out = {};
@@ -297,7 +297,7 @@ function DEV_ValidateKeys(vNodeTree, forceKeyed) {
             // In case of duplicate keys we don't want to crash the whole app because of that,
             // so we have to create a fixed duplicate on the fly
             // @ts-ignore
-            IoC.resolve("ILogger").error('Deoptimizing perfomance due to duplicate node keys', 'Encountered two children with same key: {' + key + '}. Location: \n' + getTagName(childNode));
+            Env.IoC.resolve("ILogger").error('Deoptimizing perfomance due to duplicate node keys', 'Encountered two children with same key: {' + key + '}. Location: \n' + getTagName(childNode));
             key = duplicateKeys(childNode.key, foundKeys);
             childNode.key = key;
             // return 'Encountered two children with same key: {' + key + '}. Location: \n' + getTagName(childNode);
@@ -1662,7 +1662,7 @@ function patch(lastVNode, nextVNode, parentDOM, context, isSVG, nextNode, lifecy
         patchFunctionalComponent(lastVNode, nextVNode, parentDOM, context, isSVG, nextNode, lifecycle);
     }
     else if (nextFlags & 16 /* Text */) {
-        patchText(lastVNode, nextVNode);
+        patchText(lastVNode, nextVNode, parentDOM);
     }
     else if (nextFlags & 512 /* Void */) {
         nextVNode.dom = lastVNode.dom;
@@ -1979,7 +1979,7 @@ function patchFunctionalComponent(lastVNode, nextVNode, parentDOM, context, isSV
         nextVNode.children = lastInput;
     }
 }
-function patchText(lastVNode, nextVNode) {
+function patchText(lastVNode, nextVNode, parentDOM) {
     var nextText = unescape(nextVNode.children);
     var dom = lastVNode.dom;
     if (nextText !== lastVNode.children) {
@@ -1987,16 +1987,20 @@ function patchText(lastVNode, nextVNode) {
         // EmptyTextNode - implementation of empty string value
         // You can't set nodeValue property in EmptyTextNode
         // @ts-ignore
-        if (detection.isIE10) {
+        if (Env.detection.isIE10) {
             if (dom && dom.parentNode) {
                 // @ts-ignore
-                if (detection.isIE10 || dom.nodeValue === '') {
+                if (Env.detection.isIE10 || dom.nodeValue === '') {
                     // @ts-ignore
                     dom.parentNode.innerText = nextText;
                 }
                 else {
                     dom.nodeValue = nextText;
                 }
+            }
+            else {
+                // @ts-ignore
+                parentDOM.innerText = nextText;
             }
         }
         else {
@@ -2485,7 +2489,7 @@ Component.prototype.render = function render (_nextProps, _nextState, _nextConte
     var testFunc = function testFn() { };
     /* tslint:disable-next-line*/
     // @ts-ignore
-    IoC.resolve("ILogger").log("Inferno core", "Inferno is in development mode.");
+    Env.IoC.resolve("ILogger").log("Inferno core", "Inferno is in development mode.");
     if ((testFunc.name || testFunc.toString()).indexOf('testFn') === -1) {
         warning("It looks like you're using a minified copy of the development build " +
             'of Inferno. When deploying Inferno apps to production, make sure to use ' +

@@ -8,10 +8,9 @@ define('Core/markup/ParserUtilities', [
    'Core/core-extend-initializer',
    'Core/RightsManager',
    'Core/ContextBinder',
-   'Core/IoC',
    'Core/helpers/Function/shallowClone',
    'Core/Abstract',
-   'Core/constants',
+   'Env/Env',
    'Core/Deferred'
 ], function(
    require,
@@ -23,10 +22,9 @@ define('Core/markup/ParserUtilities', [
    coreInitializer,
    RightsManager,
    ContextBinder,
-   ioc,
    shallowClone,
    Abstract,
-   constants,
+   Env,
    Deferred
 ) {
    "use strict";
@@ -47,7 +45,7 @@ define('Core/markup/ParserUtilities', [
       QUOTE_RE = /"/g,
       closeTagSymbols = /\/>$/,
       ParserUtilities = {},
-      logger = ioc.resolve('ILogger'),
+      logger = Env.IoC.resolve('ILogger'),
       varStorageUseCount = 0;
 
    function removeEvalDot(markup, store) {
@@ -82,7 +80,7 @@ define('Core/markup/ParserUtilities', [
       this._junk       = cfg._junk || [];
 
       // сейчас эти свойства нужны только при сборке. ie8 не поддерживает defineProperty
-      if (constants.isNodePlatform) {
+      if (Env.constants.isNodePlatform) {
          Object.defineProperty(this, 'firstChild', {
             get: function () {
                // Возвращает первый Node, не являющийся комментарием и инструкцией обработки

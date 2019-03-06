@@ -151,7 +151,7 @@ function isSuccessful() {
  */
 function logError(message: string) {
     // @ts-ignore
-    import('Core/IoC').then((IoC) => { // tslint:disable-line
+    import('Env/Env').then(({ IoC }) => { // tslint:disable-line
         IoC.resolve('ILogger').warn('Core/polyfill/PromiseAPIDeferred', message);
     });
 }

@@ -1,4 +1,4 @@
-define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getResourceUrl'], function(coreExtend, getResourceUrl) {
+define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getResourceUrl', 'Core/constants'], function(coreExtend, getResourceUrl, constants) {
    'use strict';
 
    function joinPaths(arr) {
@@ -37,7 +37,6 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
          'old-bootup': 'WS.Core/res/js/old-bootup',
          'tslib': 'WS.Core/ext/tslib',
          'Resources': '',
-         'WS.Core': 'WS.Core',
          'Core': 'WS.Core/core',
          'css': 'WS.Core/ext/requirejs/plugins/css',
          'native-css': 'WS.Core/ext/requirejs/plugins/native-css',
@@ -94,8 +93,8 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
       },
       resolveLinkTemplated: function(url) {
          var res = url;
-         res = this.fixOldAndBundles(url);
-         if (!~url.indexOf('%')) {
+         res = this.fixOld(url);
+         if(!~url.indexOf('%')) {
             res = this.originResourceRoot + res;
          }
          return res;
@@ -103,6 +102,31 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
       initPathsServerSide: function() {
          var paths = createRequireRoutes();
          this.paths = paths;
+      },
+      getConstantsModulesInfo: function() {
+         if (constants.modules) {
+            return constants.modules;
+         } else {
+            return {};
+         }
+      },
+      hasServicePath: function(moduleName) {
+         var modulesInfo = this.getConstantsModulesInfo();
+         var imodule = moduleName.split('/')[0];
+         if (modulesInfo && modulesInfo[imodule] && modulesInfo[imodule].path) {
+            return true;
+         } else {
+            return false;
+         }
+      },
+      getLinkWithServicePath: function(moduleName) {
+         var modulesInfo = this.getConstantsModulesInfo();
+         var splitted = moduleName.split('/');
+         var imodule = splitted[0];
+         var imoduleRelativePath = splitted.slice(1).join('/');
+         var sp = modulesInfo[imodule].path;
+         var result = sp + '/' + imoduleRelativePath;
+         return result;
       },
       initPaths: function(reqPaths) {
          if (typeof window === 'undefined') {
@@ -123,9 +147,14 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
          }
       },
       getLinkWithResourceRoot: function(link) {
-         var res = joinPaths([this.resourceRoot, link]);
-         if (res.indexOf('/') !== 0) {
-            res = '/' + res;
+         var res;
+         if (this.hasServicePath(link)) {
+            res = this.getLinkWithServicePath(link);
+         } else {
+            res = joinPaths([this.resourceRoot, link]);
+            if (res.indexOf('/') !== 0) {
+               res = '/' + res;
+            }
          }
          return res;
       },
@@ -136,15 +165,12 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
             return true;
          }
       },
-      fixOldAndBundles: function(name) {
+      fixOld: function(name) {
          var res = name;
          var replaceKey = '';
-         for (var key in this.paths) {
-            if (name.indexOf(key) === 0) {
-               if (key.length > replaceKey.length) {
-                  replaceKey = key;
-               }
-            }
+         var imodule = name.split('/')[0];
+         if(this.paths[imodule] && res.indexOf(imodule) === 0) {
+            replaceKey = imodule;
          }
          if (replaceKey.length && this.paths[replaceKey]) {
             res = res.replace(replaceKey, this.paths[replaceKey]);
@@ -160,10 +186,10 @@ define('Core/LinkResolver/LinkResolver', ['Core/core-extend', 'Core/helpers/getR
             return this.getLinkWithExt(this.resolveLinkTemplated(link), ext);
          }
          var res = link;
-         res = this.fixOldAndBundles(res);
+         res = this.fixOld(res);
          res = this.getLinkWithResourceRoot(res);
          res = this.getLinkWithExt(res, ext, !this.isDebug);
-         res = getResourceUrl(res);
+         res = getResourceUrl(res); // Creates path based on parameters of static domains
          return res;
       },
       resolveCssWithTheme: function(link, theme) {

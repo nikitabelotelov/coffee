@@ -2,14 +2,14 @@
  * Created by dv.zuev on 17.04.2017.
  */
 define('Core/Abstract.compatible', [
-   'Core/EventBus',
+   'Env/Event',
    'Core/helpers/Object/find',
-   'Core/IoC',
+   'Env/Env',
    'Core/helpers/Object/isPlainObject'
 ], function (
-   EventBus,
+   EnvEvent,
    objectFind,
-   IoC,
+   Env,
    isPlainObject
 ) {
    'use strict';
@@ -126,7 +126,7 @@ define('Core/Abstract.compatible', [
          if (name === 'enabled') {
             return true;
          }
-         IoC.resolve('ILogger').info(this._moduleName || 'Abstract', 'Метод _getOption вызвали для несуществующей опции "' + name + '"');
+         Env.IoC.resolve('ILogger').info(this._moduleName || 'Abstract', 'Метод _getOption вызвали для несуществующей опции "' + name + '"');
       },
 
       /**
@@ -141,7 +141,7 @@ define('Core/Abstract.compatible', [
          var exists = this._options && (name in this._options) || ('_$' + name) in this;
 
          if (!silent && !exists) {
-            IoC.resolve('ILogger').info(this._moduleName || 'Abstract', 'Метод _setOption вызвали для несуществующей опции "' + name + '"');
+            Env.IoC.resolve('ILogger').info(this._moduleName || 'Abstract', 'Метод _setOption вызвали для несуществующей опции "' + name + '"');
          }
 
          if (exists) {
@@ -167,11 +167,11 @@ define('Core/Abstract.compatible', [
        * Подписка на событие у другого контрола или канала событий. Преимущество в автоматической отписке от события при
        * разрушении собственного экземпляра класса контрола или того контрола, на чье событие подписка.
        * Настоятельно рекомендуется использование именно этого метода, а не {@link subscribe}.
-       * @param {Core/Abstract|Lib/Control/Control|Core/EventBus} control Объект, на чьё событие происходит подписка.
+       * @param {Core/Abstract|Lib/Control/Control|Env/Event:Bus} control Объект, на чьё событие происходит подписка.
        * @param {String} event Название события, на которое производим подписку.
        * @param {Function} handler Обработчик, который выполняется в контексте объекта (первый параметр, control).
        * В этом случае this возвратит сам объект.
-       * @return {Core/Abstract|Lib/Control/Control|Core/EventBus} Возвращает этот же объект.
+       * @return {Core/Abstract|Lib/Control/Control|Env/Event:Bus} Возвращает этот же объект.
        */
       subscribeTo: function(control, event, handler) {
          return this._subscribeTo(control, event, handler, false);
@@ -180,7 +180,7 @@ define('Core/Abstract.compatible', [
       /**
        * Подписка на событие у другого контрола (или канала событий - см. EventBusChannel), с автоматической отпиской
        * после срабатывания события, а также при разрушении объекта, который подписывается, или того, на чьё событие происходит подписка.
-       * @param {Core/Abstract|Lib/Control/Control|Core/EventBus} control Объект, на чьё событие происходит подписка
+       * @param {Core/Abstract|Lib/Control/Control|Env/Event:Bus} control Объект, на чьё событие происходит подписка
        * @param {String} event Событие
        * @param {Function} handler Обработчик
        * @return {Core/Abstract} Возвращает этот же объект.
@@ -277,7 +277,7 @@ define('Core/Abstract.compatible', [
 
       /**
        * Производит отписку от события объекта, на который была произведена подписка методом {@link subscribeTo}.
-       * @param {Core/Abstract|Lib/Control/Control|Core/EventBus} [control] Объект, от чьего события происходит отписка.
+       * @param {Core/Abstract|Lib/Control/Control|Env/Event:Bus} [control] Объект, от чьего события происходит отписка.
        * Если не указан, то отписка пойдёт по всем подписанным контролам по параметрам event и handler.
        * @param {String} [event] Событие. Если не указано, то будет отписка от всех событий объекта, указанного в параметре control,
        * или всех подписанных объектов (если параметр control не передан)
@@ -285,7 +285,7 @@ define('Core/Abstract.compatible', [
        * то отписан от всех подписанных событий будет именно этот обработчик, а остальные, если они есть, останутся.
        * @param {Function} [handler] Обработчик. Если не указан, то будут отписаны все обработчики события,
        * указанного в аргументе event, или вообще все обработчики всех событий, если аргумент event не задан.
-       * @return {Core/Abstract|Lib/Control/Control|Core/EventBus} Возвращает этот же объект.
+       * @return {Core/Abstract|Lib/Control/Control|Env/Event:Bus} Возвращает этот же объект.
        */
       unsubscribeFrom: function(control, event, handler) {
          return this._unsubscribeFrom(control, event, handler);
@@ -326,7 +326,7 @@ define('Core/Abstract.compatible', [
 
       /**
        * Включает отсылку событий.
-       * Подробнее см. метод Core/EventBus.allowEvents.
+       * Подробнее см. метод Env/Event:Bus.allowEvents.
        */
       _allowEvents: function() {
          this._getChannel().allowEvents();
@@ -334,7 +334,7 @@ define('Core/Abstract.compatible', [
 
       /**
        * Показывает, включена ли отсылка событий.
-       * Подробнее см. метод Core/EventBus.eventsAllowed.
+       * Подробнее см. метод Env/Event:Bus.eventsAllowed.
        * @returns {boolean}
        */
       _eventsAllowed: function() {
@@ -346,7 +346,7 @@ define('Core/Abstract.compatible', [
             //if (this._options && !this._options.eventBusId)
             //   this._options.eventBusId = "eb_" + this._options.id;
 
-            this._eventBusChannel = EventBus.channel(this._getOption('eventBusId'), {
+            this._eventBusChannel = EnvEvent.Bus.channel(this._getOption('eventBusId'), {
                waitForPermit: true,
                 /*
                  * для поддержки работоспособности Deprecated/Record(Set)
@@ -417,7 +417,7 @@ define('Core/Abstract.compatible', [
             channel = this._getChannel(),
             args = Array.prototype.slice.call(arguments, 1),
             result = channel._notifyWithTarget(event, this, args),
-            globalChannel = EventBus.globalChannel();
+            globalChannel = EnvEvent.Bus.globalChannel();
 
          globalChannel._notifyWithTarget(event, this, args);
 

@@ -76,7 +76,7 @@
    var global = (function(){ return this || (0,eval)('this'); }()),
       define = global.define || (global.requirejs && global.requirejs.define) || (requirejsVars && requirejsVars.define);
 
-   define("is", ['module', 'is-api', 'require', 'Core/constants'], function(module, api, require, constants) {
+   define("is", ['module', 'is-api', 'require', 'Env/Env'], function(module, api, require, Env) {
       var is = {};
       is.pluginBuilder = './is-builder';
 
@@ -106,7 +106,7 @@
 
       /*ПЛАГИН для тестов по веткам без режима совместимости, будет удален без предупреждения
       * в документацию не добавляется, используется в одном контроле*/
-      is.features.compatibleLayer = constants.compat;
+      is.features.compatibleLayer = Env.constants.compat;
 
       is.lookup = function(feature, complete) {
 

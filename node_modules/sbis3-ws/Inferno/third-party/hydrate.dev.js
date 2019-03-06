@@ -1,4 +1,4 @@
-define('Inferno/third-party/hydrate.dev', ['View/Executor/Expressions', 'Core/helpers/String/unEscapeASCII','Core/detection','Core/IoC', 'Inferno/third-party/index.dev'], function (Expressions, unEscapeASCII, detection, IoC, infernoSource) {var exports = {}, RawMarkupNode = Expressions.RawMarkupNode; 'use strict';
+define('Inferno/third-party/hydrate.dev', ['View/Executor/Expressions', 'Core/helpers/String/unEscapeASCII','Env/Env', 'Inferno/third-party/index.dev'], function (Expressions, unEscapeASCII, Env, infernoSource) {var exports = {}, RawMarkupNode = Expressions.RawMarkupNode; 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -32,7 +32,7 @@ function throwError(message) {
 function warning(message) {
     // tslint:disable-next-line:no-console
     // @ts-ignore
-    IoC.resolve("ILogger").log("Inferno core", message);
+    Env.IoC.resolve("ILogger").log("Inferno core", message);
 }
 function unescape(s) {
     if (!s || !s.replace) {
@@ -184,7 +184,7 @@ function hydrateChildren(parentVNode, parentNode, currentNode, context, isSVG, l
         }
     }
 }
-var domPropertySearchMap = ['chrome-extension', 'mc.yandex.ru'];
+var domPropertySearchMap = ['chrome-extension', 'mc.yandex.ru', 'kaspersky'];
 var ignoredNodeId = ['ghostery-purple-box', 'StayFocusd-infobar'];
 function domPropertySearch(domString) {
     return domPropertySearchMap.filter(function (value) {
@@ -199,6 +199,11 @@ function ignoreExtensionScripts(dom) {
         dom.tagName === 'SCRIPT' &&
         (searchForExtension(dom.innerText) || searchForExtension(dom.getAttribute('src')));
 }
+function ignoreExtensionCSS(dom) {
+    return dom &&
+        dom.tagName === 'LINK' &&
+        searchForExtension(dom.getAttribute('href'));
+}
 function ignoredById(node) {
     return ignoredNodeId.filter(function (value) {
         return node && node.id === value;
@@ -209,9 +214,8 @@ function ignoredById(node) {
 function isIgnoredNode(nextSibling) {
     return (nextSibling && nextSibling.tagName === 'SCRIPT' &&
         nextSibling.attributes && nextSibling.attributes['data-requiremodule']) ||
-        ignoreExtensionScripts(nextSibling) ||
-        (nextSibling && (nextSibling.tagName === 'LINK' || nextSibling.tagName === 'STYLE') && nextSibling.attributes &&
-            nextSibling.attributes['data-vdomignore']) ||
+        ignoreExtensionScripts(nextSibling) || ignoreExtensionCSS(nextSibling) ||
+        (nextSibling && nextSibling.attributes && nextSibling.attributes['data-vdomignore']) ||
         /*ignore ghostery chrome plugin*/
         ignoredById(nextSibling);
 }
