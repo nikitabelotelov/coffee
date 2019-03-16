@@ -50,7 +50,7 @@ define('Types/_display/Abstract', [
         Abstract.prototype.destroy = function () {
             entity_1.DestroyableMixin.prototype.destroy.call(this);
             entity_1.ObservableMixin.prototype.destroy.call(this);
-        };    //region Statics
+        };    // region Statics
               /**
          * Возвращает проекцию по умолчанию
          * @param {Types/_collection/IEnumerable} collection Объект, для которого требуется получить проекцию
@@ -59,7 +59,7 @@ define('Types/_display/Abstract', [
          * @return {Types/_display/Abstract}
          * @static
          */
-        //region Statics
+        // region Statics
         /**
          * Возвращает проекцию по умолчанию
          * @param {Types/_collection/IEnumerable} collection Объект, для которого требуется получить проекцию
@@ -87,7 +87,7 @@ define('Types/_display/Abstract', [
                 } else if (collection instanceof Array) {
                     instance = di_1.create('Types/display:Collection', options);
                 } else {
-                    throw new TypeError('Argument "collection" should implement Types/_collection/IEnumerable or be an instance of Array, but "' + collection + '" given.');
+                    throw new TypeError('Argument "collection" should implement Types/_collection/IEnumerable or be an \' +\n               \'instance of Array, but "' + collection + '" given.');
                 }
                 if (single) {
                     displaysToCollections.push(collection);

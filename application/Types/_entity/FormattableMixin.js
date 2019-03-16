@@ -59,8 +59,7 @@ define('Types/_entity/FormattableMixin', [
      * @return {Types/_entity/format/Format}
      */
     function buildFormatByRawData() {
-        var Format = di_1.resolve('Types/collection:format.Format');
-        var format = new Format();
+        var format = di_1.create('Types/collection:format.Format');
         var adapter = this._getRawDataAdapter();
         var fields = this._getRawDataFields();
         var count = fields.length;
@@ -81,8 +80,8 @@ define('Types/_entity/FormattableMixin', [
             var fields_1 = adapter_2.getFields();
             if (adapter_2['[Types/_entity/adapter/IDecorator]']) {
                 adapter_2 = adapter_2.getOriginal();
-            }    //TODO: solve the problem of data normalization
-            //TODO: solve the problem of data normalization
+            }    // TODO: solve the problem of data normalization
+            // TODO: solve the problem of data normalization
             if (adapter_2._touchData) {
                 adapter_2._touchData();
             }
@@ -100,7 +99,7 @@ define('Types/_entity/FormattableMixin', [
     var FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */
     {
         '[Types/_entity/FormattableMixin]': true,
-        //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+        // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
         '[WS.Data/Entity/FormattableMixin]': true,
         /**
          * @cfg {Object} Данные в "сыром" виде.
@@ -362,13 +361,13 @@ define('Types/_entity/FormattableMixin', [
          */
         _rawDataFields: null,
         constructor: function () {
-            //FIXME: get rid of _options
+            // FIXME: get rid of _options
             if (!this._$format && this._options && this._options.format) {
                 this._$format = this._options.format;
             }
             buildRawData.call(this);
         },
-        //region Types/_entity/SerializableMixin
+        // region Types/_entity/SerializableMixin
         _getSerializableState: function (state) {
             state.$options.rawData = this._getRawData();
             return state;
@@ -377,8 +376,8 @@ define('Types/_entity/FormattableMixin', [
             return function () {
             };
         },
-        //endregion Types/_entity/SerializableMixin
-        //region Public methods
+        // endregion Types/_entity/SerializableMixin
+        // region Public methods
         /**
          * Возвращает данные в "сыром" виде. Если данные являются объектом, то возвращается его дубликат.
          * @return {Object}
@@ -568,8 +567,8 @@ define('Types/_entity/FormattableMixin', [
             this._resetRawDataFields();
             this._clearFormatClone();
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Возвращает данные в "сыром" виде из _rawDataAdapter (если он был создан) или исходные
          * @param {Boolean} [direct=false] Напрямую, не используя адаптер
@@ -634,7 +633,7 @@ define('Types/_entity/FormattableMixin', [
         _resetRawDataAdapter: function (data) {
             if (data === undefined) {
                 if (this._rawDataAdapter && typeof this._$rawData !== 'function') {
-                    //Save possible rawData changes
+                    // Save possible rawData changes
                     this._$rawData = this._rawDataAdapter.getData();
                 }
             } else {
@@ -788,11 +787,11 @@ define('Types/_entity/FormattableMixin', [
             if (format) {
                 var formatProto = Object.getPrototypeOf(format);
                 if (formatProto === Array.prototype) {
-                    var factory = di_1.resolve('Types/collection:format.factory');    //All of the fields in Array
-                    //All of the fields in Array
+                    var factory = di_1.resolve('Types/collection:format.factory');    // All of the fields in Array
+                    // All of the fields in Array
                     format = factory(format);
                 } else if (formatProto === Object.prototype) {
-                    //Slice of the fields in Object
+                    // Slice of the fields in Object
                     format = buildFormatFromObject(format, fullFormatCallback ? fullFormatCallback() : new Format());
                 }
             }
@@ -800,8 +799,8 @@ define('Types/_entity/FormattableMixin', [
                 format = new Format();
             }
             return format;
-        }    //endregion Protected methods
+        }    // endregion Protected methods
     };
-    //endregion Protected methods
+    // endregion Protected methods
     exports.default = FormattableMixin;
 });

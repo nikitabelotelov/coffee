@@ -1,6 +1,6 @@
 define('Core/dom/wheel', [
-   'Core/constants'
-], function(constants) {
+   'Env/Env'
+], function(Env) {
    //MOVE_TO КРАЙНОВ
 
    /**
@@ -14,7 +14,7 @@ define('Core/dom/wheel', [
     * @see getTouchEventClientCoords
     */
    return function (element, callback) {
-      var support = constants.compatibility.wheel;
+      var support = Env.constants.compatibility.wheel;
       return element.bind(support, function (event) {
          var originalEvent = event.originalEvent;
          if (support === 'wheel') {

@@ -20,13 +20,13 @@ define('Types/_entity/format/DictionaryField', [
         /** @lends Types/_entity/format/DictionaryField.prototype */
         function DictionaryField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает словарь возможных значений
          * @return {Array.<String>}
          * @see dictionary
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает словарь возможных значений
          * @return {Array.<String>}

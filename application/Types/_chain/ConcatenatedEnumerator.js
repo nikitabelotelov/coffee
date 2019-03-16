@@ -69,19 +69,14 @@ define('Types/_chain/ConcatenatedEnumerator', [
         };
         return ConcatenatedEnumerator;
     }();
-    exports.default = ConcatenatedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.items = null;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.enumerator = null;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.index = null;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.current = undefined;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.currentItem = null;    // @ts-ignore
-    // @ts-ignore
-    ConcatenatedEnumerator.prototype.currentItemIndex = null;
+    exports.default = ConcatenatedEnumerator;
+    Object.assign(ConcatenatedEnumerator.prototype, {
+        previous: null,
+        items: null,
+        enumerator: null,
+        index: null,
+        current: undefined,
+        currentItem: null,
+        currentItemIndex: null
+    });
 });

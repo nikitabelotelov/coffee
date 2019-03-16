@@ -64,13 +64,13 @@ define('Types/_display/GroupItem', [
     }(CollectionItem_1.default    /** @lends Types/_display/GroupItem.prototype */);
     /** @lends Types/_display/GroupItem.prototype */
     exports.default = GroupItem;
-    GroupItem.prototype._moduleName = 'Types/display:GroupItem';
-    GroupItem.prototype['[Types/_display/GroupItem]'] = true;    // @ts-ignore
-    // @ts-ignore
-    GroupItem.prototype._instancePrefix = 'group-item-';    // @ts-ignore
-    // @ts-ignore
-    GroupItem.prototype._$expanded = true;    // Deprecated
-    // Deprecated
+    Object.assign(GroupItem.prototype, {
+        '[Types/_display/GroupItem]': true,
+        _moduleName: 'Types/display:GroupItem',
+        _instancePrefix: 'group-item-',
+        _$expanded: true
+    });    // FIXME: deprecated
+    // FIXME: deprecated
     GroupItem.prototype['[WS.Data/Display/GroupItem]'] = true;
     di_1.register('Types/display:GroupItem', GroupItem);
 });

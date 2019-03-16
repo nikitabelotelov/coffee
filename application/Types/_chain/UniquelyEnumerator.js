@@ -57,15 +57,12 @@ define('Types/_chain/UniquelyEnumerator', [
         };
         return UniquelyEnumerator;
     }();
-    exports.default = UniquelyEnumerator;    // @ts-ignore
-    // @ts-ignore
-    UniquelyEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    UniquelyEnumerator.prototype.enumerator = null;    // @ts-ignore
-    // @ts-ignore
-    UniquelyEnumerator.prototype.idExtractor = null;    // @ts-ignore
-    // @ts-ignore
-    UniquelyEnumerator.prototype.keysHash = null;    // @ts-ignore
-    // @ts-ignore
-    UniquelyEnumerator.prototype.objectsHash = null;
+    exports.default = UniquelyEnumerator;
+    Object.assign(UniquelyEnumerator.prototype, {
+        previous: null,
+        enumerator: null,
+        idExtractor: null,
+        keysHash: null,
+        objectsHash: null
+    });
 });

@@ -22,12 +22,6 @@ define('Types/_chain/SortWrapper', [
             this.item = item;
             this.index = index;
         }
-        SortWrapper.prototype.valueOf = function () {
-            return this.item;
-        };
-        SortWrapper.prototype.indexOf = function () {
-            return this.index;
-        };
         SortWrapper.valueOf = function (item) {
             return item instanceof SortWrapper ? item.valueOf() : item;
         };
@@ -38,6 +32,12 @@ define('Types/_chain/SortWrapper', [
             if (!(item instanceof SortWrapper)) {
                 delete item[SortWrapper.indexKey];
             }
+        };
+        SortWrapper.prototype.valueOf = function () {
+            return this.item;
+        };
+        SortWrapper.prototype.indexOf = function () {
+            return this.index;
         };
         return SortWrapper;
     }();

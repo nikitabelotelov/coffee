@@ -111,7 +111,7 @@ define('Types/_entity/SerializableMixin', [
      * @param {Number} [skip=3] Сколько уровней пропустить при выводе стека вызова метода
      */
     function createModuleNameError(instance, critical, skip) {
-        var text = 'Property "_moduleName" with module name for RequireJS\'s define() is not found in this prototype: "' + serializeCode(instance) + '"';
+        var text = 'Property "_moduleName" with module name for RequireJS\'s define() is not found' + (' in this prototype: "' + serializeCode(instance) + '"');
         if (critical) {
             throw new ReferenceError(text);
         } else {
@@ -121,38 +121,9 @@ define('Types/_entity/SerializableMixin', [
     var SerializableMixin    /** @lends Types/_entity/SerializableMixin.prototype */ = /** @lends Types/_entity/SerializableMixin.prototype */
     /** @class */
     function () {
-        //region Public methods
+        // region Public methods
         function SerializableMixin(options) {
-        }
-        ;    /**
-         * Возвращает сериализованный экземпляр класса
-         * @return {Object}
-         * @example
-         * Сериализуем сущность:
-         * <pre>
-         *    var instance = new Entity(),
-         *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
-         * </pre>
-         */
-        /**
-         * Возвращает сериализованный экземпляр класса
-         * @return {Object}
-         * @example
-         * Сериализуем сущность:
-         * <pre>
-         *    var instance = new Entity(),
-         *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
-         * </pre>
-         */
-        SerializableMixin.prototype.toJSON = function () {
-            this._checkModuleName(true);
-            return {
-                '$serialized$': 'inst',
-                module: this._moduleName,
-                id: getInstanceId.call(this),
-                state: this._getSerializableState({})
-            };
-        };    /**
+        }    /**
          * Конструирует экземпляр класса из сериализованного состояния
          * @param {Object} data Сериализованное состояние
          * @return {Object}
@@ -185,16 +156,79 @@ define('Types/_entity/SerializableMixin', [
                 initializer.call(instance);
             }
             return instance;
-        };    //endregion Public methods
-              //region Protected methods
+        };    /**
+         * Возвращает сериализованный экземпляр класса
+         * @return {Object}
+         * @example
+         * Сериализуем сущность:
+         * <pre>
+         *    var instance = new Entity(),
+         *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
+         * </pre>
+         */
+        /**
+         * Возвращает сериализованный экземпляр класса
+         * @return {Object}
+         * @example
+         * Сериализуем сущность:
+         * <pre>
+         *    var instance = new Entity(),
+         *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
+         * </pre>
+         */
+        SerializableMixin.prototype.toJSON = function () {
+            this._checkModuleName(true);
+            return {
+                $serialized$: 'inst',
+                module: this._moduleName,
+                id: getInstanceId.call(this),
+                state: this._getSerializableState({})
+            };
+        };    /**
+         * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в
+         * это же состояние
+         * @param {Object} state Cостояние
+         * @return {Object}
+         * @protected
+         */
+        /**
+         * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в
+         * это же состояние
+         * @param {Object} state Cостояние
+         * @return {Object}
+         * @protected
+         */
+        SerializableMixin.prototype._getSerializableState = function (state) {
+            state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {};
+            return state;
+        };    /**
+         * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта
+         * после создания инстанса.
+         * @param {Object} state Cостояние
+         * @return {Function}
+         * @protected
+         */
+        /**
+         * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта
+         * после создания инстанса.
+         * @param {Object} state Cостояние
+         * @return {Function}
+         * @protected
+         */
+        SerializableMixin.prototype._setSerializableState = function (state) {
+            return function () {
+                this[$unserialized] = true;
+            };
+        };    // endregion
+              // region Protected methods
               /**
          * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
          * @param critical Отсутствие имени модуля критично
          * @param [skip] Сколько уровней пропустить при выводе стека вызова метода
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
          * @param critical Отсутствие имени модуля критично
@@ -206,8 +240,8 @@ define('Types/_entity/SerializableMixin', [
             if (!proto._moduleName) {
                 createModuleNameError(this, critical, skip);
                 return;
-            }    //TODO: refactor to Object.getPrototypeOf(this) after migration to pure prototypes
-            //TODO: refactor to Object.getPrototypeOf(this) after migration to pure prototypes
+            }    // TODO: refactor to Object.getPrototypeOf(this) after migration to pure prototypes
+            // TODO: refactor to Object.getPrototypeOf(this) after migration to pure prototypes
             if (!isProtoSupported) {
                 return;
             }
@@ -215,46 +249,16 @@ define('Types/_entity/SerializableMixin', [
             if (!proto.hasOwnProperty('_moduleName')) {
                 createModuleNameError(this, critical, skip);
             }
-        };    /**
-         * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
-         * @param {Object} state Cостояние
-         * @return {Object}
-         * @protected
-         */
-        /**
-         * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
-         * @param {Object} state Cостояние
-         * @return {Object}
-         * @protected
-         */
-        SerializableMixin.prototype._getSerializableState = function (state) {
-            state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {};
-            return state;
-        };    /**
-         * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
-         * @param {Object} state Cостояние
-         * @return {Function}
-         * @protected
-         */
-        /**
-         * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
-         * @param {Object} state Cостояние
-         * @return {Function}
-         * @protected
-         */
-        SerializableMixin.prototype._setSerializableState = function (state) {
-            return function () {
-                this[$unserialized] = true;
-            };
         };
         return SerializableMixin;
     }();
     exports.default = SerializableMixin;
-    SerializableMixin.prototype['[Types/_entity/SerializableMixin]'] = true;    //FIXME: Core/Serializer is looking for dynamic method
-                                                                                // @ts-ignore
-    //FIXME: Core/Serializer is looking for dynamic method
+    Object.assign(SerializableMixin.prototype, {
+        '[Types/_entity/SerializableMixin]': true,
+        _instanceNumber: null
+    });    // FIXME: Core/Serializer is looking for dynamic method
+           // @ts-ignore
+    // FIXME: Core/Serializer is looking for dynamic method
     // @ts-ignore
-    SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;    // @ts-ignore
-    // @ts-ignore
-    SerializableMixin.prototype._instanceNumber = null;
+    SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;
 });

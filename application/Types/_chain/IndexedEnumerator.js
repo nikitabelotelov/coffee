@@ -51,11 +51,10 @@ define('Types/_chain/IndexedEnumerator', [
         };
         return IndexedEnumerator;
     }();
-    exports.default = IndexedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    IndexedEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    IndexedEnumerator.prototype.index = -1;    // @ts-ignore
-    // @ts-ignore
-    IndexedEnumerator.prototype._items = null;
+    exports.default = IndexedEnumerator;
+    Object.assign(IndexedEnumerator.prototype, {
+        previous: null,
+        index: -1,
+        _items: null
+    });
 });

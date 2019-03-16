@@ -42,9 +42,9 @@ define('Types/_source/LocalSession', [
     'Types/di',
     'Types/util',
     'Types/object',
-    'Core/Deferred',
-    'Lib/Storage/LocalStorage'
-], function (require, exports, tslib_1, Query_1, entity_1, collection_1, di_1, util_1, object_1, Deferred, LocalStorage) {
+    'Browser/Storage',
+    'Core/Deferred'
+], function (require, exports, tslib_1, Query_1, entity_1, collection_1, di_1, util_1, object_1, Storage_1, Deferred) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DATA_FIELD_PREFIX = 'd';
@@ -132,11 +132,13 @@ define('Types/_source/LocalSession', [
         };
         WhereTokenizer.eq = function (field, val) {
             if (!(val instanceof Array)) {
+                // tslint:disable-next-line:triple-equals
                 return field == val;
             }
             return val.indexOf(field) !== -1;
         };
         WhereTokenizer.ne = function (field, val) {
+            // tslint:disable-next-line:triple-equals
             return field != val;
         };
         WhereTokenizer.lt = function (field, val) {
@@ -240,11 +242,11 @@ define('Types/_source/LocalSession', [
             var data = items;
             function compare(a, b) {
                 if (a === null && b !== null) {
-                    //Считаем null меньше любого не-null
+                    // Считаем null меньше любого не-null
                     return -1;
                 }
                 if (a !== null && b === null) {
-                    //Считаем любое не-null больше null
+                    // Считаем любое не-null больше null
                     return 1;
                 }
                 if (a === b) {
@@ -352,8 +354,8 @@ define('Types/_source/LocalSession', [
         RawManager.prototype.getCount = function () {
             return this.ls.getItem(ID_COUNT);
         };
-        RawManager.prototype.setCount = function (number) {
-            this.ls.setItem(ID_COUNT, number);
+        RawManager.prototype.setCount = function (count) {
+            this.ls.setItem(ID_COUNT, count);
         };
         RawManager.prototype.getKeys = function () {
             return this.ls.getItem(KEYS_FIELD);
@@ -489,10 +491,12 @@ define('Types/_source/LocalSession', [
             var rs = new collection_1.RecordSet({ adapter: this.adapter });
             var format = new entity_1.Record({ rawData: data[0] }).getFormat();
             for (var j = 0; j < data.length; j++) {
-                var item = data[j], rec = new entity_1.Record({
-                        format: format,
-                        adapter: this.adapter
-                    }), enumerator = rec.getEnumerator();
+                var item = data[j];
+                var rec = new entity_1.Record({
+                    format: format,
+                    adapter: this.adapter
+                });
+                var enumerator = rec.getEnumerator();
                 while (enumerator.moveNext()) {
                     var key = enumerator.getCurrent();
                     rec.set(key, item[key]);
@@ -507,32 +511,33 @@ define('Types/_source/LocalSession', [
     function (_super) {
         tslib_1.__extends(LocalSession, _super);
         function LocalSession(options) {
-            var _this_1 = _super.call(this) || this;    ///region {ICrud}
-            ///region {ICrud}
-            _this_1['[Types/_source/ICrud]'] = true;    ///endregion
-                                                        ///region ICrudPlus
-            ///endregion
-            ///region ICrudPlus
-            _this_1['[Types/_source/ICrudPlus]'] = true;    ///endregion
-                                                            ///region {IData}
-            ///endregion
-            ///region {IData}
-            _this_1['[Types/_source/IData]'] = true;
+            var _this = _super.call(this) || this;    // region {ICrud}
+            // region {ICrud}
+            _this['[Types/_source/ICrud]'] = true;    // endregion
+                                                      // region ICrudPlus
+            // endregion
+            // region ICrudPlus
+            _this['[Types/_source/ICrudPlus]'] = true;    // endregion
+                                                          // region {IData}
+            // endregion
+            // region {IData}
+            _this['[Types/_source/IData]'] = true;
             if (!('prefix' in options)) {
                 throw new Error('"prefix" not found in options.');
             }
             if (!('idProperty' in options)) {
                 throw new Error('"idProperty" not found in options.');
             }
-            entity_1.OptionsToPropertyMixin.call(_this_1, options);
-            _this_1.rawManager = new RawManager(new LocalStorage(options.prefix));
-            _this_1.modelManager = new ModelManager(_this_1._$adapter, _this_1._$idProperty);
-            _this_1.converter = new Converter(_this_1._$adapter, _this_1._$idProperty, _this_1.modelManager);
-            _this_1._initData(options.data);
-            return _this_1;
+            entity_1.OptionsToPropertyMixin.call(_this, options);
+            _this.rawManager = new RawManager(new Storage_1.LocalStorage(options.prefix));
+            _this.modelManager = new ModelManager(_this._$adapter, _this._$idProperty);
+            _this.converter = new Converter(_this._$adapter, _this._$idProperty, _this.modelManager);
+            _this._initData(options.data);
+            return _this;
         }    /**
          * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для
+         * создания модели
          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
          * @see Types/_entity/Model
          * @example
@@ -547,7 +552,8 @@ define('Types/_source/LocalSession', [
          */
         /**
          * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+         * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для
+         * создания модели
          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
          * @see Types/_entity/Model
          * @example
@@ -590,7 +596,7 @@ define('Types/_source/LocalSession', [
          *     });
          * </pre>
          */
-        LocalSession.prototype.read = function (key) {
+        LocalSession.prototype.read = function (key, meta) {
             var data = this.rawManager.get(key);
             if (data) {
                 return Deferred.success(this.modelManager.get(data));
@@ -640,22 +646,22 @@ define('Types/_source/LocalSession', [
          *    });
          * </pre>
          */
-        LocalSession.prototype.update = function (data) {
-            var _this_1 = this;
+        LocalSession.prototype.update = function (data, meta) {
+            var _this = this;
             var updateRecord = function (record) {
                 var key;
-                var idProperty = record.getIdProperty ? record.getIdProperty() : _this_1.getIdProperty();
+                var idProperty = record.getIdProperty ? record.getIdProperty() : _this.getIdProperty();
                 try {
                     key = record.get(idProperty);
                 } catch (e) {
                     return Deferred.fail('Record idProperty doesn\'t exist');
                 }
                 if (key === undefined) {
-                    key = _this_1.rawManager.reserveId();
+                    key = _this.rawManager.reserveId();
                 }
                 record.set(idProperty, key);
-                var item = itemToObject(record, _this_1._$adapter);
-                _this_1.rawManager.set(key, item);
+                var item = itemToObject(record, _this._$adapter);
+                _this.rawManager.set(key, item);
                 record.acceptChanges();
                 return key;
             };
@@ -694,7 +700,7 @@ define('Types/_source/LocalSession', [
          *    });
          * </pre>
          */
-        LocalSession.prototype.destroy = function (keys) {
+        LocalSession.prototype.destroy = function (keys, meta) {
             var isExistKeys = this.rawManager.existKeys(keys);
             if (!isExistKeys) {
                 return Deferred.fail('Not all keys exist');
@@ -785,7 +791,8 @@ define('Types/_source/LocalSession', [
         };    /**
          * Создает копию модели
          * @param {String} key Первичный ключ модели
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
+         * {@link Types/_entity/Model копия модели}.
          * @example
          * <pre>
          *   solarSystem.copy('5').addCallbacks(function (copy) {
@@ -796,7 +803,8 @@ define('Types/_source/LocalSession', [
         /**
          * Создает копию модели
          * @param {String} key Первичный ключ модели
-         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
+         * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
+         * {@link Types/_entity/Model копия модели}.
          * @example
          * <pre>
          *   solarSystem.copy('5').addCallbacks(function (copy) {
@@ -804,7 +812,7 @@ define('Types/_source/LocalSession', [
          *   });
          * </pre>
          */
-        LocalSession.prototype.copy = function (key) {
+        LocalSession.prototype.copy = function (key, meta) {
             var myId = this.rawManager.reserveId();
             var from = this.rawManager.get(key);
             if (from === null) {
@@ -843,23 +851,23 @@ define('Types/_source/LocalSession', [
          *    })
          * </pre>
          */
-        LocalSession.prototype.move = function (from, to, meta) {
+        LocalSession.prototype.move = function (items, target, meta) {
             var keys = this.rawManager.getKeys();
             var sourceItems = [];
-            if (!(from instanceof Array)) {
-                from = [from];
+            if (!(items instanceof Array)) {
+                items = [items];
             }
-            from.forEach(function (id) {
+            items.forEach(function (id) {
                 var index = keys.indexOf(id);
                 if (index === -1) {
-                    return Deferred.fail('Record "from" with key ' + from + ' is not found.');
+                    return Deferred.fail('Record "items" with key "' + items + '" is not found.');
                 }
                 sourceItems.push(id);
             });
             if (meta.position === 'on') {
-                return Deferred.success(this._hierarchyMove(sourceItems, to, meta, keys));
+                return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys));
             }
-            return Deferred.success(this.rawManager.move(sourceItems, to, meta));
+            return Deferred.success(this.rawManager.move(sourceItems, target, meta));
         };
         LocalSession.prototype.getIdProperty = function () {
             return this._$idProperty;
@@ -881,22 +889,22 @@ define('Types/_source/LocalSession', [
         };
         LocalSession.prototype.setModel = function (model) {
             this._$model = model;
-        };    ///endregion
-              ///region protected
+        };    // endregion
+              // region protected
               /**
          * Инициализирует данные источника, переданные в конструктор
          * @param {Object} data данные
          * @protected
          */
-        ///endregion
-        ///region protected
+        // endregion
+        // region protected
         /**
          * Инициализирует данные источника, переданные в конструктор
          * @param {Object} data данные
          * @protected
          */
         LocalSession.prototype._initData = function (data) {
-            var _this_1 = this;
+            var _this = this;
             if (!data) {
                 return;
             }
@@ -906,7 +914,7 @@ define('Types/_source/LocalSession', [
             }
             var adapter = this.getAdapter().forTable(data);
             var handler = function (record) {
-                _this_1.update(record);
+                _this.update(record);
             };
             for (var i = 0; i < adapter.getCount(); i++) {
                 var meta = adapter.at(i);
@@ -926,7 +934,7 @@ define('Types/_source/LocalSession', [
          */
         LocalSession.prototype._getDataSet = function (rawData) {
             return di_1.create(// eslint-disable-line new-cap
-            this._dataSetModule, Object.assign({
+            this._dataSetModule, tslib_1.__assign({
                 writable: this._writable,
                 adapter: this.getAdapter(),
                 model: this.getModel(),
@@ -982,29 +990,22 @@ define('Types/_source/LocalSession', [
         return LocalSession;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin));
     exports.default = LocalSession;
-    LocalSession.prototype._moduleName = 'Types/source:LocalSession';
-    LocalSession.prototype['[Types/_source/LocalSession]'] = true;    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._writable = entity_1.ReadWriteMixin.writable;    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._dataSetModule = 'Types/source:DataSet';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._$adapter = 'Types/entity:adapter.Json';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._$listModule = 'Types/collection:RecordSet';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._$model = 'Types/entity:Model';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._$idProperty = '';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._dataSetItemsProperty = 'items';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._dataSetMetaProperty = 'meta';    // @ts-ignore
-    // @ts-ignore
-    LocalSession.prototype._options = {
-        prefix: '',
-        model: entity_1.Model,
-        data: []
-    };
+    Object.assign(LocalSession.prototype, {
+        '[Types/_source/LocalSession]': true,
+        _moduleName: 'Types/source:LocalSession',
+        _writable: entity_1.ReadWriteMixin.writable,
+        _dataSetModule: 'Types/source:DataSet',
+        _$adapter: 'Types/entity:adapter.Json',
+        _$listModule: 'Types/collection:RecordSet',
+        _$model: 'Types/entity:Model',
+        _$idProperty: '',
+        _dataSetItemsProperty: 'items',
+        _dataSetMetaProperty: 'meta',
+        _options: {
+            prefix: '',
+            model: entity_1.Model,
+            data: []
+        }
+    });
     di_1.register('Types/source:LocalSession', LocalSession, { instantiate: false });
 });

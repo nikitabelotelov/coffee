@@ -38,7 +38,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       }
 
       this._getCursorEnumerator().setPosition(
-         this.getIndexBySourceIndex(<number>this._$collection.get())
+         this.getIndexBySourceIndex(this._$collection.get() as number)
       );
 
       if (this._$collection['[Types/_entity/ObservableMixin]']) {
@@ -74,7 +74,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
    }
 
    protected _getSourceIndex(index) {
-      let enumerator = this._$collection.getEnumerator();
+      const enumerator = this._$collection.getEnumerator();
       let i = 0;
 
       if (index > -1) {
@@ -89,7 +89,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
    }
 
    protected _getItemIndex(index) {
-      let enumerator = this._$collection.getEnumerator();
+      const enumerator = this._$collection.getEnumerator();
       let i = 0;
 
       while (enumerator.moveNext()) {
@@ -102,11 +102,11 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
    }
 }
 
-Enum.prototype._moduleName = 'Types/display:Enum';
-Enum.prototype['[Types/_display/Enum]'] = true;
-// @ts-ignore
-Enum.prototype._localize = true;
-// @ts-ignore
-Enum.prototype._onSourceChange = null;
+Object.assign(Enum.prototype, {
+   '[Types/_display/Enum]': true,
+   _moduleName: 'Types/display:Enum',
+   _localize: true,
+   _onSourceChange: null
+});
 
 register('Types/display:Enum', Enum);

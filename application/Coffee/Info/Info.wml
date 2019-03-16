@@ -1,5 +1,5 @@
-<div class="info-page">
-   <div class="info-page">
+<div class="info-page tile-view">
+   <div class="info-list info-tile">
       <ws:for data="name, infoElement in currentInfo">
          <div class="info-list-item">
             <div class="info-list-item-name">{{name}}:</div>
@@ -7,4 +7,7 @@
          </div>
       </ws:for>
    </div>
+   <Router.Reference state="page/:pageId" pageId="Settings" class="settings-button">
+      <div></div>
+   </Router.Reference>
 </div>

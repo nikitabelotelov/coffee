@@ -28,7 +28,7 @@ import ITable from './ITable';
 import GenericFormatMixin from './GenericFormatMixin';
 import JsonFormatMixin from './JsonFormatMixin';
 import JsonRecord from './JsonRecord';
-import {UniversalField} from '../format';
+import {UniversalField, Field} from '../format';
 import {Set} from '../../shim';
 import {mixin} from '../../util';
 import {merge} from '../../object';
@@ -39,36 +39,36 @@ export default class JsonTable extends mixin(
    /**
     * @property {Array.<Object>} Сырые данные
     */
-   _data: Array<Object>;
+   _data: object[];
 
    /**
     * Конструктор
     * @param {*} data Сырые данные
     */
-   constructor(data: any) {
+   constructor(data: object[]) {
       super(data);
       GenericFormatMixin.constructor.call(this, data);
       JsonFormatMixin.constructor.call(this, data);
    }
 
-   //region ITable
+   // region ITable
 
    readonly '[Types/_entity/adapter/ITable]': boolean;
 
-   getData: () => any;
-   getFormat: (name: string) => any;
+   getData: () => object[];
+   getFormat: (name: string) => Field;
    getSharedFormat: (name: string) => UniversalField;
    removeFieldAt: (index: number) => void;
 
-   //region ITable
+   // endregion
 
-   //region Types/_entity/adapter/JsonFormatMixin
+   // region Types/_entity/adapter/JsonFormatMixin
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       JsonFormatMixin.addField.call(this, format, at);
 
-      let name = format.getName();
-      let value = format.getDefaultValue();
+      const name = format.getName();
+      const value = format.getDefaultValue();
       let item;
       for (let i = 0; i < this._data.length; i++) {
          item = this._data[i];
@@ -78,23 +78,23 @@ export default class JsonTable extends mixin(
       }
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       JsonFormatMixin.removeField.call(this, name);
       for (let i = 0; i < this._data.length; i++) {
          delete this._data[i][name];
       }
    }
 
-   //endregion Types/_entity/adapter/JsonFormatMixin
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
-   getFields() {
-      let count = this.getCount();
-      let fieldSet = new Set();
-      let fields = [];
+   getFields(): string[] {
+      const count = this.getCount();
+      const fieldSet = new Set();
+      const fields = [];
       let item;
-      let collector = (field) => {
+      const collector = (field) => {
          fieldSet.add(field);
       };
 
@@ -112,11 +112,11 @@ export default class JsonTable extends mixin(
       return fields;
    }
 
-   getCount() {
+   getCount(): number {
       return this._isValidData() ? this._data.length : 0;
    }
 
-   add(record, at) {
+   add(record: object, at: number): void {
       this._touchData();
       if (at === undefined) {
          this._data.push(record);
@@ -126,28 +126,28 @@ export default class JsonTable extends mixin(
       }
    }
 
-   at(index) {
+   at(index: number): object {
       return this._isValidData() ? this._data[index] : undefined;
    }
 
-   remove(at) {
+   remove(at: number): void {
       this._touchData();
       this._checkPosition(at);
       this._data.splice(at, 1);
    }
 
-   replace(record, at) {
+   replace(record: object, at: number): void {
       this._touchData();
       this._checkPosition(at);
       this._data[at] = record;
    }
 
-   move(source, target) {
+   move(source: number, target: number): void {
       this._touchData();
       if (target === source) {
          return;
       }
-      let removed = this._data.splice(source, 1);
+      const removed = this._data.splice(source, 1);
       if (target === -1) {
          this._data.unshift(removed.shift());
       } else {
@@ -155,49 +155,49 @@ export default class JsonTable extends mixin(
       }
    }
 
-   merge(acceptor, donor, idProperty) {
+   merge(acceptor: number, donor: number, idProperty: string): void {
       this._touchData();
 
-      let first = this.at(acceptor);
-      let extention = this.at(donor);
-      let adapter = new JsonRecord(first);
-      let id = adapter.get(idProperty);
+      const first = this.at(acceptor);
+      const extention = this.at(donor);
+      const adapter = new JsonRecord(first);
+      const id = adapter.get(idProperty);
       merge(first, extention);
       adapter.set(idProperty, id);
       this.remove(donor);
    }
 
-   copy(index) {
+   copy(index: number): object {
       this._touchData();
 
-      let source = this.at(index);
-      let clone = merge({}, source);
+      const source = this.at(index);
+      const clone = merge({}, source);
       this.add(clone, 1 + index);
       return clone;
    }
 
-   clear() {
+   clear(): void {
       this._touchData();
       this._data.length = 0;
    }
 
-   //endregion Public methods
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
-   _touchData() {
+   _touchData(): void {
       GenericFormatMixin._touchData.call(this);
       if (!(this._data instanceof Array)) {
          this._data = [];
       }
    }
 
-   _isValidData() {
+   _isValidData(): boolean {
       return this._data instanceof Array;
    }
 
-   _has(name) {
-      let count = this.getCount();
+   _has(name: string): boolean {
+      const count = this.getCount();
       let has = false;
       let item;
       for (let i = 0; i < count; i++) {
@@ -212,13 +212,13 @@ export default class JsonTable extends mixin(
       return has;
    }
 
-   _checkPosition(at) {
+   _checkPosition(at: number): void {
       if (at < 0 || at > this._data.length) {
          throw new Error('Out of bounds');
       }
    }
 
-   //endregion Protected methods
+   // endregion
 }
 
 JsonTable.prototype['[Types/_entity/adapter/JsonTable]'] = true;

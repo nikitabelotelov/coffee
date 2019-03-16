@@ -46,8 +46,8 @@ define('Types/_collection/ObservableList', [
             EventRaisingMixin_1.default.constructor.call(_this, options);
             _this._publish('onCollectionChange', 'onCollectionItemChange');
             return _this;
-        }    //region List
-        //region List
+        }    // region List
+        // region List
         ObservableList.prototype.assign = function (items) {
             var oldItems = this._itemsSlice();
             var eventsWasRaised = this._eventRaising;
@@ -94,8 +94,8 @@ define('Types/_collection/ObservableList', [
         };
         ObservableList.prototype.replace = function (item, at) {
             var oldItem = this._$items[at];
-            _super.prototype.replace.call(this, item, at);    //Replace with itself has no effect
-            //Replace with itself has no effect
+            _super.prototype.replace.call(this, item, at);    // Replace with itself has no effect
+            // Replace with itself has no effect
             if (oldItem !== item) {
                 this._notifyCollectionChange(IObservable_1.default.ACTION_REPLACE, this._itemsSlice(at, at + 1), at, [oldItem], at);
             }
@@ -123,35 +123,35 @@ define('Types/_collection/ObservableList', [
                 target: target,
                 data: data
             };
-        };    //endregion IReceiver
-              //region EventRaisingMixin
-        //endregion IReceiver
-        //region EventRaisingMixin
+        };    // endregion IReceiver
+              // region EventRaisingMixin
+        // endregion IReceiver
+        // region EventRaisingMixin
         ObservableList.prototype.setEventRaising = function (enabled, analyze) {
             var _this = this;
-            EventRaisingMixin_1.default.setEventRaising.call(this, enabled, analyze);    //Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
-            //Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
+            EventRaisingMixin_1.default.setEventRaising.call(this, enabled, analyze);    // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
+            // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
             if (enabled && analyze && this._silentChangedItems) {
                 if (this._silentChangedItems.length >= Math.min(this._resetChangesCount, this._$items.length)) {
-                    //Если изменилось критическое число элементов, то генерируем reset
+                    // Если изменилось критическое число элементов, то генерируем reset
                     this._notifyCollectionChange(IObservable_1.default.ACTION_RESET, this._itemsSlice(), 0, [], 0);
                 } else {
-                    //Собираем изменившиеся элементы в пачки
+                    // Собираем изменившиеся элементы в пачки
                     EventRaisingMixin_1.default._extractPacksByList(this, this._silentChangedItems, function (pack, index) {
                         _this._notifyCollectionChange(IObservable_1.default.ACTION_CHANGE, pack, index, pack, index);
                     });
                 }
             }
             delete this._silentChangedItems;
-        };    //endregion EventRaisingMixin
-              //region Protected methods
+        };    // endregion EventRaisingMixin
+              // region Protected methods
               /**
          * Генерирует событие об изменении элемента
          * @param {*} item Элемент
          * @param {Object} properties Изменившиеся свойства
          */
-        //endregion EventRaisingMixin
-        //region Protected methods
+        // endregion EventRaisingMixin
+        // region Protected methods
         /**
          * Генерирует событие об изменении элемента
          * @param {*} item Элемент
@@ -200,10 +200,11 @@ define('Types/_collection/ObservableList', [
         return ObservableList;
     }(util_1.mixin(List_1.default, IObservable_1.default, EventRaisingMixin_1.default));
     exports.default = ObservableList;
-    ObservableList.prototype['[Types/_collection/ObservableList]'] = true;    // @ts-ignore
-    // @ts-ignore
-    ObservableList.prototype['[Types/_entity/relation/IReceiver]'] = true;
-    ObservableList.prototype._moduleName = 'Types/collection:ObservableList';
-    ObservableList.prototype._resetChangesCount = 100;
+    Object.assign(ObservableList.prototype, {
+        '[Types/_collection/ObservableList]': true,
+        '[Types/_entity/relation/IReceiver]': true,
+        _moduleName: 'Types/collection:ObservableList',
+        _resetChangesCount: 100
+    });
     di_1.register('Types/collection:ObservableList', ObservableList, { instantiate: false });
 });

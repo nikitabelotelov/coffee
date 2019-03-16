@@ -1,16 +1,10 @@
-define('Transport/nodeType', [], function() {
-   return {
-      'ELEMENT_NODE': 1,
-      'ATTRIBUTE_NODE': 2,
-      'TEXT_NODE': 3,
-      'CDATA_SECTION_NODE': 4,
-      'ENTITY_REFERENCE_NODE': 5,
-      'ENTITY_NODE': 6,
-      'PROCESSING_INSTRUCTION_NODE': 7,
-      'COMMENT_NODE': 8,
-      'DOCUMENT_NODE': 9,
-      'DOCUMENT_TYPE_NODE': 10,
-      'DOCUMENT_FRAGMENT_NODE': 11,
-      'NOTATION_NODE': 12
-   };
+define('Transport/nodeType', [
+    'require',
+    'exports',
+    'Browser/TransportOld',
+    'Env/Env'
+], function (require, exports, TransportOld_1, Env_1) {
+    'use strict';
+    Env_1.IoC.resolve('ILogger').log('Transport/getRpcInvocationUrl', 'module has been moved to "Browser/TransportOld:nodeType" and will be removed');
+    return TransportOld_1.nodeType;
 });

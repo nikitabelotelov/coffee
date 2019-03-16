@@ -1,13 +1,12 @@
-/// <amd-module name="Vdom/_private/Synchronizer/resources/VdomMarkup" />
 define('Vdom/_private/Synchronizer/resources/VdomMarkup', [
     'require',
     'exports',
-    'Core/core-debug',
+    'Env/Env',
     'View/Executor/Utils',
     'Core/helpers/Array/flatten',
     'Vdom/_private/Utils/Monad',
     'Vdom/_private/Synchronizer/resources/Hooks'
-], function (require, exports, coreDebug, Utils_1, flatten, Monad_1, Hooks_1) {
+], function (require, exports, Env_1, Utils_1, flatten, Monad_1, Hooks_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     function getVNodeChidlren(vnode, getFromTemplateNodes) {
@@ -194,7 +193,7 @@ define('Vdom/_private/Synchronizer/resources/VdomMarkup', [
             result[partName] = result[partName].concat(part);
         }
         if (oldNode !== newNode || ignoreLinkEqual) {
-            coreDebug.checkAssertion(!!newNode, 'newNode !== null');
+            Env_1.coreDebug.checkAssertion(!!newNode, 'newNode !== null');
             if (isEqualNode(oldNode, newNode)) {
                 if (Utils_1.Vdom.isControlVNodeType(newNode)) {
                     if (oldNode.controlNodeIdx === -1) {
@@ -388,27 +387,8 @@ define('Vdom/_private/Synchronizer/resources/VdomMarkup', [
                         context: vnode.context,
                         changed: true,
                         type: 'TemplateNode',
-                        optionsVersions: vnode.optionsVersions,
-                        get count() {
-                            var descendants = 0;
-                            if (this.children) {
-                                for (var i = 0; i < this.children.length; i++) {
-                                    var child = this.children[i];
-                                    descendants += child.count || 0;
-                                }
-                                return this.children.length + descendants;
-                            } else {
-                                return 0;
-                            }
-                        }
-                    };    //delete vnode.count;
-                    //delete vnode.count;
-                    Object.defineProperty(vnode, 'count', {
-                        get: function () {
-                            return obj.count;
-                        },
-                        configurable: true
-                    });
+                        optionsVersions: vnode.optionsVersions
+                    };
                     return obj.children;
                 }
                 if (currentFullMarkup) {

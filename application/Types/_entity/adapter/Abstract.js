@@ -16,12 +16,12 @@ define('Types/_entity/adapter/Abstract', [
     'Types/_entity/DestroyableMixin',
     'Types/_entity/SerializableMixin',
     'Types/util',
-    'Types/_entity/date/toSql'
-], function (require, exports, tslib_1, DestroyableMixin_1, SerializableMixin_1, util_1, toSql_1) {
+    'Types/formatter'
+], function (require, exports, tslib_1, DestroyableMixin_1, SerializableMixin_1, util_1, formatter_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var serializer = function () {
-        var serialize = function (data) {
+    var serialize = function () {
+        function serializeAny(data) {
             if (data instanceof Array) {
                 return serializeArray(data);
             } else if (data && typeof data === 'object') {
@@ -29,32 +29,31 @@ define('Types/_entity/adapter/Abstract', [
             } else {
                 return data;
             }
-        };
-        var serializeArray = function (arr) {
+        }
+        function serializeArray(arr) {
             return arr.map(function (item) {
-                return serialize(item);
+                return serializeAny(item);
             });
-        };
-        var serializeObject = function (obj) {
+        }
+        function serializeObject(obj) {
             if (typeof obj.getRawData === 'function') {
-                //Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
+                // Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
                 return obj.getRawData(true);
             } else if (obj instanceof Date) {
-                var mode = toSql_1.MODE.DATETIME;
-                obj = obj;
+                var mode = formatter_1.TO_SQL_MODE.DATETIME;
                 if (obj.getSQLSerializationMode) {
                     switch (obj.getSQLSerializationMode()) {
                     case Date.SQL_SERIALIZE_MODE_DATE:
-                        mode = toSql_1.MODE.DATE;
+                        mode = formatter_1.TO_SQL_MODE.DATE;
                         break;
                     case Date.SQL_SERIALIZE_MODE_TIME:
-                        mode = toSql_1.MODE.TIME;
+                        mode = formatter_1.TO_SQL_MODE.TIME;
                         break;
                     }
                 }
-                return toSql_1.default(obj, mode);
+                return formatter_1.dateToSql(obj, mode);
             } else {
-                //Check if 'obj' is a scalar value wrapper
+                // Check if 'obj' is a scalar value wrapper
                 if (obj.valueOf) {
                     obj = obj.valueOf();
                 }
@@ -63,8 +62,8 @@ define('Types/_entity/adapter/Abstract', [
                 }
                 return obj;
             }
-        };
-        var serializePlainObject = function (obj) {
+        }
+        function serializePlainObject(obj) {
             var result = {};
             var proto = Object.getPrototypeOf(obj);
             if (proto !== null && proto !== Object.prototype) {
@@ -74,11 +73,11 @@ define('Types/_entity/adapter/Abstract', [
             var key;
             for (var i = 0; i < keys.length; i++) {
                 key = keys[i];
-                result[key] = serialize(obj[key]);
+                result[key] = serializeAny(obj[key]);
             }
             return result;
-        };
-        return { serialize: serialize };
+        }
+        return serializeAny;
     }();
     var Abstract = /** @class */
     function (_super) {
@@ -116,7 +115,7 @@ define('Types/_entity/adapter/Abstract', [
             }
         };
         Abstract.prototype.serialize = function (data) {
-            return serializer.serialize(data);
+            return serialize(data);
         };
         Abstract.prototype.forRecord = function (data, tableData) {
             throw new Error('Method must be implemented');
@@ -130,8 +129,9 @@ define('Types/_entity/adapter/Abstract', [
         return Abstract;
     }(util_1.mixin(DestroyableMixin_1.default, SerializableMixin_1.default));
     exports.default = Abstract;
-    Abstract.prototype['[Types/_entity/adapter/Abstract]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Abstract.prototype['[Types/_entity/adapter/IAdapter]'] = true;
-    Abstract.prototype._pathSeparator = '.';
+    Object.assign(Abstract.prototype, {
+        '[Types/_entity/adapter/Abstract]': true,
+        '[Types/_entity/adapter/IAdapter]': true,
+        _pathSeparator: '.'
+    });
 });

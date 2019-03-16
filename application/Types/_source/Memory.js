@@ -95,24 +95,24 @@ define('Types/_source/Memory', [
         tslib_1.__extends(Memory, _super);    /** @lends Types/_source/Memory.prototype */
         /** @lends Types/_source/Memory.prototype */
         function Memory(options) {
-            var _this = _super.call(this, options) || this;    //FIXME: YAGNI
-            //FIXME: YAGNI
+            var _this = _super.call(this, options) || this;    // FIXME: YAGNI
+            // FIXME: YAGNI
             if (options && options.endpoint && options.endpoint.contract && !contracts.hasOwnProperty(options.endpoint.contract)) {
                 contracts[options.endpoint.contract] = _this._$data;
             }
             return _this;
-        }    //region Base
-        //region Base
+        }    // region Base
+        // region Base
         Memory.prototype._prepareQueryResult = function (data, query) {
-            //selection has no items - return an empty table
+            // Selection has no items - return an empty table
             if (data && data.items === undefined) {
                 data.items = this._getEmptyData(query);
             }
             return _super.prototype._prepareQueryResult.call(this, data);
-        };    //endregion Base
-              //region Local
-        //endregion Base
-        //region Local
+        };    // endregion
+              // region Local
+        // endregion
+        // region Local
         Memory.prototype._getTableAdapter = function () {
             return this[$cachedAdapter] || (this[$cachedAdapter] = this.getAdapter().forTable(this._$data));
         };
@@ -126,26 +126,28 @@ define('Types/_source/Memory', [
             return data;
         };
         Memory.prototype._applyWhere = function (data, where, meta) {
-            //FIXME: get rid of this SBIS-specified
+            // FIXME: get rid of this SBIS-specified
             if (where && typeof where === 'object') {
-                where = Object.assign({}, where);
-                delete where['Разворот'];
-                delete where['ВидДерева'];
-                delete where['usePages'];
+                where = tslib_1.__assign({}, where);
+                delete where.Разворот;
+                delete where.ВидДерева;
+                delete where.usePages;
             }
             return _super.prototype._applyWhere.call(this, data, where, meta);
-        };    //endregion Local
-              //region Protected members
+        };    // endregion
+              // region Protected members
               /**
-         * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
+         * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от
+         * используемого адаптера)
          * @param {Types/_source/Query} [query] Запрос
          * @return {*}
          * @protected
          */
-        //endregion Local
-        //region Protected members
+        // endregion
+        // region Protected members
         /**
-         * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
+         * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от
+         * используемого адаптера)
          * @param {Types/_source/Query} [query] Запрос
          * @return {*}
          * @protected
@@ -165,15 +167,13 @@ define('Types/_source/Memory', [
     }(Local_1.default    /** @lends Types/_source/Memory.prototype */);
     /** @lends Types/_source/Memory.prototype */
     exports.default = Memory;
-    Memory.prototype._moduleName = 'Types/source:Memory';
-    Memory.prototype['[Types/_source/Memory]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Memory.prototype._$data = null;    // @ts-ignore
-    // @ts-ignore
-    Memory.prototype._dataSetItemsProperty = 'items';    // @ts-ignore
-    // @ts-ignore
-    Memory.prototype._dataSetMetaProperty = 'meta';    // @ts-ignore
-    // @ts-ignore
-    Memory.prototype._emptyData = null;
+    Object.assign(Memory.prototype, {
+        '[Types/_source/Memory]': true,
+        _moduleName: 'Types/source:Memory',
+        _$data: null,
+        _dataSetItemsProperty: 'items',
+        _dataSetMetaProperty: 'meta',
+        _emptyData: null
+    });
     di_1.register('Types/source:Memory', Memory, { instantiate: false });
 });

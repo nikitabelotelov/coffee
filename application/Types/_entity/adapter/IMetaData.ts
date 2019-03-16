@@ -15,7 +15,7 @@ export default interface IMetaData /** @lends Types/_entity/adapter/IMetaData.pr
     * Возвращает описание метаданных
     * @return {Array.<Types/_entity/format/Field>}
     */
-   getMetaDataDescriptor(): Array<Field>;
+   getMetaDataDescriptor(): Field[];
 
    /**
     * Возвращает значение из метаданных по имени
@@ -29,5 +29,5 @@ export default interface IMetaData /** @lends Types/_entity/adapter/IMetaData.pr
     * @param {String} name Поле метаданных
     * @param {*} value Значение
     */
-   setMetaData(name: string, value: any);
+   setMetaData(name: string, value: any): void;
 }

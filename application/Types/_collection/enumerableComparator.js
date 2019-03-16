@@ -78,22 +78,22 @@ define('Types/_collection/enumerableComparator', [
         var after = session.after;
         var beforeContents = session.beforeContents;
         var afterContents = session.afterContents;
-        var addedProcessed = session.addedProcessed;    //индексы новых элементов, которые уже были найдены
-        //индексы новых элементов, которые уже были найдены
-        var removedProcessed = session.removedProcessed;    //индексы удаленных элементов, которые уже были найдены
-        //индексы удаленных элементов, которые уже были найдены
+        var addedProcessed = session.addedProcessed;    // индексы новых элементов, которые уже были найдены
+        // индексы новых элементов, которые уже были найдены
+        var removedProcessed = session.removedProcessed;    // индексы удаленных элементов, которые уже были найдены
+        // индексы удаленных элементов, которые уже были найдены
         var newItems = [];
         var newItemsIndex = 0;
         var oldItems = [];
         var oldItemsIndex = 0;
-        var beforeItem;    //элемент до изменений
-        //элемент до изменений
-        var beforeIndex;    //индекс элемента до изменений
-        //индекс элемента до изменений
-        var afterItem;    //элемент после изменений
-        //элемент после изменений
-        var afterIndex;    //индекс элемента после изменений
-        //индекс элемента после изменений
+        var beforeItem;    // элемент до изменений
+        // элемент до изменений
+        var beforeIndex;    // индекс элемента до изменений
+        // индекс элемента до изменений
+        var afterItem;    // элемент после изменений
+        // элемент после изменений
+        var afterIndex;    // индекс элемента после изменений
+        // индекс элемента после изменений
         var exit = false;
         var index;
         var count = Math.max(before.length, after.length);
@@ -106,12 +106,12 @@ define('Types/_collection/enumerableComparator', [
             afterItem = after[index];
             switch (groupName) {
             case 'added':
-                //собираем добавленные элементы
+                // собираем добавленные элементы
                 if (!afterItem) {
                     continue;
                 }
-                afterIndex = index;    //ищем индекс с учетом возможных дубликатов
-                //ищем индекс с учетом возможных дубликатов
+                afterIndex = index;    // ищем индекс с учетом возможных дубликатов
+                // ищем индекс с учетом возможных дубликатов
                 skip = 0;
                 lookUp = true;
                 do {
@@ -119,21 +119,21 @@ define('Types/_collection/enumerableComparator', [
                     if (beforeIndex === -1) {
                         lookUp = false;
                     } else if (addedProcessed.indexOf(beforeIndex) > -1) {
-                        //этот индекс мы уже находили, значит afterItem - дубль, ищем дальше
+                        // этот индекс мы уже находили, значит afterItem - дубль, ищем дальше
                         skip = beforeIndex + 1;
                     } else {
                         if (!newItems.length) {
-                            //запомним найденный индекс
+                            // запомним найденный индекс
                             addedProcessed.push(beforeIndex);
                         }
                         lookUp = false;
                     }
-                } while (lookUp);    //если элемента не было - добавим его в список новых,
-                                     //если был - отдаем накопленный список новых, если там что-то есть
-                //если элемента не было - добавим его в список новых,
-                //если был - отдаем накопленный список новых, если там что-то есть
+                } while (lookUp);    // если элемента не было - добавим его в список новых,
+                                     // если был - отдаем накопленный список новых, если там что-то есть
+                // если элемента не было - добавим его в список новых,
+                // если был - отдаем накопленный список новых, если там что-то есть
                 if (beforeIndex === -1) {
-                    //элемент добавлен
+                    // элемент добавлен
                     newItems.push(afterItem);
                     newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
                 } else if (newItems.length) {
@@ -141,12 +141,12 @@ define('Types/_collection/enumerableComparator', [
                 }
                 break;
             case 'removed':
-                //собираем удаленные элементы
+                // собираем удаленные элементы
                 if (!beforeItem) {
                     continue;
                 }
-                beforeIndex = index;    //ищем индекс с учетом возможных дубликатов
-                //ищем индекс с учетом возможных дубликатов
+                beforeIndex = index;    // ищем индекс с учетом возможных дубликатов
+                // ищем индекс с учетом возможных дубликатов
                 skip = 0;
                 lookUp = true;
                 do {
@@ -154,19 +154,19 @@ define('Types/_collection/enumerableComparator', [
                     if (afterIndex === -1) {
                         lookUp = false;
                     } else if (removedProcessed[afterIndex]) {
-                        //этот индекс мы уже находили, значит beforeItem - дубль, ищем дальше
+                        // этот индекс мы уже находили, значит beforeItem - дубль, ищем дальше
                         skip = afterIndex + 1;
                     } else {
                         if (!oldItems.length) {
-                            //запомним найденный индекс
+                            // запомним найденный индекс
                             removedProcessed[afterIndex] = true;
                         }
                         lookUp = false;
                     }
-                } while (lookUp);    //если элемента не стало - добавим его в список старых,
-                                     //если остался - отдаем накопленный список старых, если там что-то есть
-                //если элемента не стало - добавим его в список старых,
-                //если остался - отдаем накопленный список старых, если там что-то есть
+                } while (lookUp);    // если элемента не стало - добавим его в список старых,
+                                     // если остался - отдаем накопленный список старых, если там что-то есть
+                // если элемента не стало - добавим его в список старых,
+                // если остался - отдаем накопленный список старых, если там что-то есть
                 if (afterIndex === -1) {
                     oldItems.push(beforeItem);
                     oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
@@ -175,7 +175,7 @@ define('Types/_collection/enumerableComparator', [
                 }
                 break;
             case 'replaced':
-                //собираем замененные элементы
+                // собираем замененные элементы
                 if (!beforeContents) {
                     index = -1;
                     exit = true;
@@ -185,12 +185,12 @@ define('Types/_collection/enumerableComparator', [
                     continue;
                 }
                 afterIndex = index;
-                beforeIndex = before.indexOf(afterItem);    //если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
-                                                            //если остался - отдаем накопленные списки старых и новых, если в них что-то есть
-                //если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
-                //если остался - отдаем накопленные списки старых и новых, если в них что-то есть
+                beforeIndex = before.indexOf(afterItem);    // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
+                                                            // если остался - отдаем накопленные списки старых и новых, если в них что-то есть
+                // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
+                // если остался - отдаем накопленные списки старых и новых, если в них что-то есть
                 if (beforeIndex === afterIndex && beforeContents[index] !== afterContents[index]) {
-                    //FIXME: convertToItem
+                    // FIXME: convertToItem
                     oldItems.push(collection._getItemsStrategy().convertToItem(beforeContents[index]));
                     newItems.push(afterItem);
                     oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
@@ -199,7 +199,7 @@ define('Types/_collection/enumerableComparator', [
                 }
                 break;
             case 'moved':
-                //собираем перемещенные элементы
+                // собираем перемещенные элементы
                 if (before.length !== after.length) {
                     throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
                 }
@@ -255,8 +255,8 @@ define('Types/_collection/enumerableComparator', [
     function applyGroupChanges(groupName, changes, session) {
         var before = session.before;
         var beforeContents = session.beforeContents;
-        var afterContents = session.afterContents;    //Производим с before действия согласно пачке изменений
-        //Производим с before действия согласно пачке изменений
+        var afterContents = session.afterContents;    // Производим с before действия согласно пачке изменений
+        // Производим с before действия согласно пачке изменений
         switch (groupName) {
         case 'added':
             before.splice.apply(before, [
@@ -359,7 +359,7 @@ define('Types/_collection/enumerableComparator', [
          * @param {Function} callback Функция обратного вызова для каждой пачки изменений
          */
         analizeSession: function (session, collection, callback) {
-            //сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом удаляются оба
+            // сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом удаляются оба
             var groups = [
                 'removed',
                 'added',
@@ -371,19 +371,19 @@ define('Types/_collection/enumerableComparator', [
             var startFrom;
             var offset;
             var groupName;
-            var groupAction;    //Информируем об изменениях по группам
-            //Информируем об изменениях по группам
+            var groupAction;    // Информируем об изменениях по группам
+            // Информируем об изменениях по группам
             for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-                //Собираем изменения в пачки (следующие подряд наборы элементов коллекции)
+                // Собираем изменения в пачки (следующие подряд наборы элементов коллекции)
                 startFrom = 0;
                 offset = 0;
                 groupName = groups[groupIndex];
                 while (startFrom !== -1) {
-                    //Очередная пачка
-                    changes = getGroupChanges(groupName, session, collection, startFrom, offset);    //Есть какие-то изменения
-                    //Есть какие-то изменения
+                    // Очередная пачка
+                    changes = getGroupChanges(groupName, session, collection, startFrom, offset);    // Есть какие-то изменения
+                    // Есть какие-то изменения
                     if (changes.newItems.length || changes.oldItems.length) {
-                        //Уведомляем
+                        // Уведомляем
                         if (callback) {
                             groupAction = '';
                             switch (groupName) {
@@ -401,18 +401,18 @@ define('Types/_collection/enumerableComparator', [
                                 break;
                             }
                             callback(groupAction, changes);
-                        }    //Синхронизируем состояние по пачке
-                        //Синхронизируем состояние по пачке
+                        }    // Синхронизируем состояние по пачке
+                        // Синхронизируем состояние по пачке
                         applyGroupChanges(groupName, changes, session);
-                    }    //Проверяем, все ли хорошо
-                    //Проверяем, все ли хорошо
+                    }    // Проверяем, все ли хорошо
+                    // Проверяем, все ли хорошо
                     if (changes.endAt !== -1 && changes.endAt <= startFrom) {
                         maxRepeats--;
                         if (maxRepeats === 0) {
                             throw new Error('Endless cycle detected.');
                         }
-                    }    //Запоминаем, на чем остановились
-                    //Запоминаем, на чем остановились
+                    }    // Запоминаем, на чем остановились
+                    // Запоминаем, на чем остановились
                     startFrom = changes.endAt;
                     offset = changes.offset;
                 }

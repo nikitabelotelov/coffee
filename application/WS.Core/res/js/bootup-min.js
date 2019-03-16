@@ -1,13 +1,11 @@
 define('bootup-min', [
    'require',
-   'Core/detection',
-   'Core/IoC',
    'Core/Deferred',
    'Core/ParallelDeferred',
-   'Core/EventBus',
+   'Env/Event',
    'Core/core-instance',
    'Core/Context',
-   'Core/constants',
+   'Env/Env',
    'Core/CommandDispatcher',
    'Core/helpers/Array/uniq',
    'Core/helpers/Hcontrol/doAutofocus',
@@ -25,14 +23,12 @@ define('bootup-min', [
    'is!compatibleLayer?Lib/Control/BaseCompatible/BaseCompatible'
 ], function(
    require,
-   detection,
-   ioc,
    Deferred,
    ParallelDeferred,
-   EventBus,
+   EnvEvent,
    coreIns,
    Context,
-   constants,
+   Env,
    CommandDispatcher,
    ArrayUniq,
    doAutofocus,
@@ -54,7 +50,7 @@ define('bootup-min', [
    function closeWindowWithIPadFix() {
       // на iPad просто так закрытие окна через window.close не работает, но можно попробовать сделать грязный хак
       // http://stackoverflow.com/questions/10712906/window-close-doesnt-work-on-ios
-      if (detection.isMobileSafari) {
+      if (Env.detection.isMobileSafari) {
          setTimeout(window.close, 301);
       } else {
          window.close();
@@ -205,8 +201,8 @@ define('bootup-min', [
       function notifyBootupReady(error) {
          bootupReady && bootupReady.done().getResult().addCallback(function() {
             // Кинем событие о конце загрузки основного шаблона
-            EventBus.globalChannel().setEventQueueSize('bootupReady', 1);
-            EventBus.globalChannel().notify('bootupReady', {
+            EnvEvent.Bus.globalChannel().setEventQueueSize('bootupReady', 1);
+            EnvEvent.Bus.globalChannel().notify('bootupReady', {
                error: error
             });
             Context.global.setValue('bootupReadyFlagForGenerateId', true);
@@ -247,7 +243,7 @@ define('bootup-min', [
 
          notifyBootupReady();
       }).addErrback(function(error) {
-         ioc.resolve('ILogger').error('bootup', (error && error.message) || error);
+         Env.IoC.resolve('ILogger').error('bootup', (error && error.message) || error);
          // если произошла ошибка, прокинем ее в событие bootupReady
          notifyBootupReady(error);
       });
@@ -272,7 +268,7 @@ define('bootup-min', [
             params = Context.global.getValue('editParams') || Context.global.getValue("printParams"),
             templates = [];
 
-         constants.decoratedLinkService = '/linkdecorator/service/';
+         Env.constants.decoratedLinkService = '/linkdecorator/service/';
 
          if (arguments.length === 0 || (arguments.length == 1 && typeof arguments[0] !== 'string')) {
             $('.ws-root-template').each(function() {

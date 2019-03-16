@@ -11,7 +11,7 @@
     * - html!SBIS3.CORE.HTMLChunk - подключит шаблон
     * - html!encode=true?SBIS3.CORE.HTMLChunk - подключит шаблон, в котором все {{=it....}} будет делать эскейпинг текста
     */
-   define('html', ['Core/pathResolver', 'Core/js-template-doT', 'Core/constants', 'text'], function(pathResolver, doT, constants, text) {
+   define('html', ['Core/pathResolver', 'Core/js-template-doT', 'Env/Env', 'text'], function(pathResolver, doT, Env, text) {
       function setToJsonForFunction(func, moduleName, path) {
          func.toJSON = function() {
             var serialized = {
@@ -87,7 +87,7 @@
 
                // для Сервиса Представлений необходимы именно сбилженные шаблоны(для здоровья локализации)
                // Также проверяем наличие process - на Серверном скрипте должны просится шаблоны без .min
-               if (isServerSide && constants.buildMode === 'release' && constants.isNodePlatform) {
+               if (isServerSide && Env.constants.buildMode === 'release' && Env.constants.isNodePlatform) {
                   path = path.replace(/(\.min)?\.xhtml$/, '.min.xhtml');
                }
 

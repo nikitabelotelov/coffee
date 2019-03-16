@@ -2,13 +2,11 @@
  * Created by dv.zuev on 31.01.2018.
  */
 define('Core/BodyClasses', [
-   'Core/detection',
-   'Core/compatibility',
-   'Core/constants'
+   
+   'Env/Env'
 ], function(
-   detection,
-   compatibility,
-   constants
+   
+   Env
 ) {
    return function(restrictions) {
       var
@@ -49,35 +47,35 @@ define('Core/BodyClasses', [
 
       // Map the list of detection properties to corresponding classes
       for (var prop in classMap) {
-         if (detection[prop]) {
+         if (Env.detection[prop]) {
             addClassIfNotRestricted(classMap[prop]);
          }
       }
 
       // Manually add different combinations of detection properties
       // to the list of classes
-      if (detection.chrome && detection.isMobileIOS) {
+      if (Env.detection.chrome && Env.detection.isMobileIOS) {
          addClassIfNotRestricted('ws-is-mobile-chrome-ios');
       }
-      if (detection.isMobileSafari) {
-         if ((detection.IOSVersion || 0) < 8) {
+      if (Env.detection.isMobileSafari) {
+         if ((Env.detection.IOSVersion || 0) < 8) {
             addClassIfNotRestricted('ws-is-mobile-safari-ios-below-8');
          }
       }
 
-      addClassIfNotRestricted(detection.isMobilePlatform ? 'ws-is-mobile-platform' : 'ws-is-desktop-platform');
+      addClassIfNotRestricted(Env.detection.isMobilePlatform ? 'ws-is-mobile-platform' : 'ws-is-desktop-platform');
 
-      addClassIfNotRestricted(compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch');
+      addClassIfNotRestricted(Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch');
 
-      if (detection.isMacOSDesktop && detection.safari) {
+      if (Env.detection.isMacOSDesktop && Env.detection.safari) {
          addClassIfNotRestricted('ws-is-desktop-safari');
       }
 
-      if (((detection.isWin7 || detection.isWinVista || detection.isWinXP) && !detection.firefox) || detection.isUnix) {
+      if (((Env.detection.isWin7 || Env.detection.isWinVista || Env.detection.isWinXP) && !Env.detection.firefox) || Env.detection.isUnix) {
          addClassIfNotRestricted('ws-fix-emoji');
       }
 
-      if (detection.webkit && !constants.isServerScript && !constants.isNodePlatform) {
+      if (Env.detection.webkit && !Env.constants.isServerScript && !Env.constants.isNodePlatform) {
          // On the server Chrome is detected as webkit, because it has 'AppleWebKit' in its
          // user agent. We can't check if the browser is Chrome on the server, because a lot
          // of other browsers have 'Chrome' in their user agent string. Only add 'ws-is-webkit'

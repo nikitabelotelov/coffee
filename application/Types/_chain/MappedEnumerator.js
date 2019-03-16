@@ -43,15 +43,12 @@ define('Types/_chain/MappedEnumerator', [
         };
         return MappedEnumerator;
     }();
-    exports.default = MappedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    MappedEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    MappedEnumerator.prototype.callback = null;    // @ts-ignore
-    // @ts-ignore
-    MappedEnumerator.prototype.callbackContext = null;    // @ts-ignore
-    // @ts-ignore
-    MappedEnumerator.prototype.enumerator = null;    // @ts-ignore
-    // @ts-ignore
-    MappedEnumerator.prototype.current = null;
+    exports.default = MappedEnumerator;
+    Object.assign(MappedEnumerator.prototype, {
+        previous: null,
+        callback: null,
+        callbackContext: null,
+        enumerator: null,
+        current: null
+    });
 });

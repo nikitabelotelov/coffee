@@ -37,11 +37,10 @@ define('Types/_chain/FlattenedEnumerator', [
         };
         return FlattenedEnumerator;
     }();
-    exports.default = FlattenedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    FlattenedEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    FlattenedEnumerator.prototype.mover = null;    // @ts-ignore
-    // @ts-ignore
-    FlattenedEnumerator.prototype.index = null;
+    exports.default = FlattenedEnumerator;
+    Object.assign(FlattenedEnumerator.prototype, {
+        previous: null,
+        mover: null,
+        index: null
+    });
 });

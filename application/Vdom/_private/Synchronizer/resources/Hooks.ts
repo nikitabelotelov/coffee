@@ -2,7 +2,7 @@
 
 import { Event as EventExpression } from 'View/Executor/Expressions';
 // @ts-ignore
-import * as Constants from 'Core/constants';
+import { constants as Constants } from 'Env/Env';
 
 function getEventHandlerBase(eventDescr) {
    function eventUtil(event) {
@@ -13,10 +13,10 @@ function getEventHandlerBase(eventDescr) {
       var res = event.nativeEvent.result;
       if (res && res.then) {
          res.then(function () {
-            eventDescr.controlNode.requestDirtyCheck();
+            eventDescr.controlNode.requestDirtyCheck(eventDescr.controlNode);
          });
       } else {
-         eventDescr.controlNode.requestDirtyCheck();
+         eventDescr.controlNode.requestDirtyCheck(eventDescr.controlNode);
       }
       return [eventDescr.controlNode.control, event];
    }
@@ -269,7 +269,6 @@ export function setEventHooks(domEnvironment) {
                      if (!(propVal instanceof CapturePhaseEventHook) && !(propVal instanceof BubblingPhaseEventHook)) {
                         cnt = this.controlNode.control._container[0];
                         this.environment.removeCaptureEventHandler(eventName, cnt);
-
                         if (cnt && cnt.eventProperties) {
                            delete cnt.eventProperties[this.eventName];
                            cnt.eventPropertiesCnt--;

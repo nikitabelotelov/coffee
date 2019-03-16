@@ -77,7 +77,7 @@ define('View/Logger', [], function() {
       if (req && req.query) {
          return req.query[paramName];
       }
-      if (window && window.location) {
+      if (typeof window !== 'undefined' && window.location) {
          var match = window.location.search.match(paramRegexp);
          return match && match[1];
       }

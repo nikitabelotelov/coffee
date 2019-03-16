@@ -9,25 +9,13 @@
       "remote", "text", "tmpl", "tslib",
 
       "Core/BodyClasses",
-      "Core/detection",
-      "Core/compatibility",
-      "Core/bom-define",
-      "Core/IoC",
-      "Core/ConsoleLogger",
-      "Core/ILogger",
-      "Core/constants",
       "Core/Control",
       "Core/Deferred",
-      "Core/core-debug",
-      "Core/cookie",
       "Core/DataContext",
       "Core/moduleStubs",
       "Core/patchRequireJS",
       "Core/ParallelDeferred",
       "Core/pathResolver",
-      "Core/_storage",
-      "Core/LocalStorageNative",
-      "Core/SessionStorage",
       "Core/UserInfo",
       "Core/Serializer",
       "Core/defaultRenders",
@@ -49,16 +37,8 @@
       "Core/core-instance",
 
       "Core/ExtensionsManager",
-      "Core/AbstractConfigOld",
-      "Core/UserConfigOld",
-      "Core/UserConfig",
-      "Core/_ConfigMock",
-      "Core/_ConfigMapper",
-      "Core/ClientsGlobalConfigOld",
-      "Core/ClientsGlobalConfig",
 
       "Core/css-resolve",
-      "Core/load-contents",
       "Core/app-start",
       "Core/app-init",
       "Core/app",
@@ -116,47 +96,35 @@
   },
   {
     "include": [
+      "Transport/*",
+      "Core/detection",
+      "Core/compatibility",
+      "Core/IoC",
+      "Core/ConsoleLogger",
+      "Core/ILogger",
+      "Core/constants",
+      "Core/core-debug",
+      "Core/cookie",
+      "Core/LocalStorageNative",
+      "Core/SessionStorage",
       "Core/EventBus",
       "Core/EventBusChannel",
       "Core/EventObject",
-
+      "Lib/ServerEvent/Bus",
+      "Core/UserConfigOld",
+      "Core/UserConfig",
+      "Core/AbstractConfigOld",
+      "Core/ClientsGlobalConfigOld",
+      "Core/ClientsGlobalConfig",
       "Lib/Tab/*",
+      "Core/load-contents",
+      "Lib/Storage/*",
       "Lib/TabMessage/TabMessage"
     ],
-    "output": "core-event-bus.package.js"
+    "output": "rmi.package.js"
   },
   {
     "include": [
-      "Lib/ServerEvent/Bus",
-      "Lib/ServerEvent/DebugUtils",
-      "Lib/ServerEvent/ResponseConverter",
-      "Lib/ServerEvent/_class/ConnectOptions",
-      "Lib/ServerEvent/_class/Constants",
-      "Lib/ServerEvent/_class/DeviceEnv",
-      "Lib/ServerEvent/_class/Notifier",
-      "Lib/ServerEvent/_class/RabbitEnv",
-      "Lib/ServerEvent/_class/Subscribe",
-      "Lib/ServerEvent/_class/SubscribeContainer",
-      "Lib/ServerEvent/_class/logger/*",
-      "Lib/ServerEvent/_class/deliver/*",
-      "Lib/ServerEvent/_class/creator/*",
-      "Lib/ServerEvent/_class/transport/Constants",
-      "Lib/ServerEvent/_class/transport/Transport",
-      "Lib/ServerEvent/_class/transport/LocalPageTransport",
-      "Lib/ServerEvent/native/AckSender",
-      "Lib/ServerEvent/native/HashedCounter",
-      "Lib/ServerEvent/native/SockjsEmulator",
-      "Lib/ServerEvent/resources/stomp",
-
-      "Lib/ServerEvent/_class/transport/ExclusiveProxy",
-      "Lib/ServerEvent/_class/transport/TransportChooser",
-      "Lib/ServerEvent/_class/transport/LocalMainTransport"
-    ],
-    "output": "core-server-event-bus.package.js"
-  },
-  {
-    "include": [
-      "Lib/Storage/*",
       "Core/MicroSession"
     ],
     "output": "core-storage.package.js"
@@ -249,31 +217,5 @@
       "Lib/Type/*"
     ],
     "output": "lib-type.package.js"
-  },
-  {
-    "include": [
-      "Lib/ServerEvent/native/_IndexedDB",
-      "Lib/ServerEvent/native/_IndexedDB/*"
-    ],
-    "output": "lib-server-event-indexeddb.package.js"
-  },
-  {
-    "include": [
-      "Transport/ajax-emulator",
-      "Transport/ITransport",
-      "Transport/Errors",
-      "Transport/HTTPError",
-      "Transport/XHRTransport",
-      "Transport/RPC/*",
-      "Transport/TransportError",
-      "Transport/RPCJSON",
-      "Transport/XHR/*",
-      "Transport/URL/getQueryParam",
-      "Transport/serializeURLData",
-      "Transport/prepareGetRPCInvocationURL",
-      "Transport/URL/getUrl",
-      "Transport/getRpcInvocationUrl"
-    ],
-    "output": "transport.package.js"
   }
 ]

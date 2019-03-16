@@ -1,6 +1,6 @@
 define('Core/core-simpleExtend', [
-   'Core/detection'
-], function(detection) {
+   'Env/Env'
+], function(Env) {
    /**
     * Быстрое простое наследование без "сахара" (не поддерживаются инструкции $protected и $constructor, не осуществляется deep merge объектов)
     * @class Core/core-simpleExtend
@@ -344,7 +344,7 @@ define('Core/core-simpleExtend', [
        * @static
        */
       _checkIgnoredPropertiesInIE: function(target, source) {
-         if (detection.isModernIE) {
+         if (Env.detection.isModernIE) {
             return;
          }
          var props = ['constructor', 'valueOf', 'toString'],

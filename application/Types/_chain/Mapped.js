@@ -15,6 +15,7 @@ define('Types/_chain/Mapped', [
 ], function (require, exports, tslib_1, Abstract_1, MappedEnumerator_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
+    var _a;
     var Mapped = /** @class */
     function (_super) {
         tslib_1.__extends(Mapped, _super);    /** @lends Types/_chain/Mapped.prototype */
@@ -49,9 +50,5 @@ define('Types/_chain/Mapped', [
         return Mapped;
     }(Abstract_1.default);
     exports.default = Mapped;
-    Mapped.prototype['[Types/_chain/Mapped]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Mapped.prototype._callback = null;    // @ts-ignore
-    // @ts-ignore
-    Mapped.prototype._callbackContext = null;
+    Object.assign(Mapped.prototype, (_a = {}, _a['[Types/_chain/Mapped]'] = true, _a._callback = null, _a._callbackContext = null, _a));
 });

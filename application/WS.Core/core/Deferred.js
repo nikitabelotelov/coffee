@@ -1,5 +1,5 @@
 /// <amd-module name="Core/Deferred" />
-define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debug", "Core/IoC"], function (require, exports, constants, cDebug, IoC) {
+define("Core/Deferred", ["require", "exports", "Env/Env"], function (require, exports, Env_1) {
     "use strict";
     function DeferredCanceledError(message) {
         this.message = message;
@@ -18,7 +18,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
     var Deferred = /** @class */ (function () {
         /**
          * @param {Object} [cfg] Конфигурация. Содержит опцию: cancelCallback - функция,
-         *    реализующая отмену на уровне кода, управляющего этим Deferred-ом.
+         * реализующая отмену на уровне кода, управляющего этим Deferred-ом.
          * @example
          * <pre>
          *    var dfr;
@@ -47,7 +47,17 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
             this._paused = 0;
             this._results = [null, null];
             this._running = false;
+            this._hasErrback = false;
+            this._logger = cfg && cfg.logger;
+            this._loggerAwait = cfg && cfg.loggerAwait || setTimeout;
         }
+        Object.defineProperty(Deferred.prototype, "logger", {
+            get: function () {
+                return this._logger || Env_1.IoC.resolve('ILogger');
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * установить флаг логгирования данного deferred в сервисе пердставления
          * @param value значение флага
@@ -82,7 +92,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                         cbk();
                     }
                     catch (err) {
-                        IoC.resolve('ILogger').error('Deferred', "Cancel function throwing an error: " + err.message, err);
+                        this.logger.error('Deferred', "Cancel function throwing an error: " + err.message, err);
                     }
                 }
                 this._fire();
@@ -109,12 +119,11 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
          * На отменённом объекте (после вызова метода cancel) callback/errback можно вызывать сколько угодно -
          * ошибки не будет, метод отработает вхолостую.
          * @param [res] результат асинхронной операции.
-         * @param checkCallback включить проверку наличия callback обработки ошибок
          * @returns {Core/Deferred}
          */
-        Deferred.prototype.errback = function (res, checkCallback) {
+        Deferred.prototype.errback = function (res) {
             if (!isCanceled(this)) {
-                this._resback(this._check(res, true, checkCallback));
+                this._resback(this._check(res, true));
             }
             return this;
         };
@@ -126,7 +135,8 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
             this._results[CHAIN_INDEXES[this._fired]] = res;
             this._fire();
         };
-        Deferred.prototype._check = function (res, isError, checkCallback) {
+        Deferred.prototype._check = function (res, isError) {
+            var _this = this;
             var result = res;
             if (this._fired !== WAITING) {
                 throw new Error("Deferred is already fired with state \"" + STATE_NAMES[this._fired] + "\"");
@@ -145,11 +155,17 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                         result.message = "" + result.number;
                     }
                 }
-                if (checkCallback !== false &&
-                    constants.isNodePlatform &&
-                    !this._chain.some(function (pair) { return typeof pair[1] === 'function'; })) {
-                    IoC.resolve('ILogger').error('Deferred', 'There is no callbacks attached to handle error');
-                    IoC.resolve('ILogger').error('Deferred', 'Unhandled error:', result);
+                if (!Env_1.constants.isBrowserPlatform) {
+                    //Save call stack use Error instance
+                    var rejectionError_1 = new Error("\"" + result.message + "\"");
+                    var rejectionAwait = this._loggerAwait;
+                    //Just wait for the next event loop because error handler can be attached after errback() call
+                    rejectionAwait(function () {
+                        if (!_this._hasErrback) {
+                            _this.logger.error('Deferred', 'There is no callbacks attached to handle error', rejectionError_1);
+                            _this.logger.error('Deferred', 'Unhandled error', result);
+                        }
+                    });
                 }
             }
             return result;
@@ -245,6 +261,9 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                 (eb !== null && typeof eb !== 'function')) {
                 throw new Error('Both arguments required in addCallbacks');
             }
+            if (eb) {
+                this._hasErrback = true;
+            }
             var fired = this._fired, waiting = fired === WAITING || this._running || this._paused > 0;
             if (waiting ||
                 (cb && fired === SUCCESS) ||
@@ -277,7 +296,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                     // Признак того, что Deferred сейчас выполняет цепочку
                     this._running = true;
                     if (this._logCallbackExecutionTime) {
-                        res = cDebug.methodExecutionTime(f, this, [res]);
+                        res = Env_1.coreDebug.methodExecutionTime(f, this, [res]);
                     }
                     else {
                         res = f(res);
@@ -294,7 +313,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
                 catch (err) {
                     fired = FAILED;
                     res = isErrorValue(err) ? err : new Error(err);
-                    IoC.resolve('ILogger').error('Deferred', "Callback function throwing an error: " + err.message, err);
+                    this.logger.error('Deferred', "Callback function throwing an error: " + err.message, err);
                 }
                 finally {
                     this._running = false;
@@ -423,7 +442,7 @@ define("Core/Deferred", ["require", "exports", "Core/constants", "Core/core-debu
          */
         Deferred.fail = function (result) {
             var err = result instanceof Error ? result : new Error(result ? String(result) : '');
-            return new Deferred().errback(err, false);
+            return new Deferred().errback(err);
         };
         /**
          * Возвращает Deferred, который завершится успехом или ошибкой, сразу же как завершится успехом или

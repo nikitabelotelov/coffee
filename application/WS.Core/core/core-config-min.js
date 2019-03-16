@@ -1,8 +1,8 @@
 define('Core/core-config-min', [
-   'Core/IoC',
-   'Core/constants',
+   
+   'Env/Env',
    'Core/core-merge'
-], function(IoC, constants, cMerge) {
+], function(Env, cMerge) {
 
    /**
     * Код конфигурирования ядра и запуска загрузки минимально необходимого набора компонентов
@@ -30,12 +30,12 @@ define('Core/core-config-min', [
             single = true;
          }
          if (single) {
-            IoC.bindSingle(iface, target);
+            Env.IoC.bindSingle(iface, target);
          } else {
-            IoC.bind(iface, target);
+            Env.IoC.bind(iface, target);
          }
       }
    }
 
-   cMerge(constants, global.wsConfig || {}, {rec: false});
+   cMerge(Env.constants, global.wsConfig || {}, {rec: false});
 });

@@ -1,7 +1,6 @@
 /// <amd-module name="Vdom/_private/Synchronizer/resources/VdomMarkup" />
-
 // @ts-ignore
-import * as coreDebug from 'Core/core-debug';
+import { coreDebug } from 'Env/Env';
 import { Vdom } from 'View/Executor/Utils';
 // @ts-ignore
 import * as flatten from 'Core/helpers/Array/flatten';
@@ -485,30 +484,8 @@ export function getFullMarkup(controlNodes, vnode, ignoreInnerComponent, current
                context: vnode.context,
                changed: true,
                type: 'TemplateNode',
-               optionsVersions: vnode.optionsVersions,
-               get count() {
-                  var descendants = 0;
-                  if (this.children) {
-                     for (var i = 0; i < this.children.length; i++) {
-                        var child = this.children[i];
-                        descendants += child.count || 0;
-                     }
-                     return this.children.length + descendants;
-                  } else {
-                     return 0;
-                  }
-               }
+               optionsVersions: vnode.optionsVersions
             };
-
-            //delete vnode.count;
-
-            Object.defineProperty(vnode, 'count', {
-               get: function () {
-                  return obj.count;
-               },
-               configurable: true
-            });
-
             return obj.children;
          }
 

@@ -4,13 +4,22 @@
  *
  * Основные аспекты записи:
  * <ul>
- *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/_entity/IObject};</li>
- *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/_collection/IEnumerable};</li>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
+ *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}),
+ *        например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс
+ *        {@link Types/_entity/IObject};
+ *    </li>
+ *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс
+ *        {@link Types/_collection/IEnumerable};
+ *    </li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
+ *    </li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь
+ *        {@link Types/_entity/FormattableMixin}.
+ *    </li>
  * </ul>
  *
- * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
+ * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате
+ * используется по умолчанию):
  * <pre>
  *    require(['Types/entity'], function (entity) {
  *       var employee = new entity.Record({
@@ -24,7 +33,8 @@
  *       employee.get('firstName');//John
  *    });
  * </pre>
- * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
+ * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате
+ * укажем явно):
  * <pre>
  *    require([
  *       'Types/entity',
@@ -65,7 +75,8 @@
  * @author Мальцев А.А.
  */
 
-import {protect} from '../util';
+/* tslint:disable:member-ordering */
+
 import IObject from './IObject';
 import IObservableObject from './IObservableObject';
 import ICloneable from './ICloneable';
@@ -75,7 +86,7 @@ import IVersionable from './IVersionable';
 import DestroyableMixin from './DestroyableMixin';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin from './ObservableMixin';
-import SerializableMixin from './SerializableMixin';
+import SerializableMixin, {IState as ICommonSerializableState} from './SerializableMixin';
 import CloneableMixin from './CloneableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
 import ReadWriteMixin from './ReadWriteMixin';
@@ -83,114 +94,27 @@ import FormattableMixin from './FormattableMixin';
 import VersionableMixin from './VersionableMixin';
 import Factory from './factory';
 import {IReceiver} from './relation';
-import {IAdapter} from './adapter';
-import {IEnumerable} from '../collection';
-import {resolve, register} from '../di';
-import {mixin} from '../util';
+import {IAdapter, IRecord} from './adapter';
+import {Field, IFieldDeclaration} from './format';
+import {IEnumerable, enumerator, RecordSet, format} from '../collection';
+import {register, create} from '../di';
+import {protect, mixin, logger} from '../util';
 import {Map} from '../shim';
-import {logger} from '../util';
-//@ts-ignore
-import coreExtend = require('Core/core-extend');
-
-interface IOptions {
-   adapter?: IAdapter,
-   rawData?: any
-}
-
-/**
- * Возвращает признак примитивного значения (не объекта)
- * @param {*} value
- * @return {Boolean}
- */
-function isPrimitive(value) {
-   return value && typeof value === 'object' ? false : true;
-}
-
-/**
- * Возвращает valueOf от объекта, либо value если это не объект
- * @param {*} value
- * @return {*}
- */
-function getValueOf(value) {
-   if (value && typeof value === 'object' && value !== value.valueOf()) {
-      return value.valueOf();
-   }
-   return value;
-}
-
-/**
- * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим примитивное значение
- * @param {*} first
- * @param {*} second
- * @return {Boolean}
- */
-function isEqualValues(first, second) {
-   return getValueOf(first) === getValueOf(second);
-}
-
-/**
- * Возвращает тип значения
- * @param {*} value Значение
- * @return {String|Object}
- */
-function getValueType(value) {
-   switch (typeof value) {
-      case 'boolean':
-         return 'boolean';
-
-      case 'number':
-         if (value % 1 === 0) {
-            return 'integer';
-         }
-         return 'real';
-
-      case 'object':
-         if (value === null) {
-            return 'string';
-         } else if (value instanceof Record) {
-            return 'record';
-         } else if (value && value['[Types/_collection/RecordSet]']) {
-            return 'recordset';
-         } else if (value instanceof Date) {
-            if (value.hasOwnProperty('_serializeMode')) {
-               value = <ExtendDate>value;
-               switch (value.getSQLSerializationMode()) {
-                  case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATE:
-                     return 'date';
-                  case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_TIME:
-                     return 'time';
-               }
-            }
-            return 'datetime';
-         } else if (value instanceof Array) {
-            return {
-               type: 'array',
-               kind: getValueType(value.find((item) => {
-                  return item !== null && item !== undefined;
-               }))
-            };
-         }
-         return 'object';
-
-      default:
-         return 'string';
-   }
-}
 
 /**
  * Свойство, хранящее кэш полей
  */
-let $fieldsCache = protect('fieldsCache');
+const $fieldsCache = protect('fieldsCache');
 
 /**
  * Свойство, хранящее клоны полей
  */
-let $fieldsClone = protect('fieldsClone');
+const $fieldsClone = protect('fieldsClone');
 
 /**
  * Свойство, хранящее измененные полй
  */
-let $changedFields = protect('changedFields');
+const $changedFields = protect('changedFields');
 
 /**
  * Возможные состояния записи
@@ -218,6 +142,94 @@ const CACHE_MODE_OBJECTS = protect('objects');
  */
 const CACHE_MODE_ALL = protect('all');
 
+type pairsTuple = [string, any, any];
+
+interface IOptions {
+   adapter?: IAdapter | string;
+   format?: format.Format<Field> | IFieldDeclaration[];
+   owner?: RecordSet<Record>;
+   rawData?: any;
+}
+
+interface ISerializableState extends ICommonSerializableState {
+   $options: IOptions;
+   _format: format.Format<Field>;
+   _changedFields: string[];
+}
+
+/**
+ * Возвращает признак примитивного значения (не объекта)
+ */
+function isPrimitive(value: any): boolean {
+   return value && typeof value === 'object' ? false : true;
+}
+
+/**
+ * Возвращает valueOf от объекта, либо value если это не объект
+ */
+function getValueOf(value: any): any {
+   if (value && typeof value === 'object' && value !== value.valueOf()) {
+      return value.valueOf();
+   }
+   return value;
+}
+
+/**
+ * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим
+ * примитивное значение
+ */
+function isEqualValues(first: any, second: any): boolean {
+   return getValueOf(first) === getValueOf(second);
+}
+
+/**
+ * Возвращает тип значения
+ */
+function getValueType(value: any): string | IFieldDeclaration {
+   switch (typeof value) {
+      case 'boolean':
+         return 'boolean';
+
+      case 'number':
+         if (value % 1 === 0) {
+            return 'integer';
+         }
+         return 'real';
+
+      case 'object':
+         if (value === null) {
+            return 'string';
+         } else if (value instanceof Record) {
+            return 'record';
+         } else if (value && value['[Types/_collection/RecordSet]']) {
+            return 'recordset';
+         } else if (value instanceof Date) {
+            if (value.hasOwnProperty('_serializeMode')) {
+               switch ((value as ExtendDate).getSQLSerializationMode()) {
+                  case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
+                     return 'date';
+                  case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
+                     return 'time';
+               }
+            }
+            return 'datetime';
+         } else if (value instanceof Array) {
+            return {
+               type: 'array',
+               kind: getValueType(
+                  value.find(
+                     (item) => item !== null && item !== undefined
+                  )
+               )
+            } as IFieldDeclaration;
+         }
+         return 'object';
+
+      default:
+         return 'string';
+   }
+}
+
 export default class Record extends mixin(
    DestroyableMixin,
    OptionsToPropertyMixin,
@@ -236,73 +248,28 @@ export default class Record extends mixin(
    IEquatable,
    IEnumerable<any>,
    IReceiver,
-   IVersionable
-/** @lends Types/_entity/Record.prototype */{
+   IVersionable /** @lends Types/_entity/Record.prototype */ {
 
    /**
-    * @typedef {String} RecordState
-    * @variant Added Запись была добавлена в рекордсет, но метод {@link acceptChanges} не был вызыван.
-    * @variant Deleted Запись была отмечена удаленной с использованием метода {@link setState}, но метод {@link acceptChanges} не был вызван.
-    * @variant Changed Запись была изменена, но метод {@link acceptChanges} не был вызван. Автоматически переходит в это состояние при изменении любого поля, если до этого состояние было Unchanged.
-    * @variant Unchanged С момента последнего вызова {@link acceptChanges} запись не была изменена.
-    * @variant Detached Запись не была вставлена ни в один рекордсет, либо запись была удалена из рекордсета.
-    */
-
-   /**
-    * @cfg {RecordState} Текущее состояние записи по отношению к рекордсету: отражает факт принадлежности записи к рекордсету и сценарий, в результате которого эта принадлежность была сформирована.
-    * @name Types/_entity/Record#state
-    * @see getState
-    * @see setState
-    * @see getOwner
-    */
-   _$state: string;
-
-   /**
-    * @cfg {String} Режим кеширования
-    */
-   _$cacheMode: string | symbol;
-
-   /**
-    * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при вызове rejectChages восстанавливать клонированные значения.
-    * @name Types/_entity/Record#cloneChanged
-    * @see rejectChanges
-    */
-   _$cloneChanged: boolean;
-
-   /**
-    * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
-    * @name Types/_entity/Record#owner
-    */
-   _$owner: any;
-
-   /**
-    * @property {RecordState} Состояние записи после последнего вызова {@link acceptChanges}
-    */
-   _acceptedState: string;
-
-   /**
-    * @property {Map} Объект содержащий закэшированные значения полей
+    * @property Объект содержащий закэшированные значения полей
     */
    get _fieldsCache(): Map<string, any> {
-      // @ts-ignore
-      return this[$fieldsCache] || (this[$fieldsCache] = new Map());
+      return this[$fieldsCache as string] || (this[$fieldsCache as string] = new Map());
    }
 
    /**
-    * @property {Map} Объект содержащий клонированные значения полей
+    * @property Объект содержащий клонированные значения полей
     */
    get _fieldsClone(): Map<string, any> {
-      // @ts-ignore
-      return this[$fieldsClone] || (this[$fieldsClone] = new Map());
+      return this[$fieldsClone as string] || (this[$fieldsClone as string] = new Map());
    }
 
    /**
-    * @property {Object} Данные об измененных полях
+    * @property Данные об измененных полях
     */
    get _changedFields(): Object {
-      let result = {};
-      // @ts-ignore
-      let changedFields = this[$changedFields];
+      const result = {};
+      const changedFields = this[$changedFields as string];
 
       if (!changedFields) {
          return result;
@@ -316,20 +283,68 @@ export default class Record extends mixin(
          value = data[0];
          byLink = data[1];
 
-         //Check record state if it's changed by link
+         // Check record state if it's changed by link
          if (value && byLink && value['[Types/_entity/Record]'] && !value.isChanged()) {
             return;
          }
-         result[field] = this._haveToClone(value) && this._fieldsClone.has(field) ? this._fieldsClone.get(field) : value;
+         result[field] = this._haveToClone(value) && this._fieldsClone.has(field)
+            ? this._fieldsClone.get(field)
+            : value;
       });
 
       return result;
    }
 
-   constructor(options) {
+   /**
+    * @property {RecordState} Состояние записи после последнего вызова {@link acceptChanges}
+    */
+   _acceptedState: string;
+
+   /**
+    * @typedef {String} RecordState
+    * @variant Added Запись была добавлена в рекордсет, но метод {@link acceptChanges} не был вызыван.
+    * @variant Deleted Запись была отмечена удаленной с использованием метода {@link setState}, но метод
+    * {@link acceptChanges} не был вызван.
+    * @variant Changed Запись была изменена, но метод {@link acceptChanges} не был вызван. Автоматически переходит в
+    * это состояние при изменении любого поля, если до этого состояние было Unchanged.
+    * @variant Unchanged С момента последнего вызова {@link acceptChanges} запись не была изменена.
+    * @variant Detached Запись не была вставлена ни в один рекордсет, либо запись была удалена из рекордсета.
+    */
+
+   /**
+    * @cfg {RecordState} Текущее состояние записи по отношению к рекордсету: отражает факт принадлежности записи к
+    * рекордсету и сценарий, в результате которого эта принадлежность была сформирована.
+    * @name Types/_entity/Record#state
+    * @see getState
+    * @see setState
+    * @see getOwner
+    */
+   _$state: string;
+
+   /**
+    * @cfg {String} Режим кеширования
+    */
+   _$cacheMode: string | symbol;
+
+   /**
+    * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при
+    * вызове rejectChages восстанавливать клонированные значения.
+    * @name Types/_entity/Record#cloneChanged
+    * @see rejectChanges
+    */
+   _$cloneChanged: boolean;
+
+   /**
+    * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
+    * @name Types/_entity/Record#owner
+    */
+   _$owner: any;
+
+   constructor(options?: IOptions) {
       if (options && options.owner && !options.owner['[Types/_collection/RecordSet]']) {
          throw new TypeError('Records owner should be an instance of Types/collection:RecordSet');
       }
+
       super(options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.constructor.call(this);
@@ -341,16 +356,15 @@ export default class Record extends mixin(
       this._acceptedState = this._$state;
    }
 
-   destroy() {
-      // @ts-ignore
-      this[$changedFields] = null;
+   destroy(): void {
+      this[$changedFields as string] = null;
       this._clearFieldsCache();
 
       ReadWriteMixin.destroy.call(this);
       DestroyableMixin.prototype.destroy.call(this);
    }
 
-   //region IObject
+   // region IObject
 
    readonly '[Types/_entity/IObject]': boolean;
 
@@ -359,7 +373,7 @@ export default class Record extends mixin(
          return this._fieldsCache.get(name);
       }
 
-      let value = this._getRawDataValue(name);
+      const value = this._getRawDataValue(name);
       if (this._isFieldValueCacheable(value)) {
          this._addChild(value, this._getRelationNameForField(name));
          this._fieldsCache.set(name, value);
@@ -372,12 +386,13 @@ export default class Record extends mixin(
    }
 
    set(name: string | Object, value?: any): void {
-      let map = this._getHashMap(name, value);
-      let errors = [];
+      const map = this._getHashMap(name, value);
+      const errors = [];
 
-      let changed = this._setPairs(Object.keys(map).map((key) => {
-         return [key, map[key], this.get(key)];
-      }), errors);
+      const changed = this._setPairs(
+         Object.keys(map).map((key) => [key, map[key], this.get(key)] as pairsTuple),
+         errors
+      );
 
       if (changed) {
          this._notifyChange(changed);
@@ -397,35 +412,36 @@ export default class Record extends mixin(
     * @return {Object|null} Изменившиеся значения
     * @protected
     */
-   _setPairs(pairs, errors) {
+   protected _setPairs(pairs: pairsTuple[], errors: string[]): object {
       let changed = null;
 
       pairs.forEach((item) => {
-         let [key, value, oldValue] = item;
+         const [key, newValue, oldValue]: pairsTuple = item;
+         let value = newValue;
 
-         //Check if value changed
+         // Check if value changed
          if (isEqualValues(value, oldValue)) {
-            //Update raw data by link if same Object has been set
+            // Update raw data by link if same Object has been set
             if (typeof value === 'object') {
                this._setRawDataValue(key, value);
             }
          } else {
-            //Try to set every field
+            // Try to set every field
             try {
-               //Work with relations
+               // Work with relations
                this._removeChild(oldValue);
 
-               //Save value to rawData
+               // Save value to rawData
                if (isPrimitive(value)) {
                   value = this._setRawDataValue(key, value);
                } else {
                   this._setRawDataValue(key, value);
                }
 
-               //Work with relations
+               // Work with relations
                this._addChild(value, this._getRelationNameForField(key));
 
-               //Compare once again because value can change the type during Factory converting
+               // Compare once again because value can change the type during Factory converting
                if (value !== oldValue) {
                   if (!this.has(key)) {
                      this._addRawDataField(key);
@@ -436,19 +452,19 @@ export default class Record extends mixin(
                   }
                   changed[key] = value;
 
-                  //Compare new value with initial value
+                  // Compare new value with initial value
                   if (
                      this._hasChangedField(key) &&
                      getValueOf(this._getChangedFieldValue(key)) === getValueOf(value)
                   ) {
-                     //Revert changed if new value is equal initial value
+                     // Revert changed if new value is equal initial value
                      this._unsetChangedField(key);
                   } else {
-                     //Set changed if new value is not equal initial value
+                     // Set changed if new value is not equal initial value
                      this._setChangedField(key, oldValue);
                   }
 
-                  //Cache value if necessary
+                  // Cache value if necessary
                   if (this._isFieldValueCacheable(value)) {
                      this._fieldsCache.set(key, value);
                      if (this._haveToClone(value)) {
@@ -460,7 +476,7 @@ export default class Record extends mixin(
                   }
                }
             } catch (err) {
-               //Collecting errors for every field
+               // Collecting errors for every field
                errors.push(err);
             }
          }
@@ -469,15 +485,9 @@ export default class Record extends mixin(
       return changed;
    }
 
-   //endregion
+   // endregion
 
-   //region IObservableObject
-
-   readonly '[Types/_entity/IObservableObject]': boolean;
-
-   //endregion
-
-   //region IEnumerable
+   // region IEnumerable
 
    readonly '[Types/_collection/IEnumerable]': boolean;
 
@@ -503,14 +513,14 @@ export default class Record extends mixin(
     *    fields.join(', ');//'id, login, group_id'
     * </pre>
     */
-   getEnumerator() {
-      const ArrayEnumerator = resolve('Types/collection:enumerator.Arraywise');
-      return new ArrayEnumerator(this._getRawDataFields());
+   getEnumerator(): enumerator.Arraywise<any> {
+      return create<enumerator.Arraywise<any>>('Types/collection:enumerator.Arraywise', this._getRawDataFields());
    }
 
    /**
     * Перебирает все поля записи
-    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название поля, вторым - его значение.
+    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название
+    * поля, вторым - его значение.
     * @param {Object} [context] Контекст вызова callback.
     * @example
     * Переберем все поля записи:
@@ -530,8 +540,8 @@ export default class Record extends mixin(
     *    fields.join(', ');//'id, login, group_id'
     * </pre>
     */
-   each(callback, context?: Object) {
-      let enumerator = this.getEnumerator();
+   each(callback: Function, context?: object): void {
+      const enumerator = this.getEnumerator();
       let name;
       while (enumerator.moveNext()) {
          name = enumerator.getCurrent();
@@ -543,13 +553,19 @@ export default class Record extends mixin(
       }
    }
 
-   //endregion
+   // endregion
 
-   //region IEquatable
+   // region IObservableObject
+
+   readonly '[Types/_entity/IObservableObject]': boolean;
+
+   // endregion
+
+   // region IEquatable
 
    readonly '[Types/_entity/IEquatable]': boolean;
 
-   isEqual(to) {
+   isEqual(to: any): boolean {
       if (to === this) {
          return true;
       }
@@ -560,21 +576,20 @@ export default class Record extends mixin(
          return false;
       }
 
-      //TODO: compare using formats
       return JSON.stringify(this._getRawData()) === JSON.stringify(to.getRawData(true));
    }
 
-   //endregion
+   // endregion
 
-   //region IReceiver
+   // region IReceiver
 
    readonly '[Types/_entity/relation/IReceiver]': boolean;
 
-   relationChanged(which: any, route: Array<string>): any {
-      let checkRawData = (fieldName, target) => {
-         let map = {};
-         let adapter = this._getRawDataAdapter();
-         let hasInRawData = adapter.has(fieldName);
+   relationChanged(which: any, route: string[]): any {
+      const checkRawData = (fieldName, target) => {
+         const map = {};
+         const adapter = this._getRawDataAdapter();
+         const hasInRawData = adapter.has(fieldName);
 
          // Apply child's raw data to the self raw data if necessary
          if (hasInRawData) {
@@ -587,9 +602,9 @@ export default class Record extends mixin(
 
          return map;
       };
-      let name = route[0];
-      let fieldName = this._getFieldFromRelationName(name);
-      let target = which.target;
+      const name = route[0];
+      const fieldName = this._getFieldFromRelationName(name);
+      const target = which.target;
 
       switch (which.original) {
          case Record.prototype.acceptChanges:
@@ -622,25 +637,36 @@ export default class Record extends mixin(
 
          default:
             if (fieldName) {
-               let map = checkRawData(fieldName, target);
+               const map = checkRawData(fieldName, target);
 
                // Set which data to field name => value
                return {
-                  target: target,
+                  target,
                   data: map
                };
             }
       }
    }
 
-   //endregion
+   protected _getRelationNameForField(name: string): string {
+      return FIELD_RELATION_PREFIX + name;
+   }
 
-   //region IProducible
+   protected _getFieldFromRelationName(name: string): string {
+      name += '';
+      if (name.substr(0, FIELD_RELATION_PREFIX.length) === FIELD_RELATION_PREFIX) {
+         return name.substr(FIELD_RELATION_PREFIX.length);
+      }
+   }
+
+   // endregion
+
+   // region IProducible
 
    readonly '[Types/_entity/IProducible]': boolean;
 
    static produceInstance(data?: any, options?: any): any {
-      let instanceOptions: IOptions = {
+      const instanceOptions: IOptions = {
          rawData: data
       };
       if (options && options.adapter) {
@@ -649,46 +675,46 @@ export default class Record extends mixin(
       return new this(instanceOptions);
    }
 
-   //endregion
+   // endregion
 
-   //region ICloneable
+   // region ICloneable
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone: (shallow?: boolean) => Record;
+   clone: <Record>(shallow?: boolean) => Record;
 
-   //endregion
+   // endregion
 
-   //region IVersionable
+   // region IVersionable
 
    readonly '[Types/_entity/IVersionable]': boolean;
 
    getVersion: () => number;
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-      state = FormattableMixin._getSerializableState.call(this, state);
-      // @ts-ignore
-      state._changedFields = this[$changedFields];
+   _getSerializableState(state: ICommonSerializableState): ISerializableState {
+      let resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
+      resultState = FormattableMixin._getSerializableState.call(this, resultState);
+      resultState._changedFields = this[$changedFields as string];
 
-      //keep format if record has owner with format
-      if (state.$options.owner && state.$options.owner._hasFormat()) {
-         state._format = state.$options.owner.getFormat();
+      // Keep format if record has owner with format
+      if (resultState.$options.owner && resultState.$options.owner._hasFormat()) {
+         resultState._format = resultState.$options.owner.getFormat();
       }
 
-      delete state.$options.owner;
+      delete resultState.$options.owner;
 
-      return state;
+      return resultState;
    }
 
-   _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      let fromFormattableMixin = FormattableMixin._setSerializableState(state);
-      return function() {
+   _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      const fromFormattableMixin = FormattableMixin._setSerializableState(state);
+
+      return function(): void {
          fromSerializableMixin.call(this);
          fromFormattableMixin.call(this);
 
@@ -699,20 +725,20 @@ export default class Record extends mixin(
       };
    }
 
-   //endregion
+   // endregion
 
-   //region FormattableMixin
+   // region FormattableMixin
 
-   setRawData(rawData) {
+   setRawData(rawData: any): void {
       FormattableMixin.setRawData.call(this, rawData);
       this._nextVersion();
       this._clearFieldsCache();
       this._notifyChange();
    }
 
-   addField(format, at?, value?) {
+   addField(format: Field | IFieldDeclaration, at?: number, value?: any): void {
       this._checkFormatIsWritable();
-      format = this._buildField(format);
+      format = this._buildField(format) as Field;
       FormattableMixin.addField.call(this, format, at);
       if (value !== undefined) {
          this.set(format.getName(), value);
@@ -721,7 +747,7 @@ export default class Record extends mixin(
       this._nextVersion();
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       this._checkFormatIsWritable();
       this._nextVersion();
 
@@ -732,11 +758,11 @@ export default class Record extends mixin(
       this._childChanged(Record.prototype.removeField);
    }
 
-   removeFieldAt(at) {
+   removeFieldAt(at: number): void {
       this._checkFormatIsWritable();
       this._nextVersion();
 
-      let field = this._getFormat(true).at(at);
+      const field = this._getFormat(true).at(at);
       if (field) {
          this._fieldsCache.delete(field.getName());
          this._fieldsClone.delete(field.getName());
@@ -746,8 +772,8 @@ export default class Record extends mixin(
       this._childChanged(Record.prototype.removeFieldAt);
    }
 
-   protected _hasFormat() {
-      let owner = this.getOwner();
+   protected _hasFormat(): boolean {
+      const owner = this.getOwner();
       if (owner) {
          return owner._hasFormat();
       } else {
@@ -755,8 +781,8 @@ export default class Record extends mixin(
       }
    }
 
-   protected _getFormat(build) {
-      let owner = this.getOwner();
+   protected _getFormat(build: boolean): format.Format<Field> {
+      const owner = this.getOwner();
       if (owner) {
          return owner._getFormat(build);
       } else {
@@ -764,8 +790,8 @@ export default class Record extends mixin(
       }
    }
 
-   protected _getFieldFormat(name, adapter) {
-      let owner = this.getOwner();
+   protected _getFieldFormat(name: string, adapter: IAdapter): Field {
+      const owner = this.getOwner();
       if (owner) {
          return owner._getFieldFormat(name, adapter);
       } else {
@@ -778,7 +804,7 @@ export default class Record extends mixin(
     * @return {Types/_entity/adapter/IRecord}
     * @protected
     */
-   protected _createRawDataAdapter() {
+   protected _createRawDataAdapter(): IRecord {
       return this._getAdapter().forRecord(this._getRawData(true));
    }
 
@@ -786,16 +812,19 @@ export default class Record extends mixin(
     * Проверяет, что формат записи доступен для записи
     * @protected
     */
-   protected _checkFormatIsWritable() {
-      let owner = this.getOwner();
+   protected _checkFormatIsWritable(): void {
+      const owner = this.getOwner();
       if (owner) {
-         throw new Error('Record format has read only access if record belongs to recordset. You should change recordset format instead.');
+         throw new Error(
+            'Record format has read only access if record belongs to recordset. ' +
+            'You should change recordset format instead.'
+         );
       }
    }
 
-   //endregion
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает признак, что поле с указанным именем было изменено.
@@ -828,7 +857,7 @@ export default class Record extends mixin(
     *    article.isChanged();//true
     * </pre>
     */
-   isChanged(name) {
+   isChanged(name: string): boolean {
       return name
          ? this._hasChangedField(name)
          : this.getChanged().length > 0;
@@ -856,14 +885,14 @@ export default class Record extends mixin(
     *    rs2.at(0).getOwner() === rs2;//true
     * </pre>
     */
-   getOwner() {
+   getOwner(): RecordSet<Record> {
       return this._$owner;
    }
 
    /**
     * Отвязывает запись от рекордсета: сбрасывает ссылку на владельца и устанавливает состояние detached.
     */
-   detach() {
+   detach(): void {
       this._$owner = null;
       this.setState(STATES.DETACHED);
    }
@@ -889,7 +918,7 @@ export default class Record extends mixin(
     *    record.getState() === RecordState.DETACHED;//true
     * </pre>
     */
-   getState() {
+   getState(): string {
       return this._$state;
    }
 
@@ -905,7 +934,7 @@ export default class Record extends mixin(
     *    record.setState(Record.RecordState.DELETED);
     * </pre>
     */
-   setState(state) {
+   setState(state: string): void {
       this._$state = state;
    }
 
@@ -932,7 +961,7 @@ export default class Record extends mixin(
     *    article.getChanged();//['date', 'title']
     * </pre>
     */
-   getChanged() {
+   getChanged(): string[] {
       return Object.keys(this._changedFields);
    }
 
@@ -948,9 +977,11 @@ export default class Record extends mixin(
     *       </ul>
     *    </li>
     * </ul>
-    * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
+    * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в
+    * этом случае меняется только если fields включает в себя весь набор измененных полей.
     * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
+    * acceptChanges всех владельцев.
     * @example
     * Подтвердим изменения в записи:
     * <pre>
@@ -989,7 +1020,7 @@ export default class Record extends mixin(
     *    article.getState() === RecordState.CHANGED;//true
     * </pre>
     */
-   acceptChanges(fields?: Array<string>, spread?: false) {
+   acceptChanges(fields?: string[], spread?: false): void {
       if (spread === undefined && typeof fields === 'boolean') {
          spread = fields;
          fields = undefined;
@@ -1031,9 +1062,11 @@ export default class Record extends mixin(
     *    <li>Отменяются изменения всех полей;
     *    <li>{@link state State} возвращается к состоянию, в котором он был сразу после вызова acceptChanges.</li>
     * </ul>
-    * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
+    * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в
+    * этом случае меняется только если fields включает в себя весь набор измененных полей.
     * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
+    * acceptChanges всех владельцев.
     * @example
     * Отменим изменения в записи:
     * <pre>
@@ -1074,13 +1107,13 @@ export default class Record extends mixin(
     *    article.get('password');//'123'
     * </pre>
     */
-   rejectChanges(fields?: Array<string>, spread?: false) {
+   rejectChanges(fields?: string[], spread?: false): void {
       if (spread === undefined && typeof fields === 'boolean') {
          spread = fields;
          fields = undefined;
       }
 
-      let toSet = {};
+      const toSet = {};
       if (fields === undefined) {
          fields = this.getChanged();
       } else if (!(fields instanceof Array)) {
@@ -1093,7 +1126,7 @@ export default class Record extends mixin(
       });
 
       this.set(toSet);
-      for (let name in toSet) {
+      for (const name in toSet) {
          if (toSet.hasOwnProperty(name)) {
             this._unsetChangedField(name);
          }
@@ -1121,36 +1154,25 @@ export default class Record extends mixin(
     * </pre>
     */
    toString(): string {
-      let result = {};
+      const result = {};
       this.each((key, value) => {
          result[key] = value;
       });
       return JSON.stringify(result);
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
-
-   protected _getRelationNameForField(name: string): string {
-      return FIELD_RELATION_PREFIX + name;
-   }
-
-   protected _getFieldFromRelationName(name: string): string {
-      name += '';
-      if (name.substr(0, FIELD_RELATION_PREFIX.length) === FIELD_RELATION_PREFIX) {
-         return name.substr(FIELD_RELATION_PREFIX.length);
-      }
-   }
+   // region Proteted methods
 
    /**
     * Проверяет наличие ошибок
     * @param {Array.<Error>} errors Массив ошибок
     * @protected
     */
-   protected _checkErrors(errors: Error[]) {
+   protected _checkErrors(errors: Error[]): void {
       if (errors.length) {
-         //Looking for simple Error (use compare by >) that has priority to show.
+         // Looking for simple Error (use compare by >) that has priority to show.
          let error = errors[0];
          for (let i = errors.length; i > 0; i--) {
             if (error > errors[i]) {
@@ -1168,11 +1190,11 @@ export default class Record extends mixin(
     * @return {Object}
     * @protected
     */
-   protected _getHashMap(name: string | Object, value?: any): Object {
+   protected _getHashMap(name: string | Object, value?: any): object {
       let map = name;
       if (!(map instanceof Object)) {
          map = {};
-         map[<string>name] = value;
+         map[name as string] = value;
       }
       return map;
    }
@@ -1181,11 +1203,9 @@ export default class Record extends mixin(
     * Обнуляет кэш значений полей
     * @protected
     */
-   protected _clearFieldsCache() {
-      // @ts-ignore
-      this[$fieldsCache] = null;
-      // @ts-ignore
-      this[$fieldsClone] = null;
+   protected _clearFieldsCache(): void {
+      this[$fieldsCache as string] = null;
+      this[$fieldsClone as string] = null;
    }
 
    /**
@@ -1219,19 +1239,19 @@ export default class Record extends mixin(
     * @protected
     */
    protected _getRawDataValue(name: string): any {
-      let adapter = this._getRawDataAdapter();
+      const adapter = this._getRawDataAdapter();
       if (!adapter.has(name)) {
          return;
       }
 
-      let value = adapter.get(name);
-      let format = this._getFieldFormat(name, adapter);
+      const value = adapter.get(name);
+      const format = this._getFieldFormat(name, adapter);
 
       return Factory.cast(
          value,
          this._getFieldType(format),
          {
-            format: format,
+            format,
             adapter: this._getAdapter()
          }
       );
@@ -1245,7 +1265,7 @@ export default class Record extends mixin(
     * @return {*} Значение поля, сконвертированное фабрикой
     * @protected
     */
-   protected _setRawDataValue(name, value, compatible?: boolean) {
+   protected _setRawDataValue(name: string, value: any, compatible?: boolean): void {
       if (!compatible &&
          value &&
          value['[Types/_entity/FormattableMixin]']
@@ -1253,7 +1273,7 @@ export default class Record extends mixin(
          this._checkAdapterCompatibility(value.getAdapter());
       }
 
-      let adapter = this._getRawDataAdapter();
+      const adapter = this._getRawDataAdapter();
 
       value = Factory.serialize(value, {
          format: this._getFieldFormat(name, adapter),
@@ -1270,7 +1290,7 @@ export default class Record extends mixin(
     * @param {Object} [map] Измененные поля
     * @protected
     */
-   protected _notifyChange(map?: Object) {
+   protected _notifyChange(map?: object): void {
       map = map || {};
       this._childChanged(map);
       this._nextVersion();
@@ -1281,9 +1301,8 @@ export default class Record extends mixin(
     * Очищает информацию об измененных полях
     * @protected
     */
-   protected _clearChangedFields() {
-      // @ts-ignore
-      this[$changedFields] = {};
+   protected _clearChangedFields(): void {
+      this[$changedFields as string] = {};
    }
 
    /**
@@ -1292,7 +1311,7 @@ export default class Record extends mixin(
     * @return {Boolean}
     * @protected
     */
-   protected _hasChangedField(name) {
+   protected _hasChangedField(name: string): boolean {
       return this._changedFields.hasOwnProperty(name);
    }
 
@@ -1302,7 +1321,7 @@ export default class Record extends mixin(
     * @return {*}
     * @protected
     */
-   protected _getChangedFieldValue(name) {
+   protected _getChangedFieldValue(name: string): any {
       return this._changedFields[name];
    }
 
@@ -1313,11 +1332,9 @@ export default class Record extends mixin(
     * @param {Boolean} byLink Значение изменилось по ссылке
     * @protected
     */
-   protected _setChangedField(name, value, byLink?: boolean) {
-      // @ts-ignore
-      if (!this[$changedFields].hasOwnProperty(name)) {
-         // @ts-ignore
-         this[$changedFields][name] = [value, Boolean(byLink)];
+   protected _setChangedField(name: string, value: any, byLink?: boolean): void {
+      if (!this[$changedFields as string].hasOwnProperty(name)) {
+         this[$changedFields as string][name] = [value, Boolean(byLink)];
       }
       switch (this._$state) {
          case STATES.UNCHANGED:
@@ -1331,24 +1348,42 @@ export default class Record extends mixin(
     * @param {String} name Название поля
     * @protected
     */
-   protected _unsetChangedField(name) {
-      // @ts-ignore
-      delete this[$changedFields][name];
+   protected _unsetChangedField(name: string): void {
+      delete this[$changedFields as string][name];
    }
 
-   //endregion
+   // endregion
 
-   //region Statics
+   // region Deprecated
 
-   static get RecordState() {
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList: any, classExtender: any): Function {
+      logger.info('Types/_entity/Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Record::extend()" method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
+      return coreExtend(this, mixinsList, classExtender);
+   }
+
+   // endregion
+
+   // region Statics
+
+   static get RecordState(): any {
       return STATES;
    }
 
-   static get CACHE_MODE_OBJECTS() {
+   static get CACHE_MODE_OBJECTS(): symbol | string {
       return CACHE_MODE_OBJECTS;
    }
 
-   static get CACHE_MODE_ALL() {
+   static get CACHE_MODE_ALL(): symbol | string {
       return CACHE_MODE_ALL;
    }
 
@@ -1362,13 +1397,14 @@ export default class Record extends mixin(
     * @param {Object} [format] Формат поля
     * @static
     */
-   static addFieldTo(record: Record, name: string, value: any, format?) {
+   static addFieldTo(record: Record, name: string, value: any, format?: IFieldDeclaration): void {
       if (!format) {
-         format = getValueType(value);
-         if (!(format instanceof Object)) {
-            format = {type: format};
+         let detectedFormat = getValueType(value);
+         if (typeof detectedFormat === 'string') {
+            detectedFormat = {name: '', type: detectedFormat};
          }
-         format.name = name;
+         detectedFormat.name = name;
+         format = detectedFormat;
       }
 
       record.addField(format, undefined, value);
@@ -1395,7 +1431,7 @@ export default class Record extends mixin(
     * @return {Types/_entity/Record}
     * @static
     */
-   static fromObject(data, adapter?) {
+   static fromObject(data: any, adapter?: IAdapter | string): Record | null {
       if (data === null) {
          return data;
       }
@@ -1403,13 +1439,13 @@ export default class Record extends mixin(
          return data;
       }
 
-      let record = new Record({
+      const record = new Record({
          adapter: adapter || 'Types/entity:adapter.Json',
          format: []
       });
 
       let sortNames = [];
-      for (let name in data) {
+      for (const name in data) {
          if (data.hasOwnProperty(name)) {
             sortNames.push(name);
          }
@@ -1417,8 +1453,8 @@ export default class Record extends mixin(
       sortNames = sortNames.sort();
 
       for (let i = 0, len = sortNames.length; i < len; i++) {
-         let name = sortNames[i];
-         let value = data[name];
+         const name = sortNames[i];
+         const value = data[name];
 
          if (value === undefined) {
             continue;
@@ -1435,19 +1471,20 @@ export default class Record extends mixin(
     * @function
     * Создает запись c набором полей, ограниченным фильтром.
     * @param {Types/_entity/Record} record Исходная запись
-    * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
+    * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его
+    * значение. Должна вернуть boolean - прошло ли поле фильтр.
     * @return {Types/_entity/Record}
     * @static
     */
-   static filter(record, callback) {
-      let result = new Record({
+   static filter(record: Record, callback: (name: string, value: any) => boolean): Record {
+      const result = new Record({
          adapter: record.getAdapter()
       });
-      let format = record.getFormat();
+      const format = record.getFormat();
 
       format.each((field) => {
-         let name = field.getName();
-         let value = record.get(name);
+         const name = field.getName();
+         const value = record.get(name);
          if (!callback || callback(name, value)) {
             result.addField(field);
             result.set(name, value);
@@ -1468,7 +1505,7 @@ export default class Record extends mixin(
     * @return {Types/_entity/Record}
     * @static
     */
-   static filterFields(record, fields) {
+   static filterFields(record: Record, fields: string[]): Record {
       if (!(fields instanceof Array)) {
          throw new TypeError('Argument "fields" should be an instance of Array');
       }
@@ -1478,55 +1515,35 @@ export default class Record extends mixin(
       });
    }
 
-   //endregion
-
-   //region Deprecated
-
-   /**
-    * @deprecated
-    */
-   static extend(mixinsList:any, classExtender:any) {
-      logger.info('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-      return coreExtend(this, mixinsList, classExtender);
-   }
-
-   //endregion
+   // endregion
 }
 
-Record.prototype['[Types/_entity/Record]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_collection/IEnumerable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/ICloneable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IEquatable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IObject]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IObservableObject]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IProducible]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IVersionable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/relation/IReceiver]'] = true;
-Record.prototype._moduleName = 'Types/entity:Record';
+Object.assign(Record.prototype, {
+   '[Types/_entity/Record]': true,
+   '[Types/_collection/IEnumerable]': true,
+   '[Types/_entity/ICloneable]': true,
+   '[Types/_entity/IEquatable]': true,
+   '[Types/_entity/IObject]': true,
+   '[Types/_entity/IObservableObject]': true,
+   '[Types/_entity/IProducible]': true,
+   '[Types/_entity/IVersionable]': true,
+   '[Types/_entity/relation/IReceiver]': true,
+   _moduleName: 'Types/entity:Record',
+   _$state: STATES.DETACHED,
+   _$cacheMode: CACHE_MODE_OBJECTS,
+   _$cloneChanged: false,
+   _$owner: null,
+   _acceptedState: undefined
+});
 
 /**
  * {Object} Измененные поля и оригинальные значения
  */
-// @ts-ignore
-Record.prototype[$changedFields] = null;
+Record.prototype[$changedFields as string] = null;
 
-Record.prototype._$state = STATES.DETACHED;
-Record.prototype._$cacheMode = CACHE_MODE_OBJECTS;
-Record.prototype._$cloneChanged = false;
-Record.prototype._$owner = null;
-Record.prototype._acceptedState = undefined;
-
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Record.prototype['[WS.Data/Entity/Record]'] = true;
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Record.prototype['[WS.Data/Collection/IEnumerable]'] = true;
 Record.prototype['[WS.Data/Entity/ICloneable]'] = true;
 

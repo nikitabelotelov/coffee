@@ -12,7 +12,7 @@ define('Types/_formatter/_numberWords/utils', [
         while (numAsStr.length > 0) {
             var three = numAsStr.substr(Math.max(numAsStr.length - 3, 0), 3);
             if (three.length !== 0) {
-                //@ts-ignore
+                // @ts-ignore
                 threes.unshift([
                     three.padStart(3, '0'),
                     counter++

@@ -28,29 +28,14 @@ define('Types/_display/TreeItem', [
             _this._$expanded = !!_this._$expanded;
             _this._$hasChildren = !!_this._$hasChildren;
             return _this;
-        }    //region Types/_entity/SerializableMixin
-        //region Types/_entity/SerializableMixin
-        TreeItem.prototype._getSerializableState = function (state) {
-            state = _super.prototype._getSerializableState.call(this, state);    //It's too hard to serialize context related method. It should be restored at class that injects this function.
-            //It's too hard to serialize context related method. It should be restored at class that injects this function.
-            if (typeof state.$options.parent === 'function') {
-                delete state.$options.parent;
-            }
-            return state;
-        };
-        TreeItem.prototype._setSerializableState = function (state) {
-            var fromSuper = _super.prototype._setSerializableState.call(this, state);
-            return function () {
-                fromSuper.call(this);
-            };
-        };    //endregion Types/_entity/SerializableMixin
-              //region Public methods
-              /**
+        }    // endregion Types/_entity/SerializableMixin
+             // region Public methods
+             /**
          * Возвращает родительский узел
          * @return {Types/_display/TreeItem}
          */
-        //endregion Types/_entity/SerializableMixin
-        //region Public methods
+        // endregion Types/_entity/SerializableMixin
+        // region Public methods
         /**
          * Возвращает родительский узел
          * @return {Types/_display/TreeItem}
@@ -198,16 +183,31 @@ define('Types/_display/TreeItem', [
          */
         TreeItem.prototype.getChildrenProperty = function () {
             return this._$childrenProperty;
-        };    //endregion
-              //region Protected methods
+        };    // region Types/_entity/SerializableMixin
+        // region Types/_entity/SerializableMixin
+        TreeItem.prototype._getSerializableState = function (state) {
+            state = _super.prototype._getSerializableState.call(this, state);    // It's too hard to serialize context related method. It should be restored at class that injects this function.
+            // It's too hard to serialize context related method. It should be restored at class that injects this function.
+            if (typeof state.$options.parent === 'function') {
+                delete state.$options.parent;
+            }
+            return state;
+        };
+        TreeItem.prototype._setSerializableState = function (state) {
+            var fromSuper = _super.prototype._setSerializableState.call(this, state);
+            return function () {
+                fromSuper.call(this);
+            };
+        };    // endregion
+              // region Protected methods
               /**
          * Генерирует событие у владельца об изменении свойства элемента.
          * Помимо родительской коллекции уведомляет также и корневой узел дерева.
          * @param {String} property Измененное свойство
          * @protected
          */
-        //endregion
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Генерирует событие у владельца об изменении свойства элемента.
          * Помимо родительской коллекции уведомляет также и корневой узел дерева.
@@ -226,21 +226,17 @@ define('Types/_display/TreeItem', [
     }(CollectionItem_1.default    /** @lends Types/_display/TreeItem.prototype */);
     /** @lends Types/_display/TreeItem.prototype */
     exports.default = TreeItem;
-    TreeItem.prototype._moduleName = 'Types/display:TreeItem';
-    TreeItem.prototype['[Types/_display/TreeItem]'] = true;    // @ts-ignore
-    // @ts-ignore
-    TreeItem.prototype._$parent = undefined;    // @ts-ignore
-    // @ts-ignore
-    TreeItem.prototype._$node = false;    // @ts-ignore
-    // @ts-ignore
-    TreeItem.prototype._$expanded = false;    // @ts-ignore
-    // @ts-ignore
-    TreeItem.prototype._$hasChildren = true;    // @ts-ignore
-    // @ts-ignore
-    TreeItem.prototype._$childrenProperty = '';    // @ts-ignore
-    // @ts-ignore
-    TreeItem.prototype._instancePrefix = 'tree-item-';    // Deprecated
-    // Deprecated
+    Object.assign(TreeItem.prototype, {
+        '[Types/_display/TreeItem]': true,
+        _moduleName: 'Types/display:TreeItem',
+        _$parent: undefined,
+        _$node: false,
+        _$expanded: false,
+        _$hasChildren: true,
+        _$childrenProperty: '',
+        _instancePrefix: 'tree-item-'
+    });    // FIXME: deprecated
+    // FIXME: deprecated
     TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
     di_1.register('Types/display:TreeItem', TreeItem);
 });

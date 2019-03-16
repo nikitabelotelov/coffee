@@ -14,8 +14,8 @@ define('Types/_source/provider/SbisBusinessLogic', [
     'Types/entity',
     'Types/di',
     'Types/util',
-    'Transport/RPCJSON'
-], function (require, exports, tslib_1, entity_1, di_1, util_1, RpcJson) {
+    'Browser/Transport'
+], function (require, exports, tslib_1, entity_1, di_1, util_1, Transport_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var SbisBusinessLogic = /** @class */
@@ -82,7 +82,7 @@ define('Types/_source/provider/SbisBusinessLogic', [
     }(util_1.mixin(Object, entity_1.OptionsToPropertyMixin));
     exports.default = SbisBusinessLogic;
     SbisBusinessLogic.prototype['[Types/_source/provider/SbisBusinessLogic]'] = true;
-    SbisBusinessLogic.prototype._$transport = RpcJson;
+    SbisBusinessLogic.prototype._$transport = Transport_1.RPCJSON;
     SbisBusinessLogic.prototype._nameSpaceSeparator = '.';
     di_1.register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, { instantiate: false });
 });

@@ -97,8 +97,8 @@ define('Types/_entity/OptionsToPropertyMixin', [
                 if (key.substr(0, optionPrefixLen) === optionPrefix) {
                     options[key.substr(optionPrefixLen)] = this[key];
                 }
-            }    //FIXME: get rid of _options
-            //FIXME: get rid of _options
+            }    // FIXME: get rid of _options
+            // FIXME: get rid of _options
             if (this._options) {
                 for (key in this._options) {
                     if (this._options.hasOwnProperty(key) && !(key in options)) {

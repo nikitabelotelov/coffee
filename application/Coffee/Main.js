@@ -3,11 +3,11 @@ define('Coffee/Main', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/Main/Main',
     'Core/ConsoleLogger',
     'css!Coffee/Main/Main'
-], function (require, exports, tslib_1, Base_1, template) {
+], function (require, exports, tslib_1, Control, template) {
     'use strict';
     var Main = /** @class */
     function (_super) {
@@ -18,6 +18,6 @@ define('Coffee/Main', [
             return _this;
         }
         return Main;
-    }(Base_1.Control);
+    }(Control);
     return Main;
 });

@@ -1,4 +1,4 @@
-define('Core/helpers/i18n/wordCaseByNumber',['Core/IoC'], function() {
+define('Core/helpers/i18n/wordCaseByNumber',['Env/Env'], function() {
    /**
     *
     * Модуль, в котором описана функция <b>wordCaseByNumber(num, word0, word1, word2)</b>, которая возвращает слово в нужном падеже в зависимоси от числа.

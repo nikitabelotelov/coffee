@@ -2,7 +2,8 @@
 /**
  * Адаптер для данных в формате СБиС.
  * Работает с форматом данных, который использует БЛ СБИС.
- * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/SbisRecord} и {@link Types/_entity/adapter/SbisTable}.
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/SbisRecord} и
+ * {@link Types/_entity/adapter/SbisTable}.
  * @class Types/_entity/adapter/Sbis
  * @extends Types/_entity/adapter/Abstract
  * @public
@@ -34,7 +35,7 @@ define('Types/_entity/adapter/Sbis', [
             return new SbisRecord_1.default(data);
         };
         Sbis.prototype.getKeyField = function (data) {
-            //TODO: primary key field index can be defined in this._data.k. and can be -1
+            // TODO: primary key field index can be defined in this._data.k. and can be -1
             var index;
             var s;
             if (data && data.s) {

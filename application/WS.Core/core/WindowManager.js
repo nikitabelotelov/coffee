@@ -2,9 +2,9 @@ define('Core/WindowManager', [
    'Core/Abstract',
    'Core/ControlBatchUpdater',
    'Core/core-instance',
-   'Core/constants',
+   'Env/Env',
    'is!browser?jquery'
-],function(Abstract, ControlBatchUpdater, cInstance, isJs) {
+],function(Abstract, ControlBatchUpdater, cInstance, Env) {
    //MOVE_TO КРАЙНОВ
    var WindowManager, moduleClass;
    /**
@@ -19,11 +19,11 @@ define('Core/WindowManager', [
    var WindowManager = new (moduleClass = Abstract.extend(/** @lends Core/WindowManager.prototype */{
       /**
        * @event onAreaFocus Переход фокуса в какую-то область
-       * @param {Core/EventObject} eventObject Дескриптор события
+       * @param {Env/Event:Object} eventObject Дескриптор события
        * @param {Lib/Control/AreaAbstract/AreaAbstract} area Область, в которую перешёл фокус
        *
        * @event zIndexChanged Изменение максимального z-index, который под модальным окном
-       * @param {Core/EventObject} eventObject Дескриптор события
+       * @param {Env/Event:Object} eventObject Дескриптор события
        * @param {Number} maxZIndexBelowModal Максимальный z-index среди тех, которые находятся под модальными окнами,
        * то есть максимальный, но меньший, чем минимальный модальный z-index
        * @example
@@ -343,7 +343,7 @@ define('Core/WindowManager', [
                   if (activeWindow) {
                      // исключительная ситуация, когда в yandex открываем видео, и переключаемся на другую вкладку.
                      // видео открывается в отдельном окошке, оторванном от страницы. в этой ситуации звать фокусировку не надо
-                     if (isJs.browser.yandex) {
+                     if (Env.constants.browser.yandex) {
                         if (activeWindow.getContainer() && !activeWindow.getContainer().closest('body').length) {
                            return;
                         }
@@ -353,7 +353,7 @@ define('Core/WindowManager', [
                   }
                }
             };
-         if (isJs.compat) {
+         if (Env.constants.compat) {
             this._focusIn = $('<a class="ws-focus-in" tabindex="1"></a>').prependTo('body')
                .bind('focusin', moveFocus);
          }
@@ -367,7 +367,7 @@ define('Core/WindowManager', [
             this._focusOut.remove();
          }
          var self = this;
-         if (isJs.compat) {
+         if (Env.constants.compat) {
             this._focusOut = $('<a class="ws-focus-out" tabindex="0"></a>').appendTo('body');
          }
       },
@@ -387,7 +387,7 @@ define('Core/WindowManager', [
       focusToLastElement: function() {
          if (this._focusOut) {
             this._focusControlled = true;
-            if (isJs.compat) {
+            if (Env.constants.compat) {
                $('body').append(this._focusOut);
             }
             this._focusOut.focus();

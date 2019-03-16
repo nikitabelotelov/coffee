@@ -3,11 +3,11 @@ define('Coffee/Info', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/Info/Info',
     'Coffee/Data/DataStore',
     'css!Coffee/Info/Info'
-], function (require, exports, tslib_1, Base_1, template, DataStore_1) {
+], function (require, exports, tslib_1, Control, template, DataStore_1) {
     'use strict';
     var Info = /** @class */
     function (_super) {
@@ -31,6 +31,6 @@ define('Coffee/Info', [
             DataStore_1.DataStore.removeHandler('currentInfoUpdate');
         };
         return Info;
-    }(Base_1.Control);
+    }(Control);
     return Info;
 });

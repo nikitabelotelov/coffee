@@ -72,13 +72,11 @@ define('Types/_collection/enumerator/Objectwise', [
         return Objectwise;
     }();
     exports.default = Objectwise;
-    Objectwise.prototype['[Types/_collection/enumerator/Objectwise]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Objectwise.prototype._items = null;    // @ts-ignore
-    // @ts-ignore
-    Objectwise.prototype._keys = null;    // @ts-ignore
-    // @ts-ignore
-    Objectwise.prototype._index = -1;    // @ts-ignore
-    // @ts-ignore
-    Objectwise.prototype._filter = null;
+    Object.assign(Objectwise.prototype, {
+        '[Types/_collection/enumerator/Objectwise]': true,
+        _items: null,
+        _keys: null,
+        _index: -1,
+        _filter: null
+    });
 });

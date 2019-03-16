@@ -42,14 +42,14 @@ define('Types/_entity/relation/OneToMany', [
             this._childToParent = null;
             this._childToRelation = null;
             _super.prototype.destroy.call(this);
-        };    //region Public methods
+        };    // region Public methods
               /**
          * Добавляет отношение "родитель - ребенок"
          * @param {Object} parent Родитель
          * @param {Object} child Ребенок
          * @param {String} [name] Название отношений
          */
-        //region Public methods
+        // region Public methods
         /**
          * Добавляет отношение "родитель - ребенок"
          * @param {Object} parent Родитель
@@ -120,16 +120,16 @@ define('Types/_entity/relation/OneToMany', [
         OneToMany.prototype.getParent = function (child) {
             var parent = this._childToParent.get(child);
             return parent !== undefined && isAlive(parent) ? parent : undefined;
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Добавляет ребенка в список родителя
          * @param {Object} parent Родитель
          * @param {Object} child Ребенок
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Добавляет ребенка в список родителя
          * @param {Object} parent Родитель

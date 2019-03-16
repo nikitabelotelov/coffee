@@ -37,12 +37,12 @@ define('Types/_entity/Identity', [
                 }
             }
             this._value = value;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает значение поля таблицы.
          * @return {Number|Null}
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает значение поля таблицы.
          * @return {Number|Null}

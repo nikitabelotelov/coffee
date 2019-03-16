@@ -255,7 +255,7 @@ define('Types/_collection/IndexedEnumeratorMixin', [
         },
         /**
          * Удаляет индексы при изменении исходной коллекции
-         * @param {Core/EventObject} event Дескриптор события.
+         * @param {Env/Event.Object} event Дескриптор события.
          * @param {String} action Действие, приведшее к изменению.
          * @param {Array.<*>} newItems Новые элементы коллекции.
          * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.

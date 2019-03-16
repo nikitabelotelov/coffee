@@ -19,7 +19,7 @@ define('Types/_entity/adapter/JsonFormatMixin', [
          * @property {Object.<Types/_entity/format/Field>} Форматы полей
          */
         _format: null,
-        //region Public methods
+        // region Public methods
         constructor: function () {
             this._format = {};
         },
@@ -67,8 +67,8 @@ define('Types/_entity/adapter/JsonFormatMixin', [
         removeFieldAt: function () {
             throw new Error('Method ' + this._moduleName + '::removeFieldAt() doesn\'t supported');
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion
+        // region Protected methods
         _touchData: function () {
             if (!(this._data instanceof Object)) {
                 this._data = {};
@@ -85,8 +85,8 @@ define('Types/_entity/adapter/JsonFormatMixin', [
                 name: name,
                 type: 'string'
             });
-        }    //endregion Protected methods
+        }    // endregion
     };
-    //endregion Protected methods
+    // endregion
     exports.default = JsonFormatMixin;
 });

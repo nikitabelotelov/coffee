@@ -2,9 +2,9 @@
 define('View/Executor/_Expressions/ContextResolver', [
     'require',
     'exports',
-    'Core/IoC',
+    'Env/Env',
     'Core/DataContext'
-], function (require, exports, IoC, DataContext) {
+], function (require, exports, Env_1, DataContext) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var whiteList = {
@@ -45,7 +45,7 @@ define('View/Executor/_Expressions/ContextResolver', [
                     // if (!(ctx[i] instanceof DataContext))
                     //    IoC.resolve('ILogger').error(null, 'Context field ' + i + ' === ' + ctx[i] + ' should be instance of Core/DataContext');
                     if (ctx[i] && ctx[i]._moduleName && !whiteList[ctx[i]._moduleName]) {
-                        IoC.resolve('ILogger').error('Wrong context field', ctx[i]._moduleName + '. In control: ' + inst._moduleName + '. Only allowed context fields: ' + Object.keys(whiteList));
+                        Env_1.IoC.resolve('ILogger').error('Wrong context field', ctx[i]._moduleName + '. In control: ' + inst._moduleName + '. Only allowed context fields: ' + Object.keys(whiteList));
                     }
                     currentCtx[i] = ctx[i];
                     if (ctx[i] && ctx[i].getVersion === DataContext.prototype.getVersion) {
@@ -71,7 +71,7 @@ define('View/Executor/_Expressions/ContextResolver', [
         var contextTypes = controlClass.contextTypes ? controlClass.contextTypes() : {};
         var resolvedContext = {};
         if (!contextTypes) {
-            IoC.resolve('ILogger').error(null, 'Context types are not defined');
+            Env_1.IoC.resolve('ILogger').error(null, 'Context types are not defined');
         } else {
             for (var key in contextTypes) {
                 if (!(currentContext[key] instanceof contextTypes[key])) {

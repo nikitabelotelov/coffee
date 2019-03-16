@@ -3,8 +3,8 @@ define('UI/_base/DepsCollector', [
     'require',
     'exports',
     'View/Logger',
-    'Core/IoC'
-], function (require, exports, Logger, IoC) {
+    'Env/Env'
+], function (require, exports, Logger, Env_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DEPTYPES = {
@@ -66,7 +66,7 @@ define('UI/_base/DepsCollector', [
         if (res && res.length) {
             return res[0].slice(1);
         }
-        IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
+        Env_1.IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
         return '';
     }
     function isThemedCss(key) {

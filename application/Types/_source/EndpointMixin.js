@@ -7,18 +7,21 @@
  */
 define('Types/_source/EndpointMixin', [
     'require',
-    'exports'
-], function (require, exports) {
+    'exports',
+    'tslib'
+], function (require, exports, tslib_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */
     {
         '[Types/_source/EndpointMixin]': true,
         /**
-         * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
+         * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к
+         * функциональным возможностям источника данных.
          * @name Types/_source/EndpointMixin#endpoint
          * @remark
-         * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет интерпретироваться как контракт (endpoint.contract).
+         * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
+         * интерпретироваться как контракт (endpoint.contract).
          * @see getEndPoint
          * @example
          * Подключаем пользователей через HTTP API:
@@ -50,17 +53,17 @@ define('Types/_source/EndpointMixin', [
         constructor: function (options) {
             this._$endpoint = this._$endpoint || {};
             if (options) {
-                //Shortcut support
+                // Shortcut support
                 if (typeof options.endpoint === 'string') {
                     options.endpoint = { contract: options.endpoint };
                 }
                 if (options.endpoint instanceof Object) {
-                    options.endpoint = Object.assign({}, this._$endpoint, options.endpoint);
+                    options.endpoint = tslib_1.__assign({}, this._$endpoint, options.endpoint);
                 }
             }
         },
         getEndpoint: function () {
-            return Object.assign({}, this._$endpoint);
+            return tslib_1.__assign({}, this._$endpoint);
         }
     };
     exports.default = EndpointMixin;

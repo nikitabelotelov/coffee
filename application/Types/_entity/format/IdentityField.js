@@ -28,12 +28,12 @@ define('Types/_entity/format/IdentityField', [
         /** @lends Types/_entity/format/IdentityField.prototype */
         function IdentityField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает разделитель
          * @return {String}
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает разделитель
          * @return {String}

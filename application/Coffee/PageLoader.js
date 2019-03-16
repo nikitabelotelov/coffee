@@ -3,9 +3,9 @@ define('Coffee/PageLoader', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/PageLoader/PageLoader'
-], function (require, exports, tslib_1, Base_1, template) {
+], function (require, exports, tslib_1, Control, template) {
     'use strict';
     var PageLoader = /** @class */
     function (_super) {
@@ -16,30 +16,34 @@ define('Coffee/PageLoader', [
             _this.pageClassLoaded = null;
             return _this;
         }
-        PageLoader.prototype.changePage = function (newPage) {
+        PageLoader.prototype.changePage = function (newPage, base) {
             var _this = this;
             return new Promise(function (resolve, reject) {
                 // @ts-ignore
-                require(['Coffee/' + newPage], function (newPageClass) {
+                var basePath = base;
+                if (base) {
+                    basePath = base + '/';
+                }
+                require(['Coffee/' + basePath + newPage], function (newPageClass) {
                     _this.pageClassLoaded = newPageClass;
                     resolve(null);
                 });
             });
         };
         PageLoader.prototype._beforeMount = function (cfg) {
-            return this.changePage(cfg.pageId || cfg.default);
+            return this.changePage(cfg.pageId || cfg.default, cfg.base || '');
         };
         PageLoader.prototype._beforeUpdate = function (newCfg) {
             var _this = this;    // @ts-ignore
             // @ts-ignore
             if (this._options.pageId !== newCfg.pageId) {
-                this.changePage(newCfg.pageId || newCfg.default).then(function () {
+                this.changePage(newCfg.pageId || newCfg.default, newCfg.base || '').then(function () {
                     // @ts-ignore
                     _this._forceUpdate();
                 });
             }
         };
         return PageLoader;
-    }(Base_1.Control);
+    }(Control);
     return PageLoader;
 });

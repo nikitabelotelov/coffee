@@ -107,10 +107,10 @@ define('Types/_collection/RecordSet', [
                 if ('meta' in options) {
                     _this._$metaData = options.meta;
                 }
-            }    //Model can have it's own format. Inherit that format if RecordSet's format is not defined.
-                 //FIXME: It only works with model's constructor injection not string alias
-            //Model can have it's own format. Inherit that format if RecordSet's format is not defined.
-            //FIXME: It only works with model's constructor injection not string alias
+            }    // Model can have it's own format. Inherit that format if RecordSet's format is not defined.
+                 // FIXME: It only works with model's constructor injection not string alias
+            // Model can have it's own format. Inherit that format if RecordSet's format is not defined.
+            // FIXME: It only works with model's constructor injection not string alias
             if (!_this._$format && _this._$model && typeof _this._$model === 'function' && _this._$model.prototype._$format) {
                 _this._$format = _this._$model.prototype._$format;
             }
@@ -125,13 +125,88 @@ define('Types/_collection/RecordSet', [
             _this._publish('onPropertyChange');
             return _this;
         }
+        RecordSet.produceInstance = function (data, options) {
+            var instanceOptions = { rawData: data };
+            if (options) {
+                if (options.adapter) {
+                    instanceOptions.adapter = options.adapter;
+                }
+                if (options.model) {
+                    instanceOptions.model = options.model;
+                }
+            }
+            return new this(instanceOptions);
+        };    // endregion Protected methods
+              // region Statics
+              /**
+         * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
+         * @param {Types/_collection/RecordSet} items Исходный рекордсет
+         * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
+         * @return {Types/_entity/Record} Патч
+         */
+        // endregion Protected methods
+        // region Statics
+        /**
+         * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
+         * @param {Types/_collection/RecordSet} items Исходный рекордсет
+         * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
+         * @return {Types/_entity/Record} Патч
+         */
+        RecordSet.patch = function (items, names) {
+            names = names || [
+                'changed',
+                'added',
+                'removed'
+            ];
+            var filter = function (state) {
+                var result = new RecordSet({
+                    adapter: items.getAdapter(),
+                    idProperty: items.getIdProperty()
+                });
+                items.each(function (item) {
+                    result.add(item);
+                }, state);
+                return result;
+            };
+            var getIds = function (items) {
+                var result = [];
+                var idProperty = items.getIdProperty();
+                items.each(function (item) {
+                    result.push(item.get(idProperty));
+                });
+                return result;
+            };
+            var result = new entity_1.Record({
+                format: [
+                    {
+                        name: names[0],
+                        type: 'recordset'
+                    },
+                    {
+                        name: names[1],
+                        type: 'recordset'
+                    },
+                    {
+                        name: names[2],
+                        type: 'array',
+                        kind: 'string'
+                    }
+                ],
+                adapter: items.getAdapter()
+            });
+            result.set(names[0], filter(RECORD_STATE.CHANGED));
+            result.set(names[1], filter(RECORD_STATE.ADDED));
+            result.set(names[2], getIds(filter(RECORD_STATE.DELETED)));
+            result.acceptChanges();
+            return result;
+        };
         RecordSet.prototype.destroy = function () {
             this._$model = '';
             this._$metaData = null;
             this._metaData = null;
             _super.prototype.destroy.call(this);
-        };    //region IReceiver
-        //region IReceiver
+        };    // region IReceiver
+        // region IReceiver
         RecordSet.prototype.relationChanged = function (which, route) {
             var index = this.getIndex(which.target);
             if (index > -1) {
@@ -144,32 +219,20 @@ define('Types/_collection/RecordSet', [
                 }
             }
             return _super.prototype.relationChanged.call(this, which, route);
-        };    //endregion IObservableObject
-              //region ICloneable
-        //endregion IObservableObject
-        //region ICloneable
+        };    // endregion IObservableObject
+              // region ICloneable
+        // endregion IObservableObject
+        // region ICloneable
         RecordSet.prototype.clone = function (shallow) {
             var clone = _super.prototype.clone.call(this, shallow);
             if (shallow) {
                 clone._$items = this._$items.slice();
             }
             return clone;
-        };
-        RecordSet.produceInstance = function (data, options) {
-            var instanceOptions = { rawData: data };
-            if (options) {
-                if (options.adapter) {
-                    instanceOptions.adapter = options.adapter;
-                }
-                if (options.model) {
-                    instanceOptions.model = options.model;
-                }
-            }
-            return new this(instanceOptions);
-        };    //endregion IProducible
-              //region IEquatable
-        //endregion IProducible
-        //region IEquatable
+        };    // endregion IProducible
+              // region IEquatable
+        // endregion IProducible
+        // region IEquatable
         RecordSet.prototype.isEqual = function (to) {
             if (to === this) {
                 return true;
@@ -179,11 +242,11 @@ define('Types/_collection/RecordSet', [
             }
             if (!(to instanceof RecordSet)) {
                 return false;
-            }    //TODO: compare using formats
-            //TODO: compare using formats
+            }    // TODO: compare using formats
+            // TODO: compare using formats
             return object_1.isEqual(this._getRawData(), to.getRawData(true));
-        };    //endregion IEquatable
-              //region IEnumerable
+        };    // endregion IEquatable
+              // region IEnumerable
               /**
          * Возвращает энумератор для перебора записей рекордсета.
          * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
@@ -223,8 +286,8 @@ define('Types/_collection/RecordSet', [
          *    });
          * </pre>
          */
-        //endregion IEquatable
-        //region IEnumerable
+        // endregion IEquatable
+        // region IEnumerable
         /**
          * Возвращает энумератор для перебора записей рекордсета.
          * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
@@ -369,10 +432,10 @@ define('Types/_collection/RecordSet', [
                     callback.call(context, record, index++, this);
                 }
             }
-        };    //endregion IEnumerable
-              //region List
-        //endregion IEnumerable
-        //region List
+        };    // endregion IEnumerable
+              // region List
+        // endregion IEnumerable
+        // region List
         RecordSet.prototype.clear = function () {
             var item;
             for (var i = 0, count = this._$items.length; i < count; i++) {
@@ -545,8 +608,8 @@ define('Types/_collection/RecordSet', [
             return item;
         };
         RecordSet.prototype.move = function (from, to) {
-            this._getRecord(from);    //force create record instance
-            //force create record instance
+            this._getRecord(from);    // force create record instance
+            // force create record instance
             this._getRawDataAdapter().move(from, to);
             _super.prototype.move.call(this, from, to);
         };    /**
@@ -648,10 +711,10 @@ define('Types/_collection/RecordSet', [
             if (this._indexer) {
                 return this._indexer;
             }
-            var indexer;    //Custom model possible has different properties collection, this cause switch to the slow not lazy mode
-            //Custom model possible has different properties collection, this cause switch to the slow not lazy mode
+            var indexer;    // Custom model possible has different properties collection, this cause switch to the slow not lazy mode
+            // Custom model possible has different properties collection, this cause switch to the slow not lazy mode
             if (this._$model === this._defaultModel) {
-                //Fast mode: indexing without record instances
+                // Fast mode: indexing without record instances
                 var adapter_1 = this._getAdapter();
                 var tableAdapter_1 = this._getRawDataAdapter();
                 indexer = new Indexer_1.default(this._getRawData(), function () {
@@ -662,7 +725,7 @@ define('Types/_collection/RecordSet', [
                     return adapter_1.forRecord(item).get(property);
                 });
             } else {
-                //Slow mode: indexing use record instances
+                // Slow mode: indexing use record instances
                 indexer = new Indexer_1.default(this._$items, function (items) {
                     return items.length;
                 }, function (items, at) {
@@ -673,10 +736,10 @@ define('Types/_collection/RecordSet', [
             }
             this._indexer = indexer;
             return indexer;
-        };    //endregion List
-              //endregion ObservableList
-        //endregion List
-        //endregion ObservableList
+        };    // endregion List
+              // endregion ObservableList
+        // endregion List
+        // endregion ObservableList
         RecordSet.prototype._itemsSlice = function (begin, end) {
             if (this._isNeedNotifyCollectionChange()) {
                 if (begin === undefined) {
@@ -684,17 +747,17 @@ define('Types/_collection/RecordSet', [
                 }
                 if (end === undefined) {
                     end = this._$items.length;
-                }    //Force create records for event handler
-                //Force create records for event handler
+                }    // Force create records for event handler
+                // Force create records for event handler
                 for (var i = begin; i < end; i++) {
                     this._getRecord(i);
                 }
             }
             return _super.prototype._itemsSlice.call(this, begin, end);
-        };    //endregion ObservableList
-              //region SerializableMixin
-        //endregion ObservableList
-        //region SerializableMixin
+        };    // endregion ObservableList
+              // region SerializableMixin
+        // endregion ObservableList
+        // region SerializableMixin
         RecordSet.prototype._getSerializableState = function (state) {
             state = ObservableList_1.default.prototype._getSerializableState.call(this, state);
             state = entity_1.FormattableMixin._getSerializableState.call(this, state);
@@ -710,10 +773,10 @@ define('Types/_collection/RecordSet', [
                 fromFormattableMixin.call(this);
                 this._instanceId = state._instanceId;
             };
-        };    //endregion SerializableMixin
-              //region FormattableMixin
-        //endregion SerializableMixin
-        //region FormattableMixin
+        };    // endregion SerializableMixin
+              // region FormattableMixin
+        // endregion SerializableMixin
+        // region FormattableMixin
         RecordSet.prototype.setRawData = function (data) {
             var oldItems = this._$items.slice();
             var eventsWasRaised = this._eventRaising;
@@ -776,8 +839,8 @@ define('Types/_collection/RecordSet', [
                 this._clearFormat();
             }
             this._nextVersion();
-        };    //endregion FormattableMixin
-              //region Public methods
+        };    // endregion FormattableMixin
+              // region Public methods
               /**
          * Возвращает конструктор записей, порождаемых рекордсетом.
          * @return {String|Function}
@@ -805,8 +868,8 @@ define('Types/_collection/RecordSet', [
          *    users.getModel() === User;//true
          * </pre>
          */
-        //endregion FormattableMixin
-        //region Public methods
+        // endregion FormattableMixin
+        // region Public methods
         /**
          * Возвращает конструктор записей, порождаемых рекордсетом.
          * @return {String|Function}
@@ -1168,7 +1231,7 @@ define('Types/_collection/RecordSet', [
                     Object.keys(this._$metaData).forEach(function (fieldName) {
                         var fieldValue = _this._$metaData[fieldName];
                         if (metaFormat) {
-                            var fieldFormat = undefined;
+                            var fieldFormat = void 0;
                             var fieldIndex = metaFormat.getFieldIndex(fieldName);
                             if (fieldIndex > -1) {
                                 fieldFormat = metaFormat.at(fieldIndex);
@@ -1181,15 +1244,15 @@ define('Types/_collection/RecordSet', [
                     metaData = this._$metaData;
                 }
             } else {
-                var adapter_2 = this._getRawDataAdapter();    //Unwrap if needed
-                //Unwrap if needed
+                var adapter_2 = this._getRawDataAdapter();    // Unwrap if needed
+                // Unwrap if needed
                 if (adapter_2['[Types/_entity/adapter/IDecorator]']) {
                     adapter_2 = adapter_2.getOriginal();
                 }
                 if (adapter_2['[Types/_entity/adapter/IMetaData]']) {
                     adapter_2.getMetaDataDescriptor().forEach(function (format) {
                         var fieldName = format.getName();
-                        var fieldFormat = undefined;
+                        var fieldFormat;
                         if (metaFormat) {
                             var fieldIndex = metaFormat.getFieldIndex(fieldName);
                             if (fieldIndex > -1) {
@@ -1266,11 +1329,11 @@ define('Types/_collection/RecordSet', [
          * @see remove
          */
         RecordSet.prototype.merge = function (recordSet, options) {
-            //Backward compatibility for 'merge'
+            // Backward compatibility for 'merge'
             if (options instanceof Object && options.hasOwnProperty('merge') && !options.hasOwnProperty('replace')) {
                 options.replace = options.merge;
             }
-            options = Object.assign({
+            options = tslib_1.__assign({
                 add: true,
                 remove: true,
                 replace: true,
@@ -1347,8 +1410,8 @@ define('Types/_collection/RecordSet', [
                     this.removeAt(toRemove_1[i]);
                 }
             }
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion Public methods
+              // region Protected methods
               /**
          * Вставляет сырые данные записей в сырые данные рекордсета
          * @param {Types/_collection/IEnumerable|Array} items Коллекция записей
@@ -1356,8 +1419,8 @@ define('Types/_collection/RecordSet', [
          * @return {Array}
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Вставляет сырые данные записей в сырые данные рекордсета
          * @param {Types/_collection/IEnumerable|Array} items Коллекция записей
@@ -1520,98 +1583,27 @@ define('Types/_collection/RecordSet', [
             var adapter = this._getRawDataAdapter();
             this._$items.length = 0;
             this._$items.length = adapter.getCount();
-        };    //endregion Protected methods
-              //region Statics
-              /**
-         * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-         * @param {Types/_collection/RecordSet} items Исходный рекордсет
-         * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-         * @return {Types/_entity/Record} Патч
-         */
-        //endregion Protected methods
-        //region Statics
-        /**
-         * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-         * @param {Types/_collection/RecordSet} items Исходный рекордсет
-         * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-         * @return {Types/_entity/Record} Патч
-         */
-        RecordSet.patch = function (items, names) {
-            names = names || [
-                'changed',
-                'added',
-                'removed'
-            ];
-            var filter = function (state) {
-                var result = new RecordSet({
-                    adapter: items.getAdapter(),
-                    idProperty: items.getIdProperty()
-                });
-                items.each(function (item) {
-                    result.add(item);
-                }, state);
-                return result;
-            };
-            var getIds = function (items) {
-                var result = [];
-                var idProperty = items.getIdProperty();
-                items.each(function (item) {
-                    result.push(item.get(idProperty));
-                });
-                return result;
-            };
-            var result = new entity_1.Record({
-                format: [
-                    {
-                        name: names[0],
-                        type: 'recordset'
-                    },
-                    {
-                        name: names[1],
-                        type: 'recordset'
-                    },
-                    {
-                        name: names[2],
-                        type: 'array',
-                        kind: 'string'
-                    }
-                ],
-                adapter: items.getAdapter()
-            });
-            result.set(names[0], filter(RECORD_STATE.CHANGED));
-            result.set(names[1], filter(RECORD_STATE.ADDED));
-            result.set(names[2], getIds(filter(RECORD_STATE.DELETED)));
-            result.acceptChanges();
-            return result;
         };
         return RecordSet;
     }(util_1.mixin(ObservableList_1.default, entity_1.FormattableMixin, entity_1.InstantiableMixin));
-    exports.default = RecordSet;    //Properties defaults
-    //Properties defaults
-    RecordSet.prototype['[Types/_collection/RecordSet]'] = true;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype['[Types/_entity/IInstantiable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype['[Types/_entity/IObservableObject]'] = true;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype['[Types/_entity/IProducible]'] = true;
-    RecordSet.prototype._moduleName = 'Types/collection:RecordSet';
-    RecordSet.prototype._instancePrefix = 'recordset-';    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype._defaultModel = DEFAULT_MODEL;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype._$model = DEFAULT_MODEL;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype._$idProperty = '';    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype._$metaData = null;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype._$metaFormat = null;    // @ts-ignore
-    // @ts-ignore
-    RecordSet.prototype._metaData = null;    //Aliases
-    //Aliases
-    RecordSet.prototype.forEach = RecordSet.prototype.each;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    exports.default = RecordSet;
+    Object.assign(RecordSet.prototype, {
+        '[Types/_collection/RecordSet]': true,
+        '[Types/_entity/IInstantiable]': true,
+        '[Types/_entity/IObservableObject]': true,
+        '[Types/_entity/IProducible]': true,
+        _moduleName: 'Types/collection:RecordSet',
+        _instancePrefix: 'recordset-',
+        _defaultModel: DEFAULT_MODEL,
+        _$model: DEFAULT_MODEL,
+        _$idProperty: '',
+        _$metaData: null,
+        _$metaFormat: null,
+        _metaData: null
+    });    // Aliases
+    // Aliases
+    RecordSet.prototype.forEach = RecordSet.prototype.each;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
     RecordSet.prototype['[WS.Data/Collection/RecordSet]'] = true;
     di_1.register('Types/collection:RecordSet', RecordSet, { instantiate: false });
 });

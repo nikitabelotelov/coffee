@@ -74,7 +74,7 @@ define('Types/_entity/adapter/SbisFormatMixin', [
             this._data = data;
             this._format = {};
         },
-        //region Public methods
+        // region Public methods
         getData: function () {
             return this._data;
         },
@@ -149,8 +149,8 @@ define('Types/_entity/adapter/SbisFormatMixin', [
             this._data.s.splice(index, 1);
             this._removeD(index);
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion
+        // region Protected methods
         _touchData: function () {
             this._data = this._normalizeData(this._data, this._type);
         },
@@ -170,9 +170,9 @@ define('Types/_entity/adapter/SbisFormatMixin', [
         _cloneData: function (shareFormat) {
             var data = util_1.object.clone(this._data);
             if (shareFormat && data && data.s) {
-                data.s = this._data.s;    //Keep sharing fields format
+                data.s = this._data.s;    // Keep sharing fields format
             }
-            //Keep sharing fields format
+            // Keep sharing fields format
             return data;
         },
         _isValidData: function () {
@@ -302,7 +302,7 @@ define('Types/_entity/adapter/SbisFormatMixin', [
                 outerType = outerType.n;
             }
             if (selfType !== outerType) {
-                return 'expected field type for "' + self.n + '" at position ' + index + ' is "' + selfType + '" instead of "' + outerType + '"';
+                return 'expected field type for "' + self.n + '" at position \'' + index + ' is "' + selfType + '" instead of "' + outerType + '"';
             }
         },
         _buildFormatDeclaration: function (name) {
@@ -317,7 +317,10 @@ define('Types/_entity/adapter/SbisFormatMixin', [
             return format_1.fieldsFactory(this._buildFormatDeclaration(name));
         },
         _buildS: function (format) {
-            var data = { n: format.getName() };
+            var data = {
+                t: '',
+                n: format.getName()
+            };
             this._buildSType(data, format);
             return data;
         },
@@ -374,8 +377,8 @@ define('Types/_entity/adapter/SbisFormatMixin', [
         },
         _removeD: function () {
             throw new Error('Method must be implemented');
-        }    //endregion Protected methods
+        }    // endregion Protected methods
     };
-    //endregion Protected methods
+    // endregion Protected methods
     exports.default = SbisFormatMixin;
 });

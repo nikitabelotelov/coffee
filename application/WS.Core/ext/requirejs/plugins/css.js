@@ -33,7 +33,7 @@
       }
    }
 
-   define('css', ['native-css', 'Core/pathResolver', 'Core/detection'], function(cssAPI, pathResolver) {
+   define('css', ['native-css', 'Core/pathResolver', 'Env/Env'], function(cssAPI, pathResolver) {
       var EXT_MATCH = /\.css(\?.*)?$/;
 
       return {

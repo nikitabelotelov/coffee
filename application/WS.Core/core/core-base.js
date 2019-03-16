@@ -1,9 +1,9 @@
 define('Core/core-base', [
    'Core/core-extend',
    'Core/core-merge',
-   'Core/EventBus',
+   'Env/Event',
    'Core/Context',
-   'Transport/HTTPError',
+   'Browser/Transport',
    'Core/WindowManager'
 ], function() {
    return {};

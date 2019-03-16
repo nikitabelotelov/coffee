@@ -22,7 +22,7 @@ define('View/Builder/Tmpl/traverse',
       'View/Builder/Tmpl/modules/data/utils/dataTypesCreator',
       'Core/Deferred',
       'Core/ParallelDeferred',
-      'Core/IoC'
+      'Env/Env'
    ], function traverseLoader(htmlparser2,
                               utils,
                               processStatement,
@@ -41,7 +41,7 @@ define('View/Builder/Tmpl/traverse',
                               DTC,
                               Deferred,
                               ParallelDeferred,
-                              IoC
+                              Env
    ) {
       var
          translate = /\{\[([\s\S]+?)]}/g,
@@ -846,7 +846,7 @@ define('View/Builder/Tmpl/traverse',
                }
                def.callback(this._generatorFunctionForTags(takeTag));
             } catch (e) {
-               IoC.resolve('ILogger').error("traverse", e.stack);
+               Env.IoC.resolve('ILogger').error("traverse", e.stack);
                def.errback(errorHandling(e, this.filename));
             }
             return def;

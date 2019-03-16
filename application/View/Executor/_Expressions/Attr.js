@@ -20,6 +20,15 @@ define('View/Executor/_Expressions/Attr', [
         }
         return result;
     }
+    function getStyle(attr1, attr2) {
+        var attr1Style = attr1.style || attr1['attr:style'];
+        var attr2Style = attr2.style || attr2['attr:style'];
+        var result = attr1Style ? attr2Style + ' ' + attr1Style : attr2Style;
+        if (typeof result === 'string') {
+            result = result.replace(spacesRE, ' ').trim();
+        }
+        return result;
+    }
     function finalizeAttr(attributes) {
         var finalAttr = {};
         for (var attribute in attributes) {
@@ -53,6 +62,8 @@ define('View/Executor/_Expressions/Attr', [
             if (attr2.hasOwnProperty(name) && attr2[name] !== undefined && attr2[name] !== 'undefined') {
                 if (name === 'class') {
                     finalAttr.class = getClass(finalAttr, attr2);
+                } else if (name === 'style') {
+                    finalAttr.style = getStyle(finalAttr, attr2);
                 } else if (eventExpressions.isEvent(name)) {
                     finalAttr[name] = finalAttr[name] ? attr2[name].concat(finalAttr[name]) : attr2[name];
                 } else if (!finalAttr.hasOwnProperty(name)) {
@@ -134,6 +145,8 @@ define('View/Executor/_Expressions/Attr', [
             if (attr2.hasOwnProperty(name) && attr2[name] !== undefined && attr2[name] !== 'undefined' && attr2[name] !== null) {
                 if (name === 'attr:class' || name === 'class') {
                     finalAttr.class = getClass(finalAttr, attr2);
+                } else if (name === 'attr:style' || name === 'style') {
+                    finalAttr.style = getStyle(finalAttr, attr2);
                 } else {
                     empt = name.replace('attr:', '');
                     if (!finalAttr.hasOwnProperty(empt) || (empt === 'ws-creates-context' || empt === 'ws-delegates-tabfocus') && finalAttr[empt] === 'default') {

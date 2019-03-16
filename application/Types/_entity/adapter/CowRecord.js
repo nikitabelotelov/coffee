@@ -79,14 +79,13 @@ define('Types/_entity/adapter/CowRecord', [
         };
         CowRecord.prototype.getOriginal = function () {
             return this._originalRecord;
-        };    //endregion Types/_entity/adapter/IDecorator
-              //region Protected methods
-        //endregion Types/_entity/adapter/IDecorator
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         CowRecord.prototype._copy = function () {
             if (!this._copied) {
                 if (this._originalRecord['[Types/_entity/ICloneable]']) {
-                    // @ts-ignore
                     this._originalRecord = this._originalRecord.clone();
                 } else {
                     this._originalRecord = this._original.forRecord(util_1.object.clonePlain(this._originalRecord.getData()));
@@ -101,13 +100,13 @@ define('Types/_entity/adapter/CowRecord', [
         return CowRecord;
     }(DestroyableMixin_1.default);
     exports.default = CowRecord;
-    CowRecord.prototype['[Types/_entity/adapter/CowRecord]'] = true;    // @ts-ignore
-    // @ts-ignore
-    CowRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;    // @ts-ignore
-    // @ts-ignore
-    CowRecord.prototype['[Types/_entity/adapter/IDecorator]'] = true;
-    CowRecord.prototype._original = null;
-    CowRecord.prototype._originalRecord = null;
-    CowRecord.prototype._writeCallback = null;
-    CowRecord.prototype._copied = false;
+    Object.assign(CowRecord.prototype, {
+        '[Types/_entity/adapter/CowRecord]': true,
+        '[Types/_entity/adapter/IRecord]': true,
+        '[Types/_entity/adapter/IDecorator]': true,
+        _original: null,
+        _originalRecord: null,
+        _writeCallback: null,
+        _copied: false
+    });
 });

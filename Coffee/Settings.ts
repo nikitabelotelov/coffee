@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/Settings" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 // @ts-ignore
 import template = require('wml!Coffee/Settings/Settings');
 import {DataStore} from "./Data/DataStore";

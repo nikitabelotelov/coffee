@@ -6,13 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 define('Lib/NavigationController/NavigationController', [
-   'Core/constants',
-   'Core/EventBus',
+   'Env/Env',
+   'Env/Event',
    'Core/Deferred',
    'Core/core-clone',
-   'Core/HashManager',
-   'Core/cookie'
-], function(cConst,  EventBus, Deferred, cClone, HashManager, cookie) {
+   'Core/HashManager'
+], function(Env,  EnvEvent, Deferred, cClone, HashManager) {
 
    'use strict';
 
@@ -33,18 +32,18 @@ define('Lib/NavigationController/NavigationController', [
        */
       init : function(){
          var self = this;
-         if (cConst.saveLastState) {
+         if (Env.constants.saveLastState) {
             this._loadLastState();
-            if (!cConst.$win) {
-               cConst.$win = $(window);
-               cConst.$doc = $(document);
+            if (!Env.constants.$win) {
+               Env.constants.$win = $(window);
+               Env.constants.$doc = $(document);
             }
-            cConst.$win.on('unload', function(){
+            Env.constants.$win.on('unload', function(){
                if (!window.location.search){
                   self._saveLastState();
                }
             });
-            if (cConst.browser.isMobileSafari){
+            if (Env.constants.browser.isMobileSafari){
                window.addEventListener('pagehide', function(){
                   self._saveLastState();
                });
@@ -55,7 +54,7 @@ define('Lib/NavigationController/NavigationController', [
          HashManager.subscribe('onChange', function(){
             var
                changed = true,
-               hash = HashManager.get('ws-nc'),
+               hash = decodeURIComponent(HashManager.get('ws-nc')),
                buf,
                state;
 
@@ -83,7 +82,7 @@ define('Lib/NavigationController/NavigationController', [
       _initLuntikHandler: function(){
          var
             self = this,
-            luntik = EventBus.channel('luntik');//в этот канал падает событие onInit при готовности каждого контрола
+            luntik = EnvEvent.Bus.channel('luntik');//в этот канал падает событие onInit при готовности каждого контрола
 
          luntik.subscribe('onInit', function(e, inst){
             var stateKey = inst.getStateKey();
@@ -124,7 +123,7 @@ define('Lib/NavigationController/NavigationController', [
          var
             page = decodeURI(window.location.pathname),
             state = {},
-            sid = cookie.get('sid'),
+            sid = Env.cookie.get('sid'),
             hash = this._getHashWithoutMSID(),
             stateInStorage = this._getLastState();
 
@@ -147,7 +146,7 @@ define('Lib/NavigationController/NavigationController', [
          var
             page = decodeURI(window.location.pathname),
             hash = this._getHashWithoutMSID(),
-            sid = cookie.get('sid'),
+            sid = Env.cookie.get('sid'),
             lastState = this._getLastState(),
             lastHash;
 
@@ -327,7 +326,7 @@ define('Lib/NavigationController/NavigationController', [
        * @private
        */
       _removeFromHash: function(keys, forceReplace) {
-         var hash = decodeURI(HashManager.get('ws-nc')),
+         var hash = decodeURIComponent(HashManager.get('ws-nc')),
              hashStateKeys = [];
 
          hash = hash ? hash.split(';') : [];
@@ -353,7 +352,7 @@ define('Lib/NavigationController/NavigationController', [
        */
       _parseHash : function(){
          var
-            hash = decodeURI(HashManager.get('ws-nc')),
+            hash = decodeURIComponent(HashManager.get('ws-nc')),
             buf,
             storage = cClone(this._storage),
             saved;

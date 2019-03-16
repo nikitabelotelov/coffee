@@ -7,8 +7,9 @@
  */
 define('Types/_source/OptionsMixin', [
     'require',
-    'exports'
-], function (require, exports) {
+    'exports',
+    'tslib'
+], function (require, exports, tslib_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */
@@ -27,7 +28,7 @@ define('Types/_source/OptionsMixin', [
         },
         constructor: function (options) {
             if (options && options.options instanceof Object) {
-                this._$options = Object.assign({}, this._$options || {}, options.options);
+                this._$options = tslib_1.__assign({}, this._$options || {}, options.options);
                 delete options.options;
             }
         },
@@ -37,10 +38,10 @@ define('Types/_source/OptionsMixin', [
          * @see options
          */
         getOptions: function () {
-            return Object.assign({}, this._$options);
+            return tslib_1.__assign({}, this._$options);
         },
         setOptions: function (options) {
-            this._$options = Object.assign({}, this._$options, options || {});
+            this._$options = tslib_1.__assign({}, this._$options, options || {});
         },
         /**
          * Объединяет набор опций суперкласса с наследником
@@ -50,7 +51,7 @@ define('Types/_source/OptionsMixin', [
          * @static
          */
         addOptions: function (Super, options) {
-            return Object.assign({}, Super.prototype._$options, options);
+            return tslib_1.__assign({}, Super.prototype._$options, options);
         }
     };
     exports.default = OptionsMixin;

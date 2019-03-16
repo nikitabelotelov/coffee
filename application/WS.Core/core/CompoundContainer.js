@@ -2,10 +2,10 @@ define('Core/CompoundContainer', [
    'require',
    'Core/Control',
    'tmpl!Core/CompoundContainer',
-   'Core/IoC',
+   'Env/Env',
    'Core/Deferred',
    'Core/moduleStubs',
-   'Core/EventObject',
+   'Env/Event',
    'Core/ControlBatchUpdater',
    'Core/helpers/Hcontrol/makeInstanceCompatible',
 
@@ -13,7 +13,7 @@ define('Core/CompoundContainer', [
    'Core/Abstract.compatible',
    'Lib/Control/Control.compatible',
    'Lib/Control/BaseCompatible/BaseCompatible'
-], function(require, Control, template, IoC, Deferred, moduleStubs, EventObject, ControlBatchUpdater, makeInstanceCompatible) {
+], function(require, Control, template, Env, Deferred, moduleStubs, EnvEvent, ControlBatchUpdater, makeInstanceCompatible) {
 
 
    var _private = {
@@ -118,7 +118,7 @@ define('Core/CompoundContainer', [
 
             self._childControl.subscribe('onCommandCatch', self._handleCommandCatch);
          }).addErrback(function(e) {
-            IoC.resolve('ILogger').error('Core/CompoundContainer', 'Could not load "' + self._childControlName + '"');
+            Env.IoC.resolve('ILogger').error('Core/CompoundContainer', 'Could not load "' + self._childControlName + '"');
             self._childCreatedDfr.errback(e);
          });
          return self._childCreatedDfr;
@@ -233,10 +233,12 @@ define('Core/CompoundContainer', [
 
          this._parent = null;
 
-         // Clear event handlers after superclass destroy in case it fires any events
-         for (var i = 0; i < this._eventSubscriptions.length; i++) {
-            var sub = this._eventSubscriptions[i];
-            sub.control.unsubscribe(sub.eventName, sub.handler);
+         if (this._eventSubscriptions) {
+            // Clear event handlers after superclass destroy in case it fires any events
+            for (var i = 0; i < this._eventSubscriptions.length; i++) {
+               var sub = this._eventSubscriptions[i];
+               sub.control.unsubscribe(sub.eventName, sub.handler);
+            }
          }
          this._eventSubscriptions = null;
          this._eventHandlers = null;
@@ -283,7 +285,7 @@ define('Core/CompoundContainer', [
             eventHandlers = allHandlers[eventName] || [],
             optionHandlers = self._options.handlers || {},
             optionEventHandlers = optionHandlers[eventName] || [],
-            eventObject = new EventObject(eventName, self),
+            eventObject = new EnvEvent.Object(eventName, self),
             fullArgs = [eventObject].concat(args),
             i;
 

@@ -13,13 +13,13 @@ define('Vdom/Vdom', [
     'Vdom/_private/Utils/Focus',
     'Vdom/_private/Utils/Functional',
     'Vdom/_private/Utils/Monad',
-    'Core/IoC',
+    'Env/Env',
     'Vdom/_private/Synchronizer/Synchronizer',
     'Vdom/_private/Synchronizer/resources/DOMEnvironment',
     'Vdom/_private/Synchronizer/resources/Environment',
     'Vdom/_private/Synchronizer/resources/runDelayedRebuild',
     'Vdom/_private/Synchronizer/resources/SyntheticEvent'
-], function (require, exports, Debug, DirtyChecking, DirtyCheckingCompatible, Hooks, SwipeController, TabIndex, VdomMarkup, DefaultOpenerFinder, Focus, Functional, Monad, IoC, Synchronizer_1, DOMEnvironment_1, Environment_1, runDelayedRebuild_1, SyntheticEvent_1) {
+], function (require, exports, Debug, DirtyChecking, DirtyCheckingCompatible, Hooks, SwipeController, TabIndex, VdomMarkup, DefaultOpenerFinder, Focus, Functional, Monad, Env_1, Synchronizer_1, DOMEnvironment_1, Environment_1, runDelayedRebuild_1, SyntheticEvent_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     exports.Debug = Debug;
@@ -37,9 +37,10 @@ define('Vdom/Vdom', [
     exports.DOMEnvironment = DOMEnvironment_1.default;
     exports.Environment = Environment_1.default;
     exports.runDelayedRebuild = runDelayedRebuild_1.default;
+    exports.animationWaiter = runDelayedRebuild_1.animationWaiter;
     exports.SyntheticEvent = SyntheticEvent_1.default;
     function logDeprecatedWrapper(oldModuleName, newFieldName) {
-        IoC.resolve('ILogger').warn('Vdom/Vdom', '"' + oldModuleName + '" wrapper is deprecated and will be removed. Require ' + ('"Vdom/Vdom" and use ' + newFieldName + ' from it instead.'));
+        Env_1.IoC.resolve('ILogger').warn('Vdom/Vdom', '"' + oldModuleName + '" wrapper is deprecated and will be removed. Require ' + ('"Vdom/Vdom" and use ' + newFieldName + ' from it instead.'));
     }
     exports.logDeprecatedWrapper = logDeprecatedWrapper;
 });

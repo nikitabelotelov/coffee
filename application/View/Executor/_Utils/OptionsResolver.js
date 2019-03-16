@@ -2,9 +2,8 @@
 define('View/Executor/_Utils/OptionsResolver', [
     'require',
     'exports',
-    'Core/IoC',
-    'Core/constants'
-], function (require, exports, IoC, constants) {
+    'Env/Env'
+], function (require, exports, Env_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Применить дефолтные опции конструктора
@@ -27,7 +26,7 @@ define('View/Executor/_Utils/OptionsResolver', [
             var result = optionsTypes[key].call(null, cfg[key]);
             if (result instanceof Error) {
                 result.message = '"' + key + '"' + ' option error: ' + result.message;
-                IoC.resolve('ILogger').error(result, '\nIn component ' + controlClass.prototype._moduleName + '\nParent name ' + parentName);
+                Env_1.IoC.resolve('ILogger').error(result, '\nIn component ' + controlClass.prototype._moduleName + '\nParent name ' + parentName);
                 return false;
             }
         }
@@ -43,7 +42,7 @@ define('View/Executor/_Utils/OptionsResolver', [
     }
     exports.getDefaultOptions = getDefaultOptions;
     function validateOptions(controlClass, cfg, parentName) {
-        if (!constants.isProduction) {
+        if (!Env_1.constants.isProduction) {
             // Disable options validation in production-mode to optimize
             var optionsTypes = controlClass.getOptionTypes && controlClass.getOptionTypes();
             return _validateOptions(controlClass, cfg, optionsTypes, parentName);

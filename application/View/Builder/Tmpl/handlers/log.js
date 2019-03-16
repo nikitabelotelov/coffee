@@ -1,9 +1,9 @@
-define('View/Builder/Tmpl/handlers/log', ['Core/IoC'], function errorHandlingDefine(IoC) {
+define('View/Builder/Tmpl/handlers/log', ['Env/Env'], function errorHandlingDefine(Env) {
    'use strict';
    return {
       generateErrorMessage: function (filename) {
          return 'Template ' + filename + ' failed to generate html.';
       },
-      IoC: IoC
+      IoC: Env.IoC
    };
 });

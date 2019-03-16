@@ -1,13 +1,18 @@
 /// <amd-module name="Types/_source/DataSet" />
 /**
  * Набор данных, полученный из источника.
- * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
- * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/_source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
- * {@link rawData Исходные данные} могут быть предоставлены источником в разных форматах (JSON, XML). По умолчанию используется формат JSON.
- * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
- * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для наглядности ниже приведены несколько примеров чтения частей из набора данных.
+ * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также
+ * скалярных значений, которые можно получить по имени свойства (или пути из имен).Использование таких комплексных
+ * наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо
+ * {@link Types/_source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения
+ * какого-либо сложного интерфейса данные. {@link rawData Исходные данные} могут быть предоставлены источником в разных
+ * форматах (JSON, XML). По умолчанию используется формат JSON. Для чтения каждого формата должен быть указан
+ * соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
+ * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для
+ * наглядности ниже приведены несколько примеров чтения частей из набора данных.
  *
- * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты выполнения запроса:
+ * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты
+ * выполнения запроса:
  * <pre>
  *    require(['Types/source'], function (source) {
  *       var data = new source.DataSet({
@@ -51,7 +56,8 @@
  *       console.log(data.getScalar('executeDate'));//'2016-06-27 11:34:57'
  *    });
  * </pre>
- * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения запроса:
+ * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения
+ * запроса:
  * <pre>
  *    require(['Types/source', 'Types/entity'], function (source, entity) {
  *       var data = new source.DataSet({
@@ -151,7 +157,7 @@ define('Types/_source/DataSet', [
             },
             enumerable: true,
             configurable: true
-        });    //region Public methods
+        });    // region Public methods
                /**
          * Возвращает адаптер для работы с данными
          * @return {Types/_entity/adapter/IAdapter}
@@ -166,7 +172,7 @@ define('Types/_source/DataSet', [
          *    });
          * </pre>
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает адаптер для работы с данными
          * @return {Types/_entity/adapter/IAdapter}
@@ -446,7 +452,8 @@ define('Types/_source/DataSet', [
             this._$itemsProperty = name;
         };    /**
          * Возвращает выборку
-         * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
+         * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется
+         * основная выборка.
          * @return {Types/_collection/RecordSet}
          * @see itemsProperty
          * @example
@@ -504,7 +511,8 @@ define('Types/_source/DataSet', [
          */
         /**
          * Возвращает выборку
-         * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
+         * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется
+         * основная выборка.
          * @return {Types/_collection/RecordSet}
          * @see itemsProperty
          * @example
@@ -576,7 +584,7 @@ define('Types/_source/DataSet', [
                     someInMetaData = true;
                 }
                 if (someInMetaData) {
-                    itemsMetaData = Object.assign(itemsMetaData || {}, metaData);    // FIXME: don't use 'more' anymore
+                    itemsMetaData = tslib_1.__assign({}, itemsMetaData || {}, metaData);    // FIXME: don't use 'more' anymore
                     // FIXME: don't use 'more' anymore
                     if (!itemsMetaData.hasOwnProperty('more') && metaData.hasOwnProperty('total')) {
                         itemsMetaData.more = metaData.total;
@@ -679,8 +687,8 @@ define('Types/_source/DataSet', [
             this._checkAdapter();
             if (property === undefined) {
                 property = this._$itemsProperty;
-            }    //FIXME: don't use hardcoded signature for type detection
-            //FIXME: don't use hardcoded signature for type detection
+            }    // FIXME: don't use hardcoded signature for type detection
+            // FIXME: don't use hardcoded signature for type detection
             var data = this._getDataProperty(property);
             var type = this.getAdapter().getProperty(data, '_type');
             if (type === 'recordset') {
@@ -965,16 +973,16 @@ define('Types/_source/DataSet', [
          */
         DataSet.prototype.setRawData = function (rawData) {
             this._$rawData = rawData;
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Возвращает свойство данных
          * @param {String} property Свойство
          * @return {*}
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Возвращает свойство данных
          * @param {String} property Свойство
@@ -1043,23 +1051,17 @@ define('Types/_source/DataSet', [
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.SerializableMixin)    /** @lends Types/_source/DataSet.prototype */);
     /** @lends Types/_source/DataSet.prototype */
     exports.default = DataSet;
-    DataSet.prototype._moduleName = 'Types/source:DataSet';
-    DataSet.prototype['[Types/_source/DataSet]'] = true;    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$adapter = 'Types/entity:adapter.Json';    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$rawData = null;    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$model = 'Types/entity:Model';    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$listModule = 'Types/collection:RecordSet';    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$idProperty = '';    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$itemsProperty = '';    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$metaProperty = '';    // @ts-ignore
-    // @ts-ignore
-    DataSet.prototype._$writable = true;
+    Object.assign(DataSet.prototype, {
+        '[Types/_source/DataSet]': true,
+        _moduleName: 'Types/source:DataSet',
+        _$adapter: 'Types/entity:adapter.Json',
+        _$rawData: null,
+        _$model: 'Types/entity:Model',
+        _$listModule: 'Types/collection:RecordSet',
+        _$idProperty: '',
+        _$itemsProperty: '',
+        _$metaProperty: '',
+        _$writable: true
+    });
     di_1.register('Types/source:DataSet', DataSet, { instantiate: false });
 });

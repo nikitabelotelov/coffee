@@ -1,7 +1,10 @@
 define('Transport/Record', [
-   'Deprecated/Record',
-   'Core/deprecated'
-], function(Record, deprecated) {
-   deprecated.showInfoLog('Transport/Record помечен как deprecated и будет удален в 3.18. Используйте Types/entity:Record.');
-   return Record;
+    'require',
+    'exports',
+    'Browser/TransportOld',
+    'Env/Env'
+], function (require, exports, TransportOld_1, Env_1) {
+    'use strict';
+    Env_1.IoC.resolve('ILogger').log('Transport/getRpcInvocationUrl', 'module has been moved to "Browser/TransportOld:Record" and will be removed');
+    return TransportOld_1.Record;
 });

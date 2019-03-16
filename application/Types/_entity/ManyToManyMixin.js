@@ -15,13 +15,13 @@ define('Types/_entity/ManyToManyMixin', [
     var ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */
     {
         '[Types/_entity/ManyToManyMixin]': true,
-        //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+        // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
         '[WS.Data/Entity/ManyToManyMixin]': true,
         /**
          * @property {Types/_entity/relation/ManyToMany} Медиатор, отвечающий за связи между сущностями
          */
         _mediator: null,
-        //region Public methods
+        // region Public methods
         destroy: function () {
             var mediator = this._getMediator();
             var slaves = [];
@@ -32,14 +32,14 @@ define('Types/_entity/ManyToManyMixin', [
             var slave;
             for (var i = 0, count = slaves.length; i < count; i++) {
                 slave = slaves[i];
-                if (slave.destroy) {
+                if (slave.destroy && !slave.destroyed) {
                     slave.destroy();
                 }
             }
             this._setMediator(null);
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Добавляет отношение с другой сущностью
          * @param {Types/_entity/relation/IReceiver} child Другая сущность
@@ -105,8 +105,8 @@ define('Types/_entity/ManyToManyMixin', [
                         }, parentWhich;
                     childRoute.unshift(name);
                     if (parent['[Types/_entity/relation/IReceiver]']) {
-                        parentWhich = parent.relationChanged(which, childRoute);    //Replace data with parent's data
-                        //Replace data with parent's data
+                        parentWhich = parent.relationChanged(which, childRoute);    // Replace data with parent's data
+                        // Replace data with parent's data
                         if (parentWhich !== undefined) {
                             data = parentWhich.data;
                         }
@@ -156,8 +156,8 @@ define('Types/_entity/ManyToManyMixin', [
          */
         _setMediator: function (mediator) {
             this._mediator = mediator;
-        }    //endregion Protected methods
+        }    // endregion Protected methods
     };
-    //endregion Protected methods
+    // endregion Protected methods
     exports.default = ManyToManyMixin;
 });

@@ -43,15 +43,15 @@ define('Types/_display/Tree', [
      * @param oldItemsIndex Индекс, в котором удалены элементы.
      */
     function onCollectionChange(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-        //Fix state of all nodes
+        // Fix state of all nodes
         var nodes = this.instance._getItems().filter(function (item) {
             return item.isNode && item.isNode();
         });
         var state = this.instance._getItemsState(nodes);
         var session = this.instance._startUpdateSession();
         this.instance._reIndex();
-        this.prev(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);    //Check state of all nodes. They can change children count (include hidden by filter).
-        //Check state of all nodes. They can change children count (include hidden by filter).
+        this.prev(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);    // Check state of all nodes. They can change children count (include hidden by filter).
+        // Check state of all nodes. They can change children count (include hidden by filter).
         this.instance._finishUpdateSession(session, false);
         this.instance._checkItemsDiff(session, nodes, state);
     }    /**
@@ -112,8 +112,8 @@ define('Types/_display/Tree', [
         Tree.prototype.destroy = function () {
             this._childrenMap = {};
             _super.prototype.destroy.call(this);
-        };    //region SerializableMixin
-        //region SerializableMixin
+        };    // region SerializableMixin
+        // region SerializableMixin
         Tree.prototype._getSerializableState = function (state) {
             state = _super.prototype._getSerializableState.call(this, state);
             state._root = this._root;
@@ -125,8 +125,8 @@ define('Types/_display/Tree', [
                 this._root = state._root;
                 fromSuper.call(this);
             };
-        };    //region Collection
-        //region Collection
+        };    // region Collection
+        // region Collection
         Tree.prototype.getIndexBySourceItem = function (item) {
             if (this._$rootEnumerable && this.getRoot().getContents() === item) {
                 return 0;
@@ -161,14 +161,14 @@ define('Types/_display/Tree', [
                 item = parent;
             }
             return path.join(':');
-        };    //endregion
-              //region Public methods
+        };    // endregion
+              // region Public methods
               /**
          * Возвращает название свойства, содержащего идентификатор родительского узла
          * @return {String}
          */
-        //endregion
-        //region Public methods
+        // endregion
+        // region Public methods
         /**
          * Возвращает название свойства, содержащего идентификатор родительского узла
          * @return {String}
@@ -347,10 +347,10 @@ define('Types/_display/Tree', [
             }
             this.setCurrent(children[0]);
             return true;
-        };    //endregion
-              //region Protected methods
-        //endregion
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         Tree.prototype._getItemsFactory = function () {
             var parent = _super.prototype._getItemsFactory.call(this);
             return function TreeItemsFactory(options) {
@@ -507,8 +507,8 @@ define('Types/_display/Tree', [
             var sameParent = false;
             var current;
             var nearbyItem;
-            enumerator.setCurrent(item);    //TODO: отлеживать по level, что вышли "выше"
-            //TODO: отлеживать по level, что вышли "выше"
+            enumerator.setCurrent(item);    // TODO: отлеживать по level, что вышли "выше"
+            // TODO: отлеживать по level, что вышли "выше"
             while (hasItem && !sameParent) {
                 hasItem = enumerator[method]();
                 nearbyItem = enumerator.getCurrent();
@@ -550,25 +550,19 @@ define('Types/_display/Tree', [
     }(Collection_1.default    /** @lends Types/_display/Tree.prototype */);
     /** @lends Types/_display/Tree.prototype */
     exports.default = Tree;
-    Tree.prototype._moduleName = 'Types/display:Tree';
-    Tree.prototype['[Types/_display/Tree]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._itemModule = 'Types/display:TreeItem';    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._$parentProperty = '';    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._$nodeProperty = '';    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._$childrenProperty = '';    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._$hasChildrenProperty = '';    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._$root = undefined;    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._$rootEnumerable = false;    // @ts-ignore
-    // @ts-ignore
-    Tree.prototype._root = null;    // Deprecated
-    // Deprecated
+    Object.assign(Tree.prototype, {
+        '[Types/_display/Tree]': true,
+        _moduleName: 'Types/display:Tree',
+        _itemModule: 'Types/display:TreeItem',
+        _$parentProperty: '',
+        _$nodeProperty: '',
+        _$childrenProperty: '',
+        _$hasChildrenProperty: '',
+        _$root: undefined,
+        _$rootEnumerable: false,
+        _root: null
+    });    // DIXME: deprecated
+    // DIXME: deprecated
     Tree.prototype['[WS.Data/Display/Tree]'] = true;
     di_1.register('Types/display:Tree', Tree);
 });

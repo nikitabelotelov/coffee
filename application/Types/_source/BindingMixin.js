@@ -7,8 +7,9 @@
  */
 define('Types/_source/BindingMixin', [
     'require',
-    'exports'
-], function (require, exports) {
+    'exports',
+    'tslib'
+], function (require, exports, tslib_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var BindingMixin = /** @lends Types/_source/BindingMixin.prototype */
@@ -102,7 +103,7 @@ define('Types/_source/BindingMixin', [
         },
         constructor: function (options) {
             if (options && options.binding instanceof Object) {
-                options.binding = Object.assign({}, this._$binding, options.binding);
+                options.binding = tslib_1.__assign({}, this._$binding, options.binding);
             }
         },
         /**
@@ -130,12 +131,14 @@ define('Types/_source/BindingMixin', [
          *       },
          *       idProperty: 'id'
          *    });
-         *    console.log('Calling read() method via ' + dataSource.getBinding().read);//'Calling read() method via /api/article/read/'
-         *    articlesSource.read(13);//Cause HTTP request to /api/article/read/?id=13
+         *    console.log('Calling read() method via ' + dataSource.getBinding().read);
+         *    //'Calling read() method via /api/article/read/'
+         *    articlesSource.read(13);
+         *   //Cause HTTP request to /api/article/read/?id=13
          * </pre>
          */
         getBinding: function () {
-            return Object.assign({}, this._$binding);
+            return tslib_1.__assign({}, this._$binding);
         },
         setBinding: function (binding) {
             this._$binding = binding;

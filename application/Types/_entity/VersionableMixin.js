@@ -14,7 +14,7 @@ define('Types/_entity/VersionableMixin', [
     var VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */
     {
         '[Types/_entity/VersionableMixin]': true,
-        //region IVersionable
+        // region IVersionable
         _version: 0,
         getVersion: function () {
             return this._version;
@@ -28,8 +28,8 @@ define('Types/_entity/VersionableMixin', [
                     }
                 });
             }
-        }    //endregion IVersionable
+        }    // endregion
     };
-    //endregion IVersionable
+    // endregion
     exports.default = VersionableMixin;
 });

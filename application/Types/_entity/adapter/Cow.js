@@ -46,8 +46,8 @@ define('Types/_entity/adapter/Cow', [
                 _this._writeCallback = writeCallback;
             }
             return _this;
-        }    //region IAdapter
-        //region IAdapter
+        }    // region IAdapter
+        // region IAdapter
         Cow.prototype.forTable = function (data) {
             return new CowTable_1.default(data, this._original, this._writeCallback);
         };
@@ -68,14 +68,14 @@ define('Types/_entity/adapter/Cow', [
         };
         Cow.prototype.getOriginal = function () {
             return this._original;
-        };    //endregion IDecorator
-              //region SerializableMixin
-        //endregion IDecorator
-        //region SerializableMixin
+        };    // endregion
+              // region SerializableMixin
+        // endregion
+        // region SerializableMixin
         Cow.prototype._getSerializableState = function (state) {
-            state = SerializableMixin_1.default.prototype._getSerializableState.call(this, state);
-            state._original = this._original;
-            return state;
+            var resultState = SerializableMixin_1.default.prototype._getSerializableState.call(this, state);
+            resultState._original = this._original;
+            return resultState;
         };
         Cow.prototype._setSerializableState = function (state) {
             var fromSerializableMixin = SerializableMixin_1.default.prototype._setSerializableState(state);
@@ -87,11 +87,12 @@ define('Types/_entity/adapter/Cow', [
         return Cow;
     }(util_1.mixin(Abstract_1.default, SerializableMixin_1.default));
     exports.default = Cow;
-    Cow.prototype['[Types/_entity/adapter/Cow]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Cow.prototype['[Types/_entity/adapter/IDecorator]'] = true;
-    Cow.prototype._moduleName = 'Types/entity:adapter.Cow';
-    Cow.prototype._original = null;
-    Cow.prototype._writeCallback = null;
+    Object.assign(Cow.prototype, {
+        '[Types/_entity/adapter/Cow]': true,
+        '[Types/_entity/adapter/IDecorator]': true,
+        _moduleName: 'Types/entity:adapter.Cow',
+        _original: null,
+        _writeCallback: null
+    });
     di_1.register('Types/entity:adapter.Cow', Cow, { instantiate: false });
 });

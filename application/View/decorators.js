@@ -1,5 +1,5 @@
 define('View/decorators', [
-      'Core/IoC',
+      'Env/Env',
       'Core/markup/ParserUtilities',
       'Core/helpers/i18n/wordCaseByNumber',
       'Core/Sanitize',
@@ -11,7 +11,7 @@ define('View/decorators', [
       // добавлено здесь в зависимость, чтобы Серверный скрипт (Абрамов Виктор)
       // не умеет синхронно подгрузить модуль по месту требования. добавлено здесь, чтобы модуль был подгружен только в случае constants.compat = true
    ],
-   function decoratorsLoader(IoC, Parser, wordCaseByNumber, Sanitize, escapeHtml, linkWrap, escapeTagsFromStr) {
+   function decoratorsLoader(Env, Parser, wordCaseByNumber, Sanitize, escapeHtml, linkWrap, escapeTagsFromStr) {
    'use strict';
 
    /**
@@ -237,10 +237,10 @@ define('View/decorators', [
          var lt;
          if (writeup) {
             lt = 'RUNNING TRACE DECORATOR: ' + writeup + ', Result of expression: ';
-            IoC.resolve('ILogger', 'ConsoleLogger').info(lt, expression);
+            Env.IoC.resolve('ILogger', 'ConsoleLogger').info(lt, expression);
          } else {
             lt = 'RUNNING TRACE DECORATOR: ' +  'Your Expression: ' + name + ', Result of expression ';
-            IoC.resolve('ILogger', 'ConsoleLogger').info(lt, expression);
+            Env.IoC.resolve('ILogger', 'ConsoleLogger').info(lt, expression);
          }
          return expression;
       },
@@ -372,6 +372,11 @@ define('View/decorators', [
          }
 
          highlight = makeSafeForRegex(escapeHtml('' + highlight));
+
+         // escapeHtml экранирует теги и кавычки. Кавычки не являются специальным
+         // символом для highlight и могут встречаться в поисковой строке, поэтому
+         // восстанавливаем их в исходный вид
+         highlight = highlight.replace(/&quot;/g, '"');
 
          var res = highlightFragment(text, new RegExp(highlight, 'gi'), cssClass),
             foundWords, word;

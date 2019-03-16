@@ -1,9 +1,7 @@
 /// <amd-module name="View/Executor/_Utils/OptionsResolver" />
 
 // @ts-ignore
-import * as IoC from 'Core/IoC';
-// @ts-ignore
-import * as constants from 'Core/constants';
+import { IoC, constants } from 'Env/Env';
 
 /**
  * Применить дефолтные опции конструктора

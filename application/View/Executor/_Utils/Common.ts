@@ -1,13 +1,11 @@
 /// <amd-module name="View/Executor/_Utils/Common" />
 
 // @ts-ignore
-import * as constants from 'Core/constants';
-// @ts-ignore
 import * as RightsManager from 'Core/RightsManager';
 // @ts-ignore
 import * as isPlainObject from 'Core/helpers/Object/isPlainObject';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC, constants } from 'Env/Env';
 
 import { Attr } from '../Expressions';
 

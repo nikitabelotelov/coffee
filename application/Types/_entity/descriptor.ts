@@ -15,14 +15,12 @@
 
 declare type Descriptor = string | Function;
 
-interface ValidateFunc {
-   (value: any): any;
-}
+type ValidateFunc = (value: any) => any;
 
-interface Chained extends ValidateFunc {
-   required?: Chained
-   oneOf?: Chained
-   arrayOf?: Chained
+interface IChained extends ValidateFunc {
+   required?: IChained;
+   oneOf?: IChained;
+   arrayOf?: IChained;
 }
 
 /**
@@ -57,7 +55,7 @@ function validate(type: Descriptor): ValidateFunc {
 
    switch (typeName) {
       case 'string':
-         return function validateTypeName(value) {
+         return function validateTypeName(value: any): any {
             if (value === undefined || typeof value === type || value instanceof String) {
                return value;
             }
@@ -65,16 +63,15 @@ function validate(type: Descriptor): ValidateFunc {
          };
 
       case 'function':
-         return function validateTypeIntance(value) {
-            // @ts-ignore
-            if (value === undefined || value instanceof type) {
+         return function validateTypeInstance(value: any): any {
+            if (value === undefined || value instanceof (type as Function)) {
                return value;
             }
             return new TypeError(`Value "${value}" should be instance of ${type}`);
          };
 
       case 'object':
-         return function validateTypeInterface(value) {
+         return function validateTypeInterface(value: any): any {
             if (value === undefined) {
                return value;
             }
@@ -87,6 +84,7 @@ function validate(type: Descriptor): ValidateFunc {
          };
    }
 
+   // tslint:disable-next-line:max-line-length
    throw new TypeError(`Argument "type" should be one of following types: string, function or object but "${typeName}" received.`);
 }
 
@@ -95,10 +93,10 @@ function validate(type: Descriptor): ValidateFunc {
  * @name Types/_entity/descriptor#required
  * @returns {Chained} Validator
  */
-function required(): Chained {
-   const prev: Chained = this;
+function required(): IChained {
+   const prev: IChained = this;
 
-   return chain(function isRequired(value) {
+   return chain(function isRequired(value: any): IChained | TypeError {
       if (value === undefined) {
          return new TypeError('Value is required');
       }
@@ -112,14 +110,14 @@ function required(): Chained {
  * @param {Array} values Allowed values.
  * @returns {Chained} Validator.
  */
-function oneOf(values: Array<any>): Chained {
+function oneOf(values: any[]): IChained {
    if (!(values instanceof Array)) {
       throw new TypeError('Argument values should be an instance of Array');
    }
 
-   const prev: Chained = this;
+   const prev: IChained = this;
 
-   return chain(function isOneOf(value) {
+   return chain(function isOneOf(value: any): IChained | TypeError {
       if (value !== undefined && values.indexOf(value) === -1) {
          return new TypeError(`Invalid value ${value}`);
       }
@@ -133,11 +131,11 @@ function oneOf(values: Array<any>): Chained {
  * @param {Function|String} type Type descriptor.
  * @returns {Chained} Validator.
  */
-function arrayOf(type: Descriptor): Chained {
-   const prev: Chained = this;
+function arrayOf(type: Descriptor): IChained {
+   const prev: IChained = this;
    const validator = validate(type);
 
-   return chain(function isArrayOf(value) {
+   return chain(function isArrayOf(value: any): IChained | TypeError {
       if (value !== undefined) {
          if (!(value instanceof Array)) {
             return new TypeError(`'Value "${value}" is not an Array`);
@@ -161,7 +159,7 @@ function arrayOf(type: Descriptor): Chained {
  * @param {Chained} parent Previous chain element.
  * @returns {Chained} New chain element.
  */
-function chain(parent: Chained): Chained {
+function chain(parent: IChained): IChained {
    const wrapper = (...args) => {
       return parent.apply(this, args);
    };
@@ -181,7 +179,7 @@ function chain(parent: Chained): Chained {
       }
    });
 
-   return <Chained>wrapper;
+   return wrapper as IChained;
 }
 
 /**
@@ -190,7 +188,7 @@ function chain(parent: Chained): Chained {
  * @param {Descriptor} type Value type.
  * @returns {Chained} Type descriptor.
  */
-export default function descriptor(type: Descriptor): Chained {
+export default function descriptor(type: Descriptor): IChained {
    return chain(
       validate(type)
    );

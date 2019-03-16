@@ -3,12 +3,12 @@ define('Coffee/CoffeeApplication', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/CoffeeApplication/CoffeeApplication',
     'Coffee/Data/DataStore',
     'Core/ConsoleLogger',
     'css!Coffee/CoffeeApplication/CoffeeApplication'
-], function (require, exports, tslib_1, Base_1, template, DataStore_1) {
+], function (require, exports, tslib_1, Control, template, DataStore_1) {
     'use strict';
     var CoffeeApplication = /** @class */
     function (_super) {
@@ -19,9 +19,11 @@ define('Coffee/CoffeeApplication', [
             return _this;
         }
         CoffeeApplication.prototype._beforeMount = function () {
-            return DataStore_1.DataStore.initDataStore();
+            if (typeof window !== 'undefined') {
+                return DataStore_1.DataStore.initDataStore();
+            }
         };
         return CoffeeApplication;
-    }(Base_1.Control);
+    }(Control);
     return CoffeeApplication;
 });

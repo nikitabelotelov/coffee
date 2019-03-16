@@ -1,18 +1,16 @@
 define('Core/RightsManager', [
    'require',
-   'Core/constants',
+   'Env/Env',
    'Core/helpers/Object/isEmpty',
    'Core/helpers/Object/find',
    'Core/Deferred',
-   'Core/IoC',
    'Core/core-instance'
 ], function(
    require,
-   _const,
+   Env,
    isEmptyObject,
    objectFind,
    Deferred,
-   IoC,
    coreIns
 ) {
    /**
@@ -55,7 +53,7 @@ define('Core/RightsManager', [
 
             return serviceConfig && serviceConfig.rightsNeeded();
          } else if (window) {
-            return (window.rights && !isEmptyObject(window.rights)) || _const.rights || false;
+            return (window.rights && !isEmptyObject(window.rights)) || Env.constants.rights || false;
          }
       },
 
@@ -137,7 +135,7 @@ define('Core/RightsManager', [
             } else if (window && window.rights && !isEmptyObject(window.rights)) {
                // Если мы на клиенте и в window есть права
                rights = window.rights;
-            } else if (process || _const.rights) {
+            } else if (process || Env.constants.rights) {
                // Если у нас нет прав и мы на препроцессоре, или на клиенте с активированным _const.rights
                rights = this.readUserRights();
             }
@@ -228,8 +226,8 @@ define('Core/RightsManager', [
        * @see getRights
        */
       checkRights: function(zones) {
-         if (_const.isBrowserPlatform) {
-            IoC.resolve('ILogger').info('$ws.single.RightsManager.checkRights',
+         if (Env.constants.isBrowserPlatform) {
+            Env.IoC.resolve('ILogger').info('$ws.single.RightsManager.checkRights',
                'Метод будет удален в 3.18. ' +
                'Для получения объекта с правами используйте .getRights([zones]). ' +
                'Для плучения значения allow вызовите getRights([zones]) и используйте логическое И для полей объекта с RightsManager.ALLOW_MASK');
@@ -664,7 +662,7 @@ define('Core/RightsManager', [
                   def.callback(response.getRawData());
                })
                .addErrback(function(e) {
-                  IoC.resolve('ILogger').error('User rights', 'Transport error', e);
+                  Env.IoC.resolve('ILogger').error('User rights', 'Transport error', e);
                   def.errback(e);
                });
          }, function(){

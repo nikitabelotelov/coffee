@@ -1,8 +1,8 @@
 define('View/Builder/Tmpl/modules/utils/tag', [
-      'Core/constants',
+      'Env/Env',
       'View/Builder/Tmpl/modules/utils/names',
       'View/Builder/Tmpl/modules/utils/common'
-   ], function (constants, names, common) {
+   ], function (Env, names, common) {
       var
          controlNameDivider = '.',
          controlPathDivider = '/',
@@ -52,10 +52,10 @@ define('View/Builder/Tmpl/modules/utils/tag', [
             return ws[1];
          },
          getJsModules = function getJsModules() {
-            return constants.jsModules;
+            return Env.constants.jsModules;
          },
          getJsCoreModules = function getJsCoreModules() {
-            return constants.jsCoreModules;
+            return Env.constants.jsCoreModules;
          },
          oldNamesPopout = function oldNamesPopout(name, seekingDeps) {
             return name === sbisModuleName && seekingDeps;

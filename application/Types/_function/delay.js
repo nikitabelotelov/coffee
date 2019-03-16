@@ -4,7 +4,8 @@ define('Types/_function/delay', [
     'exports'
 ], function (require, exports) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    /**
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var win = typeof window !== 'undefined' ? window : null;    /**
      * Модуль, в котором описана функция <b>delay(fn)</b>.
      *
      * Метод Вызывает функцию асинхронно, через requestAnimationFrame, или на крайний случай setTimeout
@@ -32,13 +33,12 @@ define('Types/_function/delay', [
      * @public
      * @author Мальцев А.А.
      */
-    function runDelayed(original) {
-        var win = typeof window !== 'undefined' ? window : null;
+    function delay(original) {
         if (win && win.requestAnimationFrame) {
             win.requestAnimationFrame(original);
         } else {
             setTimeout(original, 0);
         }
     }
-    exports.default = runDelayed;
+    exports.default = delay;
 });

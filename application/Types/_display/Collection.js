@@ -1,6 +1,6 @@
-/// <amd-module name="Types/_display/Collection" />
 /**
- * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную коллекцию.
+ * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
+ * не меняя при этом оригинальную коллекцию.
  * @class Types/_display/Collection
  * @extends Types/_display/Abstract
  * @implements Types/_collection/IEnumerable
@@ -32,7 +32,8 @@ define('Types/_display/Collection', [
     'Types/shim'
 ], function (require, exports, tslib_1, IBind_1, Abstract_1, CollectionEnumerator_1, CollectionItem_1, GroupItem_1, Composer_1, Direct_1, User_1, Group_1, entity_1, collection_1, di_1, util_1, shim_1) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
+    Object.defineProperty(exports, '__esModule', { value: true });    // tslint:disable-next-line:ban-comma-operator
+    // tslint:disable-next-line:ban-comma-operator
     var GLOBAL = (0, eval)('this');
     var LOGGER = GLOBAL.console;
     var MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';    /**
@@ -97,8 +98,8 @@ define('Types/_display/Collection', [
             this._notifyAfterCollectionChange();
             return;
         case IBind_1.default.ACTION_CHANGE:
-            session = this._startUpdateSession();    //FIXME: newItems.length - FIXME[OrderMatch]
-            //FIXME: newItems.length - FIXME[OrderMatch]
+            session = this._startUpdateSession();    // FIXME: newItems.length - FIXME[OrderMatch]
+            // FIXME: newItems.length - FIXME[OrderMatch]
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
@@ -109,14 +110,14 @@ define('Types/_display/Collection', [
         session = this._startUpdateSession();
         switch (action) {
         case IBind_1.default.ACTION_ADD:
-            this._addItems(newItemsIndex, newItems);    //FIXME: newItems.length - FIXME[OrderMatch]
-            //FIXME: newItems.length - FIXME[OrderMatch]
+            this._addItems(newItemsIndex, newItems);    // FIXME: newItems.length - FIXME[OrderMatch]
+            // FIXME: newItems.length - FIXME[OrderMatch]
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
             break;
         case IBind_1.default.ACTION_REMOVE:
-            //FIXME: oldItems.length - FIXME[OrderMatch]
+            // FIXME: oldItems.length - FIXME[OrderMatch]
             this._removeItems(oldItemsIndex, oldItems.length);
             this._reSort();
             if (this._isFiltered() && this._isFilteredByIndex()) {
@@ -124,15 +125,15 @@ define('Types/_display/Collection', [
             }
             break;
         case IBind_1.default.ACTION_REPLACE:
-            //FIXME: newItems - FIXME[OrderMatch]
-            this._replaceItems(newItemsIndex, newItems);    //FIXME: newItems.length - FIXME[OrderMatch]
-            //FIXME: newItems.length - FIXME[OrderMatch]
+            // FIXME: newItems - FIXME[OrderMatch]
+            this._replaceItems(newItemsIndex, newItems);    // FIXME: newItems.length - FIXME[OrderMatch]
+            // FIXME: newItems.length - FIXME[OrderMatch]
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
             break;
         case IBind_1.default.ACTION_MOVE:
-            //FIXME: newItems - FIXME[OrderMatch]
+            // FIXME: newItems - FIXME[OrderMatch]
             this._moveItems(newItemsIndex, oldItemsIndex, newItems);
             this._reSort();
             this._reFilter();
@@ -179,12 +180,12 @@ define('Types/_display/Collection', [
      * @param analyze Включен или выключен анализ изменений
      */
     function onEventRaisingChange(event, enabled, analyze) {
-        //Если без выключили без анализа изменений, то при следующем включении генерации надо актуализировать состояние
+        // Если без выключили без анализа изменений, то при следующем включении генерации надо актуализировать состояние
         if (!analyze && enabled) {
             this._reBuild(true);
         }
-        this._sourceCollectionSynchronized = enabled;    //Call delayed handlers if get back to synchronize
-        //Call delayed handlers if get back to synchronize
+        this._sourceCollectionSynchronized = enabled;    // Call delayed handlers if get back to synchronize
+        // Call delayed handlers if get back to synchronize
         var callbacks = this._sourceCollectionDelayedCallbacks;
         if (this._sourceCollectionSynchronized && callbacks) {
             var callback = void 0;
@@ -199,7 +200,15 @@ define('Types/_display/Collection', [
     function (_super) {
         tslib_1.__extends(Collection, _super);
         function Collection(options) {
-            var _this = _super.call(this, options) || this;    /**
+            var _this = _super.call(this, options) || this;    // endregion
+                                                               // region IEnumerable
+            // endregion
+            // region IEnumerable
+            _this['[Types/_collection/IEnumerable]'] = true;    // endregion
+                                                                // region IList
+            // endregion
+            // region IList
+            _this['[Types/_collection/IList]'] = true;    /**
              * Элемент -> уникальный идентификатор
              */
             /**
@@ -223,15 +232,7 @@ define('Types/_display/Collection', [
             /**
              * Результат применения сортировки: индекс после сортировки -> индекс элемента проекции
              */
-            _this._sortMap = [];    //endregion
-                                    //region IEnumerable
-            //endregion
-            //region IEnumerable
-            _this['[Types/_collection/IEnumerable]'] = true;    //endregion
-                                                                //region IList
-            //endregion
-            //region IList
-            _this['[Types/_collection/IList]'] = true;
+            _this._sortMap = [];
             entity_1.SerializableMixin.constructor.call(_this);
             collection_1.EventRaisingMixin.constructor.call(_this, options);
             _this._$filter = _this._$filter || [];
@@ -274,7 +275,30 @@ define('Types/_display/Collection', [
             },
             enumerable: true,
             configurable: true
-        });
+        });    /**
+         * Добавляет/удаляет свойства функтора в в/из список важных свойств.
+         * @param func Функтор
+         * @param instance Проекция
+         * @param add Добавить или удалить свойства
+         */
+        /**
+         * Добавляет/удаляет свойства функтора в в/из список важных свойств.
+         * @param func Функтор
+         * @param instance Проекция
+         * @param add Добавить или удалить свойства
+         */
+        Collection._functorToImportantProperties = function (func, instance, add) {
+            if (entity_1.functor.Compute.isFunctor(func)) {
+                var properties = func.properties;
+                for (var i = 0; i < properties.length; i++) {
+                    if (add) {
+                        instance._setImportantProperty(properties[i]);
+                    } else {
+                        instance._unsetImportantProperty(properties[i]);
+                    }
+                }
+            }
+        };
         Collection.prototype.destroy = function () {
             if (!this._$collection.destroyed) {
                 if (this._$collection['[Types/_collection/IObservable]']) {
@@ -294,14 +318,14 @@ define('Types/_display/Collection', [
             this._cursorEnumerator = null;
             this._utilityEnumerator = null;
             _super.prototype.destroy.call(this);
-        };    //region mutable
+        };    // region mutable
               /**
          * Возвращает элемент проекции с указанным идентификатором экземпляра.
          * @param {String} instanceId Идентификатор экземпляра.
          * @return {Types/_display/CollectionItem}
          * @state mutable
          */
-        //region mutable
+        // region mutable
         /**
          * Возвращает элемент проекции с указанным идентификатором экземпляра.
          * @param {String} instanceId Идентификатор экземпляра.
@@ -336,7 +360,8 @@ define('Types/_display/Collection', [
             return this._getEnumerator();
         };    /**
          * Перебирает все элементы проекции, начиная с первого.
-         * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
+         * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента
+         * коллекции (аргументами придут элемент коллекции и его порядковый номер)
          * @param {Object} [context] Контекст вызова callback
          * @example
          * Сгруппируем персонажей по полу:
@@ -369,13 +394,17 @@ define('Types/_display/Collection', [
          *             console.log(item.getContents().name);
          *          }
          *       });
-         *       //output: '[M]', 'Philip J. Fry', 'Professor Farnsworth', '[F]', 'Turanga Leela', 'Amy Wong', '[R]', 'Bender Bending Rodriguez'
+         *       //output:
+         *       // '[M]', 'Philip J. Fry', 'Professor Farnsworth',
+         *       // '[F]', 'Turanga Leela', 'Amy Wong',
+         *       // '[R]', 'Bender Bending Rodriguez'
          *    });
          * </pre>
          */
         /**
          * Перебирает все элементы проекции, начиная с первого.
-         * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
+         * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента
+         * коллекции (аргументами придут элемент коллекции и его порядковый номер)
          * @param {Object} [context] Контекст вызова callback
          * @example
          * Сгруппируем персонажей по полу:
@@ -408,7 +437,10 @@ define('Types/_display/Collection', [
          *             console.log(item.getContents().name);
          *          }
          *       });
-         *       //output: '[M]', 'Philip J. Fry', 'Professor Farnsworth', '[F]', 'Turanga Leela', 'Amy Wong', '[R]', 'Bender Bending Rodriguez'
+         *       //output:
+         *       // '[M]', 'Philip J. Fry', 'Professor Farnsworth',
+         *       // '[F]', 'Turanga Leela', 'Amy Wong',
+         *       // '[R]', 'Bender Bending Rodriguez'
          *    });
          * </pre>
          */
@@ -477,72 +509,17 @@ define('Types/_display/Collection', [
                 count = this._getUtilityEnumerator().getCount();
             }
             return count;
-        };    //endregion
-              //region SerializableMixin
-        //endregion
-        //region SerializableMixin
-        Collection.prototype._getSerializableState = function (state) {
-            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
-            state._composer = this._composer;
-            return state;
-        };
-        Collection.prototype._setSerializableState = function (state) {
-            var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
-            return function () {
-                fromSerializableMixin.call(this);
-                this._composer = state._composer;
-                if (this._composer) {
-                    //Restore link to _$sort in UserItemsStrategy instance
-                    var userStrategy = this._composer.getInstance(User_1.default);
-                    if (userStrategy) {
-                        userStrategy.handlers = this._$sort;
-                    }    //Restore link to _$group in GroupItemsStrategy instance
-                    //Restore link to _$group in GroupItemsStrategy instance
-                    var groupStrategy = this._composer.getInstance(Group_1.default);
-                    if (groupStrategy) {
-                        groupStrategy.handler = this._$group;
-                    }    //Restore items contents before the _$collection will be affected
-                    //Restore items contents before the _$collection will be affected
-                    if (this._composer) {
-                        var restoreItemsContents = function (items, owner) {
-                            items.forEach(function (item) {
-                                if (item._contentsIndex !== undefined) {
-                                    item._$owner = owner;    //Link to _$owner is not restored yet, force it
-                                    //Link to _$owner is not restored yet, force it
-                                    item.getContents();    //Force resolving item contents
-                                }
-                            });
-                        };
-                        //Force resolving item contents
-                        try {
-                            var itemsHolder = this._composer.getResult();
-                            do {
-                                if (itemsHolder._items) {
-                                    restoreItemsContents(itemsHolder._items, this);
-                                }
-                                itemsHolder = itemsHolder.source;
-                            } while (itemsHolder);
-                        } catch (err) {
-                            //eslint
-                            if (typeof LOGGER !== undefined) {
-                                LOGGER.error(err);    // eslint-disable-line no-console
-                            }
-                        }
-                    }
-                }
-            };
-        };    //endregion
-              //region Public
-              //region Access
+        };    // endregion
+              // region Public
+              // region Access
               /**
          * Возвращает оригинальную коллекцию
          * @return {Types/_collection/IEnumerable}
          * @see collection
          */
-        // eslint-disable-line no-console
-        //endregion
-        //region Public
-        //region Access
+        // endregion
+        // region Public
+        // region Access
         /**
          * Возвращает оригинальную коллекцию
          * @return {Types/_collection/IEnumerable}
@@ -573,11 +550,11 @@ define('Types/_display/Collection', [
             }
             return count;
         };    /**
-         * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
+         * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
          * @return {Array.<Types/_display/CollectionItem>}
          */
         /**
-         * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
+         * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
          * @return {Array.<Types/_display/CollectionItem>}
          */
         Collection.prototype.getItems = function () {
@@ -598,12 +575,14 @@ define('Types/_display/Collection', [
             }
             return this._itemsFactory(options);
         };    /**
-         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/_display/CollectionItem#contents}.
+         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции
+         * {@link Types/_display/CollectionItem#contents}.
          * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @return {String|undefined}
          */
         /**
-         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/_display/CollectionItem#contents}.
+         * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции
+         * {@link Types/_display/CollectionItem#contents}.
          * @param {Types/_display/CollectionItem} item Элемент коллекции
          * @return {String|undefined}
          */
@@ -616,56 +595,14 @@ define('Types/_display/Collection', [
             uid = this._searchItemUid(item, uid);
             itemToUid.set(item, uid);
             return uid;
-        };    /**
-         * Рассчитывает идентификатор элемента коллекции.
-         * @param {Types/_display/CollectionItem} item Элемент коллекции
-         * @return {String}
-         */
-        /**
-         * Рассчитывает идентификатор элемента коллекции.
-         * @param {Types/_display/CollectionItem} item Элемент коллекции
-         * @return {String}
-         */
-        Collection.prototype._exctractItemId = function (item) {
-            var contents = item.getContents();
-            var uid;
-            if (contents['[Types/_entity/Model]']) {
-                uid = contents.getId();
-            } else if (this._$idProperty) {
-                uid = util_1.object.getPropertyValue(contents, this._$idProperty);
-            } else {
-                throw new Error('Option "idProperty" must be defined to extract item unique id.');
-            }
-            return String(uid);
-        };    /**
-         * Рассчитывает уникальный идентификатор элемента коллекции.
-         * @param {Types/_display/CollectionItem} item Элемент коллекции
-         * @param {String} baseId Базовое значение
-         * @return {String}
-         */
-        /**
-         * Рассчитывает уникальный идентификатор элемента коллекции.
-         * @param {Types/_display/CollectionItem} item Элемент коллекции
-         * @param {String} baseId Базовое значение
-         * @return {String}
-         */
-        Collection.prototype._searchItemUid = function (item, baseId) {
-            var uid = baseId;
-            var itemsUid = this._itemsUid;
-            var count = 0;
-            while (itemsUid.has(uid)) {
-                uid = baseId.concat('-', String(++count));
-            }
-            itemsUid.add(uid);
-            return uid;
-        };    //endregion Access
-              //region Navigation
+        };    // endregion Access
+              // region Navigation
               /**
          * Возвращает текущий элемент
          * @return {Types/_display/CollectionItem}
          */
-        //endregion Access
-        //region Navigation
+        // endregion Access
+        // region Navigation
         /**
          * Возвращает текущий элемент
          * @return {Types/_display/CollectionItem}
@@ -931,8 +868,8 @@ define('Types/_display/Collection', [
         Collection.prototype.getItemBySourceItem = function (item) {
             var index = this.getIndexBySourceItem(item);
             return index === -1 ? undefined : this.at(index);
-        };    //endregion Navigation
-              //region Changing
+        };    // endregion Navigation
+              // region Changing
               /**
          * Возвращает пользовательские методы фильтрации элементов проекции
          * @return {Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>}
@@ -941,8 +878,8 @@ define('Types/_display/Collection', [
          * @see addFilter
          * @see removeFilter
          */
-        //endregion Navigation
-        //region Changing
+        // endregion Navigation
+        // region Changing
         /**
          * Возвращает пользовательские методы фильтрации элементов проекции
          * @return {Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>}
@@ -954,8 +891,11 @@ define('Types/_display/Collection', [
         Collection.prototype.getFilter = function () {
             return this._$filter.slice();
         };    /**
-         * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских фильтров.
-         * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к
+         * удалению всех пользовательских фильтров.
+         * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
+         * элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции.
+         * Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @see filter
          * @see getFilter
          * @see addFilter
@@ -992,8 +932,11 @@ define('Types/_display/Collection', [
          * </pre>
          */
         /**
-         * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских фильтров.
-         * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к
+         * удалению всех пользовательских фильтров.
+         * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
+         * элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции.
+         * Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @see filter
          * @see getFilter
          * @see addFilter
@@ -1060,7 +1003,9 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+         * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
+         * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
          * @see filter
          * @see getFilter
@@ -1099,7 +1044,9 @@ define('Types/_display/Collection', [
          */
         /**
          * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+         * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
+         * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
          * @see filter
          * @see getFilter
@@ -1150,7 +1097,9 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Удаляет пользовательский метод фильтрации элементов проекции.
-         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+         * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
+         * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @return {Boolean} Был ли установлен такой метод фильтрации
          * @see filter
          * @see getFilter
@@ -1196,7 +1145,9 @@ define('Types/_display/Collection', [
          */
         /**
          * Удаляет пользовательский метод фильтрации элементов проекции.
-         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+         * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+         * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
+         * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
          * @return {Boolean} Был ли установлен такой метод фильтрации
          * @see filter
          * @see getFilter
@@ -1265,14 +1216,20 @@ define('Types/_display/Collection', [
         Collection.prototype.getGroup = function () {
             return this._$group;
         };    /**
-         * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать этот метод без параметров.
-         * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
+         * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать
+         * этот метод без параметров.
+         * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов:
+         * аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу,
+         * в которую входит элемент.
          * @see group
          * @see getGroup
          */
         /**
-         * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать этот метод без параметров.
-         * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
+         * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать
+         * этот метод без параметров.
+         * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов:
+         * аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу,
+         * в которую входит элемент.
          * @see group
          * @see getGroup
          */
@@ -1425,7 +1382,12 @@ define('Types/_display/Collection', [
          *          console.log(group + ': ' + contents.name);
          *          index++;
          *       }
-         *       //output: 'M: Philip J. Fry', 'M: Professor Farnsworth', 'F: Turanga Leela', 'F: Amy Wong', 'R: Bender Bending Rodriguez'
+         *       // output:
+         *       // 'M: Philip J. Fry',
+         *       // 'M: Professor Farnsworth',
+         *       // 'F: Turanga Leela',
+         *       // 'F: Amy Wong',
+         *       // 'R: Bender Bending Rodriguez'
          *    });
          * </pre>
          */
@@ -1469,19 +1431,31 @@ define('Types/_display/Collection', [
          *          console.log(group + ': ' + contents.name);
          *          index++;
          *       }
-         *       //output: 'M: Philip J. Fry', 'M: Professor Farnsworth', 'F: Turanga Leela', 'F: Amy Wong', 'R: Bender Bending Rodriguez'
+         *       // output:
+         *       // 'M: Philip J. Fry',
+         *       // 'M: Professor Farnsworth',
+         *       // 'F: Turanga Leela',
+         *       // 'F: Amy Wong',
+         *       // 'R: Bender Bending Rodriguez'
          *    });
          * </pre>
          */
         Collection.prototype.getGroupByIndex = function (index) {
-            var items = this._getItems();
+            var currentGroupId;
+            var enumerator = this.getEnumerator();
             var item;
-            for (var position = index; position >= 0; position--) {
-                item = items[position];
+            var itemIndex = 0;
+            while (enumerator.moveNext()) {
+                item = enumerator.getCurrent();
                 if (item instanceof GroupItem_1.default) {
-                    return item.getContents();
+                    currentGroupId = item.getContents();
                 }
+                if (itemIndex === index) {
+                    break;
+                }
+                itemIndex++;
             }
+            return currentGroupId;
         };    /**
          * Возвращает пользовательские методы сортировки элементов проекции
          * @return {Array.<Function>}
@@ -1499,8 +1473,10 @@ define('Types/_display/Collection', [
         Collection.prototype.getSort = function () {
             return this._$sort.slice();
         };    /**
-         * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских сортировок.
-         * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+         * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к
+         * удалению всех пользовательских сортировок.
+         * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами
+         * приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
          * @see sort
          * @see getSort
          * @see addSort
@@ -1561,8 +1537,10 @@ define('Types/_display/Collection', [
          * </pre>
          */
         /**
-         * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских сортировок.
-         * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+         * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к
+         * удалению всех пользовательских сортировок.
+         * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами
+         * приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
          * @see sort
          * @see getSort
          * @see addSort
@@ -1653,7 +1631,8 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Добавляет пользовательский метод сортировки элементов проекции, если такой еще не был задан.
-         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+         * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
          * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
          * @see sort
          * @see getSort
@@ -1683,7 +1662,8 @@ define('Types/_display/Collection', [
          */
         /**
          * Добавляет пользовательский метод сортировки элементов проекции, если такой еще не был задан.
-         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+         * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
          * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
          * @see sort
          * @see getSort
@@ -1731,7 +1711,8 @@ define('Types/_display/Collection', [
             this._finishUpdateSession(session);
         };    /**
          * Удаляет пользовательский метод сортировки элементов проекции.
-         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+         * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
          * @return {Boolean} Был ли установлен такой метод сортировки
          * @see sort
          * @see getSort
@@ -1764,7 +1745,8 @@ define('Types/_display/Collection', [
          */
         /**
          * Удаляет пользовательский метод сортировки элементов проекции.
-         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+         * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+         * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
          * @return {Boolean} Был ли установлен такой метод сортировки
          * @see sort
          * @see getSort
@@ -1882,62 +1864,16 @@ define('Types/_display/Collection', [
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(IBind_1.default.ACTION_CHANGE, items, index, items, index);
             this._notifyAfterCollectionChange();
-        };    //endregion
-              //endregion
-              //region EventRaisingMixin
-        //endregion
-        //endregion
-        //region EventRaisingMixin
-        Collection.prototype._analizeUpdateSession = function (session) {
-            if (session) {
-                this._notifyBeforeCollectionChange();
-            }
-            collection_1.EventRaisingMixin._analizeUpdateSession.call(this, session);
-            if (session) {
-                this._notifyAfterCollectionChange();
-            }
-        };
-        Collection.prototype._notifyCollectionChange = function (action, newItems, newItemsIndex, oldItems, oldItemsIndex, session) {
-            var _this = this;
-            if (!this._isNeedNotifyCollectionChange()) {
-                return;
-            }
-            if (!session || action === IBind_1.default.ACTION_RESET || !this._isGrouped()) {
-                this._notifyLater('onCollectionChange', action, newItems, newItemsIndex, oldItems, oldItemsIndex);
-                return;
-            }    //Split by groups and notify
-            //Split by groups and notify
-            var notify = function (start, finish) {
-                if (start < finish) {
-                    _this._notifyLater('onCollectionChange', action, newItems.slice(start, finish), newItems.length ? newItemsIndex + start : 0, oldItems.slice(start, finish), oldItems.length ? oldItemsIndex + start : 0);
-                }
-            };
-            var isRemove = action === IBind_1.default.ACTION_REMOVE;
-            var max = isRemove ? oldItems.length : newItems.length;
-            var notifyIndex = 0;
-            var item;
-            for (var i = 0; i < max; i++) {
-                item = isRemove ? oldItems[i] : newItems[i];
-                if (item instanceof GroupItem_1.default) {
-                    notify(notifyIndex, i);
-                    notifyIndex = i;
-                }
-                if (i === max - 1) {
-                    notify(notifyIndex, i + 1);
-                }
-            }
-        };    //endregion
-              //region Multiselectable
+        };    // endregion
+              // region Multiselectable
               /**
-         * Возвращает массив выбранных элементов
-         * @remark Метод возвращает выбранные элементы не зависимо от фильтра проекции.
+         * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
          * @return {Array.<Types/_display/CollectionItem>}
          */
-        //endregion
-        //region Multiselectable
+        // endregion
+        // region Multiselectable
         /**
-         * Возвращает массив выбранных элементов
-         * @remark Метод возвращает выбранные элементы не зависимо от фильтра проекции.
+         * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
          * @return {Array.<Types/_display/CollectionItem>}
          */
         Collection.prototype.getSelectedItems = function () {
@@ -1984,26 +1920,26 @@ define('Types/_display/Collection', [
             }
             this._setSelectedItems(sourceItems, selected);
         };    /**
-         * Устанавливает признак, что элемент выбран, всем элементам проекции.
-         * @remark Метод устанавливает  признак всем элементам не зависимо от фильтра проекции.
+         * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и
+         * группировки).
          * @param {Boolean} selected Элемент выбран.
          * @return {Array}
          */
         /**
-         * Устанавливает признак, что элемент выбран, всем элементам проекции.
-         * @remark Метод устанавливает  признак всем элементам не зависимо от фильтра проекции.
+         * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и
+         * группировки).
          * @param {Boolean} selected Элемент выбран.
          * @return {Array}
          */
         Collection.prototype.setSelectedItemsAll = function (selected) {
             this._setSelectedItems(this._getItems(), selected);
         };    /**
-         * Инвертирует признак, что элемент выбран, у всех элементов проекции
-         * @remark Метод инвертирует выделение у всех элементов не зависимо от фильтра проекции.
+         * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и
+         * группировки).
          */
         /**
-         * Инвертирует признак, что элемент выбран, у всех элементов проекции
-         * @remark Метод инвертирует выделение у всех элементов не зависимо от фильтра проекции.
+         * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и
+         * группировки).
          */
         Collection.prototype.invertSelectedItemsAll = function () {
             var items = this._getItems();
@@ -2013,6 +1949,146 @@ define('Types/_display/Collection', [
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(IBind_1.default.ACTION_RESET, items, 0, items, 0);
             this._notifyAfterCollectionChange();
+        };    // endregion
+              // region SerializableMixin
+        // endregion
+        // region SerializableMixin
+        Collection.prototype._getSerializableState = function (state) {
+            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
+            state._composer = this._composer;
+            return state;
+        };
+        Collection.prototype._setSerializableState = function (state) {
+            var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
+            return function () {
+                fromSerializableMixin.call(this);
+                this._composer = state._composer;
+                if (this._composer) {
+                    // Restore link to _$sort in UserItemsStrategy instance
+                    var userStrategy = this._composer.getInstance(User_1.default);
+                    if (userStrategy) {
+                        userStrategy.handlers = this._$sort;
+                    }    // Restore link to _$group in GroupItemsStrategy instance
+                    // Restore link to _$group in GroupItemsStrategy instance
+                    var groupStrategy = this._composer.getInstance(Group_1.default);
+                    if (groupStrategy) {
+                        groupStrategy.handler = this._$group;
+                    }    // Restore items contents before the _$collection will be affected
+                    // Restore items contents before the _$collection will be affected
+                    if (this._composer) {
+                        var restoreItemsContents = function (items, owner) {
+                            items.forEach(function (item) {
+                                if (item._contentsIndex !== undefined) {
+                                    item._$owner = owner;    // Link to _$owner is not restored yet, force it
+                                    // Link to _$owner is not restored yet, force it
+                                    item.getContents();    // Force resolving item contents
+                                }
+                            });
+                        };
+                        // Force resolving item contents
+                        try {
+                            var itemsHolder = this._composer.getResult();
+                            do {
+                                if (itemsHolder._items) {
+                                    restoreItemsContents(itemsHolder._items, this);
+                                }
+                                itemsHolder = itemsHolder.source;
+                            } while (itemsHolder);
+                        } catch (err) {
+                            if (typeof LOGGER !== undefined) {
+                                LOGGER.error(err);    // eslint-disable-line no-console
+                            }
+                        }
+                    }
+                }
+            };
+        };    /**
+         * Рассчитывает идентификатор элемента коллекции.
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
+         * @return {String}
+         */
+        // eslint-disable-line no-console
+        /**
+         * Рассчитывает идентификатор элемента коллекции.
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
+         * @return {String}
+         */
+        Collection.prototype._exctractItemId = function (item) {
+            var contents = item.getContents();
+            var uid;
+            if (contents['[Types/_entity/Model]']) {
+                uid = contents.getId();
+            } else if (this._$idProperty) {
+                uid = util_1.object.getPropertyValue(contents, this._$idProperty);
+            } else {
+                throw new Error('Option "idProperty" must be defined to extract item unique id.');
+            }
+            return String(uid);
+        };    /**
+         * Рассчитывает уникальный идентификатор элемента коллекции.
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
+         * @param {String} baseId Базовое значение
+         * @return {String}
+         */
+        /**
+         * Рассчитывает уникальный идентификатор элемента коллекции.
+         * @param {Types/_display/CollectionItem} item Элемент коллекции
+         * @param {String} baseId Базовое значение
+         * @return {String}
+         */
+        Collection.prototype._searchItemUid = function (item, baseId) {
+            var uid = baseId;
+            var itemsUid = this._itemsUid;
+            var count = 0;
+            while (itemsUid.has(uid)) {
+                uid = baseId.concat('-', String(++count));
+            }
+            itemsUid.add(uid);
+            return uid;
+        };    // endregion
+              // endregion
+              // region EventRaisingMixin
+        // endregion
+        // endregion
+        // region EventRaisingMixin
+        Collection.prototype._analizeUpdateSession = function (session) {
+            if (session) {
+                this._notifyBeforeCollectionChange();
+            }
+            collection_1.EventRaisingMixin._analizeUpdateSession.call(this, session);
+            if (session) {
+                this._notifyAfterCollectionChange();
+            }
+        };
+        Collection.prototype._notifyCollectionChange = function (action, newItems, newItemsIndex, oldItems, oldItemsIndex, session) {
+            var _this = this;
+            if (!this._isNeedNotifyCollectionChange()) {
+                return;
+            }
+            if (!session || action === IBind_1.default.ACTION_RESET || !this._isGrouped()) {
+                this._notifyLater('onCollectionChange', action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+                return;
+            }    // Split by groups and notify
+            // Split by groups and notify
+            var notify = function (start, finish) {
+                if (start < finish) {
+                    _this._notifyLater('onCollectionChange', action, newItems.slice(start, finish), newItems.length ? newItemsIndex + start : 0, oldItems.slice(start, finish), oldItems.length ? oldItemsIndex + start : 0);
+                }
+            };
+            var isRemove = action === IBind_1.default.ACTION_REMOVE;
+            var max = isRemove ? oldItems.length : newItems.length;
+            var notifyIndex = 0;
+            var item;
+            for (var i = 0; i < max; i++) {
+                item = isRemove ? oldItems[i] : newItems[i];
+                if (item instanceof GroupItem_1.default) {
+                    notify(notifyIndex, i);
+                    notifyIndex = i;
+                }
+                if (i === max - 1) {
+                    notify(notifyIndex, i + 1);
+                }
+            }
         };    /**
          * Устанавливает признак, переданным, элементам проекции.
          * @param {Array} selecItems массив элементов проекции
@@ -2038,17 +2114,17 @@ define('Types/_display/Collection', [
                 this._notifyCollectionChange(IBind_1.default.ACTION_REPLACE, items, index, items, index);
                 this._notifyAfterCollectionChange();
             }
-        };    //endregion
-              //region Protected methods
-              //region Access
+        };    // endregion
+              // region Protected methods
+              // region Access
               /**
          * Добавляет свойство в importantItemProperties, если его еще там нет
          * @param {String} name Название свойства
          * @protected
          */
-        //endregion
-        //region Protected methods
-        //region Access
+        // endregion
+        // region Protected methods
+        // region Access
         /**
          * Добавляет свойство в importantItemProperties, если его еще там нет
          * @param {String} name Название свойства
@@ -2101,29 +2177,6 @@ define('Types/_display/Collection', [
         Collection.prototype._switchImportantPropertiesByGroup = function (add) {
             Collection._functorToImportantProperties(this._$group, this, add);
         };    /**
-         * Добавляет/удаляет свойства функтора в в/из список важных свойств.
-         * @param func Функтор
-         * @param instance Проекция
-         * @param add Добавить или удалить свойства
-         */
-        /**
-         * Добавляет/удаляет свойства функтора в в/из список важных свойств.
-         * @param func Функтор
-         * @param instance Проекция
-         * @param add Добавить или удалить свойства
-         */
-        Collection._functorToImportantProperties = function (func, instance, add) {
-            if (entity_1.functor.Compute.isFunctor(func)) {
-                var properties = func.properties;
-                for (var i = 0; i < properties.length; i++) {
-                    if (add) {
-                        instance._setImportantProperty(properties[i]);
-                    } else {
-                        instance._unsetImportantProperty(properties[i]);
-                    }
-                }
-            }
-        };    /**
          * Настраивает контекст обработчиков
          * @protected
          */
@@ -2140,17 +2193,17 @@ define('Types/_display/Collection', [
             this._onCollectionChange = null;
             this._onCollectionItemChange = null;
             this._oEventRaisingChange = null;
-        };    //endregion
-              //region Navigation
+        };    // endregion
+              // region Navigation
               /**
-         * Возвращает элементы проекции
+         * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
          * @return {Array.<Types/_display/CollectionItem>}
          * @protected
          */
-        //endregion
-        //region Navigation
+        // endregion
+        // region Navigation
         /**
-         * Возвращает элементы проекции
+         * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
          * @return {Array.<Types/_display/CollectionItem>}
          * @protected
          */
@@ -2264,12 +2317,14 @@ define('Types/_display/Collection', [
         Collection.prototype._getCursorEnumerator = function () {
             return this._cursorEnumerator || (this._cursorEnumerator = this._getEnumerator());
         };    /**
-         * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
+         * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента
+         * относительно заданного
          * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
         /**
-         * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
+         * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента
+         * относительно заданного
          * @return {Types/_display/CollectionEnumerator}
          * @protected
          */
@@ -2334,15 +2389,15 @@ define('Types/_display/Collection', [
          */
         Collection.prototype._getSourceIndex = function (index) {
             return this._getItemsStrategy().getCollectionIndex(index);
-        };    //endregion
-              //region Calculation
+        };    // endregion
+              // region Calculation
               /**
          * Перерасчитывает все данные заново
          * @param {Boolean} [reset=false] Сбросить все созданные элементы
          * @protected
          */
-        //endregion
-        //region Calculation
+        // endregion
+        // region Calculation
         /**
          * Перерасчитывает все данные заново
          * @param {Boolean} [reset=false] Сбросить все созданные элементы
@@ -2402,14 +2457,14 @@ define('Types/_display/Collection', [
         Collection.prototype._reIndex = function () {
             this._getCursorEnumerator().reIndex();
             this._getUtilityEnumerator().reIndex();
-        };    //endregion
-              //region Changing
+        };    // endregion
+              // region Changing
               /**
          * Сбрасывает фильтр: помечает все элементы как прошедшие фильтрацию
          * @protected
          */
-        //endregion
-        //region Changing
+        // endregion
+        // region Changing
         /**
          * Сбрасывает фильтр: помечает все элементы как прошедшие фильтрацию
          * @protected
@@ -2477,11 +2532,11 @@ define('Types/_display/Collection', [
                     return true;
                 }
                 return false;
-            };    //Lookup every item in _sortMap order
-            //Lookup every item in _sortMap order
+            };    // Lookup every item in _sortMap order
+            // Lookup every item in _sortMap order
             for (position = 0; position < sortMapLength; position++) {
-                index = sortMap[position];    //Check item index in range
-                //Check item index in range
+                index = sortMap[position];    // Check item index in range
+                // Check item index in range
                 if (index === undefined || index < start || index >= finish) {
                     continue;
                 }
@@ -2489,18 +2544,18 @@ define('Types/_display/Collection', [
                 item = items[index];
                 match = true;
                 if (item instanceof GroupItem_1.default) {
-                    //A new group begin, check match for previous
+                    // A new group begin, check match for previous
                     if (prevGroup) {
                         match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);
                         changed = applyMatch(match, prevGroupIndex) || changed;
-                    }    //Remember current group as previous
-                    //Remember current group as previous
+                    }    // Remember current group as previous
+                    // Remember current group as previous
                     prevGroup = item;
                     prevGroupIndex = index;
                     prevGroupPosition = position;
                     prevGroupHasMembers = false;
                 } else {
-                    //Check item match
+                    // Check item match
                     match = isMatch(item, index, position);
                     changed = applyMatch(match, index) || changed;
                     if (match) {
@@ -2512,8 +2567,8 @@ define('Types/_display/Collection', [
                 if (!processedIndices.has(index)) {
                     filterMap[index] = undefined;
                 }
-            }    //Check last group match
-            //Check last group match
+            }    // Check last group match
+            // Check last group match
             if (prevGroup) {
                 match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);
                 changed = applyMatch(match, prevGroupIndex) || changed;
@@ -2747,23 +2802,23 @@ define('Types/_display/Collection', [
             var index;
             var sortIndex;
             var toRemove = [];
-            var removed = {};    //Collect indices to remove
-            //Collect indices to remove
+            var removed = {};    // Collect indices to remove
+            // Collect indices to remove
             for (index = start; index < finish; index++) {
                 sortIndex = this._sortMap.indexOf(index);
                 if (sortIndex > -1) {
                     toRemove.push(sortIndex);
                     removed[sortIndex] = this._sortMap[sortIndex];
                 }
-            }    //Remove collected indices from _sortMap
-            //Remove collected indices from _sortMap
+            }    // Remove collected indices from _sortMap
+            // Remove collected indices from _sortMap
             toRemove.sort(function (a, b) {
                 return a - b;
             });
             for (index = toRemove.length - 1; index >= 0; index--) {
                 this._sortMap.splice(toRemove[index], 1);
-            }    //Shift _sortMap values by count from start index
-            //Shift _sortMap values by count from start index
+            }    // Shift _sortMap values by count from start index
+            // Shift _sortMap values by count from start index
             for (index = 0; index < this._sortMap.length; index++) {
                 if (this._sortMap[index] >= start) {
                     this._sortMap[index] -= count;
@@ -2846,8 +2901,8 @@ define('Types/_display/Collection', [
             var diff = state ? this._getItemsDiff(state, this._getItemsState(items)) : [];
             if (beforeCheck) {
                 beforeCheck(diff, items);
-            }    //Notify changes by the diff
-            //Notify changes by the diff
+            }    // Notify changes by the diff
+            // Notify changes by the diff
             if (diff.length) {
                 this._notifyBeforeCollectionChange();
                 collection_1.EventRaisingMixin._extractPacksByList(this, diff, function (items, index) {
@@ -2893,8 +2948,8 @@ define('Types/_display/Collection', [
             var _this = this;
             var items = this._getItems();
             var last = index + changed.length;
-            var changedItems = [];    //Extract display items contains changed
-            //Extract display items contains changed
+            var changedItems = [];    // Extract display items contains changed
+            // Extract display items contains changed
             for (var i = index; i < last; i++) {
                 changedItems.push(items[this._getItemIndex(i)]);
             }
@@ -2905,7 +2960,7 @@ define('Types/_display/Collection', [
             this._notifyAfterCollectionChange();
         };    /**
          * Генерирует событие об изменении элемента проекции
-         * @param {Core/EventObject} event Дескриптор события.
+         * @param {Env/Event.Object} event Дескриптор события.
          * @param {*} item Измененный элемент коллекции.
          * @param {Number} index Индекс измененного элемента.
          * @param {Object} [properties] Изменившиеся свойства
@@ -2913,7 +2968,7 @@ define('Types/_display/Collection', [
          */
         /**
          * Генерирует событие об изменении элемента проекции
-         * @param {Core/EventObject} event Дескриптор события.
+         * @param {Env/Event.Object} event Дескриптор события.
          * @param {*} item Измененный элемент коллекции.
          * @param {Number} index Индекс измененного элемента.
          * @param {Object} [properties] Изменившиеся свойства
@@ -2930,48 +2985,48 @@ define('Types/_display/Collection', [
             var isEventRaising = this.isEventRaising();
             var session = this._startUpdateSession();
             var isMoved;
-            var state;    //Only changes of important properties can run analysis
-            //Only changes of important properties can run analysis
+            var state;    // Only changes of important properties can run analysis
+            // Only changes of important properties can run analysis
             for (var key in properties) {
                 if (properties.hasOwnProperty(key)) {
                     if (this._$importantItemProperties.indexOf(key) > -1) {
                         if (isEventRaising) {
-                            //Fix the state before analysis
+                            // Fix the state before analysis
                             state = this._getItemsState(internalItems);
                         }
                         this._reAnalize(index, 1);
                         break;
                     }
                 }
-            }    //Return here if events are disabled
-            //Return here if events are disabled
+            }    // Return here if events are disabled
+            // Return here if events are disabled
             if (!isEventRaising) {
                 return;
             }
-            this._finishUpdateSession(session, false);    //Check changes by state
-            //Check changes by state
+            this._finishUpdateSession(session, false);    // Check changes by state
+            // Check changes by state
             internalIndexAfter = this._getItemIndex(index);
             indexAfter = enumerator.getInternalBySource(internalIndexAfter);
             isMoved = indexBefore !== indexAfter;
             this._checkItemsDiff(session, internalItems, state, function (diff) {
-                //Some hard logic related with the character of item change.
+                // Some hard logic related with the character of item change.
                 var internalItemIndex = diff.indexOf(internalItem);
                 if (isMoved) {
-                    //Item change the position
+                    // Item change the position
                     if (internalItemIndex > -1 && indexBefore > indexAfter) {
-                        //Changed item is presented in the diff and moved up.
-                        //It will be presented as a move event with that item in _finishUpdateSession.
-                        //We should not notify about item change with the diff.
+                        // Changed item is presented in the diff and moved up.
+                        // It will be presented as a move event with that item in _finishUpdateSession.
+                        // We should not notify about item change with the diff.
                         diff.splice(internalItemIndex, 1);
                     } else if (internalItemIndex === -1 && indexBefore < indexAfter) {
-                        //Changed item isn't presented in the diff and moved down.
-                        //It won't be presented as a move event with that item in _finishUpdateSession (items after will move up).
-                        //We should notify about item change with the diff.
+                        // Changed item isn't presented in the diff and moved down.
+                        // It won't be presented as a move event with that item in _finishUpdateSession (items after will
+                        // move up). We should notify about item change with the diff.
                         diff.push(internalItem);
                     }
                 } else if (!isMoved && internalItemIndex === -1) {
-                    //Changed item don't change the position and not presented in the diff.
-                    //We should notify about item change with the diff.
+                    // Changed item don't change the position and not presented in the diff.
+                    // We should notify about item change with the diff.
                     diff.push(internalItem);
                 }
             });
@@ -3005,45 +3060,29 @@ define('Types/_display/Collection', [
         return Collection;
     }(util_1.mixin(Abstract_1.default, entity_1.SerializableMixin, collection_1.EventRaisingMixin));
     exports.default = Collection;
-    Collection.prototype._moduleName = 'Types/display:Collection';
-    Collection.prototype['[Types/_display/Collection]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$collection = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$filter = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$group = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$sort = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$idProperty = '';    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$unique = false;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._$importantItemProperties = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._localize = false;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._itemModule = 'Types/display:CollectionItem';    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._itemsFactory = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._composer = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._sourceCollectionSynchronized = true;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._sourceCollectionDelayedCallbacks = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._cursorEnumerator = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._utilityEnumerator = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._onCollectionChange = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._onCollectionItemChange = null;    // @ts-ignore
-    // @ts-ignore
-    Collection.prototype._oEventRaisingChange = null;    // Deprecated
-    // Deprecated
+    Object.assign(Collection.prototype, {
+        '[Types/_display/Collection]': true,
+        _moduleName: 'Types/display:Collection',
+        _$collection: null,
+        _$filter: null,
+        _$group: null,
+        _$sort: null,
+        _$idProperty: '',
+        _$unique: false,
+        _$importantItemProperties: null,
+        _localize: false,
+        _itemModule: 'Types/display:CollectionItem',
+        _itemsFactory: null,
+        _composer: null,
+        _sourceCollectionSynchronized: true,
+        _sourceCollectionDelayedCallbacks: null,
+        _cursorEnumerator: null,
+        _utilityEnumerator: null,
+        _onCollectionChange: null,
+        _onCollectionItemChange: null,
+        _oEventRaisingChange: null
+    });    // FIXME: deprecated
+    // FIXME: deprecated
     Collection.prototype['[WS.Data/Display/Collection]'] = true;
     di_1.register('Types/display:Collection', Collection);
 });

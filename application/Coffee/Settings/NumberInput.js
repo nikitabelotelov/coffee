@@ -3,10 +3,10 @@ define('Coffee/Settings/NumberInput', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/Settings/NumberInput/NumberInput',
     'css!Coffee/Settings/NumberInput/NumberInput'
-], function (require, exports, tslib_1, Base_1, template) {
+], function (require, exports, tslib_1, Control, template) {
     'use strict';
     var Info = /** @class */
     function (_super) {
@@ -20,16 +20,18 @@ define('Coffee/Settings/NumberInput', [
             this.inputValue = opts.value;
         };
         ;
+        Info.prototype._beforeUpdate = function (opts) {
+            this.inputValue = opts.value;
+        };
+        ;
         Info.prototype.increment = function () {
-            this.inputValue = this.inputValue + 1;
-            this._notify('valueChanged', [this.inputValue]);
+            this._notify('valueChanged', [this.inputValue + 1]);
         };
         ;
         Info.prototype.decrement = function () {
-            this.inputValue = this.inputValue - 1;
-            this._notify('valueChanged', [this.inputValue]);
+            this._notify('valueChanged', [this.inputValue - 1]);
         };
         return Info;
-    }(Base_1.Control);
+    }(Control);
     return Info;
 });

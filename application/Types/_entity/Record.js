@@ -4,13 +4,22 @@
  *
  * Основные аспекты записи:
  * <ul>
- *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/_entity/IObject};</li>
- *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/_collection/IEnumerable};</li>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
+ *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}),
+ *        например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс
+ *        {@link Types/_entity/IObject};
+ *    </li>
+ *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс
+ *        {@link Types/_collection/IEnumerable};
+ *    </li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
+ *    </li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь
+ *        {@link Types/_entity/FormattableMixin}.
+ *    </li>
  * </ul>
  *
- * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
+ * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате
+ * используется по умолчанию):
  * <pre>
  *    require(['Types/entity'], function (entity) {
  *       var employee = new entity.Record({
@@ -24,7 +33,8 @@
  *       employee.get('firstName');//John
  *    });
  * </pre>
- * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
+ * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате
+ * укажем явно):
  * <pre>
  *    require([
  *       'Types/entity',
@@ -68,7 +78,6 @@ define('Types/_entity/Record', [
     'require',
     'exports',
     'tslib',
-    'Types/util',
     'Types/_entity/DestroyableMixin',
     'Types/_entity/OptionsToPropertyMixin',
     'Types/_entity/ObservableMixin',
@@ -81,102 +90,10 @@ define('Types/_entity/Record', [
     'Types/_entity/factory',
     'Types/di',
     'Types/util',
-    'Types/shim',
-    'Types/util',
-    'Core/core-extend'
-], function (require, exports, tslib_1, util_1, DestroyableMixin_1, OptionsToPropertyMixin_1, ObservableMixin_1, SerializableMixin_1, CloneableMixin_1, ManyToManyMixin_1, ReadWriteMixin_1, FormattableMixin_1, VersionableMixin_1, factory_1, di_1, util_2, shim_1, util_3, coreExtend) {
+    'Types/shim'
+], function (require, exports, tslib_1, DestroyableMixin_1, OptionsToPropertyMixin_1, ObservableMixin_1, SerializableMixin_1, CloneableMixin_1, ManyToManyMixin_1, ReadWriteMixin_1, FormattableMixin_1, VersionableMixin_1, factory_1, di_1, util_1, shim_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
-     * Возвращает признак примитивного значения (не объекта)
-     * @param {*} value
-     * @return {Boolean}
-     */
-    /**
-     * Возвращает признак примитивного значения (не объекта)
-     * @param {*} value
-     * @return {Boolean}
-     */
-    function isPrimitive(value) {
-        return value && typeof value === 'object' ? false : true;
-    }    /**
-     * Возвращает valueOf от объекта, либо value если это не объект
-     * @param {*} value
-     * @return {*}
-     */
-    /**
-     * Возвращает valueOf от объекта, либо value если это не объект
-     * @param {*} value
-     * @return {*}
-     */
-    function getValueOf(value) {
-        if (value && typeof value === 'object' && value !== value.valueOf()) {
-            return value.valueOf();
-        }
-        return value;
-    }    /**
-     * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим примитивное значение
-     * @param {*} first
-     * @param {*} second
-     * @return {Boolean}
-     */
-    /**
-     * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим примитивное значение
-     * @param {*} first
-     * @param {*} second
-     * @return {Boolean}
-     */
-    function isEqualValues(first, second) {
-        return getValueOf(first) === getValueOf(second);
-    }    /**
-     * Возвращает тип значения
-     * @param {*} value Значение
-     * @return {String|Object}
-     */
-    /**
-     * Возвращает тип значения
-     * @param {*} value Значение
-     * @return {String|Object}
-     */
-    function getValueType(value) {
-        switch (typeof value) {
-        case 'boolean':
-            return 'boolean';
-        case 'number':
-            if (value % 1 === 0) {
-                return 'integer';
-            }
-            return 'real';
-        case 'object':
-            if (value === null) {
-                return 'string';
-            } else if (value instanceof Record) {
-                return 'record';
-            } else if (value && value['[Types/_collection/RecordSet]']) {
-                return 'recordset';
-            } else if (value instanceof Date) {
-                if (value.hasOwnProperty('_serializeMode')) {
-                    value = value;
-                    switch (value.getSQLSerializationMode()) {
-                    case Date.SQL_SERIALIZE_MODE_DATE:
-                        return 'date';
-                    case Date.SQL_SERIALIZE_MODE_TIME:
-                        return 'time';
-                    }
-                }
-                return 'datetime';
-            } else if (value instanceof Array) {
-                return {
-                    type: 'array',
-                    kind: getValueType(value.find(function (item) {
-                        return item !== null && item !== undefined;
-                    }))
-                };
-            }
-            return 'object';
-        default:
-            return 'string';
-        }
-    }    /**
      * Свойство, хранящее кэш полей
      */
     /**
@@ -224,7 +141,80 @@ define('Types/_entity/Record', [
     /**
      * Режим кэширования: все значения
      */
-    var CACHE_MODE_ALL = util_1.protect('all');
+    var CACHE_MODE_ALL = util_1.protect('all');    /**
+     * Возвращает признак примитивного значения (не объекта)
+     */
+    /**
+     * Возвращает признак примитивного значения (не объекта)
+     */
+    function isPrimitive(value) {
+        return value && typeof value === 'object' ? false : true;
+    }    /**
+     * Возвращает valueOf от объекта, либо value если это не объект
+     */
+    /**
+     * Возвращает valueOf от объекта, либо value если это не объект
+     */
+    function getValueOf(value) {
+        if (value && typeof value === 'object' && value !== value.valueOf()) {
+            return value.valueOf();
+        }
+        return value;
+    }    /**
+     * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим
+     * примитивное значение
+     */
+    /**
+     * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим
+     * примитивное значение
+     */
+    function isEqualValues(first, second) {
+        return getValueOf(first) === getValueOf(second);
+    }    /**
+     * Возвращает тип значения
+     */
+    /**
+     * Возвращает тип значения
+     */
+    function getValueType(value) {
+        switch (typeof value) {
+        case 'boolean':
+            return 'boolean';
+        case 'number':
+            if (value % 1 === 0) {
+                return 'integer';
+            }
+            return 'real';
+        case 'object':
+            if (value === null) {
+                return 'string';
+            } else if (value instanceof Record) {
+                return 'record';
+            } else if (value && value['[Types/_collection/RecordSet]']) {
+                return 'recordset';
+            } else if (value instanceof Date) {
+                if (value.hasOwnProperty('_serializeMode')) {
+                    switch (value.getSQLSerializationMode()) {
+                    case Date.SQL_SERIALIZE_MODE_DATE:
+                        return 'date';
+                    case Date.SQL_SERIALIZE_MODE_TIME:
+                        return 'time';
+                    }
+                }
+                return 'datetime';
+            } else if (value instanceof Array) {
+                return {
+                    type: 'array',
+                    kind: getValueType(value.find(function (item) {
+                        return item !== null && item !== undefined;
+                    }))
+                };
+            }
+            return 'object';
+        default:
+            return 'string';
+        }
+    }
     var Record = /** @class */
     function (_super) {
         tslib_1.__extends(Record, _super);
@@ -245,10 +235,9 @@ define('Types/_entity/Record', [
         }
         Object.defineProperty(Record.prototype, '_fieldsCache', {
             /**
-             * @property {Map} Объект содержащий закэшированные значения полей
+             * @property Объект содержащий закэшированные значения полей
              */
             get: function () {
-                // @ts-ignore
                 return this[$fieldsCache] || (this[$fieldsCache] = new shim_1.Map());
             },
             enumerable: true,
@@ -256,10 +245,9 @@ define('Types/_entity/Record', [
         });
         Object.defineProperty(Record.prototype, '_fieldsClone', {
             /**
-             * @property {Map} Объект содержащий клонированные значения полей
+             * @property Объект содержащий клонированные значения полей
              */
             get: function () {
-                // @ts-ignore
                 return this[$fieldsClone] || (this[$fieldsClone] = new shim_1.Map());
             },
             enumerable: true,
@@ -267,12 +255,11 @@ define('Types/_entity/Record', [
         });
         Object.defineProperty(Record.prototype, '_changedFields', {
             /**
-             * @property {Object} Данные об измененных полях
+             * @property Данные об измененных полях
              */
             get: function () {
                 var _this = this;
-                var result = {};    // @ts-ignore
-                // @ts-ignore
+                var result = {};
                 var changedFields = this[$changedFields];
                 if (!changedFields) {
                     return result;
@@ -283,8 +270,8 @@ define('Types/_entity/Record', [
                 Object.keys(changedFields).forEach(function (field) {
                     data = changedFields[field];
                     value = data[0];
-                    byLink = data[1];    //Check record state if it's changed by link
-                    //Check record state if it's changed by link
+                    byLink = data[1];    // Check record state if it's changed by link
+                    // Check record state if it's changed by link
                     if (value && byLink && value['[Types/_entity/Record]'] && !value.isChanged()) {
                         return;
                     }
@@ -296,7 +283,6 @@ define('Types/_entity/Record', [
             configurable: true
         });
         Record.prototype.destroy = function () {
-            // @ts-ignore
             this[$changedFields] = null;
             this._clearFieldsCache();
             ReadWriteMixin_1.default.destroy.call(this);
@@ -352,27 +338,28 @@ define('Types/_entity/Record', [
             var _this = this;
             var changed = null;
             pairs.forEach(function (item) {
-                var key = item[0], value = item[1], oldValue = item[2];    //Check if value changed
-                //Check if value changed
+                var key = item[0], newValue = item[1], oldValue = item[2];
+                var value = newValue;    // Check if value changed
+                // Check if value changed
                 if (isEqualValues(value, oldValue)) {
-                    //Update raw data by link if same Object has been set
+                    // Update raw data by link if same Object has been set
                     if (typeof value === 'object') {
                         _this._setRawDataValue(key, value);
                     }
                 } else {
-                    //Try to set every field
+                    // Try to set every field
                     try {
-                        //Work with relations
-                        _this._removeChild(oldValue);    //Save value to rawData
-                        //Save value to rawData
+                        // Work with relations
+                        _this._removeChild(oldValue);    // Save value to rawData
+                        // Save value to rawData
                         if (isPrimitive(value)) {
                             value = _this._setRawDataValue(key, value);
                         } else {
                             _this._setRawDataValue(key, value);
-                        }    //Work with relations
-                        //Work with relations
-                        _this._addChild(value, _this._getRelationNameForField(key));    //Compare once again because value can change the type during Factory converting
-                        //Compare once again because value can change the type during Factory converting
+                        }    // Work with relations
+                        // Work with relations
+                        _this._addChild(value, _this._getRelationNameForField(key));    // Compare once again because value can change the type during Factory converting
+                        // Compare once again because value can change the type during Factory converting
                         if (value !== oldValue) {
                             if (!_this.has(key)) {
                                 _this._addRawDataField(key);
@@ -380,16 +367,16 @@ define('Types/_entity/Record', [
                             if (!changed) {
                                 changed = {};
                             }
-                            changed[key] = value;    //Compare new value with initial value
-                            //Compare new value with initial value
+                            changed[key] = value;    // Compare new value with initial value
+                            // Compare new value with initial value
                             if (_this._hasChangedField(key) && getValueOf(_this._getChangedFieldValue(key)) === getValueOf(value)) {
-                                //Revert changed if new value is equal initial value
+                                // Revert changed if new value is equal initial value
                                 _this._unsetChangedField(key);
                             } else {
-                                //Set changed if new value is not equal initial value
+                                // Set changed if new value is not equal initial value
                                 _this._setChangedField(key, oldValue);
-                            }    //Cache value if necessary
-                            //Cache value if necessary
+                            }    // Cache value if necessary
+                            // Cache value if necessary
                             if (_this._isFieldValueCacheable(value)) {
                                 _this._fieldsCache.set(key, value);
                                 if (_this._haveToClone(value)) {
@@ -401,7 +388,7 @@ define('Types/_entity/Record', [
                             }
                         }
                     } catch (err) {
-                        //Collecting errors for every field
+                        // Collecting errors for every field
                         errors.push(err);
                     }
                 }
@@ -452,11 +439,11 @@ define('Types/_entity/Record', [
          * </pre>
          */
         Record.prototype.getEnumerator = function () {
-            var ArrayEnumerator = di_1.resolve('Types/collection:enumerator.Arraywise');
-            return new ArrayEnumerator(this._getRawDataFields());
+            return di_1.create('Types/collection:enumerator.Arraywise', this._getRawDataFields());
         };    /**
          * Перебирает все поля записи
-         * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название поля, вторым - его значение.
+         * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название
+         * поля, вторым - его значение.
          * @param {Object} [context] Контекст вызова callback.
          * @example
          * Переберем все поля записи:
@@ -478,7 +465,8 @@ define('Types/_entity/Record', [
          */
         /**
          * Перебирает все поля записи
-         * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название поля, вторым - его значение.
+         * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название
+         * поля, вторым - его значение.
          * @param {Object} [context] Контекст вызова callback.
          * @example
          * Переберем все поля записи:
@@ -515,8 +503,7 @@ define('Types/_entity/Record', [
             }
             if (!(to instanceof Record)) {
                 return false;
-            }    //TODO: compare using formats
-            //TODO: compare using formats
+            }
             return JSON.stringify(this._getRawData()) === JSON.stringify(to.getRawData(true));
         };
         Record.prototype.relationChanged = function (which, route) {
@@ -568,27 +555,35 @@ define('Types/_entity/Record', [
                 }
             }
         };
+        Record.prototype._getRelationNameForField = function (name) {
+            return FIELD_RELATION_PREFIX + name;
+        };
+        Record.prototype._getFieldFromRelationName = function (name) {
+            name += '';
+            if (name.substr(0, FIELD_RELATION_PREFIX.length) === FIELD_RELATION_PREFIX) {
+                return name.substr(FIELD_RELATION_PREFIX.length);
+            }
+        };
         Record.produceInstance = function (data, options) {
             var instanceOptions = { rawData: data };
             if (options && options.adapter) {
                 instanceOptions.adapter = options.adapter;
             }
             return new this(instanceOptions);
-        };    //endregion
-              //region SerializableMixin
-        //endregion
-        //region SerializableMixin
+        };    // endregion
+              // region SerializableMixin
+        // endregion
+        // region SerializableMixin
         Record.prototype._getSerializableState = function (state) {
-            state = SerializableMixin_1.default.prototype._getSerializableState.call(this, state);
-            state = FormattableMixin_1.default._getSerializableState.call(this, state);    // @ts-ignore
-            // @ts-ignore
-            state._changedFields = this[$changedFields];    //keep format if record has owner with format
-            //keep format if record has owner with format
-            if (state.$options.owner && state.$options.owner._hasFormat()) {
-                state._format = state.$options.owner.getFormat();
+            var resultState = SerializableMixin_1.default.prototype._getSerializableState.call(this, state);
+            resultState = FormattableMixin_1.default._getSerializableState.call(this, resultState);
+            resultState._changedFields = this[$changedFields];    // Keep format if record has owner with format
+            // Keep format if record has owner with format
+            if (resultState.$options.owner && resultState.$options.owner._hasFormat()) {
+                resultState._format = resultState.$options.owner.getFormat();
             }
-            delete state.$options.owner;
-            return state;
+            delete resultState.$options.owner;
+            return resultState;
         };
         Record.prototype._setSerializableState = function (state) {
             var fromSerializableMixin = SerializableMixin_1.default.prototype._setSerializableState(state);
@@ -601,10 +596,10 @@ define('Types/_entity/Record', [
                     this._$format = state._format;
                 }
             };
-        };    //endregion
-              //region FormattableMixin
-        //endregion
-        //region FormattableMixin
+        };    // endregion
+              // region FormattableMixin
+        // endregion
+        // region FormattableMixin
         Record.prototype.setRawData = function (rawData) {
             FormattableMixin_1.default.setRawData.call(this, rawData);
             this._nextVersion();
@@ -686,10 +681,10 @@ define('Types/_entity/Record', [
         Record.prototype._checkFormatIsWritable = function () {
             var owner = this.getOwner();
             if (owner) {
-                throw new Error('Record format has read only access if record belongs to recordset. You should change recordset format instead.');
+                throw new Error('Record format has read only access if record belongs to recordset. ' + 'You should change recordset format instead.');
             }
-        };    //endregion
-              //region Public methods
+        };    // endregion
+              // region Public methods
               /**
          * Возвращает признак, что поле с указанным именем было изменено.
          * Если name не передано, то проверяет, что изменено хотя бы одно поле.
@@ -721,8 +716,8 @@ define('Types/_entity/Record', [
          *    article.isChanged();//true
          * </pre>
          */
-        //endregion
-        //region Public methods
+        // endregion
+        // region Public methods
         /**
          * Возвращает признак, что поле с указанным именем было изменено.
          * Если name не передано, то проверяет, что изменено хотя бы одно поле.
@@ -941,9 +936,11 @@ define('Types/_entity/Record', [
          *       </ul>
          *    </li>
          * </ul>
-         * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
+         * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в
+         * этом случае меняется только если fields включает в себя весь набор измененных полей.
          * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
+         * acceptChanges всех владельцев.
          * @example
          * Подтвердим изменения в записи:
          * <pre>
@@ -994,9 +991,11 @@ define('Types/_entity/Record', [
          *       </ul>
          *    </li>
          * </ul>
-         * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
+         * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в
+         * этом случае меняется только если fields включает в себя весь набор измененных полей.
          * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
+         * acceptChanges всех владельцев.
          * @example
          * Подтвердим изменения в записи:
          * <pre>
@@ -1072,9 +1071,11 @@ define('Types/_entity/Record', [
          *    <li>Отменяются изменения всех полей;
          *    <li>{@link state State} возвращается к состоянию, в котором он был сразу после вызова acceptChanges.</li>
          * </ul>
-         * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
+         * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в
+         * этом случае меняется только если fields включает в себя весь набор измененных полей.
          * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
+         * acceptChanges всех владельцев.
          * @example
          * Отменим изменения в записи:
          * <pre>
@@ -1121,9 +1122,11 @@ define('Types/_entity/Record', [
          *    <li>Отменяются изменения всех полей;
          *    <li>{@link state State} возвращается к состоянию, в котором он был сразу после вызова acceptChanges.</li>
          * </ul>
-         * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
+         * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в
+         * этом случае меняется только если fields включает в себя весь набор измененных полей.
          * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+         * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
+         * acceptChanges всех владельцев.
          * @example
          * Отменим изменения в записи:
          * <pre>
@@ -1223,23 +1226,15 @@ define('Types/_entity/Record', [
                 result[key] = value;
             });
             return JSON.stringify(result);
-        };    //endregion
-              //region Protected methods
-        //endregion
-        //region Protected methods
-        Record.prototype._getRelationNameForField = function (name) {
-            return FIELD_RELATION_PREFIX + name;
-        };
-        Record.prototype._getFieldFromRelationName = function (name) {
-            name += '';
-            if (name.substr(0, FIELD_RELATION_PREFIX.length) === FIELD_RELATION_PREFIX) {
-                return name.substr(FIELD_RELATION_PREFIX.length);
-            }
-        };    /**
+        };    // endregion
+              // region Proteted methods
+              /**
          * Проверяет наличие ошибок
          * @param {Array.<Error>} errors Массив ошибок
          * @protected
          */
+        // endregion
+        // region Proteted methods
         /**
          * Проверяет наличие ошибок
          * @param {Array.<Error>} errors Массив ошибок
@@ -1247,7 +1242,7 @@ define('Types/_entity/Record', [
          */
         Record.prototype._checkErrors = function (errors) {
             if (errors.length) {
-                //Looking for simple Error (use compare by >) that has priority to show.
+                // Looking for simple Error (use compare by >) that has priority to show.
                 var error = errors[0];
                 for (var i = errors.length; i > 0; i--) {
                     if (error > errors[i]) {
@@ -1286,9 +1281,7 @@ define('Types/_entity/Record', [
          * @protected
          */
         Record.prototype._clearFieldsCache = function () {
-            // @ts-ignore
-            this[$fieldsCache] = null;    // @ts-ignore
-            // @ts-ignore
+            this[$fieldsCache] = null;
             this[$fieldsClone] = null;
         };    /**
          * Возвращает признак, что значение поля кэшируемое
@@ -1394,7 +1387,6 @@ define('Types/_entity/Record', [
          * @protected
          */
         Record.prototype._clearChangedFields = function () {
-            // @ts-ignore
             this[$changedFields] = {};
         };    /**
          * Возвращает признак наличия изменений в поле
@@ -1439,9 +1431,7 @@ define('Types/_entity/Record', [
          * @protected
          */
         Record.prototype._setChangedField = function (name, value, byLink) {
-            // @ts-ignore
             if (!this[$changedFields].hasOwnProperty(name)) {
-                // @ts-ignore
                 this[$changedFields][name] = [
                     value,
                     Boolean(byLink)
@@ -1463,12 +1453,28 @@ define('Types/_entity/Record', [
          * @protected
          */
         Record.prototype._unsetChangedField = function (name) {
-            // @ts-ignore
             delete this[$changedFields][name];
+        };    // endregion
+              // region Deprecated
+              /**
+         * @deprecated
+         */
+        // endregion
+        // region Deprecated
+        /**
+         * @deprecated
+         */
+        Record.extend = function (mixinsList, classExtender) {
+            util_1.logger.info('Types/_entity/Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+            if (!require.defined('Core/core-extend')) {
+                throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Record::extend()" method.');
+            }
+            var coreExtend = require('Core/core-extend');
+            return coreExtend(this, mixinsList, classExtender);
         };
         Object.defineProperty(Record, 'RecordState', {
-            //endregion
-            //region Statics
+            // endregion
+            // region Statics
             get: function () {
                 return STATES;
             },
@@ -1510,11 +1516,15 @@ define('Types/_entity/Record', [
          */
         Record.addFieldTo = function (record, name, value, format) {
             if (!format) {
-                format = getValueType(value);
-                if (!(format instanceof Object)) {
-                    format = { type: format };
+                var detectedFormat = getValueType(value);
+                if (typeof detectedFormat === 'string') {
+                    detectedFormat = {
+                        name: '',
+                        type: detectedFormat
+                    };
                 }
-                format.name = name;
+                detectedFormat.name = name;
+                format = detectedFormat;
             }
             record.addField(format, undefined, value);
         };    /**
@@ -1591,7 +1601,8 @@ define('Types/_entity/Record', [
          * @function
          * Создает запись c набором полей, ограниченным фильтром.
          * @param {Types/_entity/Record} record Исходная запись
-         * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
+         * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его
+         * значение. Должна вернуть boolean - прошло ли поле фильтр.
          * @return {Types/_entity/Record}
          * @static
          */
@@ -1600,7 +1611,8 @@ define('Types/_entity/Record', [
          * @function
          * Создает запись c набором полей, ограниченным фильтром.
          * @param {Types/_entity/Record} record Исходная запись
-         * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
+         * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его
+         * значение. Должна вернуть boolean - прошло ли поле фильтр.
          * @return {Types/_entity/Record}
          * @static
          */
@@ -1642,57 +1654,36 @@ define('Types/_entity/Record', [
             return Record.filter(record, function (name) {
                 return fields.indexOf(name) > -1;
             });
-        };    //endregion
-              //region Deprecated
-              /**
-         * @deprecated
-         */
-        //endregion
-        //region Deprecated
-        /**
-         * @deprecated
-         */
-        Record.extend = function (mixinsList, classExtender) {
-            util_3.logger.info('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-            return coreExtend(this, mixinsList, classExtender);
         };
         return Record;
-    }(util_2.mixin(DestroyableMixin_1.default, OptionsToPropertyMixin_1.default, ObservableMixin_1.default, SerializableMixin_1.default, CloneableMixin_1.default, ManyToManyMixin_1.default, ReadWriteMixin_1.default, FormattableMixin_1.default, VersionableMixin_1.default));
+    }(util_1.mixin(DestroyableMixin_1.default, OptionsToPropertyMixin_1.default, ObservableMixin_1.default, SerializableMixin_1.default, CloneableMixin_1.default, ManyToManyMixin_1.default, ReadWriteMixin_1.default, FormattableMixin_1.default, VersionableMixin_1.default));
     exports.default = Record;
-    Record.prototype['[Types/_entity/Record]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_collection/IEnumerable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/ICloneable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/IEquatable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/IObject]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/IObservableObject]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/IProducible]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/IVersionable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Record.prototype['[Types/_entity/relation/IReceiver]'] = true;
-    Record.prototype._moduleName = 'Types/entity:Record';    /**
+    Object.assign(Record.prototype, {
+        '[Types/_entity/Record]': true,
+        '[Types/_collection/IEnumerable]': true,
+        '[Types/_entity/ICloneable]': true,
+        '[Types/_entity/IEquatable]': true,
+        '[Types/_entity/IObject]': true,
+        '[Types/_entity/IObservableObject]': true,
+        '[Types/_entity/IProducible]': true,
+        '[Types/_entity/IVersionable]': true,
+        '[Types/_entity/relation/IReceiver]': true,
+        _moduleName: 'Types/entity:Record',
+        _$state: STATES.DETACHED,
+        _$cacheMode: CACHE_MODE_OBJECTS,
+        _$cloneChanged: false,
+        _$owner: null,
+        _acceptedState: undefined
+    });    /**
      * {Object} Измененные поля и оригинальные значения
      */
-                                                             // @ts-ignore
     /**
      * {Object} Измененные поля и оригинальные значения
      */
-    // @ts-ignore
-    Record.prototype[$changedFields] = null;
-    Record.prototype._$state = STATES.DETACHED;
-    Record.prototype._$cacheMode = CACHE_MODE_OBJECTS;
-    Record.prototype._$cloneChanged = false;
-    Record.prototype._$owner = null;
-    Record.prototype._acceptedState = undefined;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    Record.prototype['[WS.Data/Entity/Record]'] = true;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Record.prototype[$changedFields] = null;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    Record.prototype['[WS.Data/Entity/Record]'] = true;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     Record.prototype['[WS.Data/Collection/IEnumerable]'] = true;
     Record.prototype['[WS.Data/Entity/ICloneable]'] = true;
     di_1.register('Types/entity:Record', Record, { instantiate: false });

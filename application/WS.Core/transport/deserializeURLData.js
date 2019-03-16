@@ -1,16 +1,10 @@
 define('Transport/deserializeURLData', [
-   'Core/base64'
-], function(
-   base64
-) {
-
-   /**
-    * Переводит строку из base64 в обычную строку.
-    * @param {string} serialized
-    * @returns {*}
-    * @see serializeURLData
-    */
-   return function (serialized) {
-      return JSON.parse(base64.decode(serialized));
-   };
+    'require',
+    'exports',
+    'Browser/Transport',
+    'Env/Env'
+], function (require, exports, Transport_1, Env_1) {
+    'use strict';
+    Env_1.IoC.resolve('ILogger').log('Transport/deserializeURLData', 'module has been moved to "Browser/Transport:URL.deserializeData" and will be removed');
+    return Transport_1.URL.deserializeData;
 });

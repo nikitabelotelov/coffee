@@ -8,11 +8,11 @@
 define('Types/_entity/ObservableMixin', [
     'require',
     'exports',
-    'Core/EventBus'
-], function (require, exports, EventBus) {
+    'Env/Event'
+], function (require, exports, Event_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var ObservableMixin    /**@lends Types/_entity/ObservableMixin.prototype */ = /**@lends Types/_entity/ObservableMixin.prototype */
+    var ObservableMixin    /** @lends Types/_entity/ObservableMixin.prototype */ = /** @lends Types/_entity/ObservableMixin.prototype */
     /** @class */
     function () {
         function ObservableMixin(options) {
@@ -64,7 +64,8 @@ define('Types/_entity/ObservableMixin', [
                 return;
             }
             if (!this._eventBusChannel) {
-                this._eventBusChannel = EventBus.channel();
+                // @ts-ignore
+                this._eventBusChannel = Event_1.Bus.channel();
                 if (this._publishedEvents) {
                     for (var i = 0; i < this._publishedEvents.length; i++) {
                         this._eventBusChannel.publish(this._publishedEvents[i]);
@@ -117,7 +118,7 @@ define('Types/_entity/ObservableMixin', [
         };    /**
          * Возвращет массив подписчиков на событие
          * @param {String} event Имя события
-         * @return {Array.<Core/EventObject>}
+         * @return {Array.<Env/Event.Object>}
          * @example
          * Посмотрим, сколько подписчиков у события OnSomethingChanged
          * <pre>
@@ -127,7 +128,7 @@ define('Types/_entity/ObservableMixin', [
         /**
          * Возвращет массив подписчиков на событие
          * @param {String} event Имя события
-         * @return {Array.<Core/EventObject>}
+         * @return {Array.<Env/Event.Object>}
          * @example
          * Посмотрим, сколько подписчиков у события OnSomethingChanged
          * <pre>
@@ -183,16 +184,16 @@ define('Types/_entity/ObservableMixin', [
                 }
             }
         };    /**
-         * Извещает о наступлении события.
-         * Если в процессе извещения приходит очередное событие, то извещение о нем будет отправлено после выполнения обработчиков предыдущего.
+         * Извещает о наступлении события. Если в процессе извещения приходит очередное событие, то извещение о нем будет
+         * отправлено после выполнения обработчиков предыдущего.
          * @param {String} event Имя события
          * @param {...*} args Аргументы события
          * @return {*} Результат обработки события (возвращается только в случае отсутствия очереди)
          * @protected
          */
         /**
-         * Извещает о наступлении события.
-         * Если в процессе извещения приходит очередное событие, то извещение о нем будет отправлено после выполнения обработчиков предыдущего.
+         * Извещает о наступлении события. Если в процессе извещения приходит очередное событие, то извещение о нем будет
+         * отправлено после выполнения обработчиков предыдущего.
          * @param {String} event Имя события
          * @param {...*} args Аргументы события
          * @return {*} Результат обработки события (возвращается только в случае отсутствия очереди)
@@ -297,11 +298,10 @@ define('Types/_entity/ObservableMixin', [
         return ObservableMixin;
     }();
     exports.default = ObservableMixin;
-    ObservableMixin.prototype['[Types/_entity/ObservableMixin]'] = true;    // @ts-ignore
-    // @ts-ignore
-    ObservableMixin.prototype._eventBusChannel = null;    // @ts-ignore
-    // @ts-ignore
-    ObservableMixin.prototype._eventsQueue = null;    // @ts-ignore
-    // @ts-ignore
-    ObservableMixin.prototype._publishedEvents = null;
+    Object.assign(ObservableMixin.prototype, {
+        '[Types/_entity/ObservableMixin]': true,
+        _eventBusChannel: null,
+        _eventsQueue: null,
+        _publishedEvents: null
+    });
 });

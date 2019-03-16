@@ -3,9 +3,9 @@ define('Coffee/BlockPage', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/BlockPage/BlockPage'
-], function (require, exports, tslib_1, Base_1, template) {
+], function (require, exports, tslib_1, Control, template) {
     'use strict';
     var BlockPage = /** @class */
     function (_super) {
@@ -16,6 +16,6 @@ define('Coffee/BlockPage', [
             return _this;
         }
         return BlockPage;
-    }(Base_1.Control);
+    }(Control);
     return BlockPage;
 });

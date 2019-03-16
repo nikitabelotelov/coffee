@@ -31,7 +31,7 @@ define("Lib/Control/Paging/Paging", [
        * @event onPageChange При изменении страницы
        *
        * Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {Number} number номер новой страницы
        * @param {Core/Deferred} deferred для режима частичной постраничной навигации.
        * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.

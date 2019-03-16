@@ -55,8 +55,7 @@ define('Types/_entity/descriptor', [
                 return new TypeError('Value "' + value + '" should be type of ' + type);
             };
         case 'function':
-            return function validateTypeIntance(value) {
-                // @ts-ignore
+            return function validateTypeInstance(value) {
                 if (value === undefined || value instanceof type) {
                     return value;
                 }
@@ -73,7 +72,8 @@ define('Types/_entity/descriptor', [
                 }
                 return new TypeError('Value "' + value + '" should implement ' + type);
             };
-        }
+        }    // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:max-line-length
         throw new TypeError('Argument "type" should be one of following types: string, function or object but "' + typeName + '" received.');
     }    /**
      * Returns validator for required value.

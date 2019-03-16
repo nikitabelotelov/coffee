@@ -9,8 +9,8 @@ define('Types/_shim/Set', [
     'exports'
 ], function (require, exports) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    //Use native implementation if supported
-    //Use native implementation if supported
+    Object.defineProperty(exports, '__esModule', { value: true });    // Use native implementation if supported
+    // Use native implementation if supported
     var SetImplementation;
     if (typeof Set === 'undefined') {
         SetImplementation = /** @class */
@@ -18,6 +18,9 @@ define('Types/_shim/Set', [
             function class_1() {
                 this.clear();
             }
+            class_1._getHashedKey = function (key) {
+                return typeof key + '@' + key;
+            };
             class_1.prototype.add = function (value) {
                 var key = this._isObject(value) ? this._addObject(value) : value;
                 this._hash[SetImplementation._getHashedKey(key)] = value;
@@ -43,7 +46,7 @@ define('Types/_shim/Set', [
                 throw new Error('Method is not supported');
             };
             class_1.prototype.forEach = function (callbackFn, thisArg) {
-                //FIXME: now not in insertion order
+                // FIXME: now not in insertion order
                 var hash = this._hash;
                 for (var key in hash) {
                     if (hash.hasOwnProperty(key) && hash[key] !== undefined) {
@@ -96,17 +99,13 @@ define('Types/_shim/Set', [
                 }
                 return this._objectPrefix + index;
             };
-            class_1._getHashedKey = function (key) {
-                return typeof key + '@' + key;
-            };
             return class_1;
-        }();    // @ts-ignore
-        // @ts-ignore
-        SetImplementation.prototype._hash = null;    // @ts-ignore
-        // @ts-ignore
-        SetImplementation.prototype._objectPrefix = '{[object]}:';    // @ts-ignore
-        // @ts-ignore
-        SetImplementation.prototype._objects = null;
+        }();
+        Object.assign(SetImplementation.prototype, {
+            _hash: null,
+            _objectPrefix: '{[object]}:',
+            _objects: null
+        });
         Object.defineProperty(SetImplementation.prototype, 'size', {
             get: function () {
                 return Object.keys(this._hash).length;

@@ -26,22 +26,22 @@ define('Lib/Control/Master/Master', [
       /**
        * @event onStepReady событие при полной загрузке каждого шага
        * Важно: id может быть не равен идентификатору текущего шага
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        * @param {Number} step номер шага в мастере, нумируются с 1
        * @param {String} id идентификатор шага
        */
       /**
        * @event onComplete событие при успешном завершении работы мастера
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        */
       /**
        * @event onCancel событие при отмене работы мастера
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        */
       /**
        * @event onPrevious событие при переключении на предыдующий шаг.
        * Если вернуть из обработчика другой номер шага, то переключиться на него.
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        * @param {Number} step номер нового шага
        * @param {String} id идентификатор нового шага
        * @return {undefined|Number} номер нового шага
@@ -49,7 +49,7 @@ define('Lib/Control/Master/Master', [
       /**
        * @event onNext событие при переключении на следующий шаг.
        * Если вернуть из обработчика другой номер шага, то переключиться на него.
-       * @param {Core/EventObject} eventObject описание в классе Core/Abstract
+       * @param {Env/Event:Object} eventObject описание в классе Core/Abstract
        * @param {Number} step номер нового шага
        * @param {String} id идентификатор нового шага
        * @return {undefined|Number} номер нового шага

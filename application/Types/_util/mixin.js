@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_util/mixin" />
 /**
  * Наследование с использованием миксинов
  * @author Мальцев А.А.
@@ -11,16 +10,16 @@ define('Types/_util/mixin', [
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Наследует статические свойства
-     * @param {Function} Base Базовый класс.
-     * @param {Function} Sub Класс-наследник.
+     * @param Base Базовый класс.
+     * @param Sub Класс-наследник.
      */
     /**
      * Наследует статические свойства
-     * @param {Function} Base Базовый класс.
-     * @param {Function} Sub Класс-наследник.
+     * @param Base Базовый класс.
+     * @param Sub Класс-наследник.
      */
     function inheritStatic(Base, Sub) {
-        //Don't inherit from plain object
+        // Don't inherit from plain object
         if (Base === Object) {
             return;
         }
@@ -31,7 +30,7 @@ define('Types/_util/mixin', [
             case 'length':
             case 'name':
             case 'prototype':
-                //Skip some valuable keys of type Function
+                // Skip some valuable keys of type Function
                 break;
             default:
                 if (!Sub.hasOwnProperty(key)) {
@@ -44,8 +43,8 @@ define('Types/_util/mixin', [
         var mixins = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             mixins[_i - 1] = arguments[_i];
-        }    //FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
-        //FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
+        }    // FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
+        // FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
         if (mixins.length && !Sub.prototype._mixins) {
             Sub.prototype._mixins = [];
         }
@@ -68,13 +67,13 @@ define('Types/_util/mixin', [
      * Создает наследника с набором миксинов
      * @param Base Базовый класс
      * @param mixins Миксины
-     * @return {Function} Наследник с миксинами.
+     * @return Наследник с миксинами.
      */
     /**
      * Создает наследника с набором миксинов
      * @param Base Базовый класс
      * @param mixins Миксины
-     * @return {Function} Наследник с миксинами.
+     * @return Наследник с миксинами.
      */
     function mixin(Base) {
         var mixins = [];

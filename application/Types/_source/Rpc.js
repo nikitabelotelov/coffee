@@ -20,12 +20,12 @@ define('Types/_source/Rpc', [
     function (_super) {
         tslib_1.__extends(Rpc, _super);
         function Rpc() {
-            //region IRpc
+            // region IRpc
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this['[Types/_source/IRpc]'] = true;
-            return _this;    //endregion
+            return _this;    // endregion
         }
-        //endregion
+        // endregion
         Rpc.prototype.call = function (command, data) {
             var _this = this;
             return this._callProvider(command, data).addCallback(function (data) {
@@ -34,16 +34,6 @@ define('Types/_source/Rpc', [
                 });
             });
         };
-        Object.defineProperty(Rpc, 'NAVIGATION_TYPE', {
-            //endregion
-            //region Statics
-            //FIXME: something went wrong with inheritance of static members in IE
-            get: function () {
-                return Remote_1.default.NAVIGATION_TYPE;
-            },
-            enumerable: true,
-            configurable: true
-        });
         return Rpc;
     }(Remote_1.default);
     exports.default = Rpc;

@@ -19,8 +19,8 @@ define('Types/_entity/format/DateField', [
     'exports',
     'tslib',
     'Types/_entity/format/Field',
-    'Types/_entity/date/toSql'
-], function (require, exports, tslib_1, Field_1, toSql_1) {
+    'Types/formatter'
+], function (require, exports, tslib_1, Field_1, formatter_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DateField = /** @class */
@@ -29,11 +29,11 @@ define('Types/_entity/format/DateField', [
         /** @lends Types/_entity/format/DateField.prototype */
         function DateField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
-        //region Public methods
+        }    // region Public methods
+        // region Public methods
         DateField.prototype.getDefaultValue = function () {
             if (this._$defaultValue instanceof Date) {
-                return toSql_1.default(this._$defaultValue, toSql_1.MODE.DATE);
+                return formatter_1.dateToSql(this._$defaultValue, formatter_1.TO_SQL_MODE.DATE);
             }
             return this._$defaultValue;
         };

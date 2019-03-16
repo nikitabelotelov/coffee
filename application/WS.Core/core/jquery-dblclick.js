@@ -21,11 +21,11 @@
  * @param {Function} click Обработчик на клик.
  * @param {Function} doubleclick Обработчик на двойной клик.
  */
-define('Core/jquery-dblclick', ['Core/detection'], function(detection) {
+define('Core/jquery-dblclick', ['Env/Env'], function(Env) {
 
    (function($) {
 
-      if (detection.isMobileAndroid || detection.isMobileSafari) {
+      if (Env.detection.isMobileAndroid || Env.detection.isMobileSafari) {
 
          $.fn.wsFixedClick = function(selector, clickHandler) {
             return this.on('click', selector, clickHandler);

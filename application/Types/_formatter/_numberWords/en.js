@@ -76,10 +76,9 @@ define('Types/_formatter/_numberWords/en', [
         if (num[0] === '-') {
             return negword + ' ' + numberWordsEN(num.slice(1));
         }
-        var words = [];    //let chunks = list(splitbyx(str(n), 3))
-        //let chunks = list(splitbyx(str(n), 3))
+        var words = [];    // let chunks = list(splitbyx(str(n), 3))
+        // let chunks = list(splitbyx(str(n), 3))
         utils_1.iterateNumber(num, function (three, counter) {
-            var i = three.length;
             var prepareWord = [];
             if (three[0] !== '0') {
                 prepareWord.push({
@@ -107,7 +106,6 @@ define('Types/_formatter/_numberWords/en', [
             if (prepareWord.length > 0) {
                 var word = prepareWord.reduceRight(concat).title;
                 if (counter > 0 && +three != 0) {
-                    //@ts-ignore
                     word += ' ' + rk(THOUSANDS[counter], +three);
                 }
                 words.push(word);

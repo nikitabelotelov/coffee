@@ -3,14 +3,14 @@ define('Types/_entity/Guid', [
     'exports'
 ], function (require, exports) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    ///<amd-module name="Types/_entity/Guid" />
+    Object.defineProperty(exports, '__esModule', { value: true });    /// <amd-module name="Types/_entity/Guid" />
                                                                       /**
      * Guid
      * @class Types/_entity/Guid
      * @public
      * @author Мальцев А.А.
      */
-    ///<amd-module name="Types/_entity/Guid" />
+    /// <amd-module name="Types/_entity/Guid" />
     /**
      * Guid
      * @class Types/_entity/Guid

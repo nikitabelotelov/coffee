@@ -51,10 +51,10 @@ define('Types/_entity/adapter/JsonTable', [
             GenericFormatMixin_1.default.constructor.call(_this, data);
             JsonFormatMixin_1.default.constructor.call(_this, data);
             return _this;
-        }    //region ITable
-             //region Types/_entity/adapter/JsonFormatMixin
-        //region ITable
-        //region Types/_entity/adapter/JsonFormatMixin
+        }    // endregion
+             // region Types/_entity/adapter/JsonFormatMixin
+        // endregion
+        // region Types/_entity/adapter/JsonFormatMixin
         JsonTable.prototype.addField = function (format, at) {
             JsonFormatMixin_1.default.addField.call(this, format, at);
             var name = format.getName();
@@ -72,10 +72,10 @@ define('Types/_entity/adapter/JsonTable', [
             for (var i = 0; i < this._data.length; i++) {
                 delete this._data[i][name];
             }
-        };    //endregion Types/_entity/adapter/JsonFormatMixin
-              //region Public methods
-        //endregion Types/_entity/adapter/JsonFormatMixin
-        //region Public methods
+        };    // endregion
+              // region Public methods
+        // endregion
+        // region Public methods
         JsonTable.prototype.getFields = function () {
             var count = this.getCount();
             var fieldSet = new shim_1.Set();
@@ -152,10 +152,10 @@ define('Types/_entity/adapter/JsonTable', [
         JsonTable.prototype.clear = function () {
             this._touchData();
             this._data.length = 0;
-        };    //endregion Public methods
-              //region Protected methods
-        //endregion Public methods
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         JsonTable.prototype._touchData = function () {
             GenericFormatMixin_1.default._touchData.call(this);
             if (!(this._data instanceof Array)) {

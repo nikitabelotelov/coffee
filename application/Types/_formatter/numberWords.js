@@ -6,8 +6,7 @@ define('Types/_formatter/numberWords', [
     'Core/i18n'
 ], function (require, exports, ru_1, en_1, i18n) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    //@ts-ignore
-    //@ts-ignore
+    Object.defineProperty(exports, '__esModule', { value: true });
     function numberWords(num, feminine) {
         if (feminine === void 0) {
             feminine = false;
@@ -22,5 +21,4 @@ define('Types/_formatter/numberWords', [
         }
     }
     exports.default = numberWords;
-    ;
 });

@@ -1,5 +1,5 @@
 define('Core/Abstract', [
-   'Core/core-extend', 'Core/Abstract.compatible', 'Core/helpers/Function/shallowClone', 'Core/EventBus', 'Core/IoC'
+   'Core/core-extend', 'Core/Abstract.compatible', 'Core/helpers/Function/shallowClone', 'Env/Event', 'Env/Env'
 ], function(coreExtend, AbstractCompatible, shallowClone) {
    /**
     * Абстрактный класс.
@@ -25,7 +25,7 @@ define('Core/Abstract', [
    var Abstract = coreExtend([AbstractCompatible], /** @lends Core/Abstract.prototype */{
       /**
        * @event onInit Происходит при инициализации экземпляра класса контрола.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @return Результат не обрабатывается.
        * @example
        * 1. При инициализации класса вывести об этом информацию в элемент с идентификатором status.
@@ -48,7 +48,7 @@ define('Core/Abstract', [
        * @event onInitComplete Происходит после инициализации компонента.
        * @remark
        * Именно в обработчике на это событие рекомендуется использовать метод {@link Lib/Control/Control#setEnabled} для изменения режима взаимодействия с дочерними контролами.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @return Результат не обрабатывается.
        */
       /**
@@ -58,7 +58,7 @@ define('Core/Abstract', [
        * 1. С экземпляром класса уже можно полноценно работать.
        * 2. Все дочерние элементы построены и доступны для взаимодействия.
        *
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @return Результат не обрабатывается.
        * @example
        * 1. При готовности класса вывести об этом информацию в элемент с идентификатором status.
@@ -88,7 +88,7 @@ define('Core/Abstract', [
        * Событие, возникающее при уничтожении экземпляра класса.
        * Происходит, например, при закрытии страницы или смене шаблона области по шаблону.
        *
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @return Результат не обрабатывается.
        * @example
        * 1. При уничтожении экземпляра класса вывести об этом информацию в элемент с идентификатором status.
@@ -273,7 +273,7 @@ define('Core/Abstract', [
        * @returns {String} "Описание" класса.
        * @example
        * <pre>
-       * define(..., [... , 'Core/IoC']. function(... , IoC) {
+       * define(..., [... , 'Env/Env:IoC']. function(... , IoC) {
        *    onDestroy: function(){
        *       Ioc.resolve('ILogger').log('Error', 'Class ' + myClass.describe() + ' destroyed');
        *    }

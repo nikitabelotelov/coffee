@@ -2,11 +2,9 @@ define('View/Runner/Vdom/third-party/inferno',
 
     ['View/Executor/Expressions',
      'Core/helpers/String/unEscapeASCII',
-     'Core/detection',
-     'Core/IoC',
-     'Core/ConsoleLogger' //No mappings defined for ILogger
+     'Env/Env' //No mappings defined for ILogger
     ],
-function (Expressions, unEscapeASCII, detection, IoC) {
+function (Expressions, unEscapeASCII, Env) {
     'use strict';
 
     var RawMarkupNode = Expressions.RawMarkupNode;
@@ -91,7 +89,7 @@ function (Expressions, unEscapeASCII, detection, IoC) {
     }
     function warning(message) {
         // tslint:disable-next-line:no-console
-        IoC.resolve("ILogger").log("Inferno core", message);
+        Env.IoC.resolve("ILogger").log("Inferno core", message);
     }
     function combineFrom(first, second) {
         var out = {};
@@ -192,7 +190,7 @@ function (Expressions, unEscapeASCII, detection, IoC) {
             if (foundKeys[key]) {
                // In case of duplicate keys we don't want to crash the whole app because of that,
                // so we have to create a fixed duplicate on the fly
-                IoC.resolve("ILogger").error(
+                Env.IoC.resolve("ILogger").error(
                    'Deoptimizing perfomance due to duplicate node keys',
                    'Encountered two children with same key: {' + key + '}. Location: \n' + getTagName(childNode)
                 );
@@ -2036,11 +2034,11 @@ function (Expressions, unEscapeASCII, detection, IoC) {
         else {
             dom = lastVNode.dom;
             if (nextText !== lastVNode.children) {
-               if (detection.isIE) {
+               if (Env.detection.isIE) {
                   // inner text has to be just for IE 10 and for EmptyTextNode
                   // EmptyTextNode - implementation of empty string value
                   // You can't set nodeValue property in EmptyTextNode
-                  if (detection.isIE10 || dom.nodeValue === '') {
+                  if (Env.detection.isIE10 || dom.nodeValue === '') {
                      parentDom.innerText = nextText;
                   } else {
                      dom.nodeValue = nextText;
@@ -2553,7 +2551,7 @@ function (Expressions, unEscapeASCII, detection, IoC) {
         /* tslint:disable-next-line:no-empty */
         var testFunc = function testFn() { };
         /* tslint:disable-next-line*/
-        IoC.resolve("ILogger").log("Inferno core", "Inferno is in development mode.");
+        Env.IoC.resolve("ILogger").log("Inferno core", "Inferno is in development mode.");
         if ((testFunc.name || testFunc.toString()).indexOf('testFn') === -1) {
             warning("It looks like you're using a minified copy of the development build " +
                 'of Inferno. When deploying Inferno apps to production, make sure to use ' +

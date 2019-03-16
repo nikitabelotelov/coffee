@@ -7,8 +7,9 @@ define('UI/Base', [
     'UI/_base/StateReceiver',
     'UI/_base/Deprecated/AppData',
     'UI/_base/Start',
+    'UI/_base/HeadController',
     'wml!UI/_base/Route'
-], function (require, exports, Control_1, HTML_1, Document_1, StateReceiver_1, AppData_1, Start_1, BaseRoute) {
+], function (require, exports, Control_1, HTML_1, Document_1, StateReceiver_1, AppData_1, Start_1, HeadController_1, BaseRoute) {
     'use strict';
     return {
         Control: Control_1.default,
@@ -17,6 +18,7 @@ define('UI/Base', [
         StateReceiver: StateReceiver_1.default,
         AppData: AppData_1.default,
         Start: Start_1.default,
-        BaseRoute: BaseRoute
+        BaseRoute: BaseRoute,
+        HeadController: HeadController_1.default
     };
 });

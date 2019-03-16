@@ -1,4 +1,4 @@
-define('Core/s3ds', ['Core/cookie', 'Core/helpers/Function/debounce'], function(cookie, debounce) {
+define('Core/s3ds', ['Env/Env', 'Core/helpers/Function/debounce'], function(Env, debounce) {
    function setS3DSCookie() {
 
       //В screen, лежат реальные размеры экрана, а не размер окна браузера. screen.width и screen.height
@@ -11,7 +11,7 @@ define('Core/s3ds', ['Core/cookie', 'Core/helpers/Function/debounce'], function(
          window.outerWidth,
          window.outerHeight
       ];
-      cookie.set('s3ds', dimensions.join('|'), {
+      Env.cookie.set('s3ds', dimensions.join('|'), {
          path: '/',
          expires: 365
       });

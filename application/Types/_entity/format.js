@@ -72,6 +72,7 @@ define('Types/_entity/format', [
     exports.DictionaryField = DictionaryField_1.default;
     exports.EnumField = EnumField_1.default;
     exports.fieldsFactory = fieldsFactory_1.default;
+    exports.IFieldDeclaration = fieldsFactory_1.IDeclaration;
     exports.FlagsField = FlagsField_1.default;
     exports.HierarchyField = HierarchyField_1.default;
     exports.IdentityField = IdentityField_1.default;

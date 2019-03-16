@@ -11,15 +11,13 @@
    define('tmpl', [
       'View/config',
       'Core/pathResolver',
-      'Core/IoC',
-      'Core/constants',
+      'Env/Env',
       'View/Runner',
       'wml'
    ], function(
       config,
       pathResolver,
-      IoC,
-      constants,
+      Env,
       runner,
       wml
    ) {

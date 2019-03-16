@@ -2,8 +2,9 @@
 define('Vdom/_private/Synchronizer/resources/runDelayedRebuild', [
     'require',
     'exports',
-    'Core/helpers/Function/runDelayed'
-], function (require, exports, runDelayed) {
+    'Core/helpers/Function/runDelayed',
+    'Env/Env'
+], function (require, exports, runDelayed, Env_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var checkPageVisibility = function checkPageVisibility() {
@@ -19,7 +20,17 @@ define('Vdom/_private/Synchronizer/resources/runDelayedRebuild', [
                 }
             }
             return hidden;
-        }, pageVisibility = checkPageVisibility();    /**
+        }, performingAnimation = false, pageVisibility = checkPageVisibility();
+    function animationWaiterOff() {
+        performingAnimation = false;
+    }
+    function animationWaiter(b) {
+        performingAnimation = b;
+        if (b === true) {
+            setTimeout(animationWaiterOff, 1000);
+        }
+    }
+    exports.animationWaiter = animationWaiter;    /**
      * Function runDelayedRebuild module <b>runDelayed(fn)</b>.
      *
      * Method checks if browser tab active or not and depending on tab state
@@ -52,6 +63,12 @@ define('Vdom/_private/Synchronizer/resources/runDelayedRebuild', [
     function runDelayedRebuild(fn) {
         if (pageVisibility && document[pageVisibility]) {
             setTimeout(fn, 0);
+        } else if (performingAnimation && Env_1.detection.chrome) {
+            // @ts-ignore
+            if (window && window.requestIdleCallback) {
+                // @ts-ignore
+                window.requestIdleCallback(fn);
+            }
         } else {
             runDelayed(fn);
         }

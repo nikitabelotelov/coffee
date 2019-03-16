@@ -1,8 +1,8 @@
 <div class="settings-page">
    <div class="coffee-application" >
       <Router.Route mask="settingsPage/:pageId">
-         <Coffee.PageLoader base="Settings" default="SettingsMenu" templateOptions="{{settingsInfo}}">
-         </Coffee.PageLoader>
+            <Coffee.PageLoader temp="{{content.pageId}}" base="Settings" default="SettingsMenu" templateOptions="{{settingsInfo}}">
+            </Coffee.PageLoader>
       </Router.Route>
    </div>
 

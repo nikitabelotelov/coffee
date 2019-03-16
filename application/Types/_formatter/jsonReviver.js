@@ -1,3 +1,4 @@
+/// <amd-module name="Types/_formatter/jsonReviver" />
 define('Types/_formatter/jsonReviver', [
     'require',
     'exports',
@@ -10,7 +11,8 @@ define('Types/_formatter/jsonReviver', [
     var unresolvedInstancesId = [];
     var instanceStorage = {};
     function resolveInstances() {
-        var Module, name;
+        var Module;
+        var name;
         for (var i = 0; i < unresolvedInstances.length; i++) {
             var item = unresolvedInstances[i];
             var instance = null;
@@ -18,9 +20,8 @@ define('Types/_formatter/jsonReviver', [
                 instance = instanceStorage[item.value.id];
             } else if (item.value.module) {
                 try {
-                    name = item.value.module;    //@ts-ignore
-                    //@ts-ignore
-                    Module = requirejs(name);
+                    name = item.value.module;
+                    Module = require(name);
                     if (!Module) {
                         throw new Error('The module "' + name + '" is not loaded yet.');
                     }
@@ -73,8 +74,8 @@ define('Types/_formatter/jsonReviver', [
                 var dateValue = new Date(result);
                 return dateValue;
             }
-        }    //Resolve links and instances at root
-        //Resolve links and instances at root
+        }    // Resolve links and instances at root
+        // Resolve links and instances at root
         if (name === '' && Object.keys(this).length === 1) {
             resolveInstances();
             unresolvedInstances = [];

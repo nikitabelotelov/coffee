@@ -60,17 +60,13 @@ define('Types/_chain/ZippedEnumerator', [
         };
         return ZippedEnumerator;
     }();
-    exports.default = ZippedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    ZippedEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    ZippedEnumerator.prototype.items = null;    // @ts-ignore
-    // @ts-ignore
-    ZippedEnumerator.prototype.itemsEnumerators = null;    // @ts-ignore
-    // @ts-ignore
-    ZippedEnumerator.prototype.enumerator = null;    // @ts-ignore
-    // @ts-ignore
-    ZippedEnumerator.prototype.index = null;    // @ts-ignore
-    // @ts-ignore
-    ZippedEnumerator.prototype.current = undefined;
+    exports.default = ZippedEnumerator;
+    Object.assign(ZippedEnumerator.prototype, {
+        previous: null,
+        items: null,
+        itemsEnumerators: null,
+        enumerator: null,
+        index: null,
+        current: undefined
+    });
 });

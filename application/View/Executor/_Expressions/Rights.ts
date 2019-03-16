@@ -5,7 +5,7 @@ import * as RightsManager from 'Core/RightsManager';
 // @ts-ignore
 import * as isPlainObject from 'Core/helpers/Object/isPlainObject';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC } from 'Env/Env';
 
 const entityRightsHandlers = {
    object: {

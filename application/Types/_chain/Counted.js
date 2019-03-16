@@ -52,7 +52,8 @@ define('Types/_chain/Counted', [
         return Counted;
     }(Abstract_1.default);
     exports.default = Counted;
-    Counted.prototype['[Types/_chain/Counted]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Counted.prototype._key = null;
+    Object.assign(Counted.prototype, {
+        '[Types/_chain/Counted]': true,
+        _key: null
+    });
 });

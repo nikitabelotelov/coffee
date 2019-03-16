@@ -28,44 +28,14 @@ define('Types/_display/CollectionItem', [
             entity_1.OptionsToPropertyMixin.call(_this, options);
             entity_1.SerializableMixin.constructor.call(_this);
             return _this;
-        }    //endregion
-             //region SerializableMixin
-        //endregion
-        //region SerializableMixin
-        CollectionItem.prototype._getSerializableState = function (state) {
-            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
-            if (state.$options.owner) {
-                //save element index if collections implements Types/_collection/IList
-                var collection = state.$options.owner.getCollection();
-                var index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
-                if (index > -1) {
-                    state.ci = index;
-                    delete state.$options.contents;
-                }
-            }    //By performance reason. It will be restored at Collection::_setSerializableState
-                 //delete state.$options.owner;
-            //By performance reason. It will be restored at Collection::_setSerializableState
-            //delete state.$options.owner;
-            state.iid = this.getInstanceId();
-            return state;
-        };
-        CollectionItem.prototype._setSerializableState = function (state) {
-            var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
-            return function () {
-                fromSerializableMixin.call(this);
-                if (state.hasOwnProperty('ci')) {
-                    this._contentsIndex = state.ci;
-                }
-                this._instanceId = state.iid;
-            };
-        };    //endregion
-              //region Public
-              /**
+        }    // endregion
+             // region Public
+             /**
          * Возвращает коллекцию, которой принадлежит элемент
          * @return {Types/_collection/IEnumerable}
          */
-        //endregion
-        //region Public
+        // endregion
+        // region Public
         /**
          * Возвращает коллекцию, которой принадлежит элемент
          * @return {Types/_collection/IEnumerable}
@@ -92,7 +62,7 @@ define('Types/_display/CollectionItem', [
          */
         CollectionItem.prototype.getContents = function () {
             if (this._contentsIndex !== undefined) {
-                //Ленивое восстановление _$contents по _contentsIndex после десериализации
+                // Ленивое восстановление _$contents по _contentsIndex после десериализации
                 this._$contents = this.getOwner().getCollection().at(this._contentsIndex);
                 this._contentsIndex = undefined;
             }
@@ -156,15 +126,45 @@ define('Types/_display/CollectionItem', [
             if (!silent) {
                 this._notifyItemChangeToOwner('selected');
             }
-        };    //endregion
-              //region Protected
+        };    // endregion
+              // region SerializableMixin
+        // endregion
+        // region SerializableMixin
+        CollectionItem.prototype._getSerializableState = function (state) {
+            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
+            if (state.$options.owner) {
+                // save element index if collections implements Types/_collection/IList
+                var collection = state.$options.owner.getCollection();
+                var index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
+                if (index > -1) {
+                    state.ci = index;
+                    delete state.$options.contents;
+                }
+            }    // By performance reason. It will be restored at Collection::_setSerializableState
+                 // delete state.$options.owner;
+            // By performance reason. It will be restored at Collection::_setSerializableState
+            // delete state.$options.owner;
+            state.iid = this.getInstanceId();
+            return state;
+        };
+        CollectionItem.prototype._setSerializableState = function (state) {
+            var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
+            return function () {
+                fromSerializableMixin.call(this);
+                if (state.hasOwnProperty('ci')) {
+                    this._contentsIndex = state.ci;
+                }
+                this._instanceId = state.iid;
+            };
+        };    // endregion
+              // region Protected
               /**
          * Возвращает коллекцию проекции
          * @return {Types/_collection/IEnumerable}
          * @protected
          */
-        //endregion
-        //region Protected
+        // endregion
+        // region Protected
         /**
          * Возвращает коллекцию проекции
          * @return {Types/_collection/IEnumerable}
@@ -190,19 +190,16 @@ define('Types/_display/CollectionItem', [
         return CollectionItem;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.InstantiableMixin, entity_1.SerializableMixin));
     exports.default = CollectionItem;
-    CollectionItem.prototype._moduleName = 'Types/display:CollectionItem';
-    CollectionItem.prototype['[Types/_display/CollectionItem]'] = true;    // @ts-ignore
-    // @ts-ignore
-    CollectionItem.prototype._$owner = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionItem.prototype._$contents = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionItem.prototype._$selected = false;    // @ts-ignore
-    // @ts-ignore
-    CollectionItem.prototype._instancePrefix = 'collection-item-';    // @ts-ignore
-    // @ts-ignore
-    CollectionItem.prototype._contentsIndex = undefined;    // Deprecated
-    // Deprecated
+    Object.assign(CollectionItem.prototype, {
+        '[Types/_display/CollectionItem]': true,
+        _moduleName: 'Types/display:CollectionItem',
+        _$owner: null,
+        _$contents: null,
+        _$selected: false,
+        _instancePrefix: 'collection-item-',
+        _contentsIndex: undefined
+    });    // FIXME: deprecated
+    // FIXME: deprecated
     CollectionItem.prototype['[WS.Data/Display/CollectionItem]'] = true;
     di_1.register('Types/display:CollectionItem', CollectionItem);
 });

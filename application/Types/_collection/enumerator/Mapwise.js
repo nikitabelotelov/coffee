@@ -71,11 +71,10 @@ define('Types/_collection/enumerator/Mapwise', [
         return Mapwise;
     }();
     exports.default = Mapwise;
-    Mapwise.prototype['[Types/_collection/enumerator/Mapwise]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Mapwise.prototype._items = null;    // @ts-ignore
-    // @ts-ignore
-    Mapwise.prototype._index = -1;    // @ts-ignore
-    // @ts-ignore
-    Mapwise.prototype._cachedKeys = undefined;
+    Object.assign(Mapwise.prototype, {
+        '[Types/_collection/enumerator/Mapwise]': true,
+        _items: null,
+        _index: -1,
+        _cachedKeys: undefined
+    });
 });

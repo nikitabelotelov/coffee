@@ -2,7 +2,8 @@
 /**
  * Адаптер для рекордсета.
  * Работает с данными, представленными в виде рекорда/рекордсета.
- * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/RecordSetRecord} и {@link Types/_entity/adapter/RecordSetTable}.
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/RecordSetRecord} и
+ * {@link Types/_entity/adapter/RecordSetTable}.
  * @class Types/_entity/adapter/RecordSet
  * @extends Types/_entity/adapter/Abstract
  * @public
@@ -71,7 +72,7 @@ define('Types/_entity/adapter/RecordSet', [
     exports.default = RecordSet;
     RecordSet.prototype['[Types/_entity/adapter/RecordSet]'] = true;
     RecordSet.prototype._moduleName = 'Types/entity:adapter.RecordSet';
-    di_1.register('Types/entity:adapter.RecordSet', RecordSet, { instantiate: false });    //FIXME: deprecated
-    //FIXME: deprecated
+    di_1.register('Types/entity:adapter.RecordSet', RecordSet, { instantiate: false });    // FIXME: deprecated
+    // FIXME: deprecated
     di_1.register('adapter.recordset', RecordSet, { instantiate: false });
 });

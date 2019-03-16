@@ -3,8 +3,8 @@ define('Vdom/_private/Synchronizer/resources/Hooks', [
     'require',
     'exports',
     'View/Executor/Expressions',
-    'Core/constants'
-], function (require, exports, Expressions_1, Constants) {
+    'Env/Env'
+], function (require, exports, Expressions_1, Env_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     function getEventHandlerBase(eventDescr) {
@@ -14,10 +14,10 @@ define('Vdom/_private/Synchronizer/resources/Hooks', [
             var res = event.nativeEvent.result;
             if (res && res.then) {
                 res.then(function () {
-                    eventDescr.controlNode.requestDirtyCheck();
+                    eventDescr.controlNode.requestDirtyCheck(eventDescr.controlNode);
                 });
             } else {
-                eventDescr.controlNode.requestDirtyCheck();
+                eventDescr.controlNode.requestDirtyCheck(eventDescr.controlNode);
             }
             return [
                 eventDescr.controlNode.control,
@@ -71,7 +71,7 @@ define('Vdom/_private/Synchronizer/resources/Hooks', [
         }
         for (var i = 0; i < controlNodes.length; i++) {
             controlNodes[i]['element'] = element;
-            if (Constants.compat) {
+            if (Env_1.constants.compat) {
                 controlNodes[i].control.saveOptions(controlNodes[i].control._options, controlNodes[i]);
             } else {
                 controlNodes[i].control._container = element;

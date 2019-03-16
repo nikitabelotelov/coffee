@@ -46,10 +46,10 @@ define('Types/_entity/adapter/JsonRecord', [
             GenericFormatMixin_1.default.constructor.call(_this, data);
             JsonFormatMixin_1.default.constructor.call(_this, data);
             return _this;
-        }    //endregion IRecord
-             //region Types/_entity/adapter/JsonFormatMixin
-        //endregion IRecord
-        //region Types/_entity/adapter/JsonFormatMixin
+        }    // endregion
+             // region Types/_entity/adapter/JsonFormatMixin
+        // endregion
+        // region Types/_entity/adapter/JsonFormatMixin
         JsonRecord.prototype.addField = function (format, at) {
             if (!format || !(format instanceof format_1.Field)) {
                 throw new TypeError(this._moduleName + '::addField(): argument "format" should be an instance of Types/entity:format.Field');
@@ -64,10 +64,10 @@ define('Types/_entity/adapter/JsonRecord', [
         JsonRecord.prototype.removeField = function (name) {
             JsonFormatMixin_1.default.removeField.call(this, name);
             delete this._data[name];
-        };    //endregion Types/_entity/adapter/JsonFormatMixin
-              //region Public methods
-        //endregion Types/_entity/adapter/JsonFormatMixin
-        //region Public methods
+        };    // endregion
+              // region Public methods
+        // endregion
+        // region Public methods
         JsonRecord.prototype.has = function (name) {
             return this._isValidData() ? this._data.hasOwnProperty(name) : false;
         };
@@ -94,18 +94,19 @@ define('Types/_entity/adapter/JsonRecord', [
         };
         JsonRecord.prototype.getKeyField = function () {
             return undefined;
-        };    //endregion Public methods
-              //region Protected methods
-        //endregion Public methods
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         JsonRecord.prototype._has = function (name) {
             return this.has(name);
         };
         return JsonRecord;
     }(util_1.mixin(DestroyableMixin_1.default, GenericFormatMixin_1.default, JsonFormatMixin_1.default));
     exports.default = JsonRecord;
-    JsonRecord.prototype['[Types/_entity/adapter/JsonRecord]'] = true;    // @ts-ignore
-    // @ts-ignore
-    JsonRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-    JsonRecord.prototype._data = null;
+    Object.assign(JsonRecord.prototype, {
+        '[Types/_entity/adapter/JsonRecord]': true,
+        '[Types/_entity/adapter/IRecord]': true,
+        _data: null
+    });
 });

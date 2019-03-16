@@ -73,14 +73,14 @@ define('Types/_entity/relation/Hierarchy', [
             var _this = _super.call(this, options) || this;
             OptionsToPropertyMixin_1.default.call(_this, options);
             return _this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает название свойства, содержащего идентификатор узла.
          * @return {String}
          * @see idProperty
          * @see setIdProperty
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает название свойства, содержащего идентификатор узла.
          * @return {String}
@@ -239,8 +239,8 @@ define('Types/_entity/relation/Hierarchy', [
             }
             var parentId = this._asField(parent, this._$idProperty);
             var indices = rs.getIndicesByValue(this._$parentProperty, parentId);
-            var children = [];    //If nothing found by that property value, return all if null(root) requested
-            //If nothing found by that property value, return all if null(root) requested
+            var children = [];    // If nothing found by that property value, return all if null(root) requested
+            // If nothing found by that property value, return all if null(root) requested
             if (indices.length === 0 && parentId === null) {
                 indices = rs.getIndicesByValue(this._$parentProperty);
             }
@@ -306,8 +306,8 @@ define('Types/_entity/relation/Hierarchy', [
             child = this._asRecord(child, rs);
             var parentId = child.get(this._$parentProperty);
             return parentId === undefined || parentId === null ? null : this._asRecord(parentId, rs);
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion Public methods
+              // region Protected methods
               /**
          * Возвращает инстанс записи
          * @param {Types/_entity/Record|Sting|Number} value Запись или ее ПК
@@ -315,8 +315,8 @@ define('Types/_entity/relation/Hierarchy', [
          * @return {Types/_entity/Record}
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Возвращает инстанс записи
          * @param {Types/_entity/Record|Sting|Number} value Запись или ее ПК

@@ -202,10 +202,10 @@ define('Types/_entity/adapter/SbisTable', [
         };
         SbisTable.prototype.clone = function (shallow) {
             return new SbisTable(shallow ? this.getData() : this._cloneData());
-        };    //endregion ICloneable
-              //region SbisFormatMixin
-        //endregion ICloneable
-        //region SbisFormatMixin
+        };    // endregion
+              // region SbisFormatMixin
+        // endregion
+        // region SbisFormatMixin
         SbisTable.prototype._buildD = function (at, value) {
             this._data.d.forEach(function (item) {
                 item.splice(at, 0, value);
@@ -215,10 +215,10 @@ define('Types/_entity/adapter/SbisTable', [
             this._data.d.forEach(function (item) {
                 item.splice(at, 1);
             });
-        };    //endregion SbisFormatMixin
-              //region Protected methods
-        //endregion SbisFormatMixin
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         SbisTable.prototype._checkRowIndex = function (index, addMode) {
             var max = this._data.d.length + (addMode ? 0 : -1);
             if (!(index >= 0 && index <= max)) {
@@ -228,14 +228,13 @@ define('Types/_entity/adapter/SbisTable', [
         return SbisTable;
     }(util_1.mixin(DestroyableMixin_1.default, SbisFormatMixin_1.default));
     exports.default = SbisTable;
-    SbisTable.prototype['[Types/_entity/adapter/SbisTable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    SbisTable.prototype['[Types/_entity/adapter/ITable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    SbisTable.prototype['[Types/_entity/adapter/IMetaData]'] = true;    // @ts-ignore
-    // @ts-ignore
-    SbisTable.prototype['[Types/_entity/ICloneable]'] = true;
-    SbisTable.prototype._type = 'recordset';    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Object.assign(SbisTable.prototype, {
+        '[Types/_entity/adapter/SbisTable]': true,
+        '[Types/_entity/adapter/ITable]': true,
+        '[Types/_entity/adapter/IMetaData]': true,
+        '[Types/_entity/ICloneable]': true,
+        _type: 'recordset'
+    });    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     SbisTable.prototype['[WS.Data/Entity/ICloneable]'] = true;
 });

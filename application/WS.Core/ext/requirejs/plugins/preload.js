@@ -13,14 +13,12 @@
 
    define('preload', [
       'Core/ParallelDeferred',
-      'Core/IoC',
       'Core/moduleStubs',
       'View/Executor/Utils',
-      'Core/constants',
+      'Env/Env',
       'Core/i18n',
-      'Core/detection',
       'Core/Deferred'
-   ], function(ParallelDeferred, ioc, moduleStubs, Utils, constants, i18n) {
+   ], function(ParallelDeferred, moduleStubs, Utils, Env, i18n) {
       if (typeof window == 'undefined') {
          return {
             load: function(n, r, load) {
@@ -105,7 +103,7 @@
          if (items.length) {
             var xhr = new XMLHttpRequest();
             var appRoot = window.wsConfig && window.wsConfig.appRoot || '/';
-            var ver = constants.buildnumber ? '&v=' + constants.buildnumber : '';
+            var ver = Env.constants.buildnumber ? '&v=' + Env.constants.buildnumber : '';
             xhr.open('GET', encodeURI(appRoot + 'depresolver/?modules=' + JSON.stringify(items) + '&lightload=1' + ver), true);
 
             xhr.onreadystatechange = function() {
@@ -131,9 +129,9 @@
       function onError(err) {
          if (err.message.indexOf('DOCTYPE') > -1) {
             // Предположительно вместо ошибки нам пришла страница с ошибкой
-            ioc.resolve('ILogger').error('Preloader', 'Unknown error with code: ' + err.code);
+            Env.IoC.resolve('ILogger').error('Preloader', 'Unknown error with code: ' + err.code);
          } else {
-            ioc.resolve('ILogger').error('Preloader', err.message);
+            Env.IoC.resolve('ILogger').error('Preloader', err.message);
          }
       }
 

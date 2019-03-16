@@ -4,14 +4,14 @@ define('Core/Date', [
    'Core/helpers/Date/fromSql',
    'Core/helpers/Date/strftime',
    'Core/helpers/i18n/locales',
-   'Core/constants',
+   'Env/Env',
    'Core/i18n'
 ], function(
    toSql,
    fromSql,
    strftime,
    locales,
-   constants,
+   Env,
    i18n
 ) {
    'use strict';
@@ -71,7 +71,7 @@ define('Core/Date', [
    Date.fromSQL = function(dateTime, useDefaultTimeZone) {
       return fromSql(
          dateTime,
-         useDefaultTimeZone || useDefaultTimeZone === undefined ? constants.moscowTimeOffset : undefined
+         useDefaultTimeZone || useDefaultTimeZone === undefined ? Env.constants.moscowTimeOffset : undefined
       );
    };
 
@@ -176,7 +176,7 @@ define('Core/Date', [
     */
    Date.prototype.toServerTime = function() {
       // Приводим время к серверному (московскому) из местного
-      this.setMinutes(this.getMinutes() + this.getTimezoneOffset() + constants.moscowTimeOffset);
+      this.setMinutes(this.getMinutes() + this.getTimezoneOffset() + Env.constants.moscowTimeOffset);
       return this;
    };
 
@@ -202,7 +202,7 @@ define('Core/Date', [
    }());
 
    //Dirty hack for Node.js: use client cookies to detect it's time zone (if possible)
-   if (constants.isNodePlatform) {
+   if (Env.constants.isNodePlatform) {
       //Save system time zone
       var systemTimeZone = new Date().getTimezoneOffset();
 
@@ -234,7 +234,7 @@ define('Core/Date', [
    }
 
    //Export locales name to constants.Locales
-   Object.defineProperty(constants, 'Locales', {
+   Object.defineProperty(Env.constants, 'Locales', {
       configurable: true,
       get: function() {
          return locales.available;
@@ -242,7 +242,7 @@ define('Core/Date', [
    });
 
    //Export current locale config to constants.Date
-   Object.defineProperty(constants, 'Date', {
+   Object.defineProperty(Env.constants, 'Date', {
       configurable: true,
       get: function() {
          return locales.current.config;

@@ -2,9 +2,9 @@ define('Vdom/_private/Utils/DefaultOpenerFinder', [
     'require',
     'exports',
     'Core/core-instance',
-    'Core/IoC',
+    'Env/Env',
     'Vdom/_private/Synchronizer/resources/DOMEnvironment'
-], function (require, exports, cInstance, IoC, DOMEnvironment_1) {
+], function (require, exports, cInstance, Env_1, DOMEnvironment_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var goUpByControlTree = DOMEnvironment_1.default._goUpByControlTree;
@@ -15,7 +15,7 @@ define('Vdom/_private/Utils/DefaultOpenerFinder', [
         } else if (control instanceof Element) {
             container = control;
         } else {
-            IoC.resolve('ILogger').error('DOMEnvironment', rk('The arguments should be control or node element'));
+            Env_1.IoC.resolve('ILogger').error('DOMEnvironment', rk('The arguments should be control or node element'));
         }
         var controlTree = goUpByControlTree(container);
         return controlTree.find(function (ctrl) {

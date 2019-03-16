@@ -46,20 +46,22 @@ define('Types/_source/Local', [
                 }
             }
             return true;
-        }    //Otherwise - just compare
-        //Otherwise - just compare
+        }    // Otherwise - just compare
+             // tslint:disable-next-line:triple-equals
+        // Otherwise - just compare
+        // tslint:disable-next-line:triple-equals
         return given == expect;
     }
     var Local = /** @class */
     function (_super) {
         tslib_1.__extends(Local, _super);
         function Local(options) {
-            var _this = _super.call(this, options) || this;    //region ICrud
-            //region ICrud
-            _this['[Types/_source/ICrud]'] = true;    //endregion ICrud
-                                                      //region ICrudPlus
-            //endregion ICrud
-            //region ICrudPlus
+            var _this = _super.call(this, options) || this;    // region ICrud
+            // region ICrud
+            _this['[Types/_source/ICrud]'] = true;    // endregion
+                                                      // region ICrudPlus
+            // endregion
+            // region ICrudPlus
             _this['[Types/_source/ICrudPlus]'] = true;
             _this._reIndex();
             return _this;
@@ -206,7 +208,7 @@ define('Types/_source/Local', [
             items.sort(function (a, b) {
                 var indexa = _this._getIndexByKey(a);
                 var indexb = _this._getIndexByKey(b);
-                return meta.position == MOVE_POSITION.after ? indexb - indexa : indexa - indexb;
+                return meta.position === MOVE_POSITION.after ? indexb - indexa : indexa - indexb;
             }).forEach(function (id) {
                 var index = _this._getIndexByKey(id);
                 sourceItems.push(adapter.forRecord(tableAdapter.at(index)));
@@ -224,16 +226,16 @@ define('Types/_source/Local', [
                 return this._hierarchyMove(sourceItems, targetItem, meta);
             }
             return this._reorderMove(sourceItems, targetItem, meta);
-        };    //endregion ICrudPlus
-              //region DataMixin
-        //endregion ICrudPlus
-        //region DataMixin
+        };    // endregion
+              // region DataMixin
+        // endregion
+        // region DataMixin
         Local.prototype._wrapToDataSet = function (data) {
             return _super.prototype._wrapToDataSet.call(this, util_1.object.clonePlain(data, true));
-        };    //endregion DataMixin
-              //region DataCrudMixin
-        //endregion DataMixin
-        //region DataCrudMixin
+        };    // endregion
+              // region DataCrudMixin
+        // endregion
+        // region DataCrudMixin
         Local.prototype._prepareCreateResult = function (data) {
             return DataCrudMixin_1.default._prepareCreateResult.call(this, util_1.object.clonePlain(data, true));
         };
@@ -370,8 +372,10 @@ define('Types/_source/Local', [
                 var value;
                 var values = [];
                 for (var i = 0; i < orderMap.length; i++) {
-                    value = adapter.forRecord(item).get(orderMap[i].field);    //undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются непредсказуемо. Поэтому заменим их на null.
-                    //undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются непредсказуемо. Поэтому заменим их на null.
+                    value = adapter.forRecord(item).get(orderMap[i].field);    // undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются
+                                                                               // непредсказуемо. Поэтому заменим их на null.
+                    // undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются
+                    // непредсказуемо. Поэтому заменим их на null.
                     values.push(value === undefined ? null : value);
                 }
                 dataMap.push({
@@ -387,13 +391,14 @@ define('Types/_source/Local', [
                 if (a !== null && b === null) {
                     //Считаем любое не-null больше null
                     return 1;
-                }
+                }    // tslint:disable-next-line:triple-equals
+                // tslint:disable-next-line:triple-equals
                 if (a == b) {
                     return 0;
                 }
                 return a > b ? 1 : -1;
-            };    //Сортируем служебный массив
-            //Сортируем служебный массив
+            };    // Сортируем служебный массив
+            // Сортируем служебный массив
             dataMap.sort(function (a, b) {
                 var result = 0;
                 for (var index = 0; index < orderMap.length; index++) {
@@ -403,8 +408,8 @@ define('Types/_source/Local', [
                     }
                 }
                 return result;
-            });    //Создаем новую таблицу по служебному массиву
-            //Создаем новую таблицу по служебному массиву
+            });    // Создаем новую таблицу по служебному массиву
+            // Создаем новую таблицу по служебному массиву
             var sourceAdapter = adapter.forTable(data);
             var resultAdapter = adapter.forTable();
             for (var i = 0, count = dataMap.length; i < count; i++) {
@@ -487,10 +492,10 @@ define('Types/_source/Local', [
         return Local;
     }(util_1.mixin(Base_1.default, DataCrudMixin_1.default));
     exports.default = Local;
-    Local.prototype._moduleName = 'Types/source:Local';
-    Local.prototype['[Types/_source/Local]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Local.prototype._$filter = null;    // @ts-ignore
-    // @ts-ignore
-    Local.prototype._index = null;
+    Object.assign(Local.prototype, {
+        '[Types/_source/Local]': true,
+        _moduleName: 'Types/source:Local',
+        _$filter: null,
+        _index: null
+    });
 });

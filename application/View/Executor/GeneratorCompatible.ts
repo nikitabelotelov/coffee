@@ -13,9 +13,7 @@ import * as coreInitializer from 'Core/core-extend-initializer';
 // @ts-ignore
 import * as ContextBinder from 'Core/ContextBinder';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
-// @ts-ignore
-import * as cConstants from 'Core/constants';
+import { IoC, constants as cConstants } from 'Env/Env';
 // @ts-ignore
 import * as shallowClone from 'Core/helpers/Function/shallowClone';
 // @ts-ignore
@@ -446,7 +444,7 @@ function buildForNewControl(scope, cnstr, decOptions) {
       }
    }
 
-   result = inst._template ? inst.render(undefined, { attributes: decOptions }) : '';
+   result = inst._template ? Generator.invisibleNodeCompat(inst.render(undefined, { attributes: decOptions })) : '';
 
    // Добавлено, чтобы новый контрол (в частности, Controls/Decorator/Markup) в старом окружении не терял атрибуты из шаблона.
    // По задаче https://online.sbis.ru/opendoc.html?guid=d7ec8126-a368-4afc-ba10-881fccd54b0e
@@ -751,6 +749,10 @@ function decorateAttrs(attr1, attr2) {
    return attrToStr(GeneratorCompatible.joinAttrs(attr1, attr2));
 }
 
+function notOptionalCompatibleControl(name) {
+   return !(Common.isString(name) && Common.isOptionalString(Common.splitWs(name)));
+}
+
 GeneratorCompatible.createEmptyText = function () {
    return '';
 };
@@ -770,6 +772,10 @@ GeneratorCompatible.createWsControl = function createWsControl(tpl, scope, attri
       decOptions;
 
    if (!cnstr && !resultingFn) {
+      if (notOptionalCompatibleControl(tpl)) {
+         var e = new Error('Попытка создания контрола, у которого отсутствует конструктор и шаблон');
+         IoC.resolve('ILogger').error(e.message, e.stack);
+      }
       return '';
    }
    if (cnstr && !resultingFn && !Common.isNewControl(cnstr)) {

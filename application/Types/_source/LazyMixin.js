@@ -8,11 +8,11 @@
 define('Types/_source/LazyMixin', [
     'require',
     'exports',
-    'Core/Deferred',
-    'require'
-], function (require, exports, Deferred, req) {
+    'Core/Deferred'
+], function (require, exports, Deferred) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
+    Object.defineProperty(exports, '__esModule', { value: true });    // tslint:disable-next-line:ban-comma-operator
+    // tslint:disable-next-line:ban-comma-operator
     var global = (0, eval)('this');
     var DeferredCanceledError = global.DeferredCanceledError;
     var LazyMixin = /** @lends Types/_source/LazyMixin.prototype */
@@ -32,11 +32,12 @@ define('Types/_source/LazyMixin', [
          * @return {Core/Deferred}
          * @protected
          */
+        // tslint:disable-next-line:ban-types
         _loadAdditionalDependencies: function (callback) {
             var _this = this;
             var deps = this._additionalDependencies;
             var depsLoaded = deps.reduce(function (prev, curr) {
-                return prev && req.defined(curr);
+                return prev && require.defined(curr);
             }, true);
             var result = new Deferred();
             if (depsLoaded) {
@@ -47,7 +48,7 @@ define('Types/_source/LazyMixin', [
                 }
             } else {
                 // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
-                req(deps, function () {
+                require(deps, function () {
                     // Don't call callback() if deferred has been cancelled during require
                     if (callback && (!result.isReady() || !(result.getResult() instanceof DeferredCanceledError))) {
                         callback.call(_this, result);
@@ -66,8 +67,9 @@ define('Types/_source/LazyMixin', [
          * @param {Core/Deferred} slave Ведомый
          * @protected
          */
+        // tslint:disable-next-line:ban-types
         _connectAdditionalDependencies: function (master, slave) {
-            //Cancel master on slave cancelling
+            // Cancel master on slave cancelling
             if (!slave.isCallbacksLocked()) {
                 slave.addErrback(function (err) {
                     if (err instanceof DeferredCanceledError) {
@@ -75,8 +77,8 @@ define('Types/_source/LazyMixin', [
                     }
                     return err;
                 });
-            }    //Connect master's result with slave's result
-            //Connect master's result with slave's result
+            }    // Connect master's result with slave's result
+            // Connect master's result with slave's result
             master.addCallbacks(function (result) {
                 slave.callback(result);
                 return result;

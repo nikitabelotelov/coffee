@@ -1,9 +1,11 @@
+@import "../coffee.less";
+
 * {
   margin: 0;
   padding: 0;
   outline: none;
-  font-family: "Century Gothic";
-  font-size: 12px;
+  font-family: @default-font;
+  font-size: @default-font-size;
 }
 
 .router-Link.topMenu {
@@ -19,19 +21,23 @@
 }
 
 .coffee-application-content {
-  width: 400px;
+  width:100%;
+}
+
+.tile-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 html {
   height: 100%;
+  color: @default-font-color;
+  background-color: @default-background-color;
 }
 
 body {
   height: 100%;
-}
-
-.page-navigator-container {
-  width: 80px;
 }
 
 #root {

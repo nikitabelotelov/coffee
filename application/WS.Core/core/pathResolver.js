@@ -1,4 +1,4 @@
-define("Core/pathResolver", ["require", "exports", "Core/constants"], function (require, exports, constants) {
+define("Core/pathResolver", ["require", "exports", "Env/Env"], function (require, exports, Env_1) {
     "use strict";
     var // Global variables root
     global = (function () {
@@ -26,48 +26,6 @@ define("Core/pathResolver", ["require", "exports", "Core/constants"], function (
         return [moduleName, moduleName + ".module.js"].join('/');
     }
     /**
-     * @name Core/pathResolver#resolveModule
-     * @function
-     * @description
-     * Возвращает путь до модуля по его имени
-     * @param {String} name имя модуля
-     * @returns {string}
-     */
-    function resolveModule(name, plugin, clearAlias) {
-        var path = '', isSplitted = true, checkInJsCoreModules = function (path) {
-            if (name in constants.jsCoreModules) {
-                path = constants.wsRoot + constants.jsCoreModules[name];
-            }
-            return path;
-        }, checkInJsModules = function (path) {
-            if (name in constants.jsModules) {
-                var jsMod = constants.jsModules[name];
-                if (jsMod) {
-                    if (jsMod.charAt(0) === '/' || isRemote.test(jsMod) || jsMod.charAt(1) === ':') {
-                        path = jsMod;
-                    }
-                    else {
-                        path = constants.resourceRoot + jsMod;
-                    }
-                }
-                else {
-                    path = constants.resourceRoot + resolveModulePath(name);
-                }
-            }
-            return path;
-        };
-        if (isSplitted) {
-            path = checkInJsModules(path);
-        }
-        else {
-            path = checkInJsCoreModules(path);
-            if (!path) {
-                path = checkInJsModules(path);
-            }
-        }
-        return path;
-    }
-    /**
      * @name Core/pathResolver#resolveComponentPath
      * @function
      * @description
@@ -83,13 +41,8 @@ define("Core/pathResolver", ["require", "exports", "Core/constants"], function (
      * @return {String} Полный путь.
      */
     function resolveComponentPath(path) {
-        var pA = path.split('/'), componentName = pA.shift(), 
-        //@ts-ignore
-        relativePath = constants.requirejsPaths && constants.requirejsPaths[componentName] ? "/" + constants.requirejsPaths[componentName] + "/" : resolveModule(componentName).replace(/\/[^\/]*$/, '/');
-        if (!relativePath) {
-            return '';
-        }
-        return relativePath + pA.join('/');
+        var url = require.toUrl(path);
+        return url || '';
     }
     /**
      * @name Core/pathResolver#pathResolver
@@ -110,7 +63,7 @@ define("Core/pathResolver", ["require", "exports", "Core/constants"], function (
         }
         if (name.indexOf('/') > -1) {
             var paths = name.split('/'), moduleName = paths.shift();
-            path = resolveModule(moduleName, plugin, clearAlias);
+            path = '';
             if (path) {
                 // TODO Для совместимости новых и старых имён.
                 /* При переходе к новым именнам возникла проблема при вложенных ресурсах.
@@ -131,7 +84,7 @@ define("Core/pathResolver", ["require", "exports", "Core/constants"], function (
             }
         }
         else {
-            path = resolveModule(name, plugin, clearAlias);
+            path = '';
             if (!path) {
                 throw new Error("Module " + name + " is not defined");
             }
@@ -140,7 +93,7 @@ define("Core/pathResolver", ["require", "exports", "Core/constants"], function (
             }
         }
         // В node.js необходимо передавать пути без лидирующего / и без расширения, тогда модуль ищется относительно baseUrl
-        if (constants.isNodePlatform) {
+        if (Env_1.constants.isNodePlatform) {
             path = path.replace(leadSlash, '').replace(jsExt, '');
         }
         return path;
@@ -152,7 +105,7 @@ define("Core/pathResolver", ["require", "exports", "Core/constants"], function (
         return pathResolver(name, plugin, clearAlias);
     };
     requirejsPathResolver.resolveModulePath = resolveModulePath;
-    requirejsPathResolver.resolveModule = resolveModule;
+    requirejsPathResolver.resolveModule = function () { return ''; };
     requirejsPathResolver.resolveComponentPath = resolveComponentPath;
     return requirejsPathResolver;
 });

@@ -97,10 +97,10 @@ define('Types/_entity/adapter/RecordSetTable', [
             if (!this._isValidData()) {
                 throw new TypeError('Passed data has invalid format');
             }
-            acceptor = this._data.at(acceptor);
+            var acceptorRecord = this._data.at(acceptor);
             this._data.at(donor).each(function (name, value) {
                 if (name !== idProperty) {
-                    acceptor.set(name, value);
+                    acceptorRecord.set(name, value);
                 }
             }, this);
             this._data.removeAt(donor);
@@ -139,10 +139,10 @@ define('Types/_entity/adapter/RecordSetTable', [
                 throw new TypeError('Passed data has invalid format');
             }
             this._data.removeFieldAt(index);
-        };    //endregion ITable
-              //region Protected methods
-        //endregion ITable
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         RecordSetTable.prototype._buildData = function (sample) {
             if (!this._data) {
                 var config = {};
@@ -166,8 +166,9 @@ define('Types/_entity/adapter/RecordSetTable', [
         return RecordSetTable;
     }(util_1.mixin(DestroyableMixin_1.default, GenericFormatMixin_1.default));
     exports.default = RecordSetTable;
-    RecordSetTable.prototype['[Types/_entity/adapter/RecordSetTable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    RecordSetTable.prototype['[Types/_entity/adapter/ITable]'] = true;
-    RecordSetTable.prototype._data = null;
+    Object.assign(RecordSetTable.prototype, {
+        '[Types/_entity/adapter/RecordSetTable]': true,
+        '[Types/_entity/adapter/ITable]': true,
+        _data: null
+    });
 });

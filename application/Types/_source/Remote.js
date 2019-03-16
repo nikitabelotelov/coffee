@@ -11,7 +11,8 @@
  * @mixes Types/_source/DataCrudMixin
  * @mixes Types/_source/BindingMixin
  * @mixes Types/_source/EndpointMixin
- * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy passing.merge passing.move
+ * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy
+ * passing.merge passing.move
  * @public
  * @author Мальцев А.А.
  */
@@ -27,11 +28,11 @@ define('Types/_source/Remote', [
     'Types/_source/OptionsMixin',
     'Types/entity',
     'Types/di',
-    'Types/util',
-    'require'
-], function (require, exports, tslib_1, Base_1, DataMixin_1, DataCrudMixin_1, BindingMixin_1, EndpointMixin_1, OptionsMixin_1, entity_1, di_1, util_1, req) {
+    'Types/util'
+], function (require, exports, tslib_1, Base_1, DataMixin_1, DataCrudMixin_1, BindingMixin_1, EndpointMixin_1, OptionsMixin_1, entity_1, di_1, util_1) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
+    Object.defineProperty(exports, '__esModule', { value: true });    // tslint:disable-next-line:ban-comma-operator
+    // tslint:disable-next-line:ban-comma-operator
     var global = (0, eval)('this');
     var DeferredCanceledError = global.DeferredCanceledError;    /**
      * Типы навигации для query()
@@ -50,27 +51,23 @@ define('Types/_source/Remote', [
         return value === '' || isNull(value);
     }    /**
      * Формирует данные, передваемые в провайдер при вызове create().
-     * @param {Object} [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
-     * @return {Object}.
+     * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове create().
-     * @param {Object} [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
-     * @return {Object}.
+     * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
      */
     function passCreate(meta) {
         return [meta];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове read().
-     * @param {String} key Первичный ключ записи
-     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param key Первичный ключ записи
+     * @param [meta] Дополнительные мета данные
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове read().
-     * @param {String} key Первичный ключ записи
-     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param key Первичный ключ записи
+     * @param [meta] Дополнительные мета данные
      */
     function passRead(key, meta) {
         return [
@@ -79,30 +76,28 @@ define('Types/_source/Remote', [
         ];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове update().
-     * @param {Types/_entity/Record|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
-     * @param {Object} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param data Обновляемая запись или рекордсет
+     * @param [meta] Дополнительные мета данные
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове update().
-     * @param {Types/_entity/Record|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
-     * @param {Object} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param data Обновляемая запись или рекордсет
+     * @param [meta] Дополнительные мета данные
      */
     function passUpdate(data, meta) {
         if (this._$options.updateOnlyChanged) {
             var idProperty_1 = this._getValidIdProperty(data);
             if (!isEmpty(idProperty_1)) {
                 if (DataMixin_1.default.isModelInstance(data) && !isNull(data.get(idProperty_1))) {
-                    //Filter record fields
-                    var Record_1 = req('Types/entity').Record;
+                    // Filter record fields
+                    var Record_1 = require('Types/entity').Record;
                     var changed = data.getChanged();
                     changed.unshift(idProperty_1);
                     data = Record_1.filterFields(data, changed);
                 } else if (DataMixin_1.default.isListInstance(data)) {
-                    //Filter recordset fields
+                    // Filter recordset fields
                     data = function (source) {
-                        var RecordSet = req('Types/collection').RecordSet;
+                        var RecordSet = require('Types/collection').RecordSet;
                         var result = new RecordSet({
                             adapter: source._$adapter,
                             idProperty: source._$idProperty
@@ -123,15 +118,13 @@ define('Types/_source/Remote', [
         ];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове destroy().
-     * @param {String|Array.<String>} keys Первичный ключ, или массив первичных ключей записи
-     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param keys Первичный ключ, или массив первичных ключей записи
+     * @param [meta] Дополнительные мета данные
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове destroy().
-     * @param {String|Array.<String>} keys Первичный ключ, или массив первичных ключей записи
-     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param keys Первичный ключ, или массив первичных ключей записи
+     * @param [meta] Дополнительные мета данные
      */
     function passDestroy(keys, meta) {
         return [
@@ -140,27 +133,23 @@ define('Types/_source/Remote', [
         ];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове query().
-     * @param {Types/_source/Query} [query] Запрос
-     * @return {Object}
+     * @param [query] Запрос
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове query().
-     * @param {Types/_source/Query} [query] Запрос
-     * @return {Object}
+     * @param [query] Запрос
      */
     function passQuery(query) {
         return [query];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове copy().
-     * @param {String} key Первичный ключ записи
-     * @param {Object} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param key Первичный ключ записи
+     * @param [meta] Дополнительные мета данные
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове copy().
-     * @param {String} key Первичный ключ записи
-     * @param {Object} [meta] Дополнительные мета данные
-     * @return {Object}
+     * @param key Первичный ключ записи
+     * @param [meta] Дополнительные мета данные
      */
     function passCopy(key, meta) {
         return [
@@ -169,15 +158,13 @@ define('Types/_source/Remote', [
         ];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове merge().
-     * @param {String} from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
-     * @param {String} to Первичный ключ записи-приёмника
-     * @return {Object}
+     * @param from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
+     * @param to Первичный ключ записи-приёмника
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове merge().
-     * @param {String} from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
-     * @param {String} to Первичный ключ записи-приёмника
-     * @return {Object}
+     * @param from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
+     * @param to Первичный ключ записи-приёмника
      */
     function passMerge(from, to) {
         return [
@@ -186,17 +173,15 @@ define('Types/_source/Remote', [
         ];
     }    /**
      * Формирует данные, передваемые в провайдер при вызове move().
-     * @param {Array} items Перемещаемая запись.
-     * @param {String} target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
-     * @param {Object} [meta] Дополнительные мета данные.
-     * @return {Object}
+     * @param items Перемещаемая запись.
+     * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+     * @param [meta] Дополнительные мета данные.
      */
     /**
      * Формирует данные, передваемые в провайдер при вызове move().
-     * @param {Array} items Перемещаемая запись.
-     * @param {String} target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
-     * @param {Object} [meta] Дополнительные мета данные.
-     * @return {Object}
+     * @param items Перемещаемая запись.
+     * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+     * @param [meta] Дополнительные мета данные.
      */
     function passMove(from, to, meta) {
         return [
@@ -210,16 +195,16 @@ define('Types/_source/Remote', [
         tslib_1.__extends(Remote, _super);    // @ts-ignore
         // @ts-ignore
         function Remote(options) {
-            var _this = this;    //region ICrud
-            //region ICrud
-            _this['[Types/_source/ICrud]'] = true;    //endregion
-                                                      //region ICrudPlus
-            //endregion
-            //region ICrudPlus
-            _this['[Types/_source/ICrudPlus]'] = true;    //endregion
-                                                          //region IProvider
-            //endregion
-            //region IProvider
+            var _this = this;    // region ICrud
+            // region ICrud
+            _this['[Types/_source/ICrud]'] = true;    // endregion
+                                                      // region ICrudPlus
+            // endregion
+            // region ICrudPlus
+            _this['[Types/_source/ICrudPlus]'] = true;    // endregion
+                                                          // region IProvider
+            // endregion
+            // region IProvider
             _this['[Types/_source/IProvider]'] = true;    // @ts-ignore
             // @ts-ignore
             BindingMixin_1.default.constructor.call(_this, options);    // @ts-ignore
@@ -286,8 +271,8 @@ define('Types/_source/Remote', [
                 });
             }
             return this._provider;
-        };    //endregion
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Инстанциирует провайдер удаленного доступа
          * @param {String|Types/_source/Provider/IAbstract} provider Алиас или инстанс
@@ -295,8 +280,8 @@ define('Types/_source/Remote', [
          * @return {Types/_source/Provider}
          * @protected
          */
-        //endregion
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Инстанциирует провайдер удаленного доступа
          * @param {String|Types/_source/Provider/IAbstract} provider Алиас или инстанс
@@ -372,8 +357,8 @@ define('Types/_source/Remote', [
             return idProperty;
         };
         Object.defineProperty(Remote, 'NAVIGATION_TYPE', {
-            //endregion
-            //region Statics
+            // endregion
+            // region Statics
             get: function () {
                 return NAVIGATION_TYPE;
             },
@@ -383,102 +368,101 @@ define('Types/_source/Remote', [
         return Remote;
     }(util_1.mixin(Base_1.default, entity_1.ObservableMixin, DataCrudMixin_1.default, BindingMixin_1.default, EndpointMixin_1.default));
     exports.default = Remote;
-    Remote.prototype['[Types/_source/Remote]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Remote.prototype._$provider = null;    // @ts-ignore
-    // @ts-ignore
-    Remote.prototype._$passing = /** @lends Types/_source/Remote.prototype */
+    Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */
     {
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-         * @name Types/_source/Remote#passing.create
-         */
-        create: passCreate,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-         * @name Types/_source/Remote#passing.read
-         */
-        read: passRead,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-         * @name Types/_source/Remote#passing.update
-         */
-        update: passUpdate,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-         * @name Types/_source/Remote#passing.destroy
-         */
-        destroy: passDestroy,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-         * @name Types/_source/Remote#passing.query
-         */
-        query: passQuery,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-         * @name Types/_source/Remote#passing.copy
-         */
-        copy: passCopy,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-         * @name Types/_source/Remote#passing.merge
-         */
-        merge: passMerge,
-        /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-         * @name Types/_source/Remote#passing.move
-         */
-        move: passMove
-    };    // @ts-ignore
-    // @ts-ignore
-    Remote.prototype._$options = OptionsMixin_1.default.addOptions(Base_1.default, /** @lends Types/_source/Remote.prototype */
-    {
-        /**
-         * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
-         * @name Types/_source/Remote#options.updateOnlyChanged
-         * @remark
-         * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые записи от уже существующих.
-         */
-        updateOnlyChanged: false,
-        /**
-         * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
-         * @name Types/_source/Remote#options.navigationType
-         * @example
-         * Получим заказы магазина за сегодня с двадцать первого по тридцатый c использованием навигации через смещение:
-         * <pre>
-         *    var dataSource = new RemoteSource({
-         *          endpoint: 'Orders'
-         *          options: {
-         *             navigationType: RemoteSource.prototype.NAVIGATION_TYPE.OFFSET
-         *          }
-         *       }),
-         *       query = new Query();
-         *
-         *    query.select([
-         *          'id',
-         *          'date',
-         *          'amount'
-         *       ])
-         *       .where({
-         *          'date': new Date()
-         *       })
-         *       .orderBy('id')
-         *       .offset(20)
-         *       .limit(10);
-         *
-         *    dataSource.query(query).addCallbacks(function(dataSet) {
-         *       var orders = dataSet.getAll();
-         *    }, function(error) {
-         *       console.error(error);
-         *    });
-         * </pre>
-         */
-        navigationType: NAVIGATION_TYPE.PAGE
-    });
-    Remote.prototype._moduleName = 'Types/source:Remote';    // @ts-ignore
-    // @ts-ignore
-    Remote.prototype._provider = null;    // FIXME: backward compatibility for SbisFile/Source/BL
-                                          // @ts-ignore
+        '[Types/_source/Remote]': true,
+        _moduleName: 'Types/source:Remote',
+        _provider: null,
+        _$provider: null,
+        _$passing: {
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
+             * @name Types/_source/Remote#passing.create
+             */
+            create: passCreate,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
+             * @name Types/_source/Remote#passing.read
+             */
+            read: passRead,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
+             * @name Types/_source/Remote#passing.update
+             */
+            update: passUpdate,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
+             * @name Types/_source/Remote#passing.destroy
+             */
+            destroy: passDestroy,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
+             * @name Types/_source/Remote#passing.query
+             */
+            query: passQuery,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
+             * @name Types/_source/Remote#passing.copy
+             */
+            copy: passCopy,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
+             * @name Types/_source/Remote#passing.merge
+             */
+            merge: passMerge,
+            /**
+             * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
+             * @name Types/_source/Remote#passing.move
+             */
+            move: passMove
+        },
+        _$options: OptionsMixin_1.default.addOptions(Base_1.default, {
+            /**
+             * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
+             * измененые поля записи (если обновляется одна запись).
+             * @name Types/_source/Remote#options.updateOnlyChanged
+             * @remark
+             * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые
+             * записи от уже существующих.
+             */
+            updateOnlyChanged: false,
+            /**
+             * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
+             * @name Types/_source/Remote#options.navigationType
+             * @example
+             * Получим заказы магазина за сегодня с двадцать первого по тридцатый c использованием навигации через смещение:
+             * <pre>
+             *    var dataSource = new RemoteSource({
+             *          endpoint: 'Orders'
+             *          options: {
+             *             navigationType: RemoteSource.prototype.NAVIGATION_TYPE.OFFSET
+             *          }
+             *       }),
+             *       query = new Query();
+             *
+             *    query.select([
+             *          'id',
+             *          'date',
+             *          'amount'
+             *       ])
+             *       .where({
+             *          'date': new Date()
+             *       })
+             *       .orderBy('id')
+             *       .offset(20)
+             *       .limit(10);
+             *
+             *    dataSource.query(query).addCallbacks(function(dataSet) {
+             *       var orders = dataSet.getAll();
+             *    }, function(error) {
+             *       console.error(error);
+             *    });
+             * </pre>
+             */
+            navigationType: NAVIGATION_TYPE.PAGE
+        })
+    });    // FIXME: backward compatibility for SbisFile/Source/BL
+           // @ts-ignore
     // FIXME: backward compatibility for SbisFile/Source/BL
     // @ts-ignore
     Remote.prototype._prepareArgumentsForCall = Remote.prototype._prepareProviderArguments;

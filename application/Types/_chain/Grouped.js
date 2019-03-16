@@ -64,9 +64,9 @@ define('Types/_chain/Grouped', [
         return Grouped;
     }(Abstract_1.default);
     exports.default = Grouped;
-    Grouped.prototype['[Types/_chain/Grouped]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Grouped.prototype._key = null;    // @ts-ignore
-    // @ts-ignore
-    Grouped.prototype._value = null;
+    Object.assign(Grouped.prototype, {
+        '[Types/_chain/Grouped]': true,
+        _key: null,
+        _value: null
+    });
 });

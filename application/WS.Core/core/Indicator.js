@@ -12,9 +12,11 @@ define('Core/Indicator', ['Core/helpers/isNewEnvironment', 'require'], function(
       _loading: false,
 
       _init: function(cfg, callback) {
-         if (isNewEnvironment()) {
+         if (this._isNewEnvironment()) {
             requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
-               callback(ManagerController.getIndicator());
+               if (callback) {
+                  callback(ManagerController.getIndicator());
+               }
             });
             return;
          }
@@ -77,7 +79,7 @@ define('Core/Indicator', ['Core/helpers/isNewEnvironment', 'require'], function(
          if (!this._ready) {
             var self = this;
             this._init({delay: delay}, function(inst) {
-               if (isNewEnvironment()) {
+               if (self._isNewEnvironment()) {
                   if (delay) {
                      delay = self._delay;
                   }
@@ -105,7 +107,7 @@ define('Core/Indicator', ['Core/helpers/isNewEnvironment', 'require'], function(
          
          if (!this._ready) {
             this._init({delay: delay}, function(inst) {
-               if (isNewEnvironment()) {
+               if (self._isNewEnvironment()) {
                   if (delay) {
                      delay = self._delay;
                   }
@@ -203,7 +205,7 @@ define('Core/Indicator', ['Core/helpers/isNewEnvironment', 'require'], function(
          else {
             this._init({}, function(inst) {
                self._ready = false;
-               if (isNewEnvironment()) {
+               if (self._isNewEnvironment()) {
                   inst.hide();
                } else {
                   inst.destroy();
@@ -214,6 +216,13 @@ define('Core/Indicator', ['Core/helpers/isNewEnvironment', 'require'], function(
          this._container = undefined;
          this._loading = false;
          return this;
+      },
+      _isNewEnvironment: function() {
+         // Отключил показ вдомных индикаторов, открываемых через старые контролы.
+         // Сейчас получается разница в логике, новые индикаторы показываются всегда выше всех
+         // Старые показываются выше окон, открытых на текущий момент
+         // В старых шаблонах пользователи написали код с расчетом на такое поведение, что их окно может открыться поверх индикатора.
+         return false;
       }
    };
 

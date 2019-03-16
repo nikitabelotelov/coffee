@@ -1,23 +1,29 @@
+@import "/Coffee/coffee.less";
+
 .input-number {
    display: flex;
 }
 
-.number-input-field {
-   width:40px;
-   height: 24px;
+.number-value-field {
+   width:127px;
    padding: 4px;
-   font-size: 16px;
+   font-size: 25px;
    box-sizing: border-box;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .input-number-button {
-   width: 24px;
-   height: 24px;
+   width: 60px;
+   height: 60px;
    outline: none;
-   background-color: lightblue;
+   background-color: @input-buttons-color;
    display: flex;
    align-items: center;
    justify-content: center;
+   border-right: 1px solid;
+   border-left: 1px solid;
 
    -webkit-touch-callout: none; /* iOS Safari */
    -webkit-user-select: none; /* Safari */
@@ -26,4 +32,9 @@
    -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+.input-button-icon {
+   width: 45px;
+   height: 45px;
 }

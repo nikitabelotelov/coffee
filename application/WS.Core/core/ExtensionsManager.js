@@ -1,10 +1,9 @@
 define('Core/ExtensionsManager', [
    'Core/helpers/Object/isEmpty',
-   'Core/constants',
+   'Env/Env',
    'Core/Deferred',
-   'Core/IoC',
    'optional!Types/source'
-], function(isEmptyObject, _const, Deferred, IoC, source) {
+], function(isEmptyObject, Env, Deferred, source) {
    /**
     * Менеджер работы с расширениями функционала и навигации.
     * Класс предназначен для синхронной проверки включенных расширений.
@@ -29,9 +28,9 @@ define('Core/ExtensionsManager', [
          var systemExtensions;
 
          if (this.extensionsNeeded()) {
-            if (_const.isNodePlatform) {
+            if (Env.constants.isNodePlatform) {
                systemExtensions = process && process.domain && process.domain.req && process.domain.req.systemExtensions;
-            } else if (_const.isBrowserPlatform) {
+            } else if (Env.constants.isBrowserPlatform) {
                if (window.systemExtensions && !isEmptyObject(window.systemExtensions)) {
                   systemExtensions = window.systemExtensions;
                }
@@ -71,8 +70,8 @@ define('Core/ExtensionsManager', [
       loadExtensions: function() {
          var def = new Deferred();
 
-         if (_const.isBrowserPlatform) {
-             if ((window.systemExtensions === null || window.systemExtensions === undefined) && _const.systemExtensions) {
+         if (Env.constants.isBrowserPlatform) {
+             if ((window.systemExtensions === null || window.systemExtensions === undefined) && Env.constants.systemExtensions) {
                  // здесь делаем запрос на БЛ за правами, значит у нас нет ПП
                  this.getSystemExtensions().addCallback(function (result) {
                      window.systemExtensions = result;
@@ -94,7 +93,7 @@ define('Core/ExtensionsManager', [
         * Проверка надо ли расширения загружать с БЛ.
         */
       extensionsLoaded: function() {
-         if (_const.isBrowserPlatform) {
+         if (Env.constants.isBrowserPlatform) {
             return !!window.systemExtensions;
          }
 
@@ -124,7 +123,7 @@ define('Core/ExtensionsManager', [
                def.callback(data.getScalar());
             })
             .addErrback(function(e) {
-               IoC.resolve('ILogger').error('System extensions', 'Transport error', e);
+               Env.IoC.resolve('ILogger').error('System extensions', 'Transport error', e);
                def.errback(e);
             });
 
@@ -136,7 +135,7 @@ define('Core/ExtensionsManager', [
        * @return {Boolean}
        */
       extensionsNeeded: function() {
-         if (_const.isNodePlatform) {
+         if (Env.constants.isNodePlatform) {
             var serviceConfig;
             try {
                serviceConfig = process.application.getCurrentService();
@@ -145,8 +144,8 @@ define('Core/ExtensionsManager', [
             }
 
             return serviceConfig && serviceConfig.extensionsNeeded();
-         } else if (_const.isBrowserPlatform) {
-            return (window.systemExtensions && !isEmptyObject(window.systemExtensions)) || _const.systemExtensions || false;
+         } else if (Env.constants.isBrowserPlatform) {
+            return (window.systemExtensions && !isEmptyObject(window.systemExtensions)) || Env.constants.systemExtensions || false;
          }
       }
    };

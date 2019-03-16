@@ -51,8 +51,8 @@ define('Types/_entity/DestroyableMixin', [
                     }
                 }
             }
-        };    //FIXME: deprecated
-        //FIXME: deprecated
+        };    // FIXME: deprecated
+        // FIXME: deprecated
         DestroyableMixin.prototype.isDestroyed = function () {
             return this.destroyed;
         };

@@ -183,10 +183,10 @@ define('Types/_display/itemsStrategy/AbstractStrategy', [
         return Abstract;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin));
     exports.default = Abstract;
-    Abstract.prototype._moduleName = 'Types/display:itemsStrategy.DestroyableMixin';
-    Abstract.prototype['[Types/_display/itemsStrategy/DestroyableMixin]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Abstract.prototype._items = null;    // @ts-ignore
-    // @ts-ignore
-    Abstract.prototype._sourceItems = null;
+    Object.assign(Abstract.prototype, {
+        '[Types/_display/itemsStrategy/DestroyableMixin]': true,
+        _moduleName: 'Types/display:itemsStrategy.DestroyableMixin',
+        _items: null,
+        _sourceItems: null
+    });
 });

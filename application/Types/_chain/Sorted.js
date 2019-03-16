@@ -45,7 +45,8 @@ define('Types/_chain/Sorted', [
         return Sorted;
     }(Abstract_1.default);
     exports.default = Sorted;
-    Sorted.prototype['[Types/_chain/Sorted]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Sorted.prototype._compareFunction = null;
+    Object.assign(Sorted.prototype, {
+        '[Types/_chain/Sorted]': true,
+        _compareFunction: null
+    });
 });

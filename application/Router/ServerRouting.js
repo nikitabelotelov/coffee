@@ -2,18 +2,22 @@
 define('Router/ServerRouting', [
     'require',
     'exports',
-    'Router/Helper'
-], function (require, exports, Helper_1) {
+    'Router/MaskResolver'
+], function (require, exports, MaskResolver_1) {
     'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var _baseTemplate = 'wml!Controls/Application/Route';
     function getAppName(request) {
-        return Helper_1.default.getAppNameByUrl(request.path);
+        return MaskResolver_1.getAppNameByUrl(request.path);
     }
+    exports.getAppName = getAppName;
     function renderApp(request, response, appName) {
         request.compatible = false;
-        response.render('wml!Controls/Application/Route', { application: appName });
+        response.render(_baseTemplate, { application: appName });
     }
-    return {
-        getAppName: getAppName,
-        renderApp: renderApp
-    };
+    exports.renderApp = renderApp;
+    function setBaseTemplate(newBaseTemplate) {
+        _baseTemplate = newBaseTemplate;
+    }
+    exports.setBaseTemplate = setBaseTemplate;
 });

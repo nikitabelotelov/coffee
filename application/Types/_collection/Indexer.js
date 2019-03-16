@@ -54,14 +54,14 @@ define('Types/_collection/Indexer', [
             this._at = at;
             this._prop = prop;
             this.resetIndex();
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
          * @param {String} property Название свойства элемента.
          * @param {*} value Значение свойства элемента.
          * @return {Number}
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
          * @param {String} property Название свойства элемента.
@@ -164,15 +164,15 @@ define('Types/_collection/Indexer', [
                     }
                 }
             });
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion Public methods
+              // region Protected methods
               /**
          * Перебирает проиндексированные значения для всех свойств
          * @param {Function} callback Метод обратного вызова
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Перебирает проиндексированные значения для всех свойств
          * @param {Function} callback Метод обратного вызова

@@ -1,4 +1,8 @@
 /// <amd-module name="Transport/XHR/ErrorText" />
-import {ERROR_TEXT} from 'Transport/Errors';
+//@ts-ignore
+import { XHR } from 'Browser/Transport';
+//@ts-ignore
+import { IoC } from 'Env/Env';
+IoC.resolve('ILogger').log("Transport/RPC/Error", 'module has been moved to "Browser/Transport:XHR.ERRORS_TEXT" and will be removed');
 
-export  = ERROR_TEXT;
+export = XHR.ERRORS_TEXT;

@@ -5,29 +5,88 @@ import * as Control from 'Core/Control';
 // @ts-ignore
 import template = require('wml!Router/Route');
 
-import RouterHelper from 'Router/Helper';
-import History from 'Router/History';
+import * as Controller from 'Router/Controller';
+import * as Data from 'Router/Data';
+import * as MaskResolver from 'Router/MaskResolver';
+import * as History from 'Router/History';
+
+interface IRouteOptions extends HashMap<any> {
+   content?: Function;
+   mask?: string;
+}
 
 class Route extends Control {
-   private _urlOptions = null;
-   private _entered: boolean = false;
-   private _index: number = 0;
-
    public _template: Function = template;
 
-   public pathUrlOptionsFromCfg(cfg: object): void {
-      for (let i in cfg) {
-         if (!this._urlOptions.hasOwnProperty(i) && cfg.hasOwnProperty(i) &&
-            i !== 'mask' && i !== 'content' && i !== '_logicParent') {
-            this._urlOptions[i] = cfg[i];
+   private _urlOptions: HashMap<any> = null;
+   private _isResolved = false;
+
+   public _beforeMount(cfg: IRouteOptions): void {
+      this._urlOptions = {};
+      this._applyNewUrl(cfg.mask, cfg);
+   }
+
+   public _afterMount(): void {
+      this._register();
+      this._checkUrlResolved();
+   }
+
+   public _beforeUpdate(cfg: IRouteOptions) {
+      this._applyNewUrl(cfg.mask, cfg);
+   }
+
+   public _beforeUnmount() {
+      this._unregister();
+   }
+
+   private _register(): void {
+      Controller.addRoute(
+         this,
+         (newLoc, oldLoc) => {
+            return this._beforeApplyNewUrl(newLoc, oldLoc);
+         },
+         () => {
+            this._forceUpdate();
+            return Promise.resolve(true);
          }
+      );
+   }
+
+   private _unregister(): void {
+      Controller.removeRoute(this);
+   }
+
+   private _beforeApplyNewUrl(newLoc: Data.IHistoryState, oldLoc: Data.IHistoryState): Promise<boolean> {
+      let result: Promise<boolean>;
+
+      this._urlOptions = MaskResolver.calculateUrlParams(this._options.mask, newLoc.state);
+      const wasResolvedParam = this._hasResolvedParams();
+      this._fillUrlOptionsFromCfg(this._options);
+
+      if (wasResolvedParam && !this._isResolved) {
+         result = this._notify('enter', [newLoc, oldLoc]);
+         this._isResolved = true;
+      } else if (!wasResolvedParam && this._isResolved) {
+         result = this._notify('leave', [newLoc, oldLoc]);
+         this._isResolved = false;
+      } else {
+         result = Promise.resolve(true);
       }
+
+      return result;
+   }
+
+   private _applyNewUrl(mask: string, cfg: IRouteOptions): boolean {
+      this._urlOptions = MaskResolver.calculateUrlParams(mask);
+      const notUndefVal = this._hasResolvedParams();
+      this._fillUrlOptionsFromCfg(cfg);
+      return notUndefVal;
    }
 
    /**
     * return flag = resolved params from URL
     */
-   public _wasResolvedParam(): boolean {
+   private _hasResolvedParams(): boolean {
       let notUndefVal = false;
       for (let i in this._urlOptions) {
          if (this._urlOptions.hasOwnProperty(i)) {
@@ -40,90 +99,37 @@ class Route extends Control {
       return notUndefVal;
    }
 
-   public _applyNewUrl(mask: string, cfg: object): boolean {
-      this._urlOptions = RouterHelper.calculateUrlParams(mask, undefined, this._index);
-      const notUndefVal = this._wasResolvedParam();
-      this.pathUrlOptionsFromCfg(cfg);
-      return notUndefVal;
-   }
-
-   public beforeApplyUrl(newLoc: any, oldLoc: any): Promise<any> {
-      let result;
-      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, newLoc.url, this._index);
-      const wasResolvedParam = this._wasResolvedParam();
-      if (wasResolvedParam) {
-         this.pathUrlOptionsFromCfg(this._options);
-         if (!this._entered) {
-            result = this._notify('enter', [newLoc, oldLoc]);
-         } else {
-            result = (new Promise((resolve) => {
-               resolve(true);
-            }));
+   private _fillUrlOptionsFromCfg(cfg: IRouteOptions): void {
+      for (let i in cfg) {
+         if (
+            !this._urlOptions.hasOwnProperty(i) &&
+            cfg.hasOwnProperty(i) &&
+            i !== 'mask' &&
+            i !== 'content' &&
+            i !== '_logicParent'
+         ) {
+            this._urlOptions[i] = cfg[i];
          }
-         this._entered = true;
-      } else {
-         this.pathUrlOptionsFromCfg(this._options);
-         if (this._entered) {
-            result = this._notify('leave', [newLoc, oldLoc]);
-         } else {
-            result = (new Promise((resolve) => {
-               resolve(true);
-            }));
-         }
-         this._entered = false;
       }
-      return result;
    }
 
-   public afterUpForNotify(): Promise<any> {
-      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, RouterHelper.getRelativeUrl(), this._index);
-      const notUndefVal = this._wasResolvedParam();
-      this.pathUrlOptionsFromCfg(this._options);
+   private _checkUrlResolved(): Promise<boolean> {
+      this._urlOptions = MaskResolver.calculateUrlParams(this._options.mask, Data.getRelativeUrl());
+      const notUndefVal = this._hasResolvedParams();
+      this._fillUrlOptionsFromCfg(this._options);
 
       const currentState = History.getCurrentState();
       let prevState = History.getPrevState();
       if (notUndefVal) {
-         this._entered = true;
+         this._isResolved = true;
          if (!prevState) {
             prevState = {
-               url: RouterHelper.calculateHref(this._options.mask, {clear: true}, undefined)
+               state: MaskResolver.calculateHref(this._options.mask, { clear: true })
             };
          }
          return this._notify('enter', [currentState, prevState]);
       }
-      return new Promise((resolve) => {resolve(); });
-   }
-
-   public applyNewUrl(): void {
-      this._forceUpdate();
-   }
-
-   public _reserve(index: number, newUrl: string): number {
-      let res = RouterHelper.findIndex(this._options.mask, index, newUrl);
-      if (res !== -1) {
-         this._index = res - 1;
-      } else {
-         res = index;
-      }
-      return res;
-   }
-
-   public _beforeMount(cfg: any): void {
-      this._urlOptions = {};
-      this._applyNewUrl(cfg.mask, cfg);
-   }
-
-   public _afterMount(): void {
-      this._notify('routerCreated', [this], { bubbling: true });
-      this.afterUpForNotify();
-   }
-
-   public _beforeUpdate(cfg: any) {
-      this._applyNewUrl(cfg.mask, cfg);
-   }
-
-   public _beforeUnmount() {
-      this._notify('routerDestroyed', [this], { bubbling: true });
+      return Promise.resolve(true);
    }
 }
 

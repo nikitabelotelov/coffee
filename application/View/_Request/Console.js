@@ -1,8 +1,8 @@
 define('View/_Request/Console', [
     'require',
     'exports',
-    'Core/constants'
-], function (require, exports, constants) {
+    'Env/Env'
+], function (require, exports, Env_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var isAllowedLog = function (allowedLevel, methodLevel) {
@@ -21,7 +21,7 @@ define('View/_Request/Console', [
     function () {
         function Console(_a) {
             var logLevel = _a.logLevel, console = _a.console;
-            this.__logLevel = logLevel || constants.logLevel;
+            this.__logLevel = logLevel || Env_1.constants.logLevel;
             this.__console = console;
         }
         Console.prototype.setLogLevel = function (mode) {

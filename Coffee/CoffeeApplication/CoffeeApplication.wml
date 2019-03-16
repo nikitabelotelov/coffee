@@ -1,6 +1,6 @@
 <div class="coffee-application">
    <Router.Route mask="page/:pageId" attr:class="coffee-application-content">
-      <Coffee.PageLoader default="Info">
+      <Coffee.PageLoader default="Info" temp="{{content.pageId}}">
          <ws:templateOptions
             settingsInfo="{{settingsInfo}}"
             currentInfo="{{currentInfo}}"/>

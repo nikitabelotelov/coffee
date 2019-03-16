@@ -4,7 +4,9 @@
  * Модуль, в котором описана функция <b>isEqual(obj1, obj2)</b>,
  *
  * Функция рекурсивно сравнивает два объекта или массива.
- * Объекты считаются равными тогда, когда они равны по оператору ===, или когда они являются plain Object и у них одинаковые наборы внутренних ключей, и по каждому ключу значения равны, причём, если эти значения - объекты или массивы, то они сравниваются рекурсивно.
+ * Объекты считаются равными тогда, когда они равны по оператору ===, или когда они являются plain Object и у них
+ * одинаковые наборы внутренних ключей, и по каждому ключу значения равны, причём, если эти значения - объекты или
+ * массивы, то они сравниваются рекурсивно.
  * Функция возвращает true, когда оба объекта/массива идентичны.
  *
  * <h2>Параметры функции</h2>
@@ -35,7 +37,7 @@ define('Types/_object/isEqual', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var isTraversable = function (v) {
+    function isTraversable(v) {
         var proto;
         if (v && typeof v === 'object') {
             if (v instanceof Date) {
@@ -45,17 +47,18 @@ define('Types/_object/isEqual', [
             return proto === null || proto === Object.prototype;
         }
         return false;
-    };
-    var isEqualArrays = function (arr1, arr2) {
+    }
+    function isEqualArrays(arr1, arr2) {
         if (arr1.length !== arr2.length) {
             return false;
         }
         return !arr1.some(function (item, index) {
             return !isEqual(item, arr2[index]);
         });
-    };
-    var isEqualObjects = function (obj1, obj2) {
-        var keys1 = Object.keys(obj1), keys2 = Object.keys(obj2);
+    }
+    function isEqualObjects(obj1, obj2) {
+        var keys1 = Object.keys(obj1);
+        var keys2 = Object.keys(obj2);
         if (keys1.length !== keys2.length) {
             return false;
         }
@@ -67,9 +70,13 @@ define('Types/_object/isEqual', [
             });
         }
         return Object.getPrototypeOf(obj1) === Object.getPrototypeOf(obj2);
-    };
+    }
     function isEqual(obj1, obj2) {
-        var equal = obj1 === obj2, val1, val2, isArray1, isArray2;
+        var equal = obj1 === obj2;
+        var val1;
+        var val2;
+        var isArray1;
+        var isArray2;
         if (equal) {
             return equal;
         }
@@ -94,5 +101,4 @@ define('Types/_object/isEqual', [
         return false;
     }
     exports.default = isEqual;
-    ;
 });

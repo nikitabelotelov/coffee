@@ -3,11 +3,12 @@ define('Coffee/Settings', [
     'require',
     'exports',
     'tslib',
-    'UI/Base',
+    'Core/Control',
     'wml!Coffee/Settings/Settings',
     'Coffee/Data/DataStore',
+    'Coffee/Settings/SettingsModel/SettingsModel',
     'css!Coffee/Settings/Settings'
-], function (require, exports, tslib_1, Base_1, template, DataStore_1) {
+], function (require, exports, tslib_1, Control, template, DataStore_1, SettingsModel_1) {
     'use strict';
     var Settings = /** @class */
     function (_super) {
@@ -15,25 +16,34 @@ define('Coffee/Settings', [
         function Settings() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this._template = template;
-            _this.settingsInfo = {};
             return _this;
         }
         Settings.prototype._beforeMount = function (opts) {
             var _this = this;
-            var initialSettings = DataStore_1.DataStore.getInitialSettings();
-            if (initialSettings) {
-                this.settingsInfo = initialSettings;
-            } else {
-                DataStore_1.DataStore.on('initialSettings', function () {
-                    _this.settingsInfo = DataStore_1.DataStore.getInitialSettings();
-                    _this._forceUpdate();
-                    DataStore_1.DataStore.removeHandler('initialSettings');
-                });
-            }
+            var promiseResult = new Promise(function (resolve, reject) {
+                var initialSettings = DataStore_1.DataStore.getInitialSettings();
+                if (initialSettings) {
+                    _this.saveSettings(initialSettings);
+                    resolve();
+                } else {
+                    DataStore_1.DataStore.on('initialSettings', function () {
+                        _this.saveSettings(DataStore_1.DataStore.getInitialSettings());
+                        _this._forceUpdate();
+                        DataStore_1.DataStore.removeHandler('initialSettings');
+                        resolve();
+                    });
+                }
+            });
+            return promiseResult;
         };
         ;
         Settings.prototype.settingChangedHandler = function (event, value) {
             DataStore_1.DataStore.sendSettings(this.settingsInfo);
+        };
+        ;
+        Settings.prototype.saveSettings = function (settings) {
+            var parsedSettings = SettingsModel_1.SettingsModel.parseSettings(settings);
+            this.settingsInfo = { settingsInfo: new SettingsModel_1.SettingsModel(parsedSettings) };
         };
         ;
         Settings.prototype.checkUpdate = function () {
@@ -48,6 +58,6 @@ define('Coffee/Settings', [
         };
         ;
         return Settings;
-    }(Base_1.Control);
+    }(Control);
     return Settings;
 });

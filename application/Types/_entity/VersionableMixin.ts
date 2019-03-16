@@ -9,15 +9,15 @@
 const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
    '[Types/_entity/VersionableMixin]': true,
 
-   //region IVersionable
+   // region IVersionable
 
    _version: 0,
 
-   getVersion() {
+   getVersion(): number {
       return this._version;
    },
 
-   _nextVersion() {
+   _nextVersion(): void {
       this._version++;
       if (this['[Types/_entity/ManyToManyMixin]']) {
          this._getMediator().belongsTo(this, (parent) => {
@@ -28,7 +28,7 @@ const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
       }
    }
 
-   //endregion IVersionable
+   // endregion
 };
 
 export default VersionableMixin;

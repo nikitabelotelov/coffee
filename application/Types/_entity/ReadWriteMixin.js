@@ -26,7 +26,7 @@ define('Types/_entity/ReadWriteMixin', [
     var ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */
     {
         '[Types/_entity/ReadWriteMixin]': true,
-        //region Types/_entity/ReadWriteMixin
+        // region Types/_entity/ReadWriteMixin
         get writable() {
             return this[$writable];
         },
@@ -47,8 +47,8 @@ define('Types/_entity/ReadWriteMixin', [
                 ManyToManyMixin_1.default.destroy.call(this);
             }
         },
-        //endregion Types/_entity/ReadWriteMixin
-        //region Types/_entity/ObservableMixin
+        // endregion Types/_entity/ReadWriteMixin
+        // region Types/_entity/ObservableMixin
         subscribe: function (event, handler, ctx) {
             if (this[$writable]) {
                 return ObservableMixin_1.default.prototype.subscribe.call(this, event, handler, ctx);
@@ -71,17 +71,17 @@ define('Types/_entity/ReadWriteMixin', [
                 return ObservableMixin_1.default.prototype._notify.apply(this, arguments);
             }
         },
-        //endregion Types/_entity/ObservableMixin
-        //region Types/_entity/OptionsToPropertyMixin
+        // endregion Types/_entity/ObservableMixin
+        // region Types/_entity/OptionsToPropertyMixin
         _getOptions: function () {
             // @ts-ignore
-            var options = OptionsToPropertyMixin_1.default.prototype._getOptions.call(this);    //Delete "writable" property received from _options
-            //Delete "writable" property received from _options
+            var options = OptionsToPropertyMixin_1.default.prototype._getOptions.call(this);    // Delete "writable" property received from _options
+            // Delete "writable" property received from _options
             delete options.writable;
             return options;
-        }    //endregion Types/_entity/OptionsToPropertyMixin
+        }    // endregion Types/_entity/OptionsToPropertyMixin
     };    // @ts-ignore
-    //endregion Types/_entity/OptionsToPropertyMixin
+    // endregion Types/_entity/OptionsToPropertyMixin
     // @ts-ignore
     var IS_BROWSER = typeof window !== 'undefined';    // @ts-ignore
     // @ts-ignore

@@ -9,7 +9,7 @@ define('Core/helpers/String/linkWrap',
        * Класс, в котором описаны функции, применяемые для форматирования гиперссылок.
        * @class Core/helpers/String/linkWrap
        * @public
-       * @author Мальцев А.А.
+       * @author Зуев Д.В.
        */
       var
          urlRegExpString = '((https?|ftp|file):\/\/|www\\\.)[-A-Za-zА-ЯЁа-яё0-9._]+(?::[0-9]+)?(\/([-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()\*\'\[\\\]](?!nbsp;|amp;nbsp;))*)*',
@@ -35,7 +35,7 @@ define('Core/helpers/String/linkWrap',
             wrapURLs: function() {
                var
                   //Откажимся от поддержки TLD(https://en.wikipedia.org/wiki/Top-level_domain)
-                  emailRegExpString = '((([^<>()\\[\\]\\.,;:\\s@\\"]+(\\.[^<>()\\[\\]\\.,;:\\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\\]\\.,;:\\s@\\"]+\\.)+[^<>()[\\]\\.,;:\\s@\\"]{2,}))',
+                  emailRegExpString = '((([^<>()\\[\\]\\.,;:\\s@\\"]+(\\.[^<>()\\[\\]\\.,;:\\s@\\"]+)*)|(\\".+\\"))@(([^&<>()[\\]\\.,;:\\s@\\"]+\\.)+[^&<>()[\\]\\.,;:\\s@\\"]{2,}))',
                   // Приклеим регулярку excludeLinkString, чтобы не пытаться обернуть в ссылку уже и так готовые теги <a href=.../a>
                   emailRegExp = new RegExp(excludeLinkString + emailRegExpString, 'img'),
                   urlRegExp = new RegExp(excludeLinkString + urlRegExpString, 'i'),

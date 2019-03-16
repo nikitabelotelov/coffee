@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/Main" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 import "Core/ConsoleLogger";
 // @ts-ignore
 import template = require('wml!Coffee/Main/Main');

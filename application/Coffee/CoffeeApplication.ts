@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/CoffeeApplication" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 import "Core/ConsoleLogger";
 // @ts-ignore
 import template = require('wml!Coffee/CoffeeApplication/CoffeeApplication');
@@ -13,7 +13,9 @@ class CoffeeApplication extends Control {
     public _template: Function = template;
 
     protected _beforeMount() {
-        return DataStore.initDataStore();
+        if(typeof window !== 'undefined') {
+            return DataStore.initDataStore();
+        }
     }
 }
 

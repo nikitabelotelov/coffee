@@ -36,6 +36,7 @@ define('UI/_base/Document', [
             }
             var headData = new HeadData_1.default();
             Request.getCurrent().setStorage('HeadData', headData);
+            Request.getCurrent().setStorage('CoreInstance', { instance: _this });
             _this.ctxData = new AppData_1.default(cfg);
             return _this;
         }

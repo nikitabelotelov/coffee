@@ -1,28 +1,24 @@
 define('Core/core-init-min', [
    'Core/patchRequireJS',
-   'Core/nativeExtensions',
    'Core/apply-contents',
-   'Core/cookie',
+   'Core/nativeExtensions',
    'Core/BodyClasses',
    'Core/Deferred',
-   'Core/constants',
-   'Core/compatibility',
+   'Env/Env',
    'Core/core-config-min',
    'Core/Context',
-   'Core/ConsoleLogger',
    'Core/polyfill/PromiseAPIDeferred',
    'is!browser?Lib/Control/CompoundControl/CompoundControl',
-   'Transport/RPCJSON'
+   'Browser/Transport'
 ], function(
    patchRequireJS,
    nativeExtensions,
    applyContents,
-   cookie,
    BodyClasses,
    Deferred,
-   _const,
-   compatibility
+   Env
 ) {
+
    function resolveThemeName() {
      var href = location.href;
      if (~href.indexOf('carry.html') || ~href.indexOf('carry_minimal.html')) {
@@ -45,13 +41,12 @@ define('Core/core-init-min', [
        return null;
      }
    }
-
    var
       _touchPrivate = {
          moveInRow: 1,
 
          //При инициализации необходимо корректно проставить значение, далее значение определяется в зависимости от событий
-         state: compatibility.touch,
+         state: Env.compatibility.touch,
 
          lastState: undefined,
 
@@ -90,8 +85,8 @@ define('Core/core-init-min', [
          // Убрал wi_scheme и core.css
          // Кому нужны подключит сам в шаблоне
          ready.addCallback(function() {
-            _const.$win = $(window);
-            _const.$doc = $(document);
+            Env.constants.$win = $(window);
+            Env.constants.$doc = $(document);
          }).addCallback(function() {
            var themeName = resolveThemeName();
            var config = window.wsConfig;
@@ -110,34 +105,34 @@ define('Core/core-init-min', [
             // возможно новый jquery полечит
 
             if (themeName) {
-               cookie.set('thmname', themeName, {path: '/'});
-               cookie.set('thmname', themeName);
+               Env.cookie.set('thmname', themeName, {path: '/'});
+               Env.cookie.set('thmname', themeName);
             }
             else {
-               cookie.set('thmname', '', {path: '/'});
-               cookie.set('thmname', null, {path: '/'});
-               cookie.set('thmname', '', themeName);
-               cookie.set('thmname', null, themeName);
+               Env.cookie.set('thmname', '', {path: '/'});
+               Env.cookie.set('thmname', null, {path: '/'});
+               Env.cookie.set('thmname', '', themeName);
+               Env.cookie.set('thmname', null, themeName);
             }
 
             // Сообщаем серверу о нашей timezone
-            cookie.set('tz', null);//remove current value, it can be set not on to '/' path
+            Env.cookie.set('tz', null);//remove current value, it can be set not on to '/' path
 
             /**
              * Время жизни куки в 30 дней, иначе она будет сбрасываться при закрытии браузера.
-             * Значение указывается в днях, см. недокументированные возможности cookie.set в 'Core/cookie':78
+             * Значение указывается в днях, см. недокументированные возможности cookie.set в 'Env/Env:cookie':78
              */
-            cookie.set('tz', new Date().getTimezoneOffset(), {
+            Env.cookie.set('tz', new Date().getTimezoneOffset(), {
                path: '/',
                expires: 30
             });
 
             // Заставляем перерисовать контент
-            _const.$win.bind('orientationchange', function() {
-               _const.$win.trigger('resize');
+            Env.constants.$win.bind('orientationchange', function() {
+               Env.constants.$win.trigger('resize');
             });
          }).addCallback(function() {
-            _const.$doc.ready(function applySpecificCssClasses() {
+            Env.constants.$doc.ready(function applySpecificCssClasses() {
                var
                   body = $('body'),
                   classes = BodyClasses();
@@ -146,7 +141,7 @@ define('Core/core-init-min', [
                   body.addClass(classes);
                }
 
-               _const.$body = body;
+               Env.constants.$body = body;
             });
          }).addCallback(function() {
             //TODO: временное решение. В зависимостях Core/core-extensions быть не должно, т.к. он зависит от WS/Data.
@@ -172,7 +167,6 @@ define('Core/core-init-min', [
 
       return ready;
    }
-
    patchRequireJS();
 
    coreInitialization.applyContents = applyContents;

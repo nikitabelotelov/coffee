@@ -1,50 +1,10 @@
 define('Transport/Templates/EmptyTemplate', [
-   'Transport/Templates/Template'
-], function(Template) {
-   var EmptyTemplate;
-   /**
-    * Класс - заглушка, представляющий собой пустой шаблон.
-    * Его может быть удобно подставить вместо настоящего шаблона.
-    * @class EmptyTemplate/Templates/EmptyTemplateEmptyTemplate
-    * @extends Transport/Templates/Template
-    * @author Бегунов А.В.
-    * @public
-    */
-   EmptyTemplate = Template.extend({
-      $constructor: function () {
-         this._dReady.done();
-      },
-      _collectAllControlsToPreload: function () {
-         return [];
-      },
-      isPage: function () {
-         return true;
-      },
-      getConfig: function () {
-         return {};
-      },
-      getStyle: function () {
-         return '';
-      },
-      getAlignment: function () {
-         return {horizontalAlignment: 'Stretch', verticalAlignment: 'Stretch'};
-      },
-      getTitle: function () {
-         return '';
-      },
-      createMarkup: function (container) {
-         container.get(0).innerHTML = '';
-      },
-      getDimensions: function () {
-         return {width: '', height: ''};
-      },
-      getControls: function () {
-         return [];
-      },
-      _getIncludeDescriptorNodes: function () {
-         return [];
-      }
-   });
-   
-   return EmptyTemplate;
+    'require',
+    'exports',
+    'Browser/TransportOld',
+    'Env/Env'
+], function (require, exports, TransportOld_1, Env_1) {
+    'use strict';
+    Env_1.IoC.resolve('ILogger').log('Transport/Templates/EmptyTemplate', 'module has been moved to "Browser/TransportOld:EmptyTemplate" and will be removed');
+    return TransportOld_1.EmptyTemplate;
 });

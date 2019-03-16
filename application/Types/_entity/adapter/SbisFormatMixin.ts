@@ -7,10 +7,11 @@
  */
 
 import FIELD_TYPE from './SbisFieldType';
-import factory from '../factory'
-import {fieldsFactory, Field, UniversalField} from '../format'
-import {Map} from '../../shim'
-import {object, logger} from '../../util'
+import factory from '../factory';
+import {fieldsFactory, IFieldDeclaration, Field, UniversalField} from '../format';
+import {Map} from '../../shim';
+import {object, logger} from '../../util';
+import {format} from '../../collection';
 
 /**
  * @const {Object} Инвертированный FIELD_TYPE
@@ -25,15 +26,52 @@ const FIELD_TYPE_INVERTED = Object.keys(FIELD_TYPE).reduce((memo, key) => {
  */
 const fieldIndicesSymbol = typeof Symbol === 'undefined' ? undefined : Symbol('fieldIndices');
 
-function getFieldTypeNameByInner(innerName) {
+export interface IFieldType {
+   n: string;
+}
+
+export interface IMoneyFieldType extends IFieldType {
+   l?: boolean;
+}
+
+export interface IDictFieldType extends IFieldType {
+   s: string[];
+}
+
+export interface IDateTeimeFieldType extends IFieldType {
+   tz: boolean;
+}
+
+export interface IArrayFieldType extends IFieldType {
+   t: string;
+}
+
+export interface IFieldFormat {
+   n: string;
+   t: string | IFieldType;
+}
+
+export interface IRecordFormat {
+   _type?: string;
+   d: any[];
+   s: IFieldFormat[];
+}
+
+export interface ITableFormat {
+   _type?: string;
+   d: any[][];
+   s: IFieldFormat[];
+}
+
+function getFieldTypeNameByInner(innerName: string): string {
    return FIELD_TYPE_INVERTED[innerName] || 'string';
 }
 
-function getFieldInnerTypeNameByOuter(outerName) {
+function getFieldInnerTypeNameByOuter(outerName: string): string {
    return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
-const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototype */{
+const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototype */ {
    '[Types/_entity/adapter/SbisFormatMixin]': true,
 
    /**
@@ -66,7 +104,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
     */
    _sharedFieldMeta: null,
 
-   constructor(data) {
+   constructor(data: IRecordFormat | ITableFormat): void {
       if (data && data._type && data._type !== this._type) {
          throw new TypeError(`Argument "data" has "${data._type}" type signature but "${this._type}" expected.`);
       }
@@ -78,14 +116,14 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       this._format = {};
    },
 
-   //region Public methods
+   // region Public methods
 
-   getData() {
+   getData(): IRecordFormat | ITableFormat {
       return this._data;
    },
 
-   getFields() {
-      let fields = [];
+   getFields(): string[] {
+      const fields = [];
       if (this._isValidData()) {
          for (let i = 0, count = this._data.s.length; i < count; i++) {
             fields.push(this._data.s[i].n);
@@ -94,12 +132,12 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return fields;
    },
 
-   clear() {
+   clear(): void {
       this._touchData();
       this._data.d.length = 0;
    },
 
-   getFormat(name) {
+   getFormat(name: string): format.Format<Field> {
       if (!this._has(name)) {
          throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
       }
@@ -109,9 +147,9 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return this._format[name];
    },
 
-   getSharedFormat(name) {
-      let format = this._sharedFieldFormat || (this._sharedFieldFormat = new UniversalField());
-      let index = this._getFieldIndex(name);
+   getSharedFormat(name: string): UniversalField {
+      const format = this._sharedFieldFormat || (this._sharedFieldFormat = new UniversalField());
+      const index = this._getFieldIndex(name);
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}::getSharedFormat(): field "${name}" doesn't exist`);
       }
@@ -122,11 +160,14 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return format;
    },
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {
-         throw new TypeError(`${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`);
+         throw new TypeError(
+            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+         );
       }
-      let name = format.getName();
+
+      const name = format.getName();
       if (this._has(name)) {
          throw new ReferenceError(`${this._moduleName}::addField(): field "${name}" already exists`);
       }
@@ -144,14 +185,14 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
          at,
          factory.serialize(
             format.getDefaultValue(),
-            {format: format}
+            {format}
          )
       );
    },
 
-   removeField(name) {
+   removeField(name: string): void {
       this._touchData();
-      let index = this._getFieldIndex(name);
+      const index = this._getFieldIndex(name);
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}::removeField(): field "${name}" doesn't exist`);
       }
@@ -161,25 +202,25 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       this._removeD(index);
    },
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       this._touchData();
       this._checkFieldIndex(index);
-      let name = this._data.s[index].n;
+      const name = this._data.s[index].n;
       delete this._format[name];
       this._resetFieldIndices();
       this._data.s.splice(index, 1);
       this._removeD(index);
    },
 
-   //endregion Public methods
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
-   _touchData() {
+   _touchData(): void {
       this._data = this._normalizeData(this._data, this._type);
    },
 
-   _normalizeData(data, dataType) {
+   _normalizeData(data: any, dataType: string): IRecordFormat | ITableFormat {
       if (!(data instanceof Object)) {
          data = {};
       }
@@ -194,28 +235,28 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return data;
    },
 
-   _cloneData(shareFormat) {
-      let data = object.clone(this._data);
+   _cloneData(shareFormat: UniversalField): IRecordFormat | ITableFormat {
+      const data = object.clone(this._data);
       if (shareFormat && data && data.s) {
-         data.s = this._data.s;//Keep sharing fields format
+         data.s = this._data.s; // Keep sharing fields format
       }
       return data;
    },
 
-   _isValidData() {
+   _isValidData(): boolean {
       return this._data && (this._data.s instanceof Array);
    },
 
-   _has(name) {
+   _has(name: string): boolean {
       return this._getFieldIndex(name) >= 0;
    },
 
-   _getFieldIndex(name) {
+   _getFieldIndex(name: string): number {
       if (!this._isValidData()) {
          return -1;
       }
 
-      let s = this._data.s;
+      const s = this._data.s;
       let fieldIndices = fieldIndicesSymbol ? s[fieldIndicesSymbol] : this._fieldIndices;
 
       if (!fieldIndicesSymbol && fieldIndices && this._fieldIndices['[{s}]'] !== s) {
@@ -239,7 +280,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return fieldIndices.has(name) ? fieldIndices.get(name) : -1;
    },
 
-   _resetFieldIndices() {
+   _resetFieldIndices(): void {
       if (this._isValidData()) {
          if (fieldIndicesSymbol) {
             this._data.s[fieldIndicesSymbol] = null;
@@ -249,7 +290,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       }
    },
 
-   _checkFieldIndex(index, appendMode) {
+   _checkFieldIndex(index: number, appendMode: boolean): void {
       let max = this._data.s.length - 1;
       if (appendMode) {
          max++;
@@ -259,8 +300,8 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       }
    },
 
-   _getFieldType(index) {
-      let field = this._data.s[index];
+   _getFieldType(index: number): string {
+      const field = this._data.s[index];
       let typeName = field.t;
       if (typeName && (typeName instanceof Object)) {
          typeName = typeName.n;
@@ -268,12 +309,12 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return getFieldTypeNameByInner(typeName);
    },
 
-   _getFieldMeta(index, type, singleton) {
+   _getFieldMeta(index: number, type: string, singleton: boolean): object {
       if (singleton && this._sharedFieldMeta === null) {
          this._sharedFieldMeta = {};
       }
-      let info = this._data.s[index];
-      let meta = singleton ? this._sharedFieldMeta : {};
+      const info = this._data.s[index];
+      const meta = singleton ? this._sharedFieldMeta : {};
 
       switch (type) {
          case 'real':
@@ -306,10 +347,10 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return meta;
    },
 
-   _checkFormat(record, prefix) {
-      let self = this._isValidData() ? this._data.s : [];
-      let outer = record ? record.s || [] : [];
-      let count = self.length;
+   _checkFormat(record: IRecordFormat, prefix: string): void {
+      const self = this._isValidData() ? this._data.s : [];
+      const outer = record ? record.s || [] : [];
+      const count = self.length;
       let error;
 
       if (self === outer) {
@@ -334,43 +375,44 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       }
    },
 
-   _checkFormatColumns(self, outer, index) {
+   _checkFormatColumns(self: IFieldFormat, outer: IFieldFormat, index: number): string {
       if (self.n !== outer.n) {
-         return 'field with name "' + self.n + '" at position ' + index + ' expected instead of "' + outer.n + '"';
+         return `field with name "${self.n}" at position ${index} expected instead of "${outer.n}"`;
       }
 
       let selfType = self.t;
       let outerType;
 
-      if (selfType && selfType.n) {
-         selfType = selfType.n;
+      if (selfType && (selfType as IFieldType).n) {
+         selfType = (selfType as IFieldType).n;
       }
       outerType = outer.t;
       if (outerType && outerType.n) {
          outerType = outerType.n;
       }
       if (selfType !== outerType) {
-         return 'expected field type for "' + self.n + '" at position ' + index + ' is "' + selfType + '" instead of "' + outerType + '"';
+         return `expected field type for "${self.n}" at position '${index} is "${selfType}" instead of "${outerType}"`;
       }
    },
 
-   _buildFormatDeclaration(name) {
-      let index = this._getFieldIndex(name);
-      let type = this._getFieldType(index);
-      let declaration = this._getFieldMeta(index, type);
+   _buildFormatDeclaration(name: string): IFieldDeclaration {
+      const index = this._getFieldIndex(name);
+      const type = this._getFieldType(index);
+      const declaration = this._getFieldMeta(index, type);
       declaration.name = name;
       declaration.type = type;
       return declaration;
    },
 
-   _buildFormat(name) {
+   _buildFormat(name: string): Field {
       return fieldsFactory(
          this._buildFormatDeclaration(name)
       );
    },
 
-   _buildS(format) {
-      let data = {
+   _buildS(format: Field): IFieldFormat {
+      const data = {
+         t: '',
          n: format.getName()
       };
       this._buildSType(data, format);
@@ -378,12 +420,12 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       return data;
    },
 
-   _buildSType(data, format) {
-      let type = (format.getTypeName() + '').toLowerCase();
+   _buildSType(data: IFieldFormat, format: Field): void {
+      const type = (format.getTypeName() + '').toLowerCase();
       switch (type) {
          case 'money':
             if (format.isLarge()) {
-               data.t = {
+               (data.t as IMoneyFieldType) = {
                   n: FIELD_TYPE[type],
                   l: true
                };
@@ -401,16 +443,16 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
                   return prev;
                }, {});
             }
-            data.t = {
+            (data.t as IDictFieldType) = {
                n: FIELD_TYPE[type],
                s: dict
             };
             break;
 
          case 'datetime':
-            let withoutTimeZone = format.isWithoutTimeZone();
+            const withoutTimeZone = format.isWithoutTimeZone();
             if (withoutTimeZone) {
-               data.t = {
+               (data.t as IDateTeimeFieldType) = {
                   n: FIELD_TYPE[type],
                   tz: !withoutTimeZone
                };
@@ -420,7 +462,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
             break;
 
          case 'array':
-            data.t = {
+            (data.t as IArrayFieldType) = {
                n: FIELD_TYPE[type],
                t: getFieldInnerTypeNameByOuter(format.getKind())
             };
@@ -431,15 +473,15 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       }
    },
 
-   _buildD() {
+   _buildD(): void {
       throw new Error('Method must be implemented');
    },
 
-   _removeD() {
+   _removeD(): void {
       throw new Error('Method must be implemented');
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default SbisFormatMixin;

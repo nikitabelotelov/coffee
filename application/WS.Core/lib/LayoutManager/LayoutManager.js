@@ -3,13 +3,12 @@
  */
 define('Lib/LayoutManager/LayoutManager',
    [
-      'Core/constants',
+      'Env/Env',
       'Core/helpers/Object/find',
-      'Core/EventBus',
-      'Core/detection',
+      'Env/Event',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', // подключен сюда для паковки на ПП, т.к. содержит общие для страницы/раскладки стили
       'is!browser?jquery'
-   ], function(cConstants, objectFind, EventBus, detection, StickyHeaderManager) {
+   ], function(Env, objectFind, EnvEvent, StickyHeaderManager) {
    'use strict';
 
    // Область контента
@@ -97,9 +96,9 @@ define('Lib/LayoutManager/LayoutManager',
          }
 
          if (handlers.hasOwnProperty(event)) {
-            EventBus.globalChannel().unsubscribe(event, handlers[event]);
+            EnvEvent.Bus.globalChannel().unsubscribe(event, handlers[event]);
          }
-         EventBus.globalChannel().subscribe(event, handler);
+         EnvEvent.Bus.globalChannel().subscribe(event, handler);
          handlers[event] = handler;
       },
 
@@ -124,7 +123,7 @@ define('Lib/LayoutManager/LayoutManager',
                }
             });
 
-            contentArea = findContent(cConstants.layoutConfig.contentArea);
+            contentArea = findContent(Env.constants.layoutConfig.contentArea);
             //Хак: для отключения промотки body, при которой основной контейнер с содержимым съезжает вверх, и внизу
             //body остаётся пустое место. Это происходит, когда фокус приходит на нестековую плав. панель, которая
             //лежит в body (или основном контейнере), и вылезает за нижний край body (или осн. контейнера)
@@ -140,7 +139,7 @@ define('Lib/LayoutManager/LayoutManager',
                }
             }.bind(this));
 
-            if(detection.isMobileSafari){
+            if(Env.detection.isMobileSafari){
                /**
                 * Адовый костыль для Safari.
                 * Когда в Safari одна вкладка - панели с вкладками нет, когда несколько - панель есть.
@@ -197,7 +196,7 @@ define('Lib/LayoutManager/LayoutManager',
       },
 
       setHasAnyFloatArea: function(hasAnyFloatArea){
-         if (detection.isMobileIOS && !this.isMainScrollingContainerBody()){
+         if (Env.detection.isMobileIOS && !this.isMainScrollingContainerBody()){
             // на IOS при появлении всплывающей панели надо снимать стиль -webkit-overflow-scrolling: touch;
             // лечит ошибку: https://inside.tensor.ru/opendoc.html?guid=615d920b-a698-425b-8fdd-6c96b31db2f7
             this.getMainScrollingContainer().toggleClass('ws-ios-overflow-scrolling-auto', hasAnyFloatArea);

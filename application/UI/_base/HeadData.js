@@ -2,10 +2,10 @@ define('UI/_base/HeadData', [
     'require',
     'exports',
     'Core/Themes/ThemesController',
-    'Core/cookie',
+    'Env/Env',
     'UI/_base/DepsCollector',
     'View/Request'
-], function (require, exports, ThemesController, cookie, DepsCollector_1, Request) {
+], function (require, exports, ThemesController, Env_1, DepsCollector_1, Request) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     function cropSlash(str) {
@@ -64,7 +64,7 @@ define('UI/_base/HeadData', [
             });
             this.depComponentsMap = {};
             this.additionalDeps = {};
-            this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
+            this.isDebug = Env_1.cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
         }    /* toDO: StateRec.register */
         /* toDO: StateRec.register */
         HeadData.prototype.pushDepComponent = function (componentName, needRequire) {

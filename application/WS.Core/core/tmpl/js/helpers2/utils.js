@@ -1,6 +1,6 @@
 define('Core/tmpl/js/helpers2/utils', [
-   'Core/constants'
-], function utilsLoader(utils) {
+   'Env/Env'
+], function utilsLoader(Env) {
    'use strict';
-   return utils;
+   return Env.constants;
 });

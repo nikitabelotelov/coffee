@@ -113,9 +113,8 @@ define('Types/_entity/Model', [
     'Types/_entity/functor',
     'Types/di',
     'Types/util',
-    'Types/shim',
-    'Core/core-extend'
-], function (require, exports, tslib_1, Record_1, InstantiableMixin_1, functor_1, di_1, util_1, shim_1, coreExtend) {
+    'Types/shim'
+], function (require, exports, tslib_1, Record_1, InstantiableMixin_1, functor_1, di_1, util_1, shim_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Separator for path in object
@@ -128,8 +127,8 @@ define('Types/_entity/Model', [
     function (_super) {
         tslib_1.__extends(Model, _super);
         function Model(options) {
-            var _this = _super.call(this, options) || this;    //TODO: don't allow to inject properties through constructor
-            //TODO: don't allow to inject properties through constructor
+            var _this = _super.call(this, options) || this;    // TODO: don't allow to inject properties through constructor
+            // TODO: don't allow to inject properties through constructor
             _this._propertiesInjected = options && 'properties' in options;    // FIXME: backward compatibility for _options
             // FIXME: backward compatibility for _options
             if (_this._options) {
@@ -149,7 +148,40 @@ define('Types/_entity/Model', [
                 _this._$idProperty = _this._getAdapter().getKeyField(_this._getRawData()) || '';
             }
             return _this;
-        }
+        }    // endregion
+             // region Statics
+        // endregion
+        // region Statics
+        Model.fromObject = function (data, adapter) {
+            var record = Record_1.default.fromObject(data, adapter);
+            if (!record) {
+                return record;
+            }
+            return new Model({
+                rawData: record.getRawData(true),
+                adapter: record.getAdapter(),
+                //@ts-ignore
+                format: record._getFormat(true)    // "Anakin, I Am Your Son"
+            });
+        };    // endregion
+              // region Deprecated
+              /**
+         * @deprecated
+         */
+        // "Anakin, I Am Your Son"
+        // endregion
+        // region Deprecated
+        /**
+         * @deprecated
+         */
+        Model.extend = function (mixinsList, classExtender) {
+            util_1.logger.info('Types/_entity/Model', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+            if (!require.defined('Core/core-extend')) {
+                throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Model::extend()" method.');
+            }
+            var coreExtend = require('Core/core-extend');
+            return coreExtend(this, mixinsList, classExtender);
+        };
         Model.prototype.destroy = function () {
             this._defaultPropertiesValues = null;
             this._propertiesDependency = null;
@@ -160,8 +192,7 @@ define('Types/_entity/Model', [
         // region IObject
         Model.prototype.get = function (name) {
             this._pushDependency(name);
-            var isCalculating = this._calculatingProperties ? this._calculatingProperties.has(name) : false;
-            if (!isCalculating && this._fieldsCache.has(name)) {
+            if (this._fieldsCache.has(name)) {
                 return this._fieldsCache.get(name);
             }
             var property = this._$properties && this._$properties[name];
@@ -181,7 +212,7 @@ define('Types/_entity/Model', [
                 this._removeChild(superValue);
                 this._addChild(value, this._getRelationNameForField(name));
             }
-            if (!isCalculating && this._isFieldValueCacheable(value)) {
+            if (this._isFieldValueCacheable(value)) {
                 this._fieldsCache.set(name, value);
             } else if (this._fieldsCache.has(name)) {
                 this._fieldsCache.delete(name);
@@ -190,7 +221,6 @@ define('Types/_entity/Model', [
         };
         Model.prototype.set = function (name, value) {
             var _this = this;
-            var _a;
             if (!this._$properties) {
                 _super.prototype.set.call(this, name, value);
                 return;
@@ -200,14 +230,14 @@ define('Types/_entity/Model', [
             var propertiesErrors = [];
             var isCalculating = this._calculatingProperties ? this._calculatingProperties.size > 0 : false;
             Object.keys(map).forEach(function (key) {
-                _this._deleteDependencyCache(key);    //Try to set every property
-                //Try to set every property
+                _this._deleteDependencyCache(key);    // Try to set every property
+                // Try to set every property
                 var value = map[key];
                 try {
                     var property = _this._$properties && _this._$properties[key];
                     if (property) {
                         if (property.set) {
-                            //Remove cached value
+                            // Remove cached value
                             if (_this._fieldsCache.has(key)) {
                                 _this._removeChild(_this._fieldsCache.get(key));
                                 _this._fieldsCache.delete(key);
@@ -224,34 +254,35 @@ define('Types/_entity/Model', [
                     pairs.push([
                         key,
                         value,
-                        Record_1.default.prototype.get.call(_this, key)
+                        _this._getRawDataValue(key)
                     ]);
                 } catch (err) {
-                    //Collecting errors for every property
+                    // Collecting errors for every property
                     propertiesErrors.push(err);
                 }
-            });    //Collect pairs of properties
-            //Collect pairs of properties
-            if (isCalculating && pairs.length) {
-                //Here is the set() that recursive calls from another set() so just accumulate the changes
-                this._deepChangedProperties = this._deepChangedProperties || [];
-                (_a = this._deepChangedProperties).push.apply(_a, pairs);
+            });    // Collect pairs of properties
+            // Collect pairs of properties
+            var pairsErrors = [];
+            var changedProperties = _super.prototype._setPairs.call(this, pairs, pairsErrors);
+            if (isCalculating && changedProperties) {
+                // Here is the set() that recursive calls from another set() so just accumulate the changes
+                this._deepChangedProperties = this._deepChangedProperties || {};
+                Object.assign(this._deepChangedProperties, changedProperties);
             } else if (!isCalculating && this._deepChangedProperties) {
-                //Here is the top level set() so do merge with accumulated changes
-                pairs.push.apply(pairs, this._deepChangedProperties);
-                this._deepChangedProperties.length = 0;
-            }
-            var pairsErrors = [];    //It's top level set() so notify changes if have some
-            //It's top level set() so notify changes if have some
-            if (!isCalculating) {
-                var changedProperties = _super.prototype._setPairs.call(this, pairs, pairsErrors);
+                // Here is the top level set() so do merge with accumulated changes
                 if (changedProperties) {
-                    var changed = Object.keys(changedProperties).reduce(function (memo, key) {
-                        memo[key] = _this.get(key);
-                        return memo;
-                    }, {});
-                    this._notifyChange(changed);
+                    Object.assign(this._deepChangedProperties, changedProperties);
                 }
+                changedProperties = this._deepChangedProperties;
+                this._deepChangedProperties = null;
+            }    // It's top level set() so notify changes if have some
+            // It's top level set() so notify changes if have some
+            if (!isCalculating && changedProperties) {
+                var changed = Object.keys(changedProperties).reduce(function (memo, key) {
+                    memo[key] = _this.get(key);
+                    return memo;
+                }, {});
+                this._notifyChange(changed);
             }
             this._checkErrors(propertiesErrors.concat(pairsErrors));
         };
@@ -274,8 +305,7 @@ define('Types/_entity/Model', [
          * Смотри пример {@link Types/_entity/Record#getEnumerator для записи}:
          */
         Model.prototype.getEnumerator = function () {
-            var ArrayEnumerator = di_1.resolve('Types/collection:enumerator.Arraywise');
-            return new ArrayEnumerator(this._getAllProperties());
+            return di_1.create('Types/collection:enumerator.Arraywise', this._getAllProperties());
         };    /**
          * Перебирает все свойства модели (включая имеющиеся в "сырых" данных)
          * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
@@ -319,8 +349,8 @@ define('Types/_entity/Model', [
         // endregion
         // region SerializableMixin
         Model.prototype._getSerializableState = function (state) {
-            state = _super.prototype._getSerializableState.call(this, state);    //Properties are owned by class, not by instance
-            //Properties are owned by class, not by instance
+            state = _super.prototype._getSerializableState.call(this, state);    // Properties are owned by class, not by instance
+            // Properties are owned by class, not by instance
             if (!this._propertiesInjected) {
                 delete state.$options.properties;
             }
@@ -700,14 +730,14 @@ define('Types/_entity/Model', [
             }
             this._$idProperty = idProperty;
         };    // endregion
-              //region Protected methods
+              // region Protected methods
               /**
          * Возвращает массив названий всех свойств (включая свойства в "сырых" данных)
          * @return {Array.<String>}
          * @protected
          */
         // endregion
-        //region Protected methods
+        // region Protected methods
         /**
          * Возвращает массив названий всех свойств (включая свойства в "сырых" данных)
          * @return {Array.<String>}
@@ -742,8 +772,8 @@ define('Types/_entity/Model', [
          * @protected
          */
         Model.prototype._processCalculatedValue = function (name, value, property, isReading) {
-            var _this = this;    //Check for recursive calculating
-            //Check for recursive calculating
+            var _this = this;    // Check for recursive calculating
+            // Check for recursive calculating
             var calculatingProperties = this._calculatingProperties;
             if (!calculatingProperties) {
                 calculatingProperties = this._calculatingProperties = new shim_1.Set();
@@ -751,24 +781,24 @@ define('Types/_entity/Model', [
             var checkKey = name + '|' + isReading;
             if (calculatingProperties.has(checkKey)) {
                 throw new Error('Recursive value ' + (isReading ? 'reading' : 'writing') + ' detected for property "' + name + '"');
-            }    //Initial conditions
-            //Initial conditions
+            }    // Initial conditions
+            // Initial conditions
             var method = isReading ? property.get : property.set;
             var isFunctor = isReading && functor_1.Compute.isFunctor(method);
-            var doGathering = isReading && !isFunctor;    //Automatic dependencies gathering
-            //Automatic dependencies gathering
+            var doGathering = isReading && !isFunctor;    // Automatic dependencies gathering
+            // Automatic dependencies gathering
             var prevGathering;
             if (isReading) {
                 prevGathering = this._propertiesDependencyGathering;
                 this._propertiesDependencyGathering = doGathering ? name : '';
-            }    //Save user defined dependencies
-            //Save user defined dependencies
+            }    // Save user defined dependencies
+            // Save user defined dependencies
             if (isFunctor) {
                 method.properties.forEach(function (dependFor) {
                     _this._pushDependencyFor(dependFor, name);
                 });
-            }    //Get or set property value
-            //Get or set property value
+            }    // Get or set property value
+            // Get or set property value
             try {
                 calculatingProperties.add(checkKey);
                 value = method.call(this, value);
@@ -841,54 +871,28 @@ define('Types/_entity/Model', [
                     _this._deleteDependencyCache(related);
                 });
             }
-        };    //endregion
-              //region Statics
-        //endregion
-        //region Statics
-        Model.fromObject = function (data, adapter) {
-            var record = Record_1.default.fromObject(data, adapter);
-            if (!record) {
-                return record;
-            }
-            return new Model({
-                rawData: record.getRawData(true),
-                adapter: record.getAdapter(),
-                format: record._getFormat(true)    //"Anakin, I Am Your Son"
-            });
-        };    //endregion
-              //region Deprecated
-              /**
-         * @deprecated
-         */
-        //"Anakin, I Am Your Son"
-        //endregion
-        //region Deprecated
-        /**
-         * @deprecated
-         */
-        Model.extend = function (mixinsList, classExtender) {
-            return coreExtend(this, mixinsList, classExtender);
         };
         return Model;
     }(util_1.mixin(Record_1.default, InstantiableMixin_1.default));
     exports.default = Model;
-    Model.prototype['[Types/_entity/Model]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Model.prototype['[Types/_entity/IInstantiable]'] = true;
-    Model.prototype._moduleName = 'Types/entity:Model';
-    Model.prototype._instancePrefix = 'model-';
-    Model.prototype._$properties = null;
-    Model.prototype._$idProperty = '';
-    Model.prototype._isDeleted = false;
-    Model.prototype._defaultPropertiesValues = null;
-    Model.prototype._propertiesDependency = null;
-    Model.prototype._propertiesDependencyGathering = '';
-    Model.prototype._calculatingProperties = null;
-    Model.prototype._deepChangedProperties = null;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    Model.prototype['[WS.Data/Entity/Model]'] = true;    //FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
+    Object.assign(Model.prototype, {
+        '[Types/_entity/Model]': true,
+        '[Types/_entity/IInstantiable]': true,
+        _moduleName: 'Types/entity:Model',
+        _instancePrefix: 'model-',
+        _$properties: null,
+        _$idProperty: '',
+        _isDeleted: false,
+        _defaultPropertiesValues: null,
+        _propertiesDependency: null,
+        _propertiesDependencyGathering: '',
+        _calculatingProperties: null,
+        _deepChangedProperties: null
+    });    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    Model.prototype['[WS.Data/Entity/Model]'] = true;    // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
                                                          // @ts-ignore
-    //FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
+    // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
     // @ts-ignore
     Model.produceInstance = Record_1.default.produceInstance;
     di_1.register('Types/entity:Model', Model, { instantiate: false });    // FIXME: deprecated

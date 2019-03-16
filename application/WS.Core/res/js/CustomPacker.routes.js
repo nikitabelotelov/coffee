@@ -2,7 +2,7 @@
 
 var
    global = (function() { return this || (0,eval)('this') })(),
-   logger = global.requirejs('Core/IoC').resolve('ILogger'),
+   logger = global.requirejs('Env/Env').IoC.resolve('ILogger'),
    modPacker;
 
 

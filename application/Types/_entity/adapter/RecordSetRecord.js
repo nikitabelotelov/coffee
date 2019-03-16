@@ -118,10 +118,10 @@ define('Types/_entity/adapter/RecordSetRecord', [
                 throw new TypeError('Passed data has invalid format');
             }
             this._data.removeFieldAt(index);
-        };    //endregion IRecord
-              //region Protected methods
-        //endregion IRecord
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         RecordSetRecord.prototype._touchData = function () {
             if (!this._data && this._tableData && this._tableData['[Types/_entity/FormattableMixin]']) {
                 var model = this._tableData.getModel();
@@ -138,9 +138,10 @@ define('Types/_entity/adapter/RecordSetRecord', [
         return RecordSetRecord;
     }(util_1.mixin(DestroyableMixin_1.default, GenericFormatMixin_1.default));
     exports.default = RecordSetRecord;
-    RecordSetRecord.prototype['[Types/_entity/adapter/RecordSetRecord]'] = true;    // @ts-ignore
-    // @ts-ignore
-    RecordSetRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-    RecordSetRecord.prototype._data = null;
-    RecordSetRecord.prototype._tableData = null;
+    Object.assign(RecordSetRecord.prototype, {
+        '[Types/_entity/adapter/RecordSetRecord]': true,
+        '[Types/_entity/adapter/IRecord]': true,
+        _data: null,
+        _tableData: null
+    });
 });

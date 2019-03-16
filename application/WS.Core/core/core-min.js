@@ -2,12 +2,12 @@ define('Core/core-min', [
    'Core/core-ready',
    'Core/core-init-min',
    'bootup-min',
-   'Core/constants'
-], function(cReady, cInit, bootup, constants) {
+   'Env/Env'
+], function(cReady, cInit, bootup, Env) {
    'use strict';
 
    cReady.dependOn(cInit);
-   constants._isMinimalCore = true;
+   Env.constants._isMinimalCore = true;
 
    bootup();
    return {};

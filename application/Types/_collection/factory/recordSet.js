@@ -27,10 +27,9 @@ define('Types/_collection/factory/recordSet', [
         if (!items || !items['[Types/_collection/IEnumerable]']) {
             throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
         }
-        var Factory = di_1.resolve(di_1.isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
         options = options || {};
         delete options.rawData;
-        var result = new Factory(options);
+        var result = di_1.create('Types/collection:RecordSet', options);
         items.each(function (item) {
             result.add(item);
         });

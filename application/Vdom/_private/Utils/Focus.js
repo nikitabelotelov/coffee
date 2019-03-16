@@ -1,9 +1,9 @@
 define('Vdom/_private/Utils/Focus', [
     'require',
     'exports',
-    'Core/detection',
+    'Env/Env',
     'Vdom/_private/Synchronizer/resources/TabIndex'
-], function (require, exports, detection, Tabindex) {
+], function (require, exports, Env_1, Tabindex) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Moves focus to a specific HTML element
@@ -15,7 +15,7 @@ define('Vdom/_private/Utils/Focus', [
      */
     function focus(element) {
         if (element) {
-            if (detection.isIE && element.setActive) {
+            if (Env_1.detection.isIE && element.setActive) {
                 // In IE, calling `focus` scrolls the focused element into view,
                 // which is not the desired behavior. Built-in `setActive` method
                 // makes the element active without scrolling to it

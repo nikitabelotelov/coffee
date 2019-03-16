@@ -35,14 +35,24 @@ define('Types/_collection/Flags', [
             _this._publish('onChange');
             _this._$values = _this._$values || [];
             return _this;
-        }
+        }    // endregion
+             // region IProducible
+        // endregion
+        // region IProducible
+        Flags.produceInstance = function (data, options) {
+            return new this({
+                dictionary: this.prototype._getDictionaryByFormat(options && options.format),
+                localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
+                values: data
+            });
+        };
         Flags.prototype.destroy = function () {
             entity_1.ManyToManyMixin.destroy.call(this);
             _super.prototype.destroy.call(this);
-        };    //endregion
-              //region IFlags
-        //endregion
-        //region IFlags
+        };    // endregion
+              // region IFlags
+        // endregion
+        // region IFlags
         Flags.prototype.get = function (name, localize) {
             var ordinalIndex = this._getOrdinalIndex(name, localize);
             if (ordinalIndex !== undefined) {
@@ -103,10 +113,10 @@ define('Types/_collection/Flags', [
         };
         Flags.prototype.setNullAll = function () {
             this._setAll(null);
-        };    //endregion
-              //region IEquatable
-        //endregion
-        //region IEquatable
+        };    // endregion
+              // region IEquatable
+        // endregion
+        // region IEquatable
         Flags.prototype.isEqual = function (to) {
             if (!(to instanceof Flags)) {
                 return false;
@@ -123,26 +133,16 @@ define('Types/_collection/Flags', [
                 }
             }
             return true;
-        };    //endregion
-              //region IProducible
-        //endregion
-        //region IProducible
-        Flags.produceInstance = function (data, options) {
-            return new this({
-                dictionary: this.prototype._getDictionaryByFormat(options && options.format),
-                localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-                values: data
-            });
-        };    //endregion
-              //region Public methods
-        //endregion
-        //region Public methods
+        };    // endregion
+              // region Public methods
+        // endregion
+        // region Public methods
         Flags.prototype.toString = function () {
             return '[' + this._$values.map(function (value) {
                 return value === null ? 'null' : value;
             }).join(',') + ']';
-        };    //endregion
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Returns an ordinal index of the flag.
          * @param {String} name Name of the flag
@@ -150,8 +150,8 @@ define('Types/_collection/Flags', [
          * @return {Number|undefined}
          * @protected
          */
-        //endregion
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Returns an ordinal index of the flag.
          * @param {String} name Name of the flag
@@ -220,22 +220,18 @@ define('Types/_collection/Flags', [
     }(Dictionary_1.default);
     exports.default = Flags;
     util_1.applyMixins(Flags, entity_1.ManyToManyMixin, entity_1.SerializableMixin, entity_1.CloneableMixin);
-    Flags.prototype['[Types/_collection/Flags]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype['[Types/_collection/IFlags]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype['[Types/_entity/ICloneable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype['[Types/_entity/IProducible]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype._moduleName = 'Types/collection:Flags';    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype._$values = undefined;    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype._type = 'flags';    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    Flags.prototype['[WS.Data/Type/Flags]'] = true;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Object.assign(Flags.prototype, {
+        '[Types/_collection/Flags]': true,
+        '[Types/_collection/IFlags]': true,
+        '[Types/_entity/ICloneable]': true,
+        '[Types/_entity/IProducible]': true,
+        _moduleName: 'Types/collection:Flags',
+        _$values: undefined,
+        _type: 'flags'
+    });    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    Flags.prototype['[WS.Data/Type/Flags]'] = true;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     Flags.prototype['[WS.Data/Entity/ICloneable]'] = true;
     di_1.register('Types/collection:Flags', Flags, { instantiate: false });
 });

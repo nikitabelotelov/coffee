@@ -8,15 +8,17 @@
 
 /**
  * @faq Почему я вижу ошибки от Types/di:resolve?
- * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
+ * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и
+ * {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  */
 
 import IProducible, {IProducibleConstructor} from './IProducible';
 import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField, UniversalField} from './format';
-import {create, resolve, isRegistered} from '../di';
-import toSql, {MODE as toSqlMode} from './date/toSql';
-import fromSql from './date/fromSql';
+import Record from './Record';
 import TimeInterval from './TimeInterval';
+import {create, resolve, isRegistered} from '../di';
+import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
+import {List, RecordSet} from '../collection';
 
 // @ts-ignore
 import renders = require('Core/defaultRenders');
@@ -26,14 +28,14 @@ declare type ValueType = string | Function | IProducible;
 /**
  * @const {RegExp} Выделяет временную зону в строковом представлении Date
  */
-const SQL_TIME_ZONE: RegExp = /[+-][0-9]+$/;
+const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
 
 /**
  * Возвращает словарь для поля типа "Словарь"
  * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {Array}
  */
-function getDictionary(format: DictionaryField | UniversalField): Array<any> {
+function getDictionary(format: DictionaryField | UniversalField): any[] {
    return (format instanceof DictionaryField ? format.getDictionary() : format.meta && format.meta.dictionary) || [];
 }
 
@@ -44,7 +46,7 @@ function getDictionary(format: DictionaryField | UniversalField): Array<any> {
  * @return {Boolean}
  */
 function isEnumNullable(value: any, options: any): boolean {
-   let dict = getDictionary(options.format);
+   const dict = getDictionary(options.format);
    if (value === null && !dict.hasOwnProperty(value)) {
       return true;
    } else if (value === undefined) {
@@ -70,7 +72,7 @@ function isNullable(type: ValueType, value: any, options?: Object): boolean {
       }
 
       if (typeof type === 'function') {
-         let inst = Object.create(type.prototype);
+         const inst = Object.create(type.prototype);
          if (inst && inst['[Types/_collection/IEnum]']) {
             return isEnumNullable(value, options);
          }
@@ -86,7 +88,7 @@ function isNullable(type: ValueType, value: any, options?: Object): boolean {
  * @param {*} value Значение
  * @return {*}
  */
-function toScalar(value: Array<any>): any {
+function toScalar(value: any[]): any {
    if (Array.isArray(value) && value.length < 2) {
       return value.length ? value[0] : null;
    }
@@ -158,8 +160,8 @@ function getKind(format: ArrayField): string {
  * @param {Types/_collection/Flags} data
  * @return {Array.<Boolean>}
  */
-function serializeFlags(data: any): Array<boolean> {
-   let d = [];
+function serializeFlags(data: any): boolean[] {
+   const d = [];
    data.each((name) => {
       d.push(data.get(name));
    });
@@ -171,26 +173,25 @@ function serializeFlags(data: any): Array<boolean> {
  * @param {Types/_collection/List} list Список
  * @return {Types/_collection/RecordSet}
  */
-function convertListToRecordSet(list) {
-   let adapter = 'Types/entity:adapter.Json',
-      count = list.getCount(),
-      record,
-      i;
+function convertListToRecordSet(list: List<Record>): RecordSet<Record> {
+   let adapter = 'Types/entity:adapter.Json';
+   const count = list.getCount();
+   let record;
 
-   for (i = 0; i < count; i++) {
+   for (let i = 0; i < count; i++) {
       record = list.at(i);
 
-      //Check for Types/_entity/Record
+      // Check for Types/_entity/Record
       if (record && record['[Types/_entity/IObject]'] && record['[Types/_entity/FormattableMixin]']) {
          adapter = record.getAdapter();
          break;
       }
    }
 
-   let rs = create('Types/collection:RecordSet', {
-      adapter: adapter
+   const rs = create<RecordSet<Record>>('Types/collection:RecordSet', {
+      adapter
    });
-   for (i = 0; i < count; i++) {
+   for (let i = 0; i < count; i++) {
       rs.add(list.at(i));
    }
 
@@ -232,19 +233,21 @@ const factory = {
          Type = Type.toLowerCase();
          switch (Type) {
             case 'recordset':
-               Type = resolve(isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
+               Type = resolve<Function>(
+                  isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet'
+               );
                break;
 
             case 'record':
-               Type = resolve(isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
+               Type = resolve<Function>(isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
                break;
 
             case 'enum':
-               Type = resolve('Types/collection:Enum');
+               Type = resolve<Function>('Types/collection:Enum');
                break;
 
             case 'flags':
-               Type = resolve('Types/collection:Flags');
+               Type = resolve<Function>('Types/collection:Flags');
                break;
 
             case 'link':
@@ -264,7 +267,7 @@ const factory = {
 
             case 'money':
                if (!isLargeMoney(options.format)) {
-                  let precision = getPrecision(options.format);
+                  const precision = getPrecision(options.format);
                   if (precision > 3) {
                      return renders.real(value, precision, false, true);
                   }
@@ -281,17 +284,17 @@ const factory = {
                } else if (value === '-infinity') {
                   return -Infinity;
                }
-               value = fromSql('' + value);
+               value = dateFromSql('' + value);
                if (value.setSQLSerializationMode) {
                   switch (Type) {
                      case 'date':
-                        value.setSQLSerializationMode((<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATE);
+                        value.setSQLSerializationMode((Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE);
                         break;
                      case 'time':
-                        value.setSQLSerializationMode((<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_TIME);
+                        value.setSQLSerializationMode((Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME);
                         break;
                      case 'datetime':
-                        value.setSQLSerializationMode((<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATETIME);
+                        value.setSQLSerializationMode((Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATETIME);
                         break;
                   }
                }
@@ -304,7 +307,7 @@ const factory = {
                return TimeInterval.toString(value);
 
             case 'array':
-               let kind = getKind(options.format);
+               const kind = getKind(options.format);
                if (!(value instanceof Array)) {
                   value = [value];
                }
@@ -323,7 +326,7 @@ const factory = {
          }
 
          if (Type.prototype['[Types/_entity/IProducible]']) {
-            return (<IProducibleConstructor>Type).produceInstance(
+            return (Type as IProducibleConstructor).produceInstance(
                value,
                options
             );
@@ -344,7 +347,7 @@ const factory = {
     */
    serialize(value: any, options?: any): any {
       options = options || {};
-      let type = getTypeName(options.format);
+      const type = getTypeName(options.format);
 
       if (isNullable(type, value, options)) {
          return value;
@@ -385,7 +388,7 @@ const factory = {
          case 'money':
             value = toScalar(value);
             if (!isLargeMoney(options.format)) {
-               let precision = getPrecision(options.format);
+               const precision = getPrecision(options.format);
                if (precision > 3) {
                   return renders.real(value, precision, false, true);
                }
@@ -396,22 +399,22 @@ const factory = {
          case 'time':
          case 'datetime':
             value = toScalar(value);
-            let serializeMode = toSqlMode.DATE,
-               withoutTimeZone = false;
+            let serializeMode = TO_SQL_MODE.DATE;
+            let withoutTimeZone = false;
             switch (type) {
                case 'datetime':
-                  serializeMode = toSqlMode.DATETIME;
+                  serializeMode = TO_SQL_MODE.DATETIME;
                   withoutTimeZone = isWithoutTimeZone(options.format);
                   break;
                case 'time':
-                  serializeMode = toSqlMode.TIME;
+                  serializeMode = TO_SQL_MODE.TIME;
                   break;
             }
             if (!value) {
-               value = fromSql('' + value);
+               value = dateFromSql('' + value);
             }
             if (value instanceof Date) {
-               value = toSql(value, serializeMode);
+               value = dateToSql(value, serializeMode);
                if (withoutTimeZone) {
                   value = value.replace(SQL_TIME_ZONE, '');
                }
@@ -430,7 +433,7 @@ const factory = {
             return TimeInterval.toString(value);
 
          case 'array':
-            let kind = getKind(options.format);
+            const kind = getKind(options.format);
             if (!(value instanceof Array)) {
                value = [value];
             }

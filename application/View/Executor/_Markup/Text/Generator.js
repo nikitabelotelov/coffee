@@ -3,9 +3,7 @@ define('View/Executor/_Markup/Text/Generator', [
     'require',
     'exports',
     'Core/helpers/Number/randomId',
-    'Core/helpers/Hcontrol/configStorage',
-    'Core/IoC',
-    'Core/constants',
+    'Env/Env',
     'Core/Serializer',
     'Core/library',
     'View/Logger',
@@ -14,7 +12,7 @@ define('View/Executor/_Markup/Text/Generator', [
     'View/Executor/Expressions',
     'View/Executor/Utils',
     'View/Executor/_Markup/Text/FunctionHeaderTemplate'
-], function (require, exports, randomId, configStorage, IoC, cConstants, Serializer, library, Logger, Request, Generator_1, Expressions_1, Utils_1) {
+], function (require, exports, randomId, Env_1, Serializer, library, Logger, Request, Generator_1, Expressions_1, Utils_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var GeneratorText = Object.create(Generator_1.default);
@@ -174,7 +172,7 @@ define('View/Executor/_Markup/Text/Generator', [
                 inst.saveFullContext(Expressions_1.ContextResolver.wrapContext(inst, scope.templateContext || {}));
             }
         }
-        result = inst._template ? inst.render(undefined, decOptions) : '';
+        result = inst._template ? Generator_1.default.invisibleNodeCompat(inst.render(undefined, decOptions)) : '';
         return result;
     }
     function buildMarkupForClass(cnstr, scope, context, varStorage, decOptions) {
@@ -281,6 +279,8 @@ define('View/Executor/_Markup/Text/Generator', [
         ]);
         var varStorage = null, cnstr = data.controlClass, resultingFn = cnstr && cnstr.prototype && cnstr.prototype._template;
         if (!cnstr && !resultingFn) {
+            var e = new Error('Попытка создания контрола, у которого отсутствует конструктор и шаблон');
+            Env_1.IoC.resolve('ILogger').error(e.message, e.stack);
             return '';
         }
         if (cnstr && !resultingFn) {
@@ -399,7 +399,7 @@ define('View/Executor/_Markup/Text/Generator', [
                 r = GeneratorText.joinElements(r, undefined, defCollection);
             } else {
                 if (typeof tpl === 'undefined') {
-                    IoC.resolve('ILogger').error(typeof tpl + ' component error', 'Попытка использовать компонент/шаблон, ' + 'но вместо компонента в шаблоне был передан ' + typeof tpl + '! ' + 'Если верстка строится неправильно, нужно поставить точку останова и исследовать стек вызовов. ' + 'По стеку будет понятно, в каком шаблоне и в какую опцию передается ' + typeof tpl);
+                    Env_1.IoC.resolve('ILogger').error(typeof tpl + ' component error', 'Попытка использовать компонент/шаблон, ' + 'но вместо компонента в шаблоне был передан ' + typeof tpl + '! ' + 'Если верстка строится неправильно, нужно поставить точку останова и исследовать стек вызовов. ' + 'По стеку будет понятно, в каком шаблоне и в какую опцию передается ' + typeof tpl);
                     return '';
                 } else {
                     r = tpl;
@@ -487,23 +487,13 @@ define('View/Executor/_Markup/Text/Generator', [
         });
         return ser;
     };
-    GeneratorText.saveConfig = function saveConfig(configId, inst) {
-        /**
-         * Сохраним инстанс в configStorage
-         */
-        if (typeof window !== 'undefined') {
-            var configObj = {};
-            configObj[configId] = inst;
-            configStorage.merge(configObj);
-        }
-    };
     GeneratorText.calculateScope = function calculateScope(scope) {
         return Expressions_1.Scope.calculateScope(scope, Expressions_1.Scope.controlPropMerge);
     };
     GeneratorText.buildMarkupForClass = buildMarkupForClass;
     GeneratorText.escape = Utils_1.Common.escape;    // TODO удалить когда слой совместимости будет не нужен
     // TODO удалить когда слой совместимости будет не нужен
-    if (cConstants.isBrowserPlatform && cConstants.compat) {
+    if (Env_1.constants.isBrowserPlatform && Env_1.constants.compat) {
         // @ts-ignore
         require(['View/Executor/GeneratorCompatible']);    // compatible behavior is initialised in markupGeneratorCompatible
     }

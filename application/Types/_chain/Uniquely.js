@@ -45,7 +45,8 @@ define('Types/_chain/Uniquely', [
         return Uniquely;
     }(Abstract_1.default);
     exports.default = Uniquely;
-    Uniquely.prototype['[Types/_chain/Uniquely]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Uniquely.prototype._idExtractor = null;
+    Object.assign(Uniquely.prototype, {
+        '[Types/_chain/Uniquely]': true,
+        _idExtractor: null
+    });
 });

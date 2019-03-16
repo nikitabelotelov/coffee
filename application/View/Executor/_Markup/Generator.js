@@ -1,14 +1,11 @@
-/// <amd-module name="View/Executor/_Markup/Generator" />
 define('View/Executor/_Markup/Generator', [
     'require',
     'exports',
-    'Core/core-debug',
-    'Core/constants',
-    'Core/IoC',
+    'Env/Env',
     'View/Logger',
     'View/Executor/Utils',
     'View/Executor/Expressions'
-], function (require, exports, timing, cConstants, IoC, Logger, Utils_1, Expressions_1) {
+], function (require, exports, Env_1, Logger, Utils_1, Expressions_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var cacheModules = {}, defRegExp = /(\[def-[\w\d]+\])/g, focusAttrs = [
@@ -82,7 +79,7 @@ define('View/Executor/_Markup/Generator', [
                 // тип контрола - компонент с шаблоном
                 if (type === 'wsControl') {
                     if (Logger.getLoggerStatus() || Utils_1.Common.isCompat()) {
-                        res = timing.methodExecutionTime(this.createWsControl, this, [
+                        res = Env_1.coreDebug.methodExecutionTime(this.createWsControl, this, [
                             name,
                             data,
                             attrs,
@@ -96,7 +93,7 @@ define('View/Executor/_Markup/Generator', [
                 // типа контрола - шаблон
                 if (type === 'template') {
                     if (Logger.getLoggerStatus() || Utils_1.Common.isCompat()) {
-                        res = timing.methodExecutionTime(this.createTemplate, this, [
+                        res = Env_1.coreDebug.methodExecutionTime(this.createTemplate, this, [
                             name,
                             data,
                             attrs,
@@ -111,7 +108,7 @@ define('View/Executor/_Markup/Generator', [
                 // тип контрола - компонент без шаблона
                 if (type === 'controller') {
                     if (Logger.getLoggerStatus() || Utils_1.Common.isCompat()) {
-                        res = timing.methodExecutionTime(this.createController, this, [
+                        res = Env_1.coreDebug.methodExecutionTime(this.createController, this, [
                             name,
                             data,
                             attrs,
@@ -137,7 +134,7 @@ define('View/Executor/_Markup/Generator', [
                         }
                     }
                     if (Logger.getLoggerStatus() || Utils_1.Common.isCompat()) {
-                        res = timing.methodExecutionTime(this.resolver, this, [
+                        res = Env_1.coreDebug.methodExecutionTime(this.resolver, this, [
                             name,
                             data,
                             attrs,
@@ -165,7 +162,7 @@ define('View/Executor/_Markup/Generator', [
                         return this.createText('', attrs.key);
                     }
                     if (typeof name === 'undefined') {
-                        IoC.resolve('ILogger').error('Undefined component error', 'Попытка использовать компонент/шаблон, ' + 'но вместо компонента в шаблоне в опцию template был передан undefined! ' + 'Если верстка строится неправильно, нужно поставить точку останова и исследовать стек вызовов. ' + 'По стеку будет понятно, в каком шаблоне и в какую опцию передается undefined');
+                        Env_1.IoC.resolve('ILogger').error('Undefined component error', 'Попытка использовать компонент/шаблон, ' + 'но вместо компонента в шаблоне в опцию template был передан undefined! ' + 'Если верстка строится неправильно, нужно поставить точку останова и исследовать стек вызовов. ' + 'По стеку будет понятно, в каком шаблоне и в какую опцию передается undefined');
                         return this.createText('', attrs.key);
                     }
                     throw new Error('MarkupGenerator: createControl type not resolved');
@@ -203,7 +200,7 @@ define('View/Executor/_Markup/Generator', [
                         controlClass = deps && (deps[tpl] || deps['optional!' + tpl]);
                     }
                     if (!controlClass) {
-                        if (!isSlashes || wasOptional || cConstants.compat) {
+                        if (!isSlashes || wasOptional || Env_1.constants.compat) {
                             /*
                                * it can be "optional"
                                * can be tmpl!
@@ -219,7 +216,7 @@ define('View/Executor/_Markup/Generator', [
                                     cacheModules[tpl] = controlClass;
                                 }
                             } catch (e) {
-                                IoC.resolve('ILogger').warn('Create component', e, e.stack);
+                                Env_1.IoC.resolve('ILogger').warn('Create component', e, e.stack);
                             }
                         }
                     }
@@ -265,7 +262,7 @@ define('View/Executor/_Markup/Generator', [
             logicParent = attrs.internal && attrs.internal.logicParent ? attrs.internal.logicParent : null;
             parent = attrs.internal && attrs.internal.parent ? attrs.internal.parent : null;
             Utils_1.OptionsResolver.resolveInheritOptions(controlClass, attrs, controlProperties);
-            if (cConstants.compat) {
+            if (Env_1.constants.compat) {
                 if (controlProperties && controlProperties.enabled === undefined) {
                     var internal = attrs.internal;
                     if (internal && internal.parent && fromOld) {
@@ -297,6 +294,9 @@ define('View/Executor/_Markup/Generator', [
                 controlClass: controlClass,
                 compound: !(controlClass && controlClass.isWasaby)
             };
+        },
+        invisibleNodeCompat: function invisibleNodeCompat(markup) {
+            return markup && markup.indexOf && markup.indexOf('<invisible-node') === 0 ? markup.replace(/invisible-node/g, 'div') : markup;
         },
         cutFocusAttributes: function (attributes, fn, node) {
             focusAttrs.forEach(function (focusAttr) {

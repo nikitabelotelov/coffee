@@ -3,9 +3,9 @@ define('UI/_base/StateReceiver', [
     'require',
     'exports',
     'Core/Serializer',
-    'Core/IoC',
+    'Env/Env',
     'View/Executor/Utils'
-], function (require, exports, Serializer, IoC, Utils_1) {
+], function (require, exports, Serializer, Env_1, Utils_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     function getDepsFromSerializer(slr) {
@@ -71,7 +71,7 @@ define('UI/_base/StateReceiver', [
             try {
                 this.deserialized = JSON.parse(str, slr.deserialize);
             } catch (e) {
-                IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
+                Env_1.IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
             }
         };
         StateReceiver.prototype.register = function (key, inst) {

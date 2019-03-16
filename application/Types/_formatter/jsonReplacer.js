@@ -12,9 +12,7 @@ define('Types/_formatter/jsonReplacer', [
             return { $serialized$: '-inf' };
         } else if (value === undefined) {
             return { $serialized$: 'undef' };
-        }    //@ts-ignore
-        else //@ts-ignore
-        if (Number.isNaN(value)) {
+        } else if (Number.isNaN(value)) {
             return { $serialized$: 'NaN' };
         }
         return value;

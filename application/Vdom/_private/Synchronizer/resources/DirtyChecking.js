@@ -2,7 +2,7 @@
 define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
     'require',
     'exports',
-    'Core/constants',
+    'Env/Env',
     'Vdom/_private/Utils/Monad',
     'Vdom/_private/Utils/Functional',
     'View/Executor/Expressions',
@@ -14,12 +14,12 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
     'Core/Serializer',
     'View/Logger',
     'Vdom/_private/Synchronizer/resources/DirtyCheckingCompatible'
-], function (require, exports, isJs, Monad_1, Functional_1, Expressions_1, VdomMarkup, Utils_1, Expressions_2, shallowClone, runDelayedRebuild_1, Serializer, Logger, _dcc) {
+], function (require, exports, Env_1, Monad_1, Functional_1, Expressions_1, VdomMarkup, Utils_1, Expressions_2, shallowClone, runDelayedRebuild_1, Serializer, Logger, _dcc) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var Slr = new Serializer();
     var DirtyCheckingCompatible;
-    if (isJs.compat) {
+    if (Env_1.constants.compat) {
         DirtyCheckingCompatible = _dcc;
     }
     function subscribeToEvent(node) {
@@ -51,6 +51,9 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
     };
     function getModuleDefaultCtor(mod) {
         return typeof mod === 'function' ? mod : mod['constructor'];
+    }
+    function isObjectDate(obj) {
+        return Object.prototype.toString.call(obj) === '[object Date]';
     }
     var ARR_EMPTY = [], INVALID_CONTEXT = {};
     var RebuildResultMonoid = {
@@ -95,6 +98,21 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
             if (collection.hasOwnProperty(key)) {
                 if (collection[key] && collection[key].getVersion) {
                     versions[key] = collection[key].getVersion();
+                } else if (collection[key] && collection[key].isDataArray) {
+                    //тут нужно собрать версии всех объектов,
+                    //которые используются внутри контентных опций
+                    //здесь учитывается кейс, когда внутри контентной опции
+                    //есть контентная опция
+                    //по итогу получаем плоский список всех версий всех объектов
+                    //внутри контентных опций
+                    for (var kfn = 0; kfn < collection[key].length; kfn++) {
+                        var innerVersions = collectObjectVersions(collection[key][kfn].internal || {});
+                        for (var innerKey in innerVersions) {
+                            if (innerVersions.hasOwnProperty(innerKey)) {
+                                versions[key + ';' + kfn + ';' + innerKey] = innerVersions[innerKey];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -106,7 +124,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
     function checkIsVersionableObject(newOption, oldOptionsVersions) {
         return typeof newOption === 'object' && newOption && oldOptionsVersions && newOption.getVersion;
     }
-    function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking, oldOptionsVersions, checkOldValue) {
+    function getChangedOptions(newOptions, oldOptions, ignoreDirtyChecking, oldOptionsVersions, checkOldValue, prefix) {
         var i, def, changed = false, changedOptions = {}, hasOld, hasNew;
         for (i in oldOptions) {
             /**
@@ -138,10 +156,11 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                     if (newOptions[i] === oldOptions[i]) {
                         if (checkIsVersionableObject(newOptions[i], oldOptionsVersions)) {
                             var newVersion = newOptions[i].getVersion();
-                            if (oldOptionsVersions[i] !== newVersion) {
-                                oldOptionsVersions[i] = newVersion;
+                            var checkPrefix = prefix || '';
+                            if (oldOptionsVersions[checkPrefix + i] !== newVersion) {
                                 changed = true;
                                 changedOptions[i] = newOptions[i];
+                                oldOptionsVersions[checkPrefix + i] = newVersion;
                             } else if (Array.isArray(newOptions[i]) && newOptions[i]) {
                                 if (!newOptions[i].isDataArray) {
                                     changed = true;
@@ -161,7 +180,11 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                                     continue;
                                 }
                                 for (var kfn = 0; kfn < newOptions[i].length; kfn++) {
-                                    var ch = getChangedOptions(getInternalOptions(newOptions[i][kfn]), getInternalOptions(oldOptions[i][kfn]), false, oldOptionsVersions, checkOldValue);
+                                    var localPrefix = i + ';' + kfn + ';';
+                                    if (prefix) {
+                                        localPrefix = prefix + localPrefix;
+                                    }
+                                    var ch = getChangedOptions(getInternalOptions(newOptions[i][kfn]), getInternalOptions(oldOptions[i][kfn]), false, oldOptionsVersions, checkOldValue, localPrefix);
                                     if (ch) {
                                         changed = true;
                                         changedOptions[i] = newOptions[i];
@@ -169,11 +192,49 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                                     }
                                 }
                             }
+                        } else if (i.indexOf('__dirtyCheckingVars_') > -1 && typeof oldOptions[i] === 'object' && typeof newOptions[i] === 'object' && newOptions[i] && oldOptions[i] && /* We don't need to check Date object internal properties */
+                            !isObjectDate(newOptions[i])) {
+                            //Object inside __dirtyChecking must be checked, it can be "scope=object" in subcontrol
+                            if (newOptions[i] !== oldOptions[i]) {
+                                changed = true;
+                                changedOptions[i] = newOptions[i];
+                                break;
+                            } else {
+                                var innerCh = getChangedOptions(newOptions[i], oldOptions[i], true, {}, true);
+                                if (innerCh) {
+                                    changed = true;
+                                    changedOptions[i] = newOptions[i];
+                                    break;
+                                }
+                            }
                         } else {
-                            changed = true;
-                            changedOptions[i] = newOptions[i];
-                            if (checkIsVersionableObject(newOptions[i], oldOptionsVersions)) {
-                                oldOptionsVersions[i] = newOptions[i].getVersion();
+                            /*Есть такой кейс, когда объекты всегда новые, но они равны
+                            * поставим флажок в объект, который заставит нас смотреть только на версию*/
+                            if (newOptions[i] && newOptions[i]._preferVersionAPI) {
+                                var newVersion_1 = newOptions[i].getVersion();
+                                var secCheckPrefix = prefix || '';
+                                if (oldOptionsVersions[secCheckPrefix + i] !== newVersion_1) {
+                                    changed = true;
+                                    changedOptions[i] = newOptions[i];
+                                    oldOptionsVersions[secCheckPrefix + i] = newVersion_1;
+                                    break;
+                                }
+                            } else if (newOptions[i] && newOptions[i]._isDeepChecking && oldOptions[i] && oldOptions[i]._isDeepChecking) {
+                                var innerCh_1 = getChangedOptions(newOptions[i], oldOptions[i], true, {}, true);
+                                if (innerCh_1) {
+                                    changed = true;
+                                    changedOptions[i] = newOptions[i];
+                                    break;
+                                }
+                            } else {
+                                if (newOptions[i] && newOptions[i]._ignoreChanging) {
+                                    continue;
+                                }
+                                changed = true;
+                                changedOptions[i] = newOptions[i];
+                                if (checkIsVersionableObject(newOptions[i], oldOptionsVersions)) {
+                                    oldOptionsVersions[(prefix || '') + i] = newOptions[i].getVersion();
+                                }
                             }
                         }
                     }
@@ -254,7 +315,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                 // инстанс уже есть, работаем с его опциями
                 control = controlClass_;
                 defaultOptions = Utils_1.OptionsResolver.getDefaultOptions(controlClass_);
-                if (isJs.compat) {
+                if (Env_1.constants.compat) {
                     optionsWithState = Utils_1.Compatible.combineOptionsIfCompatible(controlCnstr.prototype, optionsWithState, internalOptions);
                     if (control._setInternalOptions) {
                         control._options.doNotSetParent = true;
@@ -355,6 +416,11 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                 // этого не должно произойти, иначе синхронизатор упадет
                 childControlNode.control.__$destroyFromDirtyChecking = true;
                 childControlNode.control.destroy();
+                delete childControlNode.controlProperties;
+                delete childControlNode.oldOptions;
+                delete childControlNode.element;
+                delete childControlNode.fullMarkup;
+                delete childControlNode.markup;
                 if (childControlNode.control._logicParent && childControlNode.control._logicParent._template && childControlNode.control._options.name) {
                     delete childControlNode.control._logicParent._children[childControlNode.control._options.name];
                 }
@@ -398,7 +464,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                     try {
                         // Forbid force update in the time between _beforeUpdate and _afterUpdate
                         //newNode.control._canForceUpdate = false;
-                        newNode.control._beforeUpdate(newNode.options, resolvedContext);
+                        newNode.control.__beforeUpdate(newNode.options, resolvedContext);
                     } catch (error) {
                         Logger.catchLifeCircleErrors('_beforeUpdate', error);
                     }
@@ -564,7 +630,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                                     controlNode.control._options = controlNode.options;
                                     controlNode.control._container = controlNode.element;
                                     controlNode.control._setInternalOptions(vnode.controlInternalProperties || {});
-                                    if (isJs.compat) {
+                                    if (Env_1.constants.compat) {
                                         // @ts-ignore
                                         controlNode.control._container = $(controlNode.element);
                                     }
@@ -573,7 +639,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                                  // has compatible behavior mixed into it
                             // Only subscribe to event: from options if the environment is compatible AND control
                             // has compatible behavior mixed into it
-                            if (isJs.compat && (!controlNode.control.hasCompatible || controlNode.control.hasCompatible())) {
+                            if (Env_1.constants.compat && (!controlNode.control.hasCompatible || controlNode.control.hasCompatible())) {
                                 subscribeToEvent(controlNode);    //TODO Кусок слоя совместимости https://online.sbis.ru/opendoc.html?guid=95e5b595-f9ea-45a2-9a4d-97a714d384af
                             }
                         } else
@@ -643,7 +709,7 @@ define('Vdom/_private/Synchronizer/resources/DirtyChecking', [
                                     resolvedContext = Expressions_2.ContextResolver.resolveContext(childControlNode.controlClass, newChildNodeContext, childControlNode.control);
                                     Utils_1.OptionsResolver.resolveOptions(childControlNode.controlClass, childControlNode.defaultOptions, newOptions, childControlNode.parent.control._moduleName);    // Forbid force update in the time between _beforeUpdate and _afterUpdate
                                     // Forbid force update in the time between _beforeUpdate and _afterUpdate
-                                    childControl._beforeUpdate && childControl._beforeUpdate(newOptions, resolvedContext);
+                                    childControl._beforeUpdate && childControl.__beforeUpdate(newOptions, resolvedContext);
                                     childControl._options = newOptions;
                                     shouldUpdate = (childControl._shouldUpdate ? childControl._shouldUpdate(newOptions, resolvedContext) : true) || changedInternalOptions;
                                     childControl._setInternalOptions(changedInternalOptions || {});

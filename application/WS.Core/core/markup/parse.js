@@ -1,17 +1,14 @@
 define('Core/markup/parse', [
     'require',
     'Core/Serializer',
-    'Core/ConsoleLogger',
-    'Core/detection',
+    'Env/Env',
     'Core/core-merge',
     'Core/helpers/Hcontrol/configStorage',
-    'Core/helpers/Hcontrol/variableStorage',
-    'Core/IoC'
+    'Core/helpers/Hcontrol/variableStorage'
 ], function (
     require,
     Serializer,
-    ConsoleLogger,
-    detection,
+    Env,
     coreMerge,
     configStorage,
     variableStorage
@@ -123,7 +120,7 @@ define('Core/markup/parse', [
                      поэтому для IE парсим даты через наш Date.formSQL */
                     if (typeof(rawValue) === 'string') {
                         value = new Date(rawValue);
-                        if (value.toString() === 'Invalid Date' && detection.isIE) {
+                        if (value.toString() === 'Invalid Date' && Env.detection.isIE) {
                             value = Date.fromSQL(rawValue);
                         }
                     }
@@ -385,7 +382,7 @@ define('Core/markup/parse', [
                                 if (typeof outerHTML === 'function') {
                                     outerHTML = childNodes[i].outerHTML();
                                 }
-                                ConsoleLogger.error('markup-helpers', 'Атрибут binding нельзя использовать вместе с атрибутом spreadOptions: ' + outerHTML);
+                                Env.ConsoleLogger.error('markup-helpers', 'Атрибут binding нельзя использовать вместе с атрибутом spreadOptions: ' + outerHTML);
                             }
                         }
                     }

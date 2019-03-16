@@ -60,29 +60,9 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
       this._$hasChildren = !!this._$hasChildren;
    }
 
-   //region Types/_entity/SerializableMixin
+   // endregion Types/_entity/SerializableMixin
 
-   protected _getSerializableState(state) {
-      state =  super._getSerializableState(state);
-
-      //It's too hard to serialize context related method. It should be restored at class that injects this function.
-      if (typeof state.$options.parent === 'function') {
-         delete state.$options.parent;
-      }
-
-      return state;
-   }
-
-   protected _setSerializableState(state) {
-      let fromSuper = super._setSerializableState(state);
-      return function() {
-         fromSuper.call(this);
-      };
-   }
-
-   //endregion Types/_entity/SerializableMixin
-
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает родительский узел
@@ -105,7 +85,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * @return {Types/_display/TreeItem}
     */
    getRoot(): TreeItem {
-      let parent = this.getParent();
+      const parent = this.getParent();
       if (parent === this) {
          return;
       }
@@ -125,12 +105,12 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * @return {Number}
     */
    getLevel(): number {
-      let parent = this.getParent();
+      const parent = this.getParent();
       if (parent) {
          return (parent instanceof TreeItem ? parent.getLevel() : 0) + 1;
       }
 
-      let owner = this.getOwner();
+      const owner = this.getOwner();
       return owner && owner.isRootEnumerable() ? 1 : 0;
    }
 
@@ -212,9 +192,29 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
       return this._$childrenProperty;
    }
 
-   //endregion
+   // region Types/_entity/SerializableMixin
 
-   //region Protected methods
+   protected _getSerializableState(state) {
+      state =  super._getSerializableState(state);
+
+      // It's too hard to serialize context related method. It should be restored at class that injects this function.
+      if (typeof state.$options.parent === 'function') {
+         delete state.$options.parent;
+      }
+
+      return state;
+   }
+
+   protected _setSerializableState(state) {
+      const fromSuper = super._setSerializableState(state);
+      return function() {
+         fromSuper.call(this);
+      };
+   }
+
+   // endregion
+
+   // region Protected methods
 
    /**
     * Генерирует событие у владельца об изменении свойства элемента.
@@ -225,32 +225,28 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
    protected _notifyItemChangeToOwner(property: string) {
       super._notifyItemChangeToOwner(property);
 
-      let root = this.getRoot();
-      let rootOwner = root ? root.getOwner() : undefined;
+      const root = this.getRoot();
+      const rootOwner = root ? root.getOwner() : undefined;
       if (rootOwner && rootOwner !== this._$owner) {
          rootOwner.notifyItemChange(this, property);
       }
    }
 
-   //endregion
+   // endregion
 }
 
-TreeItem.prototype._moduleName = 'Types/display:TreeItem';
-TreeItem.prototype['[Types/_display/TreeItem]'] = true;
-// @ts-ignore
-TreeItem.prototype._$parent = undefined;
-// @ts-ignore
-TreeItem.prototype._$node = false;
-// @ts-ignore
-TreeItem.prototype._$expanded = false;
-// @ts-ignore
-TreeItem.prototype._$hasChildren = true;
-// @ts-ignore
-TreeItem.prototype._$childrenProperty = '';
-// @ts-ignore
-TreeItem.prototype._instancePrefix = 'tree-item-';
+Object.assign(TreeItem.prototype, {
+   '[Types/_display/TreeItem]': true,
+   _moduleName: 'Types/display:TreeItem',
+   _$parent: undefined,
+   _$node: false,
+   _$expanded: false,
+   _$hasChildren: true,
+   _$childrenProperty: '',
+   _instancePrefix: 'tree-item-'
+});
 
-// Deprecated
+// FIXME: deprecated
 TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
 
 register('Types/display:TreeItem', TreeItem);

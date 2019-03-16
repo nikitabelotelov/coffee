@@ -1,11 +1,6 @@
 /// <amd-module name="View/Executor/_Markup/Generator" />
-
 // @ts-ignore
-import * as timing from 'Core/core-debug';
-// @ts-ignore
-import * as cConstants from 'Core/constants';
-// @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC, constants as cConstants, coreDebug as timing } from 'Env/Env';
 // @ts-ignore
 import * as Logger from 'View/Logger';
 
@@ -298,6 +293,10 @@ const Generator = {
          controlClass: controlClass,
          compound: !(controlClass && controlClass.isWasaby)
       };
+   },
+   invisibleNodeCompat: function invisibleNodeCompat(markup) {
+      return markup && markup.indexOf && markup.indexOf('<invisible-node') === 0 ?
+                                             markup.replace(/invisible-node/g, 'div') : markup;
    },
    cutFocusAttributes(attributes, fn, node) {
       focusAttrs.forEach(function (focusAttr) {

@@ -1,8 +1,7 @@
 define('Core/CssLoader/CssLoader', [
-   'Core/IoC',
-   'Core/core-extend',
-   'Transport/XHRTransport'
-], function(IoC, coreExtend) {
+   'Env/Env',
+   'Core/core-extend'
+], function(Env, coreExtend) {
    'use strict';
 
    // Class that make requests for css-files
@@ -30,14 +29,16 @@ define('Core/CssLoader/CssLoader', [
          var url = self.linkResolver.resolveCssWithTheme(name, theme);
          return this._loadFile(url);
       },
+      _fetchByUrl: function(url) {
+         return fetch(url, { method: "get", credentials: 'include' });
+      },
       _loadFile: function(url) {
-         var promise = IoC.resolve('ITransport', {
-            method: 'GET',
-            dataType: 'text',
-            url: url
-         }).execute();
+         var promise = this._fetchByUrl(url);
+         promise = promise.then(function (response) {
+            return response.text();
+         });
          promise.catch(function() {
-            IoC.resolve('ILogger').error('Css loading', 'Can\'t load css: ' + url + '');
+            Env.IoC.resolve('ILogger').error('Css loading', 'Couldn\'t load css: ' + url + '');
          });
          return promise;
       }

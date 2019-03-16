@@ -22,7 +22,16 @@ define('View/Executor/_Utils/RequireHelper', [
             res = require.defined(name);
             if (res) {
                 // @ts-ignore
-                myRequireHash[name] = require(name);
+                var mod = require(name);    //It's possible that module is defined but not ready yet because it waits for its own dependencies.
+                                            //If we start to build templates until this process ends we'd receive not exactly module body here.
+                                            //We can get undefined or an empty object instead.
+                //It's possible that module is defined but not ready yet because it waits for its own dependencies.
+                //If we start to build templates until this process ends we'd receive not exactly module body here.
+                //We can get undefined or an empty object instead.
+                if (mod === undefined || mod && typeof mod === 'object' && Object.keys(mod).length === 0) {
+                    return false;
+                }
+                myRequireHash[name] = mod;
             }
         }
         return res;

@@ -1,10 +1,8 @@
 define('Core/MicroSession', [
-   'Core/cookie',
-   'Core/helpers/Object/isEmpty',
-   'Core/constants',
-   'Core/detection'
+   'Env/Env',
+   'Core/helpers/Object/isEmpty'
 ], function (
-   cookie,
+   Env,
    isEmptyObject
 ) {
 
@@ -76,7 +74,7 @@ define('Core/MicroSession', [
          this._ms = prevSession ? JSON.parse(prevSession) : {};
 
 
-         this._ms.sid = cookie.get('s3su');
+         this._ms.sid = Env.cookie.get('s3su');
 
          this._set('ws-msid', '');
          this._set(this._msid, JSON.stringify(this._ms));
@@ -164,7 +162,7 @@ define('Core/MicroSession', [
       _garbageCollector: function () {
          var
             keys = [],
-            sid = cookie.get('s3su'),
+            sid = Env.cookie.get('s3su'),
             ms, i, len, msVal;
 
          //collect session keys

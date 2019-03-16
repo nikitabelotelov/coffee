@@ -3,12 +3,11 @@ define('View/Executor/_Utils/Compatible', [
     'require',
     'exports',
     'Core/helpers/Function/shallowClone',
-    'Core/IoC',
-    'Core/constants',
+    'Env/Env',
     'View/Logger',
     'View/Executor/_Utils/OptionsResolver',
     'View/Executor/Expressions'
-], function (require, exports, shallowClone, IoC, constants, Logger, OptionsResolver_1, Expressions_1) {
+], function (require, exports, shallowClone, Env_1, Logger, OptionsResolver_1, Expressions_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Создает объект с объединенными (прикладными и служебными опциями)
@@ -97,7 +96,7 @@ define('View/Executor/_Utils/Compatible', [
                 var makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
                 makeInstanceCompatible(inst);
             } catch (e) {
-                IoC.resolve('ILogger').error('WS3WS4', 'Please require Core/helpers/Hcontrol/makeInstanceCompatible manual');
+                Env_1.IoC.resolve('ILogger').error('WS3WS4', 'Please require Core/helpers/Hcontrol/makeInstanceCompatible manual');
             }
         }    /*Здесь родитель может быть CompoundControl*/
         /*Здесь родитель может быть CompoundControl*/
@@ -118,7 +117,7 @@ define('View/Executor/_Utils/Compatible', [
                 inst._options = actualOptions;
             }
         }
-        if (constants.compat) {
+        if (Env_1.constants.compat) {
             inst._setInternalOptions(internalOptions);
         }    // Убираем опции, т.к. они должны отсутствовать _beforeUpdate
         // Убираем опции, т.к. они должны отсутствовать _beforeUpdate
@@ -177,8 +176,8 @@ define('View/Executor/_Utils/Compatible', [
         if (!markup) {
             markup = '<span>Component ' + moduleName + ' was building error</span>';
         }
-        if (!constants.compat) {
-            IoC.resolve('ILogger').error('Building component', 'CompoundControl detected. Component name = ' + moduleName);
+        if (!Env_1.constants.compat) {
+            Env_1.IoC.resolve('ILogger').error('Building component', 'CompoundControl detected. Component name = ' + moduleName);
         }    // markup contains raw html string because of compatibility. VDOM will insert it as is.
         // markup contains raw html string because of compatibility. VDOM will insert it as is.
         var markupNode = new Expressions_1.RawMarkupNode(markup, virtualNode.controlAttributes, moduleName, virtualNode.key);

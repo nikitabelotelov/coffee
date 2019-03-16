@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/Info" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 // @ts-ignore
 import * as template from 'wml!Coffee/Info/Info';
 import "css!Coffee/Info/Info";

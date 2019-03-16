@@ -49,21 +49,20 @@ define('Types/_source/HierarchicalMemory', [
     'Types/_source/Memory',
     'Types/entity',
     'Types/util',
-    'require',
     'Core/Deferred'
-], function (require, exports, tslib_1, Memory_1, entity_1, util_1, req, Deferred) {
+], function (require, exports, tslib_1, Memory_1, entity_1, util_1, Deferred) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var HierarchicalMemory = /** @class */
     function (_super) {
         tslib_1.__extends(HierarchicalMemory, _super);
         function HierarchicalMemory(options) {
-            var _this = _super.call(this) || this;    //region ICrud
-            //region ICrud
-            _this['[Types/_source/ICrud]'] = true;    //endregion
-                                                      //region ICrudPlus
-            //endregion
-            //region ICrudPlus
+            var _this = _super.call(this) || this;    // region ICrud
+            // region ICrud
+            _this['[Types/_source/ICrud]'] = true;    // endregion
+                                                      // region ICrudPlus
+            // endregion
+            // region ICrudPlus
             _this['[Types/_source/ICrudPlus]'] = true;
             entity_1.OptionsToPropertyMixin.call(_this, options);
             entity_1.SerializableMixin.constructor.call(_this);
@@ -92,7 +91,7 @@ define('Types/_source/HierarchicalMemory', [
         HierarchicalMemory.prototype.query = function (query) {
             var _this = this;
             var result = new Deferred();
-            req(['Types/collection'], function (collection) {
+            require(['Types/collection'], function (collection) {
                 _this._source.query(query).addCallbacks(function (response) {
                     if (_this._$parentProperty) {
                         var hierarchy = new entity_1.relation.Hierarchy({
@@ -118,8 +117,8 @@ define('Types/_source/HierarchicalMemory', [
                                 breadcrumbs.add(node, 0);
                                 startFromNode = node.get(_this._idProperty);
                             }
-                        }    //Store breadcrumbs as 'path' in meta data
-                        //Store breadcrumbs as 'path' in meta data
+                        }    // Store breadcrumbs as 'path' in meta data
+                        // Store breadcrumbs as 'path' in meta data
                         var data = response.getRawData(true);
                         if (data) {
                             var metaData = data.meta || {};
@@ -145,14 +144,14 @@ define('Types/_source/HierarchicalMemory', [
         };
         HierarchicalMemory.prototype.move = function (items, target, meta) {
             return this._source.move(items, target, meta);
-        };    //endregion
+        };    // endregion
               // region SerializableMixin
-        //endregion
+        // endregion
         // region SerializableMixin
         HierarchicalMemory.prototype._getSerializableState = function (state) {
-            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
-            state._source = this._source;
-            return state;
+            var resultState = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
+            resultState._source = this._source;
+            return resultState;
         };
         HierarchicalMemory.prototype._setSerializableState = function (state) {
             var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
@@ -164,10 +163,11 @@ define('Types/_source/HierarchicalMemory', [
         return HierarchicalMemory;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.SerializableMixin));
     exports.default = HierarchicalMemory;
-    HierarchicalMemory.prototype._moduleName = 'Types/source:HierarchicalMemory';
-    HierarchicalMemory.prototype['[Types/_source/HierarchicalMemory]'] = true;    // @ts-ignore
-    // @ts-ignore
-    HierarchicalMemory.prototype._$parentProperty = null;    //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
-    //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
+    Object.assign(HierarchicalMemory.prototype, {
+        '[Types/_source/HierarchicalMemory]': true,
+        _moduleName: 'Types/source:HierarchicalMemory',
+        _$parentProperty: null
+    });    // FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
+    // FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
     HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;
 });

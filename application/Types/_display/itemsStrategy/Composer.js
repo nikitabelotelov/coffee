@@ -153,10 +153,10 @@ define('Types/_display/itemsStrategy/Composer', [
          */
         Composer.prototype.getResult = function () {
             return this._result;
-        };    //endregion Public members
-              //region Types/_entity/SerializableMixin
-        //endregion Public members
-        //region Types/_entity/SerializableMixin
+        };    // endregion Public members
+              // region Types/_entity/SerializableMixin
+        // endregion Public members
+        // region Types/_entity/SerializableMixin
         Composer.prototype._getSerializableState = function (state) {
             state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
             state.$options = {};
@@ -173,20 +173,20 @@ define('Types/_display/itemsStrategy/Composer', [
                 this._options = state._options;
                 this._result = state._result;
             };
-        };    //endregion Types/_entity/SerializableMixin
-              //region Protected members
-        //endregion Types/_entity/SerializableMixin
-        //region Protected members
+        };    // endregion Types/_entity/SerializableMixin
+              // region Protected members
+        // endregion Types/_entity/SerializableMixin
+        // region Protected members
         Composer.prototype._reBuild = function (index, onAdd) {
             var _this = this;
             var wrap = function (source, Module, defaults) {
-                var options = Object.assign({}, defaults || {});
+                var options = tslib_1.__assign({}, defaults || {});
                 if (source) {
                     options.source = source;
                 }
                 return new Module(options);
-            };    //Just add or remove if last item affected
-            //Just add or remove if last item affected
+            };    // Just add or remove if last item affected
+            // Just add or remove if last item affected
             if (this._result && index === this._modules.length + (onAdd ? -1 : 0)) {
                 if (onAdd) {
                     this._result = wrap(this._result, this._modules[index], this._options[index]);
@@ -213,8 +213,9 @@ define('Types/_display/itemsStrategy/Composer', [
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin)    /** @lends Types/_display/ItemsStrategy/Composer.prototype */);
     /** @lends Types/_display/ItemsStrategy/Composer.prototype */
     exports.default = Composer;
-    Composer.prototype._moduleName = 'Types/display:itemsStrategy.Composer';
-    Composer.prototype['[Types/_display/itemsStrategy/Composer]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Composer.prototype._result = null;
+    Object.assign(Composer.prototype, {
+        '[Types/_display/itemsStrategy/Composer]': true,
+        _moduleName: 'Types/display:itemsStrategy.Composer',
+        _result: null
+    });
 });

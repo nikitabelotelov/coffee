@@ -1,6 +1,6 @@
 define('Lib/Control/BaseCompatible/Mixins/WsCompatibleConstructor', [
    'Core/core-extend',
-   'Core/IoC'
+   'Env/Env'
 ], function(cExtend){
 
    /**

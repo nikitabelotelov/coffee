@@ -1,12 +1,12 @@
 define('View/Builder/Tmpl/handlers/error', [
-   'Core/IoC'
+   'Env/Env'
 ], function errorHandlingDefine(
-   IoC
+   Env
 ) {
    'use strict';
 
    var setError = function(tag, message) {
-      IoC.resolve('ILogger').error(tag, message);
+      Env.IoC.resolve('ILogger').error(tag, message);
    },
    getStack = function getStack(error) {
       return error && error.stack ? error.stack : error;
@@ -17,7 +17,7 @@ define('View/Builder/Tmpl/handlers/error', [
     */
    return function errorHandlingF(messageBody, filename, err) {
       if (err) {
-         IoC.resolve('ILogger', 'ConsoleLogger').log("Tmpl", "Actual Error log: " + getStack(err));
+         Env.IoC.resolve('ILogger', 'ConsoleLogger').log("Tmpl", "Actual Error log: " + getStack(err));
       }
       if (filename) {
          setError("Tmpl", 'TMPL Engine error: ' + getStack(messageBody) + '. In file: ' + filename);

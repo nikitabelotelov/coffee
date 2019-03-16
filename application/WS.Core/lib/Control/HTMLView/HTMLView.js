@@ -8,10 +8,9 @@ define('Lib/Control/HTMLView/HTMLView', [
    'Core/helpers/Hcontrol/setElementCachedSize',
    "Core/ParallelDeferred",
    "Core/Deferred",
-   "Core/constants",
+   'Env/Env',
    "Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract",
    "Lib/Control/LoadingIndicator/LoadingIndicator",
-   'Core/detection',
    'Core/helpers/getResourceUrl',
    "css!Lib/Control/HTMLView/HTMLView"
 ], function(
@@ -24,10 +23,9 @@ define('Lib/Control/HTMLView/HTMLView', [
    setElementCachedSize,
    cParallelDeferred,
    cDeferred,
-   cConstants,
+   Env,
    TemplatedAreaAbstract,
    LoadingIndicator,
-   detection,
    getResourceUrl
 ) {
 
@@ -41,10 +39,10 @@ define('Lib/Control/HTMLView/HTMLView', [
    }
 
    function urlWithHost(url) {
-      var l = cConstants.hosts.length,
+      var l = Env.constants.hosts.length,
          host = '';
       if (l > 0) {
-         host = cConstants.hosts[Math.floor(Math.random() * l)];
+         host = Env.constants.hosts[Math.floor(Math.random() * l)];
          if (url.substring(0, 1) == '.') {
             var curPath = window.location.pathname;
             curPath = curPath.substring(0, curPath.lastIndexOf('/') + 1);
@@ -102,26 +100,26 @@ define('Lib/Control/HTMLView/HTMLView', [
        * @event onIframeCreate Происходит при создании внутреннего iframe.
        * @remark
        * В нём можно настроить, например, параметры безопасности у iframe.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {jQuery} iframe Созданный iframe, у которого можно настроить из события разные атрибуты и стили.
        */
       /**
        * @event onContentSet Происходит при установке контента.
        * @remark
        * Может быть инициировано из функции $constructor.
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {String} str Тип документа (см. {@link docType}).
        * @param {String} html Отображаемый в контроле HTML-документ.
        */
       /**
        * @event onBeforePrint Происходит перед началом печати (см. {@link print}).
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {jQuery} iframe iframe, который печатается.
        * @see print
        */
        /**
         * @event onContentReady Происходит при готовности содержимого HTML-документа, устанавливаемого в контрол методом {@link setHTML}.
-        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {Env/Event:Object} eventObject Дескриптор события.
         * @example
         * Пользовательский компонент (component) содержит в разметке контрол для отображения html-кода (htmlData).
         * component посылает событие onReady после того как данные готовы.
@@ -411,7 +409,7 @@ define('Lib/Control/HTMLView/HTMLView', [
 
                }
             });
-            if (cConstants.browser.retailOffline) {
+            if (Env.constants.browser.retailOffline) {
                //оффлайн браузер не знает что такое pointer-events поэтому для него надо прокидывать события touch события для скрола пальцем
                doc.bind('touchstart touchmove touchend', function (event) {
                   var documentToPass = doc.get(0),
@@ -439,7 +437,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                doc = $(iframe.contentDocument);
 
             keyDown(doc, function(event) {
-               if ( event.which == cConstants.key.esc ) { //esc
+               if ( event.which == Env.constants.key.esc ) { //esc
                   var evt = doc.get(0).createEvent("Event"),
                      e = event.originalEvent;
 
@@ -656,7 +654,7 @@ define('Lib/Control/HTMLView/HTMLView', [
 
             //TODO: хак: в IE8 и иногда IE7 может неправильно определяться высота/ширина содержимого фрейма
             //надо это проверить и подправить
-            if (cConstants.browser.isIE && (autoWidth || autoHeight)) {
+            if (Env.constants.browser.isIE && (autoWidth || autoHeight)) {
                var doc = iframe.contents(),
                    body = $('body', doc), html;
 
@@ -735,12 +733,12 @@ define('Lib/Control/HTMLView/HTMLView', [
             };
 
          // Хак для айпадов и айфонов - оборачивающему блоку нужно прописать эти стили, чтоб работала прокрутка в ифрейме
-         if (cConstants.browser.isMobileSafari) {
+         if (Env.constants.browser.isMobileSafari) {
             css['-webkit-overflow-scrolling'] = 'touch';
             css.overflow = 'auto';
          }
 
-         if( cConstants.browser.isIE ) {
+         if( Env.constants.browser.isIE ) {
             css.overflow = 'visible';
          }
 
@@ -794,7 +792,7 @@ define('Lib/Control/HTMLView/HTMLView', [
          function CreatLinkCss(pathFile) {
             pathFile = getResourceUrl(pathFile);
 
-            return '<link rel="stylesheet" href="' + cConstants.resourceRoot + pathFile + '">';
+            return '<link rel="stylesheet" href="' + Env.constants.resourceRoot + pathFile + '">';
          }
 
          this._options.docType = 'string';
@@ -830,7 +828,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                   }
 
                   head = $(doc).find('head');
-                  fontsUrl = self._options.tensorFontsUrl || cConstants.tensorFontsUrl;
+                  fontsUrl = self._options.tensorFontsUrl || Env.constants.tensorFontsUrl;
 
                   if (readyEventName) {
                      // Если была сделана подписка, чистим ее
@@ -879,7 +877,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                   // DOM документа внутри iframe'а уже загружен
                   onDocumentReadyHandler();
                } else {
-                  if (detection.isIE && detection.IEVersion <= 10) {
+                  if (Env.detection.isIE && Env.detection.IEVersion <= 10) {
                      // В IE 10 и ранее (или в IE 11 версии в режиме совместимости с IE 10 для iframe)
                      // DOMContentLoaded не срабатывает. Слушаем вместо него 'readystatechange' и дожидаемся,
                      // когда readyState документа станет 'complete'
@@ -981,7 +979,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                   w.document.title = window.document.title;
                }
 
-               if(cConstants.browser.opera){
+               if(Env.constants.browser.opera){
                   var
                      clone = this.getIframeDocument().documentElement,
                      oldDocument = window.document.documentElement,
@@ -1010,7 +1008,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                   var ieHiddenPrintFix = false,       //Если мы печатаем в ие ифрейм, который скрыт сам или находится в блоке с visibility: hidden
                      iframe = $(this._iframe),        //То будет печататься вся страница, а не только ифрейм
                      opacity;                        //Для решения этой проблемы перемещаю ифрейм в боди и делаю видимым, уменьшая прозрачность до 0
-                  if(cConstants.browser.isIE && !iframe.is(':visible')){
+                  if(Env.constants.browser.isIE && !iframe.is(':visible')){
                      ieHiddenPrintFix = true;
                      iframe.parents().addBack().each(function(){
                         var $this = $(this);
@@ -1031,7 +1029,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                   setTimeout(forAliveOnly(function(){
                      (self._iframe.contentWindow || w).focus();
                      setTimeout(forAliveOnly(function(){
-                        if (cConstants.browser.chrome && window.opener) {
+                        if (Env.constants.browser.chrome && window.opener) {
                            /*TODO убрать это условие после выхода 36 хрома
                            http://stackoverflow.com/questions/23071291/javascript-window-print-in-chrome-closing-new-window-or-tab-instead-of-cancel*/
                            var incorrectClosingHandler = forAliveOnly(function () {
@@ -1039,9 +1037,9 @@ define('Lib/Control/HTMLView/HTMLView', [
                                      'Пожалуйста, выберите "Остаться на этой странице" и используйте кнопку' +
                                      '"Отмена" перед закрытием вкладки.\n';
                            });
-                           cConstants.$win.bind('beforeunload', incorrectClosingHandler);
+                           Env.constants.$win.bind('beforeunload', incorrectClosingHandler);
                            w.printPage();
-                           cConstants.$win.unbind('beforeunload', incorrectClosingHandler);
+                           Env.constants.$win.unbind('beforeunload', incorrectClosingHandler);
                         }
                         else {
                            w.printPage();
@@ -1088,7 +1086,7 @@ define('Lib/Control/HTMLView/HTMLView', [
          if (this._iframe && this._iframe.contentDocument) {
             return this._iframe.contentDocument;
          } else {
-            if(cConstants.browser.isIE){
+            if(Env.constants.browser.isIE){
                return window.frames[this._createFrameId()].document;
             }
          }
@@ -1101,7 +1099,7 @@ define('Lib/Control/HTMLView/HTMLView', [
          if (this._iframe && this._iframe.contentWindow) {
             return this._iframe.contentWindow;
          } else  {
-            if (cConstants.browser.isIE) {
+            if (Env.constants.browser.isIE) {
                return window.frames[this._createFrameId()];
             }
          }
@@ -1135,7 +1133,7 @@ define('Lib/Control/HTMLView/HTMLView', [
                deferred = new cDeferred(),
                doc = self.getIframeDocument();
 
-            path = path.substr(0, 1) == '/' ? urlWithHost(path) : urlWithHost(cConstants.wsRoot + path);
+            path = path.substr(0, 1) == '/' ? urlWithHost(path) : urlWithHost(Env.constants.wsRoot + path);
             styleTag.setAttribute('rel', 'stylesheet');
             styleTag.setAttribute('href', path);
             $(doc).find('head').append(styleTag);
@@ -1169,10 +1167,10 @@ define('Lib/Control/HTMLView/HTMLView', [
        * @see getIframeContainer
        */
       hideIframeContainer: function(){
-         if (cConstants.browser.isIE) {
+         if (Env.constants.browser.isIE) {
             this._iframeContainer.css('opacity', 0);
          }
-         else if (cConstants.browser.opera) {
+         else if (Env.constants.browser.opera) {
             this._iframeContainer.css('display', 'none');
          }
          else {
@@ -1185,10 +1183,10 @@ define('Lib/Control/HTMLView/HTMLView', [
         * @see getIframeContainer
         */
       showIframeContainer: function(){
-         if (cConstants.browser.isIE) {
+         if (Env.constants.browser.isIE) {
             this._iframeContainer.css('opacity', 1);
          }
-         else if (cConstants.browser.opera) {
+         else if (Env.constants.browser.opera) {
             this._iframeContainer.css('display', 'block');
          }
          else {

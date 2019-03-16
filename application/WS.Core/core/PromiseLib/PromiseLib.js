@@ -1,6 +1,6 @@
 define('Core/PromiseLib/PromiseLib', [
-   'Core/IoC',
-], function(IoC, coreExtend) {
+   'Env/Env',
+], function(Env, coreExtend) {
    'use strict';
 
    // Create promise that always resolve

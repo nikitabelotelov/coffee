@@ -3,9 +3,7 @@
 // @ts-ignore
 import * as shallowClone from 'Core/helpers/Function/shallowClone';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
-// @ts-ignore
-import * as constants from 'Core/constants';
+import { IoC, constants } from 'Env/Env';
 // @ts-ignore
 import * as Logger from 'View/Logger';
 

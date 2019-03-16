@@ -4,36 +4,6 @@ define('Coffee/Data/DataStore', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var SettingsStruct = {
-        'Группа 1': {
-            'Температура': 'g1TSet',
-            'Время предсмачивания': 'g1TimeSet',
-            'Время автоматической варки 1': 'g1AutoMode1',
-            'Время автоматической варки 2': 'g1AutoMode2',
-            'Время пост-предсмачивания': 'g1_1TimeSet'
-        },
-        'Группа 2': {
-            'Температура': 'g2TSet',
-            'Время предсмачивания': 'g2TimeSet',
-            'Время автоматической варки 1': 'g2AutoMode1',
-            'Время автоматической варки 2': 'g2AutoMode2',
-            'Время пост-предсмачивания': 'g2_1TimeSet'
-        },
-        'Паровой бойлер': { 'Давление': 'parTSet' },
-        'Цветовая схема холодный': {
-            'Красный': 'rCold',
-            'Зеленый': 'gCold',
-            'Синий': 'bCold',
-            'Прозрачность': 'aCold'
-        },
-        'Цветовая схема горячий': {
-            'Красный': 'rHot',
-            'Зеленый': 'gHot',
-            'Синий': 'bHot',
-            'Прозрачность': 'aHot'
-        }
-    };
-    exports.SettingsStruct = SettingsStruct;
     var InfoStruct = {
         'Группа 1': 'currentGroup1P',
         'Группа 2': 'currentGroup2P',
@@ -43,27 +13,6 @@ define('Coffee/Data/DataStore', [
         socket: null,
         messageHandlers: new Array(),
         initialSettings: null,
-        _serializeSettings: function (parsedSettings) {
-            var data = {};
-            for (var i in parsedSettings) {
-                for (var j in parsedSettings[i]) {
-                    data[parsedSettings[i][j].dataFieldName] = parsedSettings[i][j].value;
-                }
-            }
-            return data;
-        },
-        _parseDataStructure: function (rawData, dataStruct) {
-            var result = {};
-            for (var groupName in dataStruct) {
-                result[groupName] = {};
-                for (var fieldName in dataStruct[groupName]) {
-                    result[groupName][fieldName] = {};
-                    result[groupName][fieldName].value = rawData[dataStruct[groupName][fieldName]];
-                    result[groupName][fieldName].dataFieldName = dataStruct[groupName][fieldName];
-                }
-            }
-            return result;
-        },
         _parseInfo: function (rawData, dataStruct) {
             var result = {};
             for (var fieldName in dataStruct) {
@@ -112,7 +61,6 @@ define('Coffee/Data/DataStore', [
             if (result.type) {
                 switch (result.type) {
                 case 'initialSettings':
-                    data = this._parseDataStructure(data, SettingsStruct);
                     this.initialSettings = data;
                     break;
                 case 'currentInfoUpdate':
@@ -131,7 +79,7 @@ define('Coffee/Data/DataStore', [
             if (!this.socket) {
                 return null;
             }
-            var serialized = this._serializeSettings(settings);
+            var serialized = settings.serialize();
             this.socket.send(JSON.stringify({
                 type: 'newSettings',
                 data: serialized

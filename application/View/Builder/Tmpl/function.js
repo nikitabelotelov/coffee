@@ -13,7 +13,6 @@ define('View/Builder/Tmpl/function', [
    'View/Builder/Tmpl/modules/data/utils/functionStringCreator',
    'View/Builder/Tmpl/handlers/log',
    'View/Builder/Tmpl/modules/utils/parse',
-   'Core/helpers/Hcontrol/configStorage',
    'Core/helpers/Function/shallowClone',
    'text!View/Builder/Tmpl/modules/templates/objectFunctionTemplate.jstpl',
    'text!View/Builder/Tmpl/modules/templates/objectFunctionHeaderTemplate.jstpl'
@@ -32,7 +31,6 @@ define('View/Builder/Tmpl/function', [
    FSC,
    log,
    parseUtils,
-   configStorage,
    shallowClone,
    objectFunctionTemplate,
    objectFunctionHeaderTemplate) {
@@ -164,7 +162,6 @@ define('View/Builder/Tmpl/function', [
             this.filename = handlers.filename;
             this.config = handlers.config;
          }
-         configStorage.merge(controlsData);
          var str = '' + this._process(ast, null, decor);
 
          if (str) {

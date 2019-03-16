@@ -44,9 +44,9 @@ define('Types/_chain/Sliced', [
         return Sliced;
     }(Abstract_1.default);
     exports.default = Sliced;
-    Sliced.prototype['[Types/_chain/Sliced]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Sliced.prototype._begin = 0;    // @ts-ignore
-    // @ts-ignore
-    Sliced.prototype._end = 0;
+    Object.assign(Sliced.prototype, {
+        '[Types/_chain/Sliced]': true,
+        _begin: 0,
+        _end: 0
+    });
 });

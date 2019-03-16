@@ -29,7 +29,7 @@ define('Lib/Control/ModalOverlay/ModalOverlay', [
        */
       /**
        * @event onClick Событие на клик по оверлею
-       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Env/Event:Object} eventObject Дескриптор события.
        * @param {object} originalEvent Оригинальное событие, пришедшее в обработчик из jquery
        */
       $protected: {

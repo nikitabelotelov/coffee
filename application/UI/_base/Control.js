@@ -2,7 +2,7 @@ define('UI/_base/Control', [
     'require',
     'exports',
     'wml!UI/_base/Control',
-    'Core/IoC',
+    'Env/Env',
     'Core/helpers/Hcontrol/doAutofocus',
     'Vdom/Vdom',
     'View/Executor/Utils',
@@ -10,7 +10,7 @@ define('UI/_base/Control', [
     'Core/Themes/ThemesControllerNew',
     'Core/PromiseLib/PromiseLib',
     'View/Logger'
-], function (require, exports, template, IoC, doAutofocus, Vdom_1, Utils_1, Expressions_1, ThemesController, PromiseLib, Logger_1) {
+], function (require, exports, template, Env_1, doAutofocus, Vdom_1, Utils_1, Expressions_1, ThemesController, PromiseLib, Logger_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * @event Core/Control#activated Occurs when the component becomes active.
@@ -196,7 +196,7 @@ define('UI/_base/Control', [
              */
             this._getMarkup = function _getMarkup(rootKey, isRoot, attributes, isVdom) {
                 if (!this._template.stable) {
-                    IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
+                    Env_1.IoC.resolve('ILogger').error(this._moduleName, 'Check what you put in _template');
                     return '';
                 }
                 var res;
@@ -308,7 +308,7 @@ define('UI/_base/Control', [
         Control.prototype._setInternalOption = function (name, value) {
             if (!this._internalOptions) {
                 this._internalOptions = {};
-                IoC.resolve('ILogger').error('Component with ' + (this._options ? 'name ' + this._options.name + ' config ' + this._options.__$config : 'maybe id ' + this._$id), 'Control.constructor wasn\'t called');
+                Env_1.IoC.resolve('ILogger').error('Component with ' + (this._options ? 'name ' + this._options.name + ' config ' + this._options.__$config : 'maybe id ' + this._$id), 'Control.constructor wasn\'t called');
             }
             this._internalOptions[name] = value;
         };    /**
@@ -362,7 +362,7 @@ define('UI/_base/Control', [
                         var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssAsync(name), 2000));
                         loadPromise.then(function (res) {
                             if (res.status === 'rejected') {
-                                IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName);
+                                Env_1.IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName);
                             }
                         });
                         promiseArray.push(loadPromise);
@@ -375,7 +375,7 @@ define('UI/_base/Control', [
                         var loadPromise = PromiseLib.reflect(PromiseLib.wrapTimeout(themesController.pushCssThemedAsync(name, theme), 2000));
                         loadPromise.then(function (res) {
                             if (res.status === 'rejected') {
-                                IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName + ' with theme ' + theme);
+                                Env_1.IoC.resolve('ILogger').error('Styles loading error', 'Could not load style ' + name + ' for control ' + self._moduleName + ' with theme ' + theme);
                             }
                         });
                         promiseArray.push(loadPromise);
@@ -672,7 +672,7 @@ define('UI/_base/Control', [
                                 /* Change _template and _afterMount
                                     *  if execution was longer than 2 sec
                                     * */
-                                IoC.resolve('ILogger').error('_beforeMount', 'Wait 20000 ms ' + _this._moduleName);
+                                Env_1.IoC.resolve('ILogger').error('_beforeMount', 'Wait 20000 ms ' + _this._moduleName);
                                 timeout = 1;
                                 require(['View/Runner/tclosure'], function (thelpers) {
                                     this._originTemplate = this._template;

@@ -44,14 +44,14 @@ define('Types/_entity/relation/ManyToMany', [
             this._belongsTo = null;
             this._belongsToName = null;
             _super.prototype.destroy.call(this);
-        };    //region Public methods
+        };    // region Public methods
               /**
          * Добавляет отношение между двумя сущностями
          * @param {Object} master Главная сущность
          * @param {Object} slave Зависимая сущность
          * @param {String} [name] Название отношения
          */
-        //region Public methods
+        // region Public methods
         /**
          * Добавляет отношение между двумя сущностями
          * @param {Object} master Главная сущность
@@ -138,8 +138,8 @@ define('Types/_entity/relation/ManyToMany', [
                     }
                 });
             }
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion Public methods
+              // region Protected methods
               /**
          * Добавляет отношение вида hasMany
          * @param {Object} master Главная сущность
@@ -147,8 +147,8 @@ define('Types/_entity/relation/ManyToMany', [
          * @param {String} name Название отношения
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Добавляет отношение вида hasMany
          * @param {Object} master Главная сущность

@@ -1,11 +1,10 @@
 define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
-   'Core/constants',
+   'Env/Env',
    'Core/deprecated',
-   'Core/detection',
-   'Core/EventBus',
+   'Env/Event',
    // 'Core/helpers/Function/debounce',
    'css!Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager'
-], function(cConstants, deprecated, cDetection, EventBus/*, debounce*/) {
+], function(Env, deprecated, EnvEvent/*, debounce*/) {
    'use strict';
    /* jshint maxcomplexity:20 */
    /**
@@ -19,7 +18,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
 
    var fixedHeadersStack = [],     // Стек заголовков, зафиксированных вверху страницы (как зафиксированные "навсегда", так и зафиксированные прилипающие)
       stickyHeadersStack = [],     // Стек заголовков, которые могут прилипать к верху страницы при скроллинге
-      hasGradient = !(cConstants.browser.isIE7 || cConstants.browser.isIE8 || cConstants.browser.isIE9),// IE9 и ниже не поддерживает CSS-стиль linear-gradient
+      hasGradient = !(Env.constants.browser.isIE7 || Env.constants.browser.isIE8 || Env.constants.browser.isIE9),// IE9 и ниже не поддерживает CSS-стиль linear-gradient
       wrappersArray = [],
       parseMarginOrPadding = function parseMarginOrPadding(val){
          var result = 0;
@@ -59,7 +58,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
       },
       headerWheelHandler = function headerWheelHandler(e){
          // при прокрутке колеса мыши над фикс.шапкой - скроллим реестр
-         var isIE8 = cConstants.browser.isIE8,
+         var isIE8 = Env.constants.browser.isIE8,
             delta = isIE8 ? e.wheelDelta || e.originalEvent.wheelDelta : e.deltaY || e.originalEvent.deltaY,
             scrollable = $(this).parent('.ws-sticky-header__wrapper').children('.ws-sticky-header__scrollable-container');
          if (isIE8){
@@ -93,7 +92,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          }
       },
       _notifyOnStickyChanged = function () {
-         EventBus.channel('stickyHeader').notify('onStickyHeadersChanged');
+         EnvEvent.Bus.channel('stickyHeader').notify('onStickyHeadersChanged');
          _changedTimer = null;
       },
       _changedTimer;
@@ -110,7 +109,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
                // при скролле включаем тени и проверяем необходимость прилипления липнущих блоков
                scrollableContainer.bind('scroll.stickyHeaderManager', scrollHandler);
                // если крутим колесом мыши над фикс.шапкой - скроллим контейнер со скроллом, к которому относится шапка
-               headerContainer.bind(cConstants.browser.isIE8 ? 'mousewheel.stickyHeaderManager' : 'wheel.stickyHeaderManager', stickyHeaderManager.headerWheelHandler);
+               headerContainer.bind(Env.constants.browser.isIE8 ? 'mousewheel.stickyHeaderManager' : 'wheel.stickyHeaderManager', stickyHeaderManager.headerWheelHandler);
                // Генерируем события 'onClick' на контроле в котором лежал заголовок
                headerContainer.bind('click.stickyHeaderManager', stickyHeaderManager._headerClickHandler);
             }
@@ -124,7 +123,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          if (wrapperIndex !== -1){
             wrappersArray.splice(wrapperIndex, 1);
             $wrapper.children('.ws-sticky-header__scrollable-container').unbind('scroll.stickyHeaderManager');
-            headerContainer.unbind(cConstants.browser.isIE8 ? 'mousewheel.stickyHeaderManager' : 'wheel.stickyHeaderManager');
+            headerContainer.unbind(Env.constants.browser.isIE8 ? 'mousewheel.stickyHeaderManager' : 'wheel.stickyHeaderManager');
             headerContainer.unbind('click.stickyHeaderManager');
             $wrapper.removeClass('ws-sticky-header__wrapper-scrolled');
          }
@@ -192,7 +191,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          // Скрол контейнер изначально проскролен. Затем часть контента удаляется, получается что контент
          // полностью влазит в скролируемый контейнер. Плучается что scrollTop у контейнера равен0.
          // На всех платформах срабатывает событие scroll, кроме firefox. Для ff обновляем стили на скролируемом контейнере.
-         if (cDetection.firefox) {
+         if (Env.detection.firefox) {
             updateWrapperScrolledStyle($container);
          }
       },
@@ -413,7 +412,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          // Если в момент срабатывания резинового скрола где нибудь вставляется или удалется контейнер
          // из дом дерева, то иногда стреляет событие скролирования и scrolltop в этот момент неправильный.
          // Затем событие скролирования стреляет еще раз и в этот момент scrollTop правильный.
-         if (cDetection.isMobileIOS &&
+         if (Env.detection.isMobileIOS &&
              (dimensions.scrollHeight - positionParams.scrollTop - positionParams.scrollableHeight < 0)) {
             return;
          }
@@ -438,7 +437,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          if (stickyStackElem.stuck && !stickyStackElem.dontUnsticky && // Если заголовок приклеен
             // и он полностью скрылся за предыдущими заголовками и если это не ios, то еще проверяем что это
             // не первый заголовок находящийся в самом верху скролируемой области.
-            ((stackHeight - height <= positionParams.top && (cDetection.isMobileIOS ? true : (stackHeight !== 0 && positionParams.top !== 0))) ||
+            ((stackHeight - height <= positionParams.top && (Env.detection.isMobileIOS ? true : (stackHeight !== 0 && positionParams.top !== 0))) ||
                // или отклеиваем еще если контейнер находится в ws-sticky-header__block и нижний край
                // ws-sticky-header__block скрылся за предыдущими заголовками или верхней границей скролируемой области.
                (positionParams.stickyParent && stackHeight - height >= positionParams.parentBottomEdge))) {
@@ -455,7 +454,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
             (stickyStackElem.dontUnsticky ||
             // и он частично или полностью выплыл за предыдущими заголовками и если это не ios, то еще проверяем что это
             // не первый заголовок находящийся в самом верху скролируемой области.
-            ((stackHeight > positionParams.top || (cDetection.isMobileIOS ? false : (stackHeight === 0 && positionParams.top === 0))) &&
+            ((stackHeight > positionParams.top || (Env.detection.isMobileIOS ? false : (stackHeight === 0 && positionParams.top === 0))) &&
                // или приклеевиваем еще заголовки если нижняя граница ws-sticky-header__block выплыла из под верхнего
                // края скрлируемой области и предыдущих заголовков
                (positionParams.stickyParent ? (stackHeight < positionParams.parentBottomEdge) : true)))) {
@@ -747,7 +746,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          // 2. На webkit если высота контейнера задана в rem и мы ее получаем в js и потом устанавливаем
          // на другой контейнер, то размер этих контейнеров в инспекторе показывается одинаковыми, но по факту
          // их высоты могут отличаться.
-         theadCopy = copyTable.find('thead').clone();
+         theadCopy = copyTable.children('thead').clone();
          // Удаляем атрибуты id и прочие атрибуты которые используются платформой для построения компонентов
          // со всех контейнеров в копии заголовков. id не должны дублироваться. После шаблонизации и до поднятия
          // компонентов на них нет атрибута id, ищем и подчищаем компоненты по атрибуту data-component.
@@ -757,7 +756,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          // Удаляем ширины строк в зафиксированном заголовке которые мы установили при предыдущей синхронизации.
          theadCopy.find('>tr>th,>tr>td').css({'min-width': '', 'max-width': ''});
          // Удаляем старую копию заголовков и вставляем новую.
-         origTable.find('thead').remove();
+         origTable.children('thead').remove();
          theadCopy.insertAfter(origTable.find('colgroup'));
       },
 
@@ -786,7 +785,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
                 * В других браузерах все работает одинакого если включить или выключить эту фичу.
                 * Включаем ее только в хроме.
                 **/
-               if (cDetection.chrome && $(elem).attr('colspan') && copyTableHeadersCount > trInd + 1) {
+               if (Env.detection.chrome && $(elem).attr('colspan') && copyTableHeadersCount > trInd + 1) {
                   return;
                }
                width = getComputedStyle(elem, null).width;
@@ -858,7 +857,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
 
          // Если первую групперовку оттянули вниз на айпаде, то не все равно не отклеиваем ее если таблица изначально
          // располагалась в самомо верху скролируемой области.
-         if(cDetection.isMobileIOS && !lastInvisibleElement.length && stickyStackElem.dontUnsticky) {
+         if(Env.detection.isMobileIOS && !lastInvisibleElement.length && stickyStackElem.dontUnsticky) {
             return;
          }
 
@@ -1039,7 +1038,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
                stackElem.width = newWidth;
                fixedElemContainer.css('width', newWidth + 'px');
                if (stackElem.gradientContainer) {
-                  var outerWidth = stickyHeaderManager._calcWidth(dummyElem, stackElem.leftPosition, stackElem.scrollableContainer, true, stackElem.isTableHeaderHasScroll);
+                  var outerWidth = stickyHeaderManager._calcWidth(dummyElem, leftPosition, stackElem.scrollableContainer, true, stackElem.isTableHeaderHasScroll);
                   stackElem.gradientContainer.css('width', outerWidth + 'px');
                }
             }
@@ -1122,7 +1121,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
          // а ширина которую мы получаем в js равна сумме ширин заданных в colgroup.
          // TODO: Зависимость от SBIS.Controls. Подумать как избавится от нее.
          var dgv = jqElem.closest('.controls-DataGridView');
-         if (dgv.length && (isTableHeaderHasScroll || cConstants.browser.isIE10)) {
+         if (dgv.length && (isTableHeaderHasScroll || Env.constants.browser.isIE10)) {
             jqElem = dgv;
          }
          var width = isOuter ? jqElem.outerWidth(true) : jqElem.width();
@@ -1158,7 +1157,7 @@ define('Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager', [
       updateTableHeaderVisibility: function ($element) {
          var stackElem = stickyHeaderManager._getStackElementByJQ($element);
          if (stackElem) {
-            stackElem.jqElem.find('thead').toggleClass('ws-hidden', stackElem.elemCopy.find('thead').hasClass('ws-hidden'));
+            stackElem.jqElem.children('thead').toggleClass('ws-hidden', stackElem.elemCopy.children('thead').hasClass('ws-hidden'));
          }
       },
       _getStackElementByJQ: function ($element) {

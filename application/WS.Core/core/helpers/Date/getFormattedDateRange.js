@@ -1,6 +1,14 @@
 define('Core/helpers/Date/getFormattedDateRange', [
-   'Core/helpers/Date/strftime'
-], function(strftime) {
+   'Core/helpers/String/format',
+   'Core/helpers/Date/strftime',
+   'Core/helpers/i18n/locales',
+   'Core/helpers/Number/toRoman'
+], function(
+   strformat,
+   strftime,
+   locales,
+   toRoman
+) {
 
    /**
     * Форматирует значения диапазона дат в строку.
@@ -38,7 +46,8 @@ define('Core/helpers/Date/getFormattedDateRange', [
          isFullYear,
          isOneDay,
          startDateParts,
-         endDateParts;
+         endDateParts,
+         locale = locales.current;
       // TODO: использовать getPeriodType
       if (startDate && endDate) {
          lastDay = (new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0)).getDate();
@@ -53,6 +62,24 @@ define('Core/helpers/Date/getFormattedDateRange', [
          isFullYear = isFullMonth && startDateParts[1] === 0 && endDateParts[1] === 11;
          isOneDay = startDateParts[0] === endDateParts[0] && startDateParts[1] === endDateParts[1] && startDateParts[2] === endDateParts[2];
 
+         // Методы, необходимые для локализации полугодия и квартала. В longQuarters - римская цифра + 'квартал'.
+         // В longHalfYear - цифра + 'полугодие'.
+
+         var quarter = locale.config.longQuarters,
+            quarterIndex,
+            quarterToStr = function(date) {
+               quarterIndex = parseInt(date.getMonth() / 3, 10);
+               return quarter[quarterIndex];
+            };
+         var halfYear = null,
+            halfYearToStr = function(date) {
+               halfYear = parseInt(date.getMonth() / 6, 10) + 1;
+               return strformat(
+                  {digit: toRoman(halfYear)},
+                  locale.config.longHalfYear
+               );
+            };
+
          if (isFullYear) {
             if (isSameYear) {
                result = strftime(startDate, "%Y");
@@ -62,12 +89,12 @@ define('Core/helpers/Date/getFormattedDateRange', [
                result = strftime(startDate, "%d.%m.%y") + ' - ' + strftime(endDate, "%d.%m.%y");
             }
          } else if (contractToHalfYear && isFullHalfYear) {
-            result = strftime(startDate, "%E полугодие" + yearMask);
+            result = strftime(startDate, halfYearToStr(startDate) + yearMask);
          } else if (contractToQuarter && isFullQuarter) {
             if (startDateParts[4] === endDateParts[4]) {
-               result = strftime(startDate, "%Q квартал" + yearMask);
+               result = strftime(startDate, quarterToStr(startDate) + yearMask);
             } else {
-               result = strftime(startDate, "%Q") + '-' + strftime(endDate, "%Q квартал" + yearMask);
+               result = strftime(startDate, "%Q") + '-' + strftime(endDate, quarterToStr(endDate) + yearMask);
             }
          } else if (isFullMonth) {
             if (isSameYear) {
@@ -75,14 +102,14 @@ define('Core/helpers/Date/getFormattedDateRange', [
                   result = strftime(startDate, "%B" + yearMask);
                } else {
                   if (contractToMonth) {
-                     result = strftime(startDate, '%f') + ' - ' + strftime(endDate, '%f' + yearMask);
+                     result = strftime(startDate, '%B') + ' - ' + strftime(endDate, '%B' + yearMask);
                   } else {
                      result = strftime(startDate, '%d.%m.%y') + ' - ' + strftime(endDate, '%d.%m.%y');
                   }
                }
             } else {
                if (contractToMonth) {
-                  result = strftime(startDate, '%f' + yearMask) + ' - ' + strftime(endDate, '%f' + yearMask);
+                  result = strftime(startDate, '%B' + yearMask) + ' - ' + strftime(endDate, '%B' + yearMask);
                } else {
                   result = strftime(startDate, '%d.%m.%y') + ' - ' + strftime(endDate, '%d.%m.%y');
                }

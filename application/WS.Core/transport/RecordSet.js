@@ -1,7 +1,10 @@
-define('Transport/RecordSet',[
-   'Deprecated/RecordSet',
-   'Core/deprecated'
-], function(RecordSet, deprecated) {
-   deprecated.showInfoLog('Transport/RecordSet помечен как deprecated и будет удален в 3.18. Используйте Types/collection:RecordSet.');
-   return RecordSet;
+define('Transport/RecordSet', [
+    'require',
+    'exports',
+    'Browser/TransportOld',
+    'Env/Env'
+], function (require, exports, TransportOld_1, Env_1) {
+    'use strict';
+    Env_1.IoC.resolve('ILogger').log('Transport/getRpcInvocationUrl', 'module has been moved to "Browser/TransportOld:RecordSet" and will be removed');
+    return TransportOld_1.RecordSet;
 });

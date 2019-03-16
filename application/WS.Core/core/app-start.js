@@ -2,11 +2,11 @@ define('Core/app-start', [
    'require',
    'Core/Control',
    'View/Request',
-   'Core/constants',
+   'Env/Env',
    'Core/Themes/ThemesController',
    'native-css'
 
-], function(require, Control, Request, constants) {
+], function(require, Control, Request, Env) {
    'use strict';
 
    function createControl(control, config, dom) {
@@ -56,7 +56,7 @@ define('Core/app-start', [
    };
    module.createControl = createControl;
    module._shouldStart = true;
-   constants.saveLastState = false; // Need for compatibility with old controls
+   Env.constants.saveLastState = false; // Need for compatibility with old controls
    // Lib/NavigationController/NavigationController check this constant and if it's true it scroll to last state.
    // We don't need it when we have new routing.
    return module;

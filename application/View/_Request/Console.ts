@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import {IConsole} from 'View/_Request/Interface/IConsole';
 // @ts-ignore
-import constants = require("Core/constants");
+import { constants } from 'Env/Env';
 
 let isAllowedLog = (allowedLevel: LogLevel, methodLevel: LogLevel) => {
     return allowedLevel > methodLevel;

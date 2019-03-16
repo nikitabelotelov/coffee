@@ -3,10 +3,10 @@ define('View/Executor/_Utils/ConfigResolver', [
     'require',
     'exports',
     'Core/core-merge',
-    'Core/constants',
+    'Env/Env',
     'View/Executor/_Utils/Common',
     'View/Executor/Expressions'
-], function (require, exports, cMerge, cConstants, Common_1, Expressions_1) {
+], function (require, exports, cMerge, Env_1, Common_1, Expressions_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     function hasOwnPropertyCheck(obj, prop) {
@@ -30,7 +30,7 @@ define('View/Executor/_Utils/ConfigResolver', [
     }
     exports.calcParent = calcParent;
     function parentEnabled(parent, obj, currentPropertyName, data, attrs) {
-        if (!cConstants.compat) {
+        if (!Env_1.constants.compat) {
             return true;
         }
         var enabled = true;
@@ -105,7 +105,7 @@ define('View/Executor/_Utils/ConfigResolver', [
         // вычисляем служебные опции для контрола - его физического и логического родителей,
         // видимость и активированность родителя
         internal.logicParent = templateCfg.viewController;
-        if (cConstants.compat) {
+        if (Env_1.constants.compat) {
             internal.parent = calcParent(templateCfg.ctx, templateCfg.pName, templateCfg.data);
             internal.parentEnabled = parentEnabled(internal.parent, templateCfg.ctx, templateCfg.pName, templateCfg.data, attrs) && (enabledFromContent === undefined ? true : enabledFromContent);
         }

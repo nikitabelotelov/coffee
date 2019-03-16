@@ -16,7 +16,7 @@ define('Types/_entity/CloneableMixin', [
     var CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */
     {
         '[Types/_entity/CloneableMixin]': true,
-        //region Types/_entity/ICloneable
+        // region Types/_entity/ICloneable
         '[Types/_entity/ICloneable]': true,
         clone: function (shallow) {
             var clone;
@@ -32,13 +32,13 @@ define('Types/_entity/CloneableMixin', [
             } else {
                 var serializer = new Serializer();
                 clone = JSON.parse(JSON.stringify(this, serializer.serialize), serializer.deserialize);
-            }    //TODO: this should be do instances mixes InstantiableMixin
-            //TODO: this should be do instances mixes InstantiableMixin
+            }    // TODO: this should be do instances mixes InstantiableMixin
+            // TODO: this should be do instances mixes InstantiableMixin
             delete clone._instanceId;
             return clone;
         },
-        //endregion Types/_entity/ICloneable
-        //region Protected methods
+        // endregion Types/_entity/ICloneable
+        // region Protected methods
         _unlinkCollection: function (collection) {
             var result;
             if (collection instanceof Array) {
@@ -64,8 +64,8 @@ define('Types/_entity/CloneableMixin', [
                 return object.slice();
             }
             return object;
-        }    //endregion Protected methods
+        }    // endregion Protected methods
     };
-    //endregion Protected methods
+    // endregion Protected methods
     exports.default = CloneableMixin;
 });

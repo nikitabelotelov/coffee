@@ -5,12 +5,12 @@ define('UI/_base/HTML', [
     'tslib',
     'UI/_base/Control',
     'wml!UI/_base/HTML/HTML',
-    'Core/constants',
+    'Env/Env',
     'Core/Themes/ThemesController',
     'Core/LinkResolver/LinkResolver',
     'View/Request',
     'UI/_base/Deprecated/AppData'
-], function (require, exports, tslib_1, Control_1, template, constants, ThemesController, LinkResolver, Request, AppData_1) {
+], function (require, exports, tslib_1, Control_1, template, Env_1, ThemesController, LinkResolver, Request, AppData_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var HTML = /** @class */
@@ -53,19 +53,19 @@ define('UI/_base/HTML', [
             if (!receivedState) {
                 receivedState = {};
             }
-            this.buildnumber = cfg.buildnumber || constants.buildnumber;
-            this.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : constants.appRoot);
+            this.buildnumber = cfg.buildnumber || Env_1.constants.buildnumber;
+            this.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : Env_1.constants.appRoot);
             this.RUMEnabled = cfg.RUMEnabled || context.AppData.RUMEnabled || false;
             this.pageName = cfg.pageName || context.AppData.pageName || false;
-            this.staticDomains = cfg.staticDomains || context.AppData.staticDomains || constants.staticDomains || '[]';
+            this.staticDomains = cfg.staticDomains || context.AppData.staticDomains || Env_1.constants.staticDomains || '[]';
             if (typeof this.staticDomains !== 'string') {
                 this.staticDomains = '[]';
             }
-            this.wsRoot = cfg.wsRoot || constants.wsRoot;
-            this.resourceRoot = cfg.resourceRoot || constants.resourceRoot;
-            this.product = cfg.product || constants.product;    // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
+            this.wsRoot = cfg.wsRoot || Env_1.constants.wsRoot;
+            this.resourceRoot = cfg.resourceRoot || Env_1.constants.resourceRoot;
+            this.product = cfg.product || Env_1.constants.product;    // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
             // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            this.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
+            this.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || Env_1.constants.defaultServiceUrl || '/service/';
             this.application = context.AppData.application;
             if (typeof window === 'undefined' && cfg.theme !== 'default') {
                 ThemesController.getInstance().themes = {};

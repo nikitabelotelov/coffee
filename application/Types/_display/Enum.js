@@ -79,11 +79,11 @@ define('Types/_display/Enum', [
     }(Collection_1.default    /** @lends Types/_display/Enum.prototype */);
     /** @lends Types/_display/Enum.prototype */
     exports.default = Enum;
-    Enum.prototype._moduleName = 'Types/display:Enum';
-    Enum.prototype['[Types/_display/Enum]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype._localize = true;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype._onSourceChange = null;
+    Object.assign(Enum.prototype, {
+        '[Types/_display/Enum]': true,
+        _moduleName: 'Types/display:Enum',
+        _localize: true,
+        _onSourceChange: null
+    });
     di_1.register('Types/display:Enum', Enum);
 });

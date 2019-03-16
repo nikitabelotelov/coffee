@@ -34,8 +34,8 @@ define('Types/_collection/format/Format', [
                 _this._checkName(_this._$items[i], i);
             }
             return _this;
-        }    //region List
-        //region List
+        }    // region List
+        // region List
         Format.prototype.add = function (item, at) {
             this._checkItem(item);
             this._checkName(item);
@@ -107,15 +107,15 @@ define('Types/_collection/format/Format', [
                 }
             }
             return true;
-        };    //endregion IEquatable
-              //region Public methods
+        };    // endregion IEquatable
+              // region Public methods
               /**
          * Удаляет поле из формата по имени.
          * Если поля с таким именем нет, генерирует исключение.
          * @param {String} name Имя поля
          */
-        //endregion IEquatable
-        //region Public methods
+        // endregion IEquatable
+        // region Public methods
         /**
          * Удаляет поле из формата по имени.
          * Если поля с таким именем нет, генерирует исключение.
@@ -155,14 +155,14 @@ define('Types/_collection/format/Format', [
          */
         Format.prototype.getFieldName = function (at) {
             return this.at(at).getName();
-        };    //endregion Public methods
-              //region Protected methods
+        };    // endregion Public methods
+              // region Protected methods
               /**
          * Проверяет, что переданный элемент - формат поля
          * @protected
          */
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Проверяет, что переданный элемент - формат поля
          * @protected
@@ -191,10 +191,10 @@ define('Types/_collection/format/Format', [
         return Format;
     }(List_1.default);
     exports.default = Format;
-    Format.prototype['[Types/_collection/format/Format]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Format.prototype['[Types/_entity/IEquatable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Format.prototype._moduleName = 'Types/collection:format.Format';
+    Object.assign(Format.prototype, {
+        '[Types/_collection/format/Format]': true,
+        '[Types/_entity/IEquatable]': true,
+        _moduleName: 'Types/collection:format.Format'
+    });
     di_1.register('Types/collection:format.Format', Format, { instantiate: false });
 });

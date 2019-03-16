@@ -48,15 +48,12 @@ define('Types/_chain/SlicedEnumerator', [
         };
         return SlicedEnumerator;
     }();
-    exports.default = SlicedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    SlicedEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    SlicedEnumerator.prototype.now = 0;    // @ts-ignore
-    // @ts-ignore
-    SlicedEnumerator.prototype.begin = 0;    // @ts-ignore
-    // @ts-ignore
-    SlicedEnumerator.prototype.end = 0;    // @ts-ignore
-    // @ts-ignore
-    SlicedEnumerator.prototype.enumerator = null;
+    exports.default = SlicedEnumerator;
+    Object.assign(SlicedEnumerator.prototype, {
+        previous: null,
+        now: 0,
+        begin: 0,
+        end: 0,
+        enumerator: null
+    });
 });

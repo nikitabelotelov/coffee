@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/Settings/NumberInput" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 // @ts-ignore
 import * as template from 'wml!Coffee/Settings/NumberInput/NumberInput';
 import "css!Coffee/Settings/NumberInput/NumberInput";
@@ -13,13 +13,14 @@ class Info extends Control {
     protected _beforeMount(opts) {
        this.inputValue = opts.value;
     };
+    protected _beforeUpdate(opts) {
+        this.inputValue = opts.value;
+    };
     private increment(): void {
-        this.inputValue = this.inputValue + 1;
-        this._notify('valueChanged', [this.inputValue]);
+        this._notify('valueChanged', [this.inputValue + 1]);
     };
     private decrement(): void {
-        this.inputValue = this.inputValue - 1;
-        this._notify('valueChanged', [this.inputValue]);
+        this._notify('valueChanged', [this.inputValue - 1]);
     }
 }
 

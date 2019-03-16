@@ -5,9 +5,7 @@ import * as Serializer from 'Core/Serializer';
 // @ts-ignore
 import * as i18n from 'Core/i18n';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
-// @ts-ignore
-import * as cConstants from 'Core/constants';
+import { IoC, constants as cConstants } from 'Env/Env';
 // @ts-ignore
 import * as config from 'View/config';
 

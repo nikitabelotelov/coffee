@@ -1,24 +1,25 @@
-///<amd-module name="Types/_entity/TimeInterval" />
+/// <amd-module name="Types/_entity/TimeInterval" />
 /**
  * Реализация объекта "Временной интервал".
  *
  * "Временной интервал" предназначен для хранения относительного временного промежутка, т.е. начало и окончание которого
  * не привязано к конкретным точкам во времени. Он может быть использован для хранения времени выполнения какого-либо
  * действия или для хранения времени до наступления события. При установке значения переменной данного типа, сохраняется
- * только дельта. При этом нужно учитывать, что интервал нормализует значения. В результате, интервал в 1 день, 777 часов,
- * 30 минут будет преобразован в интервал равный 33-м дням, 9 часам, 30 минутам, и будет сохранён именно в таком формате.
- * Формат ISO 8601 урезан до дней. Причина в том, что в случае использования месяцев и лет возникает неоднозначность. В итоге,
- * строковой формат выглядит так:
+ * только дельта. При этом нужно учитывать, что интервал нормализует значения. В результате, интервал в 1 день, 777
+ * часов, 30 минут будет преобразован в интервал равный 33-м дням, 9 часам, 30 минутам, и будет сохранён именно в таком
+ * формате. Формат ISO 8601 урезан до дней. Причина в том, что в случае использования месяцев и лет возникает
+ * неоднозначность. В итоге, строковой формат выглядит так:
  * P[<Число_недель>W][<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]
  *
  * @class Types/_entity/TimeInterval
  * @public
- * @author Бегунов А.В.
+ * @author Мальцев А.А.
  */
 define('Types/_entity/TimeInterval', [
     'require',
-    'exports'
-], function (require, exports) {
+    'exports',
+    'tslib'
+], function (require, exports, tslib_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var millisecondsInSecond = 1000;
@@ -50,25 +51,24 @@ define('Types/_entity/TimeInterval', [
         regExp: /^P(-?[0-9]+D)?(T(-?[0-9]+H)?(-?[0-9]+M)?(-?[0-9]+(\.[0-9]+)?S)?)?$/i,
         format: 'P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]'
     };
-    ;
-    function toNumber(number) {
-        return parseFloat(number) || 0;
+    function toNumber(value) {
+        return parseFloat(value) || 0;
     }
-    function truncate(number) {
-        return number > 0 ? Math.floor(number) : Math.ceil(number);
+    function truncate(value) {
+        return value > 0 ? Math.floor(value) : Math.ceil(value);
     }
     function fromIntervalStrToIntervalArray(intervalStr) {
         var intervalArray = [];
         var regexResult = regExesForParsing.regExp.exec(intervalStr);
         if (!isValidStrInterval(intervalStr)) {
-            throw new Error(rk('Передаваемый аргумент не соответствует формату ISO 8601. Допустимые форматы') + ': ' + regExesForValidation.format + '. ');
-        }    // i = 1 - исключаем первый элемент из перебора, так как это всего лишь строка intervalStr
-        // i = 1 - исключаем первый элемент из перебора, так как это всего лишь строка intervalStr
+            throw new Error('The argument does not correspond to the ISO 8601 format. Allowed formats: ' + regExesForValidation.format + '.');
+        }    // i = 1 - exclude the first element because it's just a string intervalStr
+        // i = 1 - exclude the first element because it's just a string intervalStr
         regexResult.slice(1).forEach(function (value, i) {
             if (i === regexResult.length - 1) {
-                // секунды
-                intervalArray.push(truncate(Number(value)));    // миллисекунды
-                // миллисекунды
+                // seconds
+                intervalArray.push(truncate(Number(value)));    // milliseconds
+                // milliseconds
                 intervalArray.push((Number(value) % 1 * 1000).toFixed());
             } else {
                 intervalArray.push(toNumber(value));
@@ -103,21 +103,21 @@ define('Types/_entity/TimeInterval', [
             }
         }
         return normIntervalObj;
-    }    // преобразует нормализованный объект в нормализованную строку: {days: 1, hours: 2, minutes: 3, seconds: 4, milliseconds: 5} => "P1DT2H3M4.005S"
-    // преобразует нормализованный объект в нормализованную строку: {days: 1, hours: 2, minutes: 3, seconds: 4, milliseconds: 5} => "P1DT2H3M4.005S"
+    }    // Converts a normalized object into a normalized string:
+         // {days: 1, hours: 2, minutes: 3, seconds: 4, milliseconds: 5} => "P1DT2H3M4.005S"
+    // Converts a normalized object into a normalized string:
+    // {days: 1, hours: 2, minutes: 3, seconds: 4, milliseconds: 5} => "P1DT2H3M4.005S"
     function fromNormIntervalObjToNormIntervalStr(normIntervalObj) {
         var secondsWithMilliseconds = Number((normIntervalObj.seconds + normIntervalObj.milliseconds / 1000).toFixed(3));
-        return 'P' + normIntervalObj.days + 'D' + 'T' + normIntervalObj.hours + 'H' + normIntervalObj.minutes + 'M' + secondsWithMilliseconds + 'S';
+        return 'P' + normIntervalObj.days + 'DT' + normIntervalObj.hours + 'H' + normIntervalObj.minutes + 'M' + secondsWithMilliseconds + 'S';
     }
     function isValidStrInterval(intervalStr) {
         return regExesForValidation.regExp.test(intervalStr);
-    }    // вызывать с помощью call или apply
-         /**
+    }    /**
      * @class
      * @name Types/_entity/TimeInterval
      * @public
      */
-    // вызывать с помощью call или apply
     /**
      * @class
      * @name Types/_entity/TimeInterval
@@ -128,7 +128,13 @@ define('Types/_entity/TimeInterval', [
         /**
          * Конструктор.
          *
-         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть: строка - “P20DT3H1M5S”, массив - [5, 2, 3, -4], объект - {days: 1, minutes: 5}, число – 6 или объект типа Types/_entity/TimeInterval. Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд. Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
+         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть:
+         * строка - “P20DT3H1M5S”,
+         * массив - [5, 2, 3, -4],
+         * объект - {days: 1, minutes: 5},
+         * число – 6 или объект типа Types/_entity/TimeInterval.
+         * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
+         * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
          * @return {Types/_entity/TimeInterval}
          */
         function TimeInterval(source) {
@@ -140,6 +146,35 @@ define('Types/_entity/TimeInterval', [
                 throw new Error(rk('TimeInterval вызывать через оператор new'));
             }
         }    /**
+         * Возвращает строку формата ISO 8601.
+         *
+         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть:
+         * строка - “P20DT3H1M5S”,
+         * массив - [5, 2, 3, -4],
+         * объект - {days: 1, minutes: 5},
+         * число – 6 или объект типа Types/_entity/TimeInterval.
+         * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
+         * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
+         * @return {String} P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S].
+         */
+        /**
+         * Возвращает строку формата ISO 8601.
+         *
+         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть:
+         * строка - “P20DT3H1M5S”,
+         * массив - [5, 2, 3, -4],
+         * объект - {days: 1, minutes: 5},
+         * число – 6 или объект типа Types/_entity/TimeInterval.
+         * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
+         * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
+         * @return {String} P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S].
+         */
+        TimeInterval.toString = function (source) {
+            if (source !== undefined) {
+                return TimeInterval.prototype.set.call({}, source)._normIntervalStr;
+            }
+            return Function.toString.call(this);
+        };    /**
          * Возвращает колличество дней в интервале.
          * @return {Number}
          * @function
@@ -171,8 +206,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.addDays = function (days) {
             return this.addMilliseconds(days * millisecondsInDay);
-        };
-        ;    /**
+        };    /**
          * Вычитает дни из интервала.
          *
          * @param {Number} days - Колличество дней.
@@ -190,8 +224,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.subDays = function (days) {
             return this.subMilliseconds(days * millisecondsInDay);
-        };
-        ;    /**
+        };    /**
          * Возвращает колличество часов в интервале.
          *
          * @return {Number}
@@ -207,8 +240,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getHours = function () {
             return this._normIntervalObj.hours;
-        };
-        ;    /**
+        };    /**
          * Добавляет часы к интервалу.
          *
          * @param {Number} hours - Колличество часов.
@@ -226,8 +258,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.addHours = function (hours) {
             return this.addMilliseconds(hours * millisecondsInHour);
-        };
-        ;    /**
+        };    /**
          * Вычитает часы из интервала.
          *
          * @param {Number} hours - Колличество часов.
@@ -245,8 +276,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.subHours = function (hours) {
             return this.subMilliseconds(hours * millisecondsInHour);
-        };
-        ;    /**
+        };    /**
          * Возвращает колличество минут в интервале.
          *
          * @return {Number}
@@ -262,8 +292,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getMinutes = function () {
             return this._normIntervalObj.minutes;
-        };
-        ;    /**
+        };    /**
          * Добавляет минуты к интервалу.
          *
          * @param {Number} minutes - Колличество минут.
@@ -281,8 +310,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.addMinutes = function (minutes) {
             return this.addMilliseconds(minutes * millisecondsInMinute);
-        };
-        ;    /**
+        };    /**
          * Вычитает часы из интервала.
          *
          * @param {Number} hours - Колличество часов.
@@ -300,8 +328,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.subMinutes = function (minutes) {
             return this.subMilliseconds(minutes * millisecondsInMinute);
-        };
-        ;    /**
+        };    /**
          * Возвращает колличество секунд в интервале.
          *
          * @return {Number}
@@ -317,8 +344,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getSeconds = function () {
             return this._normIntervalObj.seconds;
-        };
-        ;    /**
+        };    /**
          * Добавляет секунды к интервалу.
          *
          * @param {Number} seconds - Колличество секунд.
@@ -336,8 +362,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.addSeconds = function (seconds) {
             return this.addMilliseconds(seconds * millisecondsInSecond);
-        };
-        ;    /**
+        };    /**
          * Вычитает секунды из интервала.
          *
          * @param seconds {Number} Колличество секунд.
@@ -355,8 +380,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.subSeconds = function (seconds) {
             return this.subMilliseconds(seconds * millisecondsInSecond);
-        };
-        ;    /**
+        };    /**
          * Возвращает колличество миллисекунд в интервале.
          *
          * @return {Number}
@@ -372,8 +396,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getMilliseconds = function () {
             return this._normIntervalObj.milliseconds;
-        };
-        ;    /**
+        };    /**
          * Добавляет миллисекунды к интервалу.
          *
          * @param {Number} milliseconds - Колличество миллисекунд.
@@ -391,8 +414,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.addMilliseconds = function (milliseconds) {
             return this.set(this.getTotalMilliseconds() + truncate(milliseconds));
-        };
-        ;    /**
+        };    /**
          * Вычитает миллисекунды из интервала.
          *
          * @param {Number} milliseconds - Колличество миллисекунд.
@@ -410,8 +432,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.subMilliseconds = function (milliseconds) {
             return this.set(this.getTotalMilliseconds() - truncate(milliseconds));
-        };
-        ;    /**
+        };    /**
          * Возвращает общее колличество часов в интервале, переводя дни в часы.
          *
          * @return {Number}
@@ -427,8 +448,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getTotalHours = function () {
             return this._normIntervalObj.days * hoursInDay + this._normIntervalObj.hours;
-        };
-        ;    /**
+        };    /**
          * Возвращает общее колличество минут в интервале, переводя дни и часы в минуты.
          *
          * @return {Number}
@@ -444,8 +464,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getTotalMinutes = function () {
             return this.getTotalHours() * minutesInHour + this._normIntervalObj.minutes;
-        };
-        ;    /**
+        };    /**
          * Возвращает общее колличество секунд в интервале, переводя дни, часы и минуты в секунды.
          *
          * @return {Number}
@@ -461,8 +480,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getTotalSeconds = function () {
             return this.getTotalMinutes() * secondsInMinute + this._normIntervalObj.seconds;
-        };
-        ;    /**
+        };    /**
          * Возвращает общее колличество миллисекунд в интервале, переводя дни, часы, минуты и секунды в миллисекунды.
          *
          * @return {Number}
@@ -478,11 +496,16 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.getTotalMilliseconds = function () {
             return this.getTotalSeconds() * millisecondsInSecond + this._normIntervalObj.milliseconds;
-        };
-        ;    /**
+        };    /**
          * Устанавливает значение интервала.
          *
-         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть: строка - “P20DT3H1M5S”, массив - [5, 2, 3, -4], объект - {days: 1, minutes: 5}, число – 6 или объект типа Types/_entity/TimeInterval. Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд. Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
+         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть:
+         * строка - “P20DT3H1M5S”,
+         * массив - [5, 2, 3, -4],
+         * объект - {days: 1, minutes: 5},
+         * число – 6 или объект типа Types/_entity/TimeInterval.
+         * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
+         * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
          * @return {Types/_entity/TimeInterval} Возвращает this.
          * @function
          * @name Types/_entity/TimeInterval#set
@@ -490,14 +513,20 @@ define('Types/_entity/TimeInterval', [
         /**
          * Устанавливает значение интервала.
          *
-         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть: строка - “P20DT3H1M5S”, массив - [5, 2, 3, -4], объект - {days: 1, minutes: 5}, число – 6 или объект типа Types/_entity/TimeInterval. Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд. Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
+         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть:
+         * строка - “P20DT3H1M5S”,
+         * массив - [5, 2, 3, -4],
+         * объект - {days: 1, minutes: 5},
+         * число – 6 или объект типа Types/_entity/TimeInterval.
+         * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
+         * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
          * @return {Types/_entity/TimeInterval} Возвращает this.
          * @function
          * @name Types/_entity/TimeInterval#set
          */
         TimeInterval.prototype.set = function (source) {
-            var type;    //source = coreClone(source);
-            //source = coreClone(source);
+            var type;    // source = coreClone(source);
+            // source = coreClone(source);
             if (source instanceof TimeInterval) {
                 type = 'timeInterval';
             } else if (typeof source === 'string') {
@@ -506,7 +535,7 @@ define('Types/_entity/TimeInterval', [
                 source = source.slice();
                 type = 'intervalArray';
             } else if (source && typeof source === 'object') {
-                source = Object.assign({}, source);
+                source = tslib_1.__assign({}, source);
                 type = 'intervalObj';
             } else {
                 source = toNumber(source);
@@ -531,8 +560,7 @@ define('Types/_entity/TimeInterval', [
                 break;
             }
             return this;
-        };
-        ;    /**
+        };    /**
          * Возвращает значение интервала в виде строки формата ISO 8601.
          *
          * @return {String} P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S].
@@ -547,11 +575,9 @@ define('Types/_entity/TimeInterval', [
         TimeInterval.prototype.toString = function () {
             return String(this._normIntervalStr);
         };
-        ;
         TimeInterval.prototype.valueOf = function () {
             return String(this._normIntervalStr);
-        };
-        ;    /**
+        };    /**
          * Возвращает значение интервала в виде объекта {days: 1, minutes: 2, seconds: 3, miliseconds: 4}.
          *
          * @return {Object}
@@ -562,9 +588,8 @@ define('Types/_entity/TimeInterval', [
          * @return {Object}
          */
         TimeInterval.prototype.toObject = function () {
-            return Object.assign({}, this._normIntervalObj);
-        };
-        ;    /**
+            return tslib_1.__assign({}, this._normIntervalObj);
+        };    /**
          * Возвращает клон интервала.
          *
          * @return {Types/_entity/TimeInterval}
@@ -576,20 +601,21 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.clone = function () {
             return new TimeInterval(this);
-        };
-        ;    /**
+        };    /**
          * Возвращает результат операции над интервалом.
          *
          * @param {String} operation - Возможные значения: '==', '!=', '>=', '<=', '>', '<', '+', '-', '+=', '-='.
          * @param {Types/_entity/TimeInterval} operand
-         * @return {Types/_entity/TimeInterval | Boolean} ['+=', '-='] - this, ['+', '-'] - новый TimeInterval-объект, ['==', '!=', '>=', '<=', '>', '<'] - true/false.
+         * @return {Types/_entity/TimeInterval | Boolean} ['+=', '-='] - this, ['+', '-'] - новый TimeInterval-объект,
+         * ['==', '!=', '>=', '<=', '>', '<'] - true/false.
          */
         /**
          * Возвращает результат операции над интервалом.
          *
          * @param {String} operation - Возможные значения: '==', '!=', '>=', '<=', '>', '<', '+', '-', '+=', '-='.
          * @param {Types/_entity/TimeInterval} operand
-         * @return {Types/_entity/TimeInterval | Boolean} ['+=', '-='] - this, ['+', '-'] - новый TimeInterval-объект, ['==', '!=', '>=', '<=', '>', '<'] - true/false.
+         * @return {Types/_entity/TimeInterval | Boolean} ['+=', '-='] - this, ['+', '-'] - новый TimeInterval-объект,
+         * ['==', '!=', '>=', '<=', '>', '<'] - true/false.
          */
         TimeInterval.prototype.calc = function (operation, operand) {
             var allowedOps = [
@@ -605,12 +631,13 @@ define('Types/_entity/TimeInterval', [
                 '-='
             ];
             if (allowedOps.indexOf(operation) === -1) {
-                throw new Error(rk('Операция') + ' "' + operation + '" ' + rk('не доступна. Разрешенные операции') + ': ' + allowedOps.join(', '));
+                throw new Error('Operation "' + operation + '" is not available. Permitted operations: ' + allowedOps.join(', ') + '.');
             }
             if (!(this instanceof TimeInterval && operand instanceof TimeInterval)) {
-                throw new Error(rk('Operand должен быть объектом класса TimeInterval'));
+                throw new Error('Operand must be an instance of TimeInterval');
             }
-            var milliseconds1 = this.getTotalMilliseconds(), milliseconds2 = operand.getTotalMilliseconds();
+            var milliseconds1 = this.getTotalMilliseconds();
+            var milliseconds2 = operand.getTotalMilliseconds();
             switch (operation) {
             case '==':
                 return milliseconds1 === milliseconds2;
@@ -633,8 +660,7 @@ define('Types/_entity/TimeInterval', [
             case '-=':
                 return this.set(milliseconds1 - milliseconds2);
             }
-        };
-        ;    /**
+        };    /**
          * Прибавляет интервал к дате.
          *
          * @param {Date} date
@@ -648,8 +674,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.addToDate = function (date) {
             return this._dateModifier(1, date);
-        };
-        ;    /**
+        };    /**
          * Вычитает интервал из даты.
          *
          * @param {Date} date
@@ -663,8 +688,7 @@ define('Types/_entity/TimeInterval', [
          */
         TimeInterval.prototype.subFromDate = function (date) {
             return this._dateModifier(-1, date);
-        };
-        ;    /**
+        };    /**
          * Присваивает значение из временного интервала.
          * @param {TimeInterval} source
          */
@@ -677,28 +701,10 @@ define('Types/_entity/TimeInterval', [
             this._normIntervalStr = source.valueOf();
         };
         TimeInterval.prototype._dateModifier = function (sign, date) {
-            date = new Date(date.getTime());
-            date.setTime(date.getTime() + sign * this.getTotalMilliseconds());
-            return date;
-        };    /**
-         * Возвращает строку формата ISO 8601.
-         *
-         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть: строка - “P20DT3H1M5S”, массив - [5, 2, 3, -4], объект - {days: 1, minutes: 5}, число – 6 или объект типа Types/_entity/TimeInterval. Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд. Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
-         * @return {String} P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S].
-         */
-        /**
-         * Возвращает строку формата ISO 8601.
-         *
-         * @param {Types/_entity/TimeInterval | String | Array | Object | Number} source - Может быть: строка - “P20DT3H1M5S”, массив - [5, 2, 3, -4], объект - {days: 1, minutes: 5}, число – 6 или объект типа Types/_entity/TimeInterval. Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд. Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
-         * @return {String} P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S].
-         */
-        TimeInterval.toString = function (source) {
-            if (source !== undefined) {
-                return TimeInterval.prototype.set.call({}, source)._normIntervalStr;
-            }
-            return Function.toString.call(this);
+            var resultDate = new Date(date.getTime());
+            resultDate.setTime(resultDate.getTime() + sign * this.getTotalMilliseconds());
+            return resultDate;
         };
-        ;
         return TimeInterval;
     }();
     exports.default = TimeInterval;

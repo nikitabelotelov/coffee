@@ -7,7 +7,7 @@ define('Lib/Control/CompoundControl/CompoundControl', [
    'Lib/Control/Control.compatible',
    'Lib/Control/AreaAbstract/AreaAbstract.compatible',
    'Lib/Control/BaseCompatible/BaseCompatible',
-   "Core/EventBus",
+   'Env/Event',
    "Core/ParallelDeferred",
    "Lib/Control/AreaAbstract/AreaAbstract",
    'Core/markup/parse',
@@ -33,7 +33,7 @@ define('Lib/Control/CompoundControl/CompoundControl', [
    ControlCompatible,
    AreaAbstractCompatible,
    BaseCompatible,
-   cEventBus,
+   EnvEvent,
    cParallelDeferred,
    AreaAbstract,
    parseMarkup,
@@ -357,7 +357,7 @@ define('Lib/Control/CompoundControl/CompoundControl', [
       }
 
       if (cfg.name && !eventMap[cfg.name]){
-         cEventBus.channel(cfg.eventBusId, {
+         EnvEvent.Bus.channel(cfg.eventBusId, {
             waitForPermit: true
          });
          eventMap[cfg.name] = cfg.eventBusId;
@@ -402,8 +402,8 @@ define('Lib/Control/CompoundControl/CompoundControl', [
 
          if (this._childEventBusHashMap[name]) {
             var eventBusId = this._childEventBusHashMap[name];
-            if (cEventBus.hasChannel(eventBusId)){
-               eventBus = cEventBus.channel(eventBusId);
+            if (EnvEvent.Bus.hasChannel(eventBusId)){
+               eventBus = EnvEvent.Bus.channel(eventBusId);
             }
          }
 

@@ -58,7 +58,25 @@ define('Types/_chain/Abstract', [
             },
             enumerable: true,
             configurable: true
-        });
+        });    // endregion Ordering
+               // endregion Public methods
+               // region Static methods
+        // endregion Ordering
+        // endregion Public methods
+        // region Static methods
+        Abstract.propertyMapper = function (name) {
+            if (typeof name === 'function') {
+                return name;
+            }
+            if (name === undefined) {
+                return function (item) {
+                    return item;
+                };
+            }
+            return function (item) {
+                return util_1.object.getPropertyValue(item, name);
+            };
+        };
         Abstract.prototype.destroy = function () {
             this._source = null;
             this._previous = null;
@@ -1193,32 +1211,13 @@ define('Types/_chain/Abstract', [
         Abstract.prototype.sort = function (compareFunction) {
             var Next = di_1.resolve('Types/chain:Sorted');
             return new Next(this, compareFunction);
-        };    // endregion Ordering
-              // endregion Public methods
-              // region Static methods
-        // endregion Ordering
-        // endregion Public methods
-        // region Static methods
-        Abstract.propertyMapper = function (name) {
-            if (typeof name === 'function') {
-                return name;
-            }
-            if (name === undefined) {
-                return function (item) {
-                    return item;
-                };
-            }
-            return function (item) {
-                return util_1.object.getPropertyValue(item, name);
-            };
         };
         return Abstract;
     }(entity_1.DestroyableMixin);
-    exports.default = Abstract;    // @ts-ignore
-    // @ts-ignore
-    Abstract.prototype['[Types/_chain/Abstract]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Abstract.prototype._source = null;    // @ts-ignore
-    // @ts-ignore
-    Abstract.prototype._previous = null;
+    exports.default = Abstract;
+    Object.assign(Abstract.prototype, {
+        '[Types/_chain/Abstract]': true,
+        _source: null,
+        _previous: null
+    });
 });

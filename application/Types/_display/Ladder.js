@@ -132,47 +132,14 @@ define('Types/_display/Ladder', [
         Ladder.prototype.destroy = function () {
             this.setCollection(null);
             _super.prototype.destroy.call(this);
-        };    //region SerializableMixin
-        //region SerializableMixin
-        Ladder.prototype._getSerializableState = function (state) {
-            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
-            if (this._collection) {
-                state.$options = this._collection;
-            } else {
-                delete state.$options;
-            }
-            if (this._offset) {
-                state._offset = this._offset;
-            }
-            if (this._columnNames.length) {
-                state._columnNames = this._columnNames;
-            }    //FIXME: what about _converters?
-            //FIXME: what about _converters?
-            return state;
-        };
-        Ladder.prototype._setSerializableState = function (state) {
-            var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
-            return function () {
-                fromSerializableMixin.call(this);
-                if (state._offset) {
-                    this._offset = state._offset;
-                }
-                if (state._columnNames) {
-                    this._columnNames = state._columnNames;    //Restore _column2primaryId on wake up
-                    //Restore _column2primaryId on wake up
-                    if (this._collection) {
-                        this._checkRange(0, this._collectionItems.length);
-                    }
-                }
-            };
-        };    //endregion
-              //region Public methods
+        };    // endregion
+              // region Public methods
               /**
          * Возвращает проекцию коллекции, по которой строится лесенка.
          * @return {Types/_display/Collection|null}
          */
-        //endregion
-        //region Public methods
+        // endregion
+        // region Public methods
         /**
          * Возвращает проекцию коллекции, по которой строится лесенка.
          * @return {Types/_display/Collection|null}
@@ -190,10 +157,10 @@ define('Types/_display/Ladder', [
         Ladder.prototype.setCollection = function (collection) {
             if (collection !== null && !(collection instanceof Collection_1.default)) {
                 throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
-            }    //Reset for  the new collection
-            //Reset for  the new collection
-            var reset = collection !== this._collection;    //For the same collection just move event handler to the end (unsubscribe and then subscribe)
-            //For the same collection just move event handler to the end (unsubscribe and then subscribe)
+            }    // Reset for  the new collection
+            // Reset for  the new collection
+            var reset = collection !== this._collection;    // For the same collection just move event handler to the end (unsubscribe and then subscribe)
+            // For the same collection just move event handler to the end (unsubscribe and then subscribe)
             if (this._collection && !this._collection.destroyed) {
                 this._collection.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
                 this._collection.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeHandler);
@@ -219,7 +186,6 @@ define('Types/_display/Ladder', [
          * @param {Number} offset Позиция.
          */
         Ladder.prototype.setOffset = function (offset) {
-            // @ts-ignore
             offset = parseInt(offset, 10);
             var prev = this._offset;
             this._offset = offset;
@@ -301,10 +267,43 @@ define('Types/_display/Ladder', [
          */
         Ladder.prototype.isLadderColumn = function (columnName) {
             return this._column2primaryId.has(columnName);
-        };    //endregion
-              //region Protected methods
-        //endregion
-        //region Protected methods
+        };    // region SerializableMixin
+        // region SerializableMixin
+        Ladder.prototype._getSerializableState = function (state) {
+            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
+            if (this._collection) {
+                state.$options = this._collection;
+            } else {
+                delete state.$options;
+            }
+            if (this._offset) {
+                state._offset = this._offset;
+            }
+            if (this._columnNames.length) {
+                state._columnNames = this._columnNames;
+            }    // FIXME: what about _converters?
+            // FIXME: what about _converters?
+            return state;
+        };
+        Ladder.prototype._setSerializableState = function (state) {
+            var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);
+            return function () {
+                fromSerializableMixin.call(this);
+                if (state._offset) {
+                    this._offset = state._offset;
+                }
+                if (state._columnNames) {
+                    this._columnNames = state._columnNames;    // Restore _column2primaryId on wake up
+                    // Restore _column2primaryId on wake up
+                    if (this._collection) {
+                        this._checkRange(0, this._collectionItems.length);
+                    }
+                }
+            };
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         Ladder.prototype._applyCollection = function () {
             if (!this._collection) {
                 this._collectionItems = null;
@@ -385,22 +384,22 @@ define('Types/_display/Ladder', [
                 break;
             case collection_1.IObservable.ACTION_MOVE:
                 this._spliceCollection(oldItemsIndex, oldItems.length, []);
-                this._spliceCollection(newItemsIndex, 0, newItems);    //если запись перемещают наверх, то индекс сдвинется
-                //если запись перемещают наверх, то индекс сдвинется
+                this._spliceCollection(newItemsIndex, 0, newItems);    // если запись перемещают наверх, то индекс сдвинется
+                // если запись перемещают наверх, то индекс сдвинется
                 var startIndex = newItemsIndex > oldItemsIndex ? oldItemsIndex : oldItemsIndex + newItems.length;
                 push.apply(result, checkItems([], oldItems.length, startIndex));
                 push.apply(result, checkItems(newItems, newItems.length, newItemsIndex));
                 break;
             default:
-                //Translate collection items to the _collectionItems
-                this._applyCollection();    //FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
-                //FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
+                // Translate collection items to the _collectionItems
+                this._applyCollection();    // FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
+                // FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
                 if (action === collection_1.IObservable.ACTION_RESET && this._collectionItems && this._collectionItems.length !== newItems.length) {
                     newItems = this._collectionItems;
-                }    //Remove rejected ladder data
-                //Remove rejected ladder data
-                removeData(oldItems, newItems);    //Check updated ladder data in newItems
-                //Check updated ladder data in newItems
+                }    // Remove rejected ladder data
+                // Remove rejected ladder data
+                removeData(oldItems, newItems);    // Check updated ladder data in newItems
+                // Check updated ladder data in newItems
                 push.apply(result, checkItems(newItems, newItems.length, newItemsIndex));
             }
             this._notifyPrimaryChanges(result);

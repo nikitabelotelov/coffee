@@ -38,13 +38,11 @@ define('Types/_chain/FilteredEnumerator', [
         };
         return FilteredEnumerator;
     }();
-    exports.default = FilteredEnumerator;    // @ts-ignore
-    // @ts-ignore
-    FilteredEnumerator.prototype.previous = null;    // @ts-ignore
-    // @ts-ignore
-    FilteredEnumerator.prototype.callback = null;    // @ts-ignore
-    // @ts-ignore
-    FilteredEnumerator.prototype.callbackContext = null;    // @ts-ignore
-    // @ts-ignore
-    FilteredEnumerator.prototype.enumerator = null;
+    exports.default = FilteredEnumerator;
+    Object.assign(FilteredEnumerator.prototype, {
+        previous: null,
+        callback: null,
+        callbackContext: null,
+        enumerator: null
+    });
 });

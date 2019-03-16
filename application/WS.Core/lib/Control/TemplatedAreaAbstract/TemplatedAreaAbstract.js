@@ -5,15 +5,12 @@
  */
 define("Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract", [
    "Core/core-merge",
-   "Transport/Templates/CompoundControlTemplate",
-   "Transport/Templates/Template",
+   'Browser/TransportOld',
    'Core/helpers/String/escapeHtml',
-   "Core/IoC",
    "Core/Deferred",
-   "Core/constants",
-   "Lib/Control/AreaAbstract/AreaAbstract",
-   "Transport/attachTemplate"
-], function(cMerge, CompoundControlTemplate, Template, escapeHtml, IoC, cDeferred, cConstants, AreaAbstract, attach) {
+   'Env/Env',
+   "Lib/Control/AreaAbstract/AreaAbstract"
+], function(cMerge, TransportOld, escapeHtml, cDeferred, Env, AreaAbstract) {
 
    "use strict";
 
@@ -151,9 +148,9 @@ define("Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract", [
 
       _collectControlsToBuild: function(template, parentId){
          var result = TemplatedAreaAbstract.superclass._collectControlsToBuild.apply(this, arguments);
-         if (template && template instanceof CompoundControlTemplate && result.length == 1){
+         if (template && template instanceof TransportOld.CompoundControlTemplate && result.length == 1){
             var options = this._options.componentOptions,
-               logger = IoC.resolve('ILogger');
+               logger = Env.IoC.resolve('ILogger');
 
             if (options) {
                if (options.hasOwnProperty('id')) {
@@ -493,8 +490,8 @@ define("Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract", [
 
                if(typeof(templateName) === 'string' || !templateName) { // Строка - имя темплейта
                   var tpl = (templateName == self._defaultTpl && self._hasMarkup()) ? self.getContainer()[0].outerHTML.trim() : undefined;
-                  attach.attachTemplate(templateName, {
-                     fast: cConstants.fasttemplate,
+                  TransportOld.attachTemplate.attachTemplate(templateName, {
+                     fast: Env.constants.fasttemplate,
                      html: tpl
                   }).addCallback(templateHandler)
                     .addErrback(errorHandler);//обрабатываем ошибку в случае исключения в templateHandler
@@ -506,10 +503,10 @@ define("Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract", [
                   } ).addCallbacks(templateHandler, errorHandler)
                      .addErrback(errorHandler);//обрабатываем ошибку в случае исключения в templateHandler
                }
-               else if(templateName instanceof Template) // Или готовый темплейт
+               else if(templateName instanceof TransportOld.Template) // Или готовый темплейт
                   templateHandler(templateName);
                else
-                  templateHandler(new Template({  // Или DOM-документ
+                  templateHandler(new TransportOld.Template({  // Или DOM-документ
                      templateXML: templateName
                   }));
 
@@ -541,7 +538,7 @@ define("Lib/Control/TemplatedAreaAbstract/TemplatedAreaAbstract", [
        */
       getCurrentTemplateName: function() {
          var tpl = this._options.template,
-             tplName = tpl instanceof Template ? tpl.getName() : tpl;
+             tplName = tpl instanceof TransportOld.Template ? tpl.getName() : tpl;
          if(tplName.indexOf("pre--") !== -1)
             tplName = tplName.substr(5);
          return tplName;

@@ -56,7 +56,7 @@ define('Types/_source/Query', [
             return data.clone();
         }
         if (data && typeof data === 'object') {
-            return Object.assign({}, data);
+            return tslib_1.__assign({}, data);
         }
         return data;
     }    /**
@@ -394,7 +394,7 @@ define('Types/_source/Query', [
             return _this;
         }
         Query.prototype.clone = function () {
-            //TODO: deeper clone?
+            // TODO: deeper clone?
             var clone = new Query();
             clone._select = duplicate(this._select);
             clone._from = this._from;
@@ -865,7 +865,8 @@ define('Types/_source/Query', [
             return this._orderBy;
         };    /**
          * Устанавливает порядок сортировки выборки
-         * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+         * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор
+         * полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
          * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
          * @return {Types/_source/Query}
          * @example
@@ -902,7 +903,8 @@ define('Types/_source/Query', [
          */
         /**
          * Устанавливает порядок сортировки выборки
-         * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+         * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор
+         * полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
          * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
          * @return {Types/_source/Query}
          * @example

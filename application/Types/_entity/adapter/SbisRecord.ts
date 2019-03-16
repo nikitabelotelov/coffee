@@ -31,7 +31,7 @@
 import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
-import SbisFormatMixin from './SbisFormatMixin';
+import SbisFormatMixin, {IFieldFormat, IRecordFormat} from './SbisFormatMixin';
 import {Field, UniversalField} from '../format';
 import {mixin} from '../../util';
 
@@ -49,76 +49,76 @@ export default class SbisRecord extends mixin(
     * Конструктор
     * @param {*} data Сырые данные
     */
-   constructor(data) {
+   constructor(data: IRecordFormat) {
       super(data);
       SbisFormatMixin.constructor.call(this, data);
    }
 
-   //region IRecord
+   // region IRecord
 
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
    addField: (format: Field, at?: number) => void;
    getData: () => any;
-   getFields: () => Array<string>;
+   getFields: () => string[];
    getFormat: (name: string) => Field;
    getSharedFormat: (name: string) => UniversalField;
    removeField: (name: string) => void;
    removeFieldAt: (index: number) => void;
 
-   has(name) {
+   has(name: string): boolean {
       return this._has(name);
    }
 
-   get(name) {
-      let index = this._getFieldIndex(name);
+   get(name: string): any {
+      const index = this._getFieldIndex(name);
       return index >= 0
          ? this._cast(this._data.s[index], this._data.d[index])
          : undefined;
    }
 
-   set(name, value) {
-      let index = this._getFieldIndex(name);
+   set(name: string, value: any): void {
+      const index = this._getFieldIndex(name);
       if (index < 0) {
          throw new ReferenceError(`${this._moduleName}::set(): field "${name}" is not defined`);
       }
       this._data.d[index] = this._uncast(this._data.s[index], value);
    }
 
-   clear() {
+   clear(): void {
       this._touchData();
       SbisFormatMixin.clear.call(this);
       this._data.s.length = 0;
    }
 
-   //endregion IRecord
+   // endregion
 
-   //region ICloneable
+   // region ICloneable
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone(shallow?: boolean): SbisRecord {
-      //FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
+   clone<SbisRecord>(shallow?: boolean): any {
+      // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
       return new SbisRecord(shallow ? this.getData() : this._cloneData(true));
    }
 
-   //endregion ICloneable
+   // endregion
 
-   //region SbisFormatMixin
+   // region SbisFormatMixin
 
-   protected _buildD(at, value) {
+   protected _buildD(at: number, value: any): void {
       this._data.d.splice(at, 0, value);
    }
 
-   protected _removeD(at) {
+   protected _removeD(at: number): void {
       this._data.d.splice(at, 1);
    }
 
-   //endregion SbisFormatMixin
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
-   protected _cast(format, value) {
+   protected _cast(format: IFieldFormat, value: any): any {
       switch (format && format.t) {
          case 'Идентификатор':
             return value instanceof Array
@@ -128,7 +128,7 @@ export default class SbisRecord extends mixin(
       return value;
    }
 
-   protected _uncast(format, value) {
+   protected _uncast(format: IFieldFormat, value: any): any {
       switch (format && format.t) {
          case 'Идентификатор':
             if (value instanceof Array) {
@@ -141,16 +141,16 @@ export default class SbisRecord extends mixin(
       return value;
    }
 
-   //endregion Protected methods
+   // endregion
 }
 
-SbisRecord.prototype['[Types/_entity/adapter/SbisRecord]'] = true;
-// @ts-ignore
-SbisRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-// @ts-ignore
-SbisRecord.prototype['[Types/_entity/ICloneable]'] = true;
-SbisRecord.prototype._type = 'record';
-SbisRecord.prototype._castSeparator = ',';
+Object.assign(SbisRecord.prototype, {
+   '[Types/_entity/adapter/SbisRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   '[Types/_entity/ICloneable]': true,
+   _type: 'record',
+   _castSeparator: ','
+});
 
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 SbisRecord.prototype['[WS.Data/Entity/ICloneable]'] = true;

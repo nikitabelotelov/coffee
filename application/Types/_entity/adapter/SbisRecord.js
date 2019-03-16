@@ -72,21 +72,21 @@ define('Types/_entity/adapter/SbisRecord', [
             this._data.s.length = 0;
         };
         SbisRecord.prototype.clone = function (shallow) {
-            //FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
+            // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
             return new SbisRecord(shallow ? this.getData() : this._cloneData(true));
-        };    //endregion ICloneable
-              //region SbisFormatMixin
-        //endregion ICloneable
-        //region SbisFormatMixin
+        };    // endregion
+              // region SbisFormatMixin
+        // endregion
+        // region SbisFormatMixin
         SbisRecord.prototype._buildD = function (at, value) {
             this._data.d.splice(at, 0, value);
         };
         SbisRecord.prototype._removeD = function (at) {
             this._data.d.splice(at, 1);
-        };    //endregion SbisFormatMixin
-              //region Protected methods
-        //endregion SbisFormatMixin
-        //region Protected methods
+        };    // endregion
+              // region Protected methods
+        // endregion
+        // region Protected methods
         SbisRecord.prototype._cast = function (format, value) {
             switch (format && format.t) {
             case 'Идентификатор':
@@ -107,13 +107,13 @@ define('Types/_entity/adapter/SbisRecord', [
         return SbisRecord;
     }(util_1.mixin(DestroyableMixin_1.default, SbisFormatMixin_1.default));
     exports.default = SbisRecord;
-    SbisRecord.prototype['[Types/_entity/adapter/SbisRecord]'] = true;    // @ts-ignore
-    // @ts-ignore
-    SbisRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;    // @ts-ignore
-    // @ts-ignore
-    SbisRecord.prototype['[Types/_entity/ICloneable]'] = true;
-    SbisRecord.prototype._type = 'record';
-    SbisRecord.prototype._castSeparator = ',';    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Object.assign(SbisRecord.prototype, {
+        '[Types/_entity/adapter/SbisRecord]': true,
+        '[Types/_entity/adapter/IRecord]': true,
+        '[Types/_entity/ICloneable]': true,
+        _type: 'record',
+        _castSeparator: ','
+    });    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     SbisRecord.prototype['[WS.Data/Entity/ICloneable]'] = true;
 });

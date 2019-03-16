@@ -10,8 +10,8 @@ define('Types/_shim/Map', [
     'Types/_shim/Set'
 ], function (require, exports, Set_1) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    //Use native implementation if supported
-    //Use native implementation if supported
+    Object.defineProperty(exports, '__esModule', { value: true });    // Use native implementation if supported
+    // Use native implementation if supported
     var MapImplementation;
     if (typeof Map === 'undefined') {
         MapImplementation = /** @class */
@@ -19,6 +19,9 @@ define('Types/_shim/Map', [
             function class_1() {
                 this.clear();
             }
+            class_1._getUnhashedKey = function (key) {
+                return String(key).split('@', 2)[1];
+            };
             class_1.prototype.clear = function () {
                 this._hash = {};
                 this._objects = [];
@@ -40,7 +43,7 @@ define('Types/_shim/Map', [
                 throw new Error('Method is not supported');
             };
             class_1.prototype.forEach = function (callbackFn, thisArg) {
-                //FIXME: now not in insertion order
+                // FIXME: now not in insertion order
                 var hash = this._hash;
                 var ukey;
                 var value;
@@ -119,17 +122,13 @@ define('Types/_shim/Map', [
                 var index = parseInt(key.substr(this._objectPrefix.length), 10);
                 return this._objects[index];
             };
-            class_1._getUnhashedKey = function (key) {
-                return String(key).split('@', 2)[1];
-            };
             return class_1;
-        }();    // @ts-ignore
-        // @ts-ignore
-        MapImplementation.prototype._hash = null;    // @ts-ignore
-        // @ts-ignore
-        MapImplementation.prototype._objectPrefix = Set_1.default.prototype._objectPrefix;    // @ts-ignore
-        // @ts-ignore
-        MapImplementation.prototype._objects = null;
+        }();
+        Object.assign(MapImplementation.prototype, {
+            _hash: null,
+            _objectPrefix: Set_1.default.prototype._objectPrefix,
+            _objects: null
+        });
         Object.defineProperty(MapImplementation.prototype, 'size', {
             get: function () {
                 return Object.keys(this._hash).length;

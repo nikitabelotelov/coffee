@@ -1,7 +1,8 @@
 /// <amd-module name="View/Executor/_Expressions/Event" />
 
 const originDOMEventNames = {
-   mozmousepixelscroll: "MozMousePixelScroll"
+   mozmousepixelscroll: "MozMousePixelScroll",
+   domautocomplete: "DOMAutoComplete"
 };
 
 export function isEvent(titleAttribute) {

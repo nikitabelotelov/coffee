@@ -9,12 +9,11 @@ define('Types/_entity/factory', [
     'require',
     'exports',
     'Types/_entity/format',
-    'Types/di',
-    'Types/_entity/date/toSql',
-    'Types/_entity/date/fromSql',
     'Types/_entity/TimeInterval',
+    'Types/di',
+    'Types/formatter',
     'Core/defaultRenders'
-], function (require, exports, format_1, di_1, toSql_1, fromSql_1, TimeInterval_1, renders) {
+], function (require, exports, format_1, TimeInterval_1, di_1, formatter_1, renders) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * @const {RegExp} Выделяет временную зону в строковом представлении Date
@@ -22,7 +21,7 @@ define('Types/_entity/factory', [
     /**
      * @const {RegExp} Выделяет временную зону в строковом представлении Date
      */
-    var SQL_TIME_ZONE = /[+-][0-9]+$/;    /**
+    var SQL_TIME_ZONE = /[+-][:0-9]+$/;    /**
      * Возвращает словарь для поля типа "Словарь"
      * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
      * @return {Array}
@@ -202,17 +201,19 @@ define('Types/_entity/factory', [
      * @return {Types/_collection/RecordSet}
      */
     function convertListToRecordSet(list) {
-        var adapter = 'Types/entity:adapter.Json', count = list.getCount(), record, i;
-        for (i = 0; i < count; i++) {
-            record = list.at(i);    //Check for Types/_entity/Record
-            //Check for Types/_entity/Record
+        var adapter = 'Types/entity:adapter.Json';
+        var count = list.getCount();
+        var record;
+        for (var i = 0; i < count; i++) {
+            record = list.at(i);    // Check for Types/_entity/Record
+            // Check for Types/_entity/Record
             if (record && record['[Types/_entity/IObject]'] && record['[Types/_entity/FormattableMixin]']) {
                 adapter = record.getAdapter();
                 break;
             }
         }
         var rs = di_1.create('Types/collection:RecordSet', { adapter: adapter });
-        for (i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             rs.add(list.at(i));
         }
         return rs.getRawData(true);
@@ -287,7 +288,7 @@ define('Types/_entity/factory', [
                     } else if (value === '-infinity') {
                         return -Infinity;
                     }
-                    value = fromSql_1.default('' + value);
+                    value = formatter_1.dateFromSql('' + value);
                     if (value.setSQLSerializationMode) {
                         switch (Type) {
                         case 'date':
@@ -383,21 +384,22 @@ define('Types/_entity/factory', [
             case 'time':
             case 'datetime':
                 value = toScalar(value);
-                var serializeMode = toSql_1.MODE.DATE, withoutTimeZone = false;
+                var serializeMode = formatter_1.TO_SQL_MODE.DATE;
+                var withoutTimeZone = false;
                 switch (type) {
                 case 'datetime':
-                    serializeMode = toSql_1.MODE.DATETIME;
+                    serializeMode = formatter_1.TO_SQL_MODE.DATETIME;
                     withoutTimeZone = isWithoutTimeZone(options.format);
                     break;
                 case 'time':
-                    serializeMode = toSql_1.MODE.TIME;
+                    serializeMode = formatter_1.TO_SQL_MODE.TIME;
                     break;
                 }
                 if (!value) {
-                    value = fromSql_1.default('' + value);
+                    value = formatter_1.dateFromSql('' + value);
                 }
                 if (value instanceof Date) {
-                    value = toSql_1.default(value, serializeMode);
+                    value = formatter_1.dateToSql(value, serializeMode);
                     if (withoutTimeZone) {
                         value = value.replace(SQL_TIME_ZONE, '');
                     }

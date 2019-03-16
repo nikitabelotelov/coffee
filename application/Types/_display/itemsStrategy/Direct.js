@@ -22,15 +22,15 @@ define('Types/_display/itemsStrategy/Direct', [
                                               /**
          * @typedef {Object} Options
          * @property {Types/_display/Collection} display Проекция
-         * @property {Boolean} unique Признак обеспечения уникальности элементов
-         * @property {String} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
+         * @property {Boolean} unique Признак обеспечения униconstьности элементов
+         * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
          */
         /** @lends Types/_display/ItemsStrategy/Direct.prototype */
         /**
          * @typedef {Object} Options
          * @property {Types/_display/Collection} display Проекция
-         * @property {Boolean} unique Признак обеспечения уникальности элементов
-         * @property {String} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
+         * @property {Boolean} unique Признак обеспечения униconstьности элементов
+         * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
          */
         function Direct(options) {
             return _super.call(this, options) || this;
@@ -132,12 +132,12 @@ define('Types/_display/itemsStrategy/Direct', [
                 items[index] = this._createItem(sourceItems[index]);
             }
         };    /**
-         * Возвращает соответствие индексов в стратегии оригинальным индексам
+         * Возвращает сооconstтствие индексов в стратегии оригинальным инconstсам
          * @protected
          * @return {Array.<Number>}
          */
         /**
-         * Возвращает соответствие индексов в стратегии оригинальным индексам
+         * Возвращает сооconstтствие индексов в стратегии оригинальным инconstсам
          * @protected
          * @return {Array.<Number>}
          */
@@ -194,8 +194,9 @@ define('Types/_display/itemsStrategy/Direct', [
     }(AbstractStrategy_1.default    /** @lends Types/_display/ItemsStrategy/Direct.prototype */);
     /** @lends Types/_display/ItemsStrategy/Direct.prototype */
     exports.default = Direct;
-    Direct.prototype._moduleName = 'Types/display:itemsStrategy.Direct';
-    Direct.prototype['[Types/_display/itemsStrategy/Direct]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Direct.prototype._itemsOrder = null;
+    Object.assign(Direct.prototype, {
+        '[Types/_display/itemsStrategy/Direct]': true,
+        _moduleName: 'Types/display:itemsStrategy.Direct',
+        _itemsOrder: null
+    });
 });

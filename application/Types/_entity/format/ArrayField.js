@@ -29,13 +29,13 @@ define('Types/_entity/format/ArrayField', [
         /** @lends Types/_entity/format/ArrayField.prototype */
         function ArrayField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает тип элементов
          * @return {String}
          * @see dictionary
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает тип элементов
          * @return {String}

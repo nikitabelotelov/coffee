@@ -7,12 +7,12 @@
  */
 define('Types/_entity/InstantiableMixin', [
     'require',
-    'exports',
-    'Core/constants'
-], function (require, exports, constants) {
+    'exports'
+], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var MAX_VALUE = Number.MAX_SAFE_INTEGER || Math.pow(2, 53) - 1;
+    var IS_SERVER_SIDE = typeof window === 'undefined';
     var counter = 0;
     var InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype */
     {
@@ -25,17 +25,17 @@ define('Types/_entity/InstantiableMixin', [
          * @property {String} Уникальный идентификатор
          */
         _instanceId: '',
-        //region IInstantiable
+        // region IInstantiable
         getInstanceId: function () {
             if (counter >= MAX_VALUE) {
                 counter = 0;
             }
-            return this._instanceId || (this._instanceId = (constants.isBrowserPlatform ? 'client-' : 'server-') + this._instancePrefix + counter++);
-        }    //endregion IInstantiable
-    };    //Deprecated methods
+            return this._instanceId || (this._instanceId = (IS_SERVER_SIDE ? 'server-' : 'client-') + this._instancePrefix + counter++);
+        }    // endregion
+    };    // Deprecated methods
           // @ts-ignore
-    //endregion IInstantiable
-    //Deprecated methods
+    // endregion
+    // Deprecated methods
     // @ts-ignore
     InstantiableMixin.getHash = InstantiableMixin.getInstanceId;
     exports.default = InstantiableMixin;

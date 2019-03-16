@@ -4,13 +4,12 @@ define('View/Executor/TClosure', [
     'exports',
     'Core/Serializer',
     'Core/i18n',
-    'Core/IoC',
-    'Core/constants',
+    'Env/Env',
     'View/config',
     'View/Executor/Markup',
     'View/Executor/Expressions',
     'View/Executor/Utils'
-], function (require, exports, Serializer, i18n, IoC, cConstants, config, Markup_1, Expressions_1, Utils_1) {
+], function (require, exports, Serializer, i18n, Env_1, config, Markup_1, Expressions_1, Utils_1) {
     'use strict';
     var decorators;
     function getDecorators() {
@@ -23,7 +22,7 @@ define('View/Executor/TClosure', [
         }
     }
     function addToString() {
-        IoC.resolve('ILogger').error('Использование контентной опции компонента или шаблона в качестве строки', 'Необходимо использовать контентные опции с помощью конструкции ws:partial или ' + 'обратитесь в отдел Инфраструктура представления.');
+        Env_1.IoC.resolve('ILogger').error('Использование контентной опции компонента или шаблона в качестве строки', 'Необходимо использовать контентные опции с помощью конструкции ws:partial или ' + 'обратитесь в отдел Инфраструктура представления.');
         return this.join('');
     }
     var getter = function getter(obj, path) {
@@ -164,7 +163,7 @@ define('View/Executor/TClosure', [
                 res = res.bind(undefined, arg);
             }
             if (typeof res !== 'function') {
-                IoC.resolve('ILogger').error('Function "' + name + '" has not been loaded yet! Add this function to the module definition');
+                Env_1.IoC.resolve('ILogger').error('Function "' + name + '" has not been loaded yet! Add this function to the module definition');
             }
             return res;
         }, enumTypePin = function typeEnum(value) {
@@ -230,9 +229,9 @@ define('View/Executor/TClosure', [
             return filteredScope;
         }, templateError = function error(filename, e, data) {
             if (data.__lastGetterPath && e.message.indexOf('apply') > -1) {
-                IoC.resolve('ILogger').error('Template ' + filename + ' failed to generate html.', new Error('Field ' + data.__lastGetterPath.toString().replace(/,/g, '.') + ' is not a function!'));
+                Env_1.IoC.resolve('ILogger').error('Template ' + filename + ' failed to generate html.', new Error('Field ' + data.__lastGetterPath.toString().replace(/,/g, '.') + ' is not a function!'));
             }
-            IoC.resolve('ILogger').error('Template ' + filename + ' failed to generate html.', e, e);
+            Env_1.IoC.resolve('ILogger').error('Template ' + filename + ' failed to generate html.', e, e);
         }, partialError = function partialError() {
             try {
                 if (typeof window !== 'undefined') {
@@ -246,7 +245,7 @@ define('View/Executor/TClosure', [
             var generator;    // TODO удалить когда слой совместимости будет не нужен
             // TODO удалить когда слой совместимости будет не нужен
             if (!isVdom) {
-                if (cConstants.isNodePlatform) {
+                if (Env_1.constants.isNodePlatform) {
                     // @ts-ignore
                     if (!process.domain) {
                         // @ts-ignore
@@ -256,7 +255,7 @@ define('View/Executor/TClosure', [
                         // @ts-ignore
                         generator = require('View/Executor/GeneratorCompatible');
                     }
-                } else if (cConstants.isServerScript) {
+                } else if (Env_1.constants.isServerScript) {
                     // @ts-ignore
                     generator = require('View/Executor/GeneratorCompatible');
                 }
@@ -294,7 +293,7 @@ define('View/Executor/TClosure', [
             });
             Object.defineProperty(array, 'toString', {
                 value: function addToString() {
-                    IoC.resolve('ILogger').error('Использование контентной опции компонента или шаблона в качестве строки', 'Необходимо использовать контентные опции с помощью конструкции ws:partial или ' + 'обратитесь в отдел Инфраструктура представления. Шаблон: ' + templateName);
+                    Env_1.IoC.resolve('ILogger').error('Использование контентной опции компонента или шаблона в качестве строки', 'Необходимо использовать контентные опции с помощью конструкции ws:partial или ' + 'обратитесь в отдел Инфраструктура представления. Шаблон: ' + templateName);
                     return this.join('');
                 },
                 configurable: true,
@@ -335,7 +334,7 @@ define('View/Executor/TClosure', [
         getter: getter,
         setter: setter,
         rk: i18n.rk.bind(i18n),
-        IoC: IoC,
+        IoC: Env_1.IoC,
         config: config,
         utils: Utils_1.Common,
         uniteScope: uniteScope,

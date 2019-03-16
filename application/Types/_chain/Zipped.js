@@ -45,7 +45,8 @@ define('Types/_chain/Zipped', [
         return Zipped;
     }(Abstract_1.default);
     exports.default = Zipped;
-    Zipped.prototype['[Types/_chain/Zipped]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Zipped.prototype._items = null;
+    Object.assign(Zipped.prototype, {
+        '[Types/_chain/Zipped]': true,
+        _items: null
+    });
 });

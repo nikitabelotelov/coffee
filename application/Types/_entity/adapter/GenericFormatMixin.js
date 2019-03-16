@@ -34,7 +34,7 @@ define('Types/_entity/adapter/GenericFormatMixin', [
         constructor: function (data) {
             this._data = data;
         },
-        //region Public methods
+        // region Public methods
         getData: function () {
             return this._data;
         },
@@ -93,8 +93,8 @@ define('Types/_entity/adapter/GenericFormatMixin', [
                 fields.removeAt(index);
             }
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         _touchData: function () {
         },
         _isValidData: function () {
@@ -126,8 +126,8 @@ define('Types/_entity/adapter/GenericFormatMixin', [
                 break;
             }
             return meta;
-        }    //endregion Protected methods
+        }    // endregion Protected methods
     };
-    //endregion Protected methods
+    // endregion Protected methods
     exports.default = GenericFormatMixin;
 });

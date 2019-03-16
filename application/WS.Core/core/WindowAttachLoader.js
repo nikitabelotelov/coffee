@@ -1,12 +1,12 @@
 define('Core/WindowAttachLoader', [
    'require',
    'Core/IAttachLoader',
-   'Core/IoC',
+   'Env/Env',
    'Core/deprecated'
 ], function(
    require,
    IAttachLoader,
-   IoC,
+   Env,
    cDeprecated
 ) {
    /**
@@ -85,7 +85,7 @@ define('Core/WindowAttachLoader', [
       use: 'requirejs'
    });
 
-   IoC.bindSingle('IAttachLoader', WindowAttachLoader);
+   Env.IoC.bindSingle('IAttachLoader', WindowAttachLoader);
 
    return WindowAttachLoader
 

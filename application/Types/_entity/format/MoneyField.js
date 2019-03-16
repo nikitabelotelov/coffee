@@ -28,13 +28,13 @@ define('Types/_entity/format/MoneyField', [
         /** @lends Types/_entity/format/MoneyField.prototype */
         function MoneyField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает признак "Большие деньги"
          * @return {Boolean}
          * @see large
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает признак "Большие деньги"
          * @return {Boolean}

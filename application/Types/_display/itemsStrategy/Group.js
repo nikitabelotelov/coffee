@@ -282,10 +282,10 @@ define('Types/_display/itemsStrategy/Group', [
         return Group;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin));
     exports.default = Group;
-    Group.prototype._moduleName = 'Types/display:itemsStrategy.Group';
-    Group.prototype['[Types/_display/itemsStrategy/Group]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Group.prototype._groups = null;    // @ts-ignore
-    // @ts-ignore
-    Group.prototype._itemsOrder = null;
+    Object.assign(Group.prototype, {
+        '[Types/_display/itemsStrategy/Group]': true,
+        _moduleName: 'Types/display:itemsStrategy.Group',
+        _groups: null,
+        _itemsOrder: null
+    });
 });

@@ -1,9 +1,9 @@
 define('Core/defaultRenders', [
    'require',
-   'Core/constants'
+   'Env/Env'
 ], function(
    require,
-   constants
+   Env
 ) {
     /**
      * Класс базовых функций для форматирования и проверки значений и их типов.
@@ -353,11 +353,11 @@ define('Core/defaultRenders', [
 
          if(date instanceof Date){
             if (type == 'Дата') {
-               retval = date.strftime(constants.Date.masks.date);
+               retval = date.strftime(Env.constants.Date.masks.date);
             } else if (type == 'Время') {
-               retval = date.strftime(constants.Date.masks[prec]);
+               retval = date.strftime(Env.constants.Date.masks[prec]);
             } else if (type == 'Дата и время') {
-               retval = date.strftime(constants.Date.masks.date) + ' ' + date.strftime(constants.Date.masks[prec]);
+               retval = date.strftime(Env.constants.Date.masks.date) + ' ' + date.strftime(Env.constants.Date.masks[prec]);
             }
          } else {
             retval = "&minus;";

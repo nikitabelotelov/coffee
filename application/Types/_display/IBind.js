@@ -40,7 +40,7 @@ define('Types/_display/IBind', [
          */
         ACTION_RESET: collection_1.IObservable.ACTION_RESET    /**
          * @event onCollectionChange После изменения коллекции
-         * @param {Core/EventObject} event Дескриптор события.
+         * @param {Env/Event.Object} event Дескриптор события.
          * @param {Types/_collection/IBind#ChangeAction} action Действие, приведшее к изменению.
          * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.
          * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
@@ -74,7 +74,7 @@ define('Types/_display/IBind', [
     };
     /**
          * @event onCollectionChange После изменения коллекции
-         * @param {Core/EventObject} event Дескриптор события.
+         * @param {Env/Event.Object} event Дескриптор события.
          * @param {Types/_collection/IBind#ChangeAction} action Действие, приведшее к изменению.
          * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.
          * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.

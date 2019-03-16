@@ -17,12 +17,12 @@ define('Types/_display/Flags', [
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Обрабатывает событие об изменении состояния Flags
-     * @param {Core/EventObject} event Дескриптор события
+     * @param {Env/Event.Object} event Дескриптор события
      * @param {String|Array.<boolean|null>} name Название флага
      */
     /**
      * Обрабатывает событие об изменении состояния Flags
-     * @param {Core/EventObject} event Дескриптор события
+     * @param {Env/Event.Object} event Дескриптор события
      * @param {String|Array.<boolean|null>} name Название флага
      */
     function onSourceChange(event, name) {
@@ -65,11 +65,11 @@ define('Types/_display/Flags', [
     }(Collection_1.default    /** @lends Types/_display/Flags.prototype */);
     /** @lends Types/_display/Flags.prototype */
     exports.default = Flags;
-    Flags.prototype._moduleName = 'Types/display:Flags';
-    Flags.prototype['[Types/_display/Flags]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype._itemModule = 'Types/display:FlagsItem';    // @ts-ignore
-    // @ts-ignore
-    Flags.prototype._localize = true;
+    Object.assign(Flags.prototype, {
+        '[Types/_display/Flags]': true,
+        _moduleName: 'Types/display:Flags',
+        _itemModule: 'Types/display:FlagsItem',
+        _localize: true
+    });
     di_1.register('Types/display:Flags', Flags);
 });

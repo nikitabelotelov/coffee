@@ -3,10 +3,10 @@ define('View/_Request/createDefault', [
     'exports',
     'View/_Request/Console',
     'View/_Request/StateReceiver',
-    'Core/constants',
+    'Env/Env',
     'View/_Request/Storage',
     'View/_Request/_Storage/NodeCookie'
-], function (require, exports, Console_1, StateReceiver_1, constants, Storage_1, NodeCookie_1) {
+], function (require, exports, Console_1, StateReceiver_1, Env_1, Storage_1, NodeCookie_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var global = function () {
@@ -19,7 +19,7 @@ define('View/_Request/createDefault', [
         var _a;
         var console = new Console_1.Console({
             console: global.console,
-            logLevel: constants.logLevel
+            logLevel: Env_1.constants.logLevel
         });
         return {
             console: console,
@@ -50,7 +50,7 @@ define('View/_Request/createDefault', [
         var _a;
         var console = new Console_1.Console({
             console: 'jstestdriver' in global ? global.jstestdriver.console : global.console,
-            logLevel: constants.logLevel
+            logLevel: Env_1.constants.logLevel
         });
         return {
             console: console,
@@ -70,7 +70,7 @@ define('View/_Request/createDefault', [
      */
     var create = function (RequestConstructor) {
         var requestConfig;
-        if (constants.isBrowserPlatform) {
+        if (Env_1.constants.isBrowserPlatform) {
             requestConfig = getForBrowser();
         } else {
             requestConfig = getForNode();

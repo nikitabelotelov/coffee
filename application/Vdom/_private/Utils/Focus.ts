@@ -4,7 +4,7 @@
  * to specific elements
  */
 // @ts-ignore
-import * as detection from 'Core/detection';
+import { detection } from 'Env/Env';
 import * as Tabindex from '../Synchronizer/resources/TabIndex';
 
 /**

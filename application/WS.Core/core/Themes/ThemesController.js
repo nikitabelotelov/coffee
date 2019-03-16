@@ -1,12 +1,11 @@
 define('Core/Themes/ThemesController', [
-   'Core/IoC',
+   
    'Core/core-extend',
-   'Core/constants',
+   'Env/Env',
    'View/Request',
    'Core/CssLoader/CssLoader',
-   'Core/LinkResolver/LinkResolver',
-   'Core/cookie'
-], function(IoC, coreExtend, constants, Request, CssLoader, LinkResolver, cookie) {
+   'Core/LinkResolver/LinkResolver'
+], function(coreExtend, Env, Request, CssLoader, LinkResolver) {
    'use strict';
 
    /**
@@ -41,14 +40,14 @@ define('Core/Themes/ThemesController', [
          };
 
          var BUILD_MODE = global.contents && global.contents.buildMode || 'debug';
-         var isDebug = cookie.get('s3debug') === 'true' || BUILD_MODE === 'debug';
+         var isDebug = Env.cookie.get('s3debug') === 'true' || BUILD_MODE === 'debug';
 
          this.linkResolver = new LinkResolver(
             isDebug,
-            constants.buildnumber,
-            constants.wsRoot,
-            constants.appRoot,
-            constants.resourceRoot);
+            Env.constants.buildnumber,
+            Env.constants.wsRoot,
+            Env.constants.appRoot,
+            Env.constants.resourceRoot);
          this.cssLoader = new CssLoader(this.linkResolver);
 
          // Init themes list with default value "default"
@@ -178,7 +177,7 @@ define('Core/Themes/ThemesController', [
       // Load css asynchronously
       pushCssAsync: function(name, resolve) {
          var self = this;
-         var mayBeBundle = self.linkResolver.fixOldAndBundles(name);
+         var mayBeBundle = self.linkResolver.fixOld(name);
          if (typeof self.resolvedCss.simple[mayBeBundle] !== 'undefined') {
             // We don't need to load css if it was already loaded or request is in process
             return;
@@ -190,14 +189,14 @@ define('Core/Themes/ThemesController', [
             self.resolvedCss.simple[mayBeBundle] = element;
             resolve();
          }).catch(function() {
-            IoC.resolve('ILogger').error('Css load', 'Can\'t load css for: ' + name + '');
+            Env.IoC.resolve('ILogger').error('Css load', 'Can\'t load css for: ' + name + '');
             resolve();
          });
       },
       // Load themed css asynchronously
       pushCssThemedAsyncAllThemes: function(name, resolve) {
          var self = this;
-         var mayBeBundle = self.linkResolver.fixOldAndBundles(name);
+         var mayBeBundle = self.linkResolver.fixOld(name);
          if (typeof self.themedCssCommon[mayBeBundle] !== 'undefined') {
             // We don't need to load css if it wal already loaded or request is in process
             return;
@@ -212,7 +211,7 @@ define('Core/Themes/ThemesController', [
             }
             resolve();
          }).catch(function() {
-            IoC.resolve('ILogger').error('Css load', 'Can\'t load css for: ' + name + '');
+            Env.IoC.resolve('ILogger').error('Css load', 'Can\'t load css for: ' + name + '');
             resolve();
          });
       },
@@ -247,7 +246,7 @@ define('Core/Themes/ThemesController', [
          }
          return global._$ThemesController;
       }
-      IoC.resolve('ILogger').error('Cannot create themes controller');
+      Env.IoC.resolve('ILogger').error('Cannot create themes controller');
    }
 
    return ThemesController;

@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/BlockPage" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 // @ts-ignore
 import template = require('wml!Coffee/BlockPage/BlockPage');
 

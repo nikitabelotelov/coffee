@@ -3,12 +3,12 @@ define('View/Executor/_Markup/Vdom/Generator', [
     'require',
     'exports',
     'Core/helpers/Array/flatten',
-    'Core/IoC',
+    'Env/Env',
     'View/Logger',
     'View/Executor/_Markup/Generator',
     'View/Executor/Expressions',
     'View/Executor/Utils'
-], function (require, exports, flatten, IoC, Logger, Generator_1, Expressions_1, Utils_1) {
+], function (require, exports, flatten, Env_1, Logger, Generator_1, Expressions_1, Utils_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * TODO:: Ответственный Шипин
@@ -183,7 +183,7 @@ define('View/Executor/_Markup/Vdom/Generator', [
                 }, []);
                 return res;
             } else if (typeof tpl === 'undefined') {
-                IoC.resolve('ILogger').error(typeof tpl + ' component error', 'Попытка использовать компонент/шаблон, ' + 'но вместо компонента в шаблоне был передан ' + typeof tpl + '! ' + 'Если верстка строится неправильно, нужно поставить точку останова и исследовать стек вызовов. ' + 'По стеку будет понятно, в каком шаблоне и в какую опцию передается ' + typeof tpl);
+                Env_1.IoC.resolve('ILogger').error(typeof tpl + ' component error', 'Попытка использовать компонент/шаблон, ' + 'но вместо компонента в шаблоне был передан ' + typeof tpl + '! ' + 'Если верстка строится неправильно, нужно поставить точку останова и исследовать стек вызовов. ' + 'По стеку будет понятно, в каком шаблоне и в какую опцию передается ' + typeof tpl);
                 return GeneratorVdom.createText('', decorAttribs.key);
             } else {
                 // create text node, if template is some text
@@ -260,7 +260,7 @@ define('View/Executor/_Markup/Vdom/Generator', [
         try {
             throw new Error('vdomMarkupGenerator: using scope="{{...}}"');
         } catch (e) {
-            IoC.resolve('ILogger').info('SCOPE ... in VDom', e.stack);
+            Env_1.IoC.resolve('ILogger').info('SCOPE ... in VDom', e.stack);
         }
         return data;
     };

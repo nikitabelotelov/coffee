@@ -1,7 +1,7 @@
 /// <amd-module name="Coffee/Settings/NumberInput" />
 
 // @ts-ignore
-import {Control} from 'UI/Base';
+import Control = require('Core/Control');
 // @ts-ignore
 import * as template from 'wml!Coffee/Settings/NumberInput/NumberInput';
 import "css!Coffee/Settings/NumberInput/NumberInput";

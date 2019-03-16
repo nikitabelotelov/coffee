@@ -28,12 +28,12 @@ define('Types/_entity/format/DateTimeField', [
         /** @lends Types/_entity/format/DateTimeField.prototype */
         function DateTimeField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает признак указания временной зоны
          * @return {Boolean}
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает признак указания временной зоны
          * @return {Boolean}

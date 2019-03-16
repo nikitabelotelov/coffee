@@ -32,73 +32,9 @@ define('Types/_entity/format/fieldsFactory', [
 ], function (require, exports, BooleanField_1, IntegerField_1, RealField_1, MoneyField_1, StringField_1, XmlField_1, DateTimeField_1, DateField_1, TimeField_1, TimeIntervalField_1, LinkField_1, IdentityField_1, EnumField_1, FlagsField_1, RecordField_1, RecordSetField_1, BinaryField_1, UuidField_1, RpcFileField_1, ObjectField_1, ArrayField_1, di_1, util_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
-     * @typedef {String} FieldType
-     * @variant boolean Логическое
-     * @variant integer Число целое
-     * @variant real Число вещественное
-     * @variant money Деньги
-     * @variant string Строка
-     * @variant xml Строка в формате XML
-     * @variant datetime Дата и время
-     * @variant date Дата
-     * @variant time Время
-     * @variant timeinterval Временной интервал
-     * @variant identity Идентификатор
-     * @variant enum Перечисляемое
-     * @variant flags Флаги
-     * @variant record Запись
-     * @variant model Модель
-     * @variant recordset Выборка
-     * @variant binary Двоичное
-     * @variant uuid UUID
-     * @variant rpcfile Файл-RPC
-     * @variant object Объект
-     * @variant array Массив
-     */
-                                                                      /**
-     * @typedef {Object} FieldDeclaration
-     * @property {String} name Имя поля
-     * @property {FieldType|Function|String} type Тип поля (название или конструктор)
-     * @property {*} defaultValue Значение поля по умолчанию
-     * @property {Boolean} nullable Значение может быть null
-     * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
-     */
-                                                                      /**
      * Конструирует формат поля по декларативному описанию
      * @param {FieldDeclaration} declaration Декларативное описание
      * @return {Types/_entity/format/Field}
-     */
-    /**
-     * @typedef {String} FieldType
-     * @variant boolean Логическое
-     * @variant integer Число целое
-     * @variant real Число вещественное
-     * @variant money Деньги
-     * @variant string Строка
-     * @variant xml Строка в формате XML
-     * @variant datetime Дата и время
-     * @variant date Дата
-     * @variant time Время
-     * @variant timeinterval Временной интервал
-     * @variant identity Идентификатор
-     * @variant enum Перечисляемое
-     * @variant flags Флаги
-     * @variant record Запись
-     * @variant model Модель
-     * @variant recordset Выборка
-     * @variant binary Двоичное
-     * @variant uuid UUID
-     * @variant rpcfile Файл-RPC
-     * @variant object Объект
-     * @variant array Массив
-     */
-    /**
-     * @typedef {Object} FieldDeclaration
-     * @property {String} name Имя поля
-     * @property {FieldType|Function|String} type Тип поля (название или конструктор)
-     * @property {*} defaultValue Значение поля по умолчанию
-     * @property {Boolean} nullable Значение может быть null
-     * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
      */
     /**
      * Конструирует формат поля по декларативному описанию
@@ -171,10 +107,10 @@ define('Types/_entity/format/fieldsFactory', [
         if (typeof type === 'function') {
             var inst = Object.create(type.prototype);
             if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
-                //Yes it's Types/_entity/Record
+                // Yes it's Types/_entity/Record
                 return new RecordField_1.default(declaration);
             } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
-                //Yes it's Types/_collection/RecordSet
+                // Yes it's Types/_collection/RecordSet
                 return new RecordSetField_1.default(declaration);
             } else if (inst['[Types/_collection/IEnum]']) {
                 return new EnumField_1.default(declaration);
@@ -191,7 +127,8 @@ define('Types/_entity/format/fieldsFactory', [
             } else if (type === Object) {
                 return new ObjectField_1.default(declaration);
             }
-        }
+        }    // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:max-line-length
         throw new TypeError('Types/_entity/format/fieldsFactory(): unsupported field type ' + (typeof type === 'function' ? type.name : '"' + type + '"'));
     }
     exports.default = default_1;

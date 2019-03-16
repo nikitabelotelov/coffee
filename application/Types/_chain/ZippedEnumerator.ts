@@ -9,7 +9,7 @@ import Abstract from './Abstract';
 export default class ZippedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]' = true;
    private previous: Abstract<T>;
-   private items: Array<Array<T>|IEnumerable<T>>;
+   private items: Array<T[]|IEnumerable<T>>;
    private current: any;
    private index: number;
    private enumerator: IEnumerator<T>;
@@ -21,7 +21,7 @@ export default class ZippedEnumerator<T> implements IEnumerator<T> {
     * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
     * @protected
     */
-   constructor(previous: Abstract<T>, items: Array<Array<T> | IEnumerable<T>>) {
+   constructor(previous: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
       this.previous = previous;
       this.items = items;
       this.reset();
@@ -76,15 +76,11 @@ export default class ZippedEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-ZippedEnumerator.prototype.previous = null;
-// @ts-ignore
-ZippedEnumerator.prototype.items = null;
-// @ts-ignore
-ZippedEnumerator.prototype.itemsEnumerators = null;
-// @ts-ignore
-ZippedEnumerator.prototype.enumerator = null;
-// @ts-ignore
-ZippedEnumerator.prototype.index = null;
-// @ts-ignore
-ZippedEnumerator.prototype.current = undefined;
+Object.assign(ZippedEnumerator.prototype, {
+   previous: null,
+   items: null,
+   itemsEnumerators: null,
+   enumerator: null,
+   index: null,
+   current: undefined
+});

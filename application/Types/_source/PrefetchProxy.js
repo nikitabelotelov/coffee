@@ -1,6 +1,7 @@
 /// <amd-module name="Types/_source/PrefetchProxy" />
 /**
- * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода чтения данных. Все последующие вызовы проксируются на целевой источник данных.
+ * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода
+ * чтения данных. Все последующие вызовы проксируются на целевой источник данных.
  *
  * Создадим источник с заранее загруженным результатом списочного метода:
  * <pre>
@@ -76,11 +77,13 @@ define('Types/_source/PrefetchProxy', [
              * @name Types/_source/PrefetchProxy#target
              */
             _this._$target = null;    /**
-             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах
+             * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
              * @name Types/_source/PrefetchProxy#data
              */
             /**
-             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+             * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах
+             * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
              * @name Types/_source/PrefetchProxy#data
              */
             _this._$data = {
@@ -105,12 +108,12 @@ define('Types/_source/PrefetchProxy', [
             /**
              * Методы, уже отдавший заранее приготовленные данные
              */
-            _this._done = {};    //region ICrud
-            //region ICrud
-            _this['[Types/_source/ICrud]'] = true;    //endregion ICrud
-                                                      //region ICrudPlus
-            //endregion ICrud
-            //region ICrudPlus
+            _this._done = {};    // region ICrud
+            // region ICrud
+            _this['[Types/_source/ICrud]'] = true;    // endregion
+                                                      // region ICrudPlus
+            // endregion
+            // region ICrudPlus
             _this['[Types/_source/ICrudPlus]'] = true;
             entity_1.OptionsToPropertyMixin.call(_this, options);
             entity_1.SerializableMixin.constructor.call(_this);
@@ -154,23 +157,23 @@ define('Types/_source/PrefetchProxy', [
         };
         PrefetchProxy.prototype.move = function (items, target, meta) {
             return this._$target.move(items, target, meta);
-        };    //endregion ICrudPlus
-              //region Base
-        //endregion ICrudPlus
-        //region Base
+        };    // endregion
+              // region Base
+        // endregion
+        // region Base
         PrefetchProxy.prototype.getOptions = function () {
             return this._$target.getOptions();
         };
         PrefetchProxy.prototype.setOptions = function (options) {
             return this._$target.setOptions(options);
-        };    //endregion Base
+        };    // endregion
               // region SerializableMixin
-        //endregion Base
+        // endregion
         // region SerializableMixin
         PrefetchProxy.prototype._getSerializableState = function (state) {
-            state = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
-            state._done = this._done;
-            return state;
+            var resultState = entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
+            resultState._done = this._done;
+            return resultState;
         };
         PrefetchProxy.prototype._setSerializableState = function (state) {
             var fromSerializableMixin = entity_1.SerializableMixin.prototype._setSerializableState(state);

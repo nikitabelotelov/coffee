@@ -44,9 +44,10 @@ define('Types/_display/BreadcrumbsItem', [
     }(CollectionItem_1.default    /** @lends Types/_display/BreadcrumbsItem.prototype */);
     /** @lends Types/_display/BreadcrumbsItem.prototype */
     exports.default = BreadcrumbsItem;
-    BreadcrumbsItem.prototype._moduleName = 'Types/display:BreadcrumbsItem';
-    BreadcrumbsItem.prototype['[Types/_display/BreadcrumbsItem]'] = true;    // @ts-ignore
-    // @ts-ignore
-    BreadcrumbsItem.prototype._$last = null;
+    Object.assign(BreadcrumbsItem.prototype, {
+        '[Types/_display/BreadcrumbsItem]': true,
+        _moduleName: 'Types/display:BreadcrumbsItem',
+        _$last: null
+    });
     di_1.register('Types/display:BreadcrumbsItem', BreadcrumbsItem);
 });

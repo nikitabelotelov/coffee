@@ -81,6 +81,7 @@ define('Types/entity', [
     exports.Record = Record_1.default;
     exports.relation = relation;
     exports.SerializableMixin = SerializableMixin_1.default;
+    exports.ISerializableState = SerializableMixin_1.IState;
     exports.VersionableMixin = VersionableMixin_1.default;
     exports.TimeInterval = TimeInterval_1.default;
     exports.Guid = Guid_1.default;

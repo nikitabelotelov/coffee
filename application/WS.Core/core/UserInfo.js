@@ -1,11 +1,11 @@
 define('Core/UserInfo', [
-   'Core/cookie'
+   'Env/Env'
 ], function(
-   cookie
+   Env
 ) {
    "use strict";
    var SESSION_KEY = "s3su";
-   var stored = cookie.get(SESSION_KEY);
+   var stored = Env.cookie.get(SESSION_KEY);
    /**
     * Получение информации о текущем пользователе
     * @class Core/UserInfo
@@ -37,7 +37,7 @@ define('Core/UserInfo', [
          if (arguments.length === 0) {
             session = stored;
          }
-         var current = cookie.get(SESSION_KEY);
+         var current = Env.cookie.get(SESSION_KEY);
          if (!session && !current) {
             return true;
          }
@@ -47,7 +47,7 @@ define('Core/UserInfo', [
          return session === current;
       },
       getCurrent: function () {
-          return cookie.get(SESSION_KEY);
+          return Env.cookie.get(SESSION_KEY);
       }
    };
 

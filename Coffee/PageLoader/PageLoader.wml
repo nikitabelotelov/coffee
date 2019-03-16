@@ -1,1 +1,1 @@
-<ws:partial template="{{pageClassLoaded}}" scope="{{ _options.templateOptions }}"/>
+<ws:partial template="{{pageClassLoaded}}" scope="{{ _options.templateOptions }}" temp="{{pageClassLoaded.toString()}}"/>

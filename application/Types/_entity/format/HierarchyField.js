@@ -20,13 +20,13 @@ define('Types/_entity/format/HierarchyField', [
         /** @lends Types/_entity/format/HierarchyField.prototype */
         function HierarchyField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает тип элементов
          * @return {String}
          * @see dictionary
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает тип элементов
          * @return {String}

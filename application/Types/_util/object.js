@@ -16,13 +16,13 @@ define('Types/_util/object', [
         return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
     }    /**
      * Возвращает значение свойства объекта
-     * @param {*} object Объект.
-     * @param {String} property Название свойства.
+     * @param object Объект.
+     * @param property Название свойства.
      */
     /**
      * Возвращает значение свойства объекта
-     * @param {*} object Объект.
-     * @param {String} property Название свойства.
+     * @param object Объект.
+     * @param property Название свойства.
      */
     function getPropertyValue(object, property) {
         var checkedProperty = property || '';
@@ -42,15 +42,15 @@ define('Types/_util/object', [
         return undefined;
     }    /**
      * Устанавливает значение свойства объекта
-     * @param {*} object Объект.
-     * @param {String} property Название свойства.
-     * @param {*} value Значение свойства.
+     * @param object Объект.
+     * @param property Название свойства.
+     * @param value Значение свойства.
      */
     /**
      * Устанавливает значение свойства объекта
-     * @param {*} object Объект.
-     * @param {String} property Название свойства.
-     * @param {*} value Значение свойства.
+     * @param object Объект.
+     * @param property Название свойства.
+     * @param value Значение свойства.
      */
     function setPropertyValue(object, property, value) {
         var checkedProperty = property || '';
@@ -73,13 +73,13 @@ define('Types/_util/object', [
         throw new ReferenceError('Object doesn\'t have setter for property "' + property + '"');
     }    /**
      * Клонирует объект путем сериализации в строку и последующей десериализации.
-     * @param {Object} original Объект для клонирования
-     * @return {Object} Клон объекта
+     * @param original Объект для клонирования
+     * @return Клон объекта
      */
     /**
      * Клонирует объект путем сериализации в строку и последующей десериализации.
-     * @param {Object} original Объект для клонирования
-     * @return {Object} Клон объекта
+     * @param original Объект для клонирования
+     * @return Клон объекта
      */
     function clone(original) {
         if (original instanceof Object) {
@@ -93,17 +93,17 @@ define('Types/_util/object', [
             return original;
         }
     }    /**
-  * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
-  * @param {Object} original Объект для клонирования
-  * @param {Boolean} [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
-  * @return {Object} Клон объекта
-  */
+     * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
+     * @param original Объект для клонирования
+     * @param [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
+     * @return Клон объекта
+     */
     /**
-  * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
-  * @param {Object} original Объект для клонирования
-  * @param {Boolean} [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
-  * @return {Object} Клон объекта
-  */
+     * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
+     * @param original Объект для клонирования
+     * @param [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
+     * @return Клон объекта
+     */
     function clonePlain(original, processCloneable, processing) {
         var result;
         var checkedProcessing = processing;

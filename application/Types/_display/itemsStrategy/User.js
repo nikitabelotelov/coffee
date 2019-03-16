@@ -226,8 +226,9 @@ define('Types/_display/itemsStrategy/User', [
         return User;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.SerializableMixin));
     exports.default = User;
-    User.prototype._moduleName = 'Types/display:itemsStrategy.User';
-    User.prototype['[Types/_display/itemsStrategy/User]'] = true;    // @ts-ignore
-    // @ts-ignore
-    User.prototype._itemsOrder = null;
+    Object.assign(User.prototype, {
+        '[Types/_display/itemsStrategy/User]': true,
+        _moduleName: 'Types/display:itemsStrategy.User',
+        _itemsOrder: null
+    });
 });

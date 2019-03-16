@@ -48,7 +48,7 @@ define('Types/_collection/Dictionary', [
          */
         Dictionary.prototype.getDictionary = function (localize) {
             var dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
-            return dictionary ? Array.isArray(dictionary) ? dictionary.slice() : Object.assign({}, dictionary) : dictionary;
+            return dictionary ? Array.isArray(dictionary) ? dictionary.slice() : tslib_1.__assign({}, dictionary) : dictionary;
         };
         Dictionary.prototype.each = function (callback, context, localize) {
             context = context || this;
@@ -88,8 +88,8 @@ define('Types/_collection/Dictionary', [
                 }
             } while (hasItem || hasToItem);
             return true;
-        };    //endregion
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Returns key of the value in dictionary
          * @param {String} name Value for lookup
@@ -97,8 +97,8 @@ define('Types/_collection/Dictionary', [
          * @return {Number|String|undefined}
          * @protected
          */
-        //endregion
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Returns key of the value in dictionary
          * @param {String} name Value for lookup
@@ -169,17 +169,14 @@ define('Types/_collection/Dictionary', [
     }(entity_1.DestroyableMixin);
     exports.default = Dictionary;
     util_1.applyMixins(Dictionary, entity_1.OptionsToPropertyMixin, entity_1.ObservableMixin);
-    Dictionary.prototype['[Types/_collection/Dictionary]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Dictionary.prototype['[Types/_collection/IEnumerable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Dictionary.prototype['[Types/_entity/IEquatable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Dictionary.prototype._$dictionary = undefined;    // @ts-ignore
-    // @ts-ignore
-    Dictionary.prototype._$localeDictionary = undefined;    // @ts-ignore
-    // @ts-ignore
-    Dictionary.prototype._type = undefined;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Object.assign(Dictionary.prototype, {
+        '[Types/_collection/Dictionary]': true,
+        '[Types/_collection/IEnumerable]': true,
+        '[Types/_entity/IEquatable]': true,
+        _$dictionary: undefined,
+        _$localeDictionary: undefined,
+        _type: undefined
+    });    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     Dictionary.prototype['[WS.Data/Collection/IEnumerable]'] = true;
 });

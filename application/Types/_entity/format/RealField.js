@@ -29,14 +29,14 @@ define('Types/_entity/format/RealField', [
         /** @lends Types/_entity/format/RealField.prototype */
         function RealField() {
             return _super !== null && _super.apply(this, arguments) || this;
-        }    //region Public methods
+        }    // region Public methods
              /**
          * Возвращает максимальное количество знаков в дробной части
          * @return {Number}
          * @see precision
          * @see setPrecision
          */
-        //region Public methods
+        // region Public methods
         /**
          * Возвращает максимальное количество знаков в дробной части
          * @return {Number}

@@ -1,11 +1,11 @@
 define('View/Builder/Tmpl', [
       'View/Builder/Tmpl/traverse',
-      'Core/IoC',
+      'Env/Env',
       'View/Builder/Tmpl/modules/utils/common',
       'text!View/Builder/Tmpl/modules/templates/file.jstpl',
       'View/Builder/Tmpl/function'],
    function (traversing,
-             IoC,
+             Env,
              utils,
              file,
              processingToFunction) {
@@ -72,7 +72,7 @@ define('View/Builder/Tmpl', [
                ext = 'tmpl';
             }
             errback = errback || function (er) {
-               IoC.resolve('ILogger').error('Template', 'Ошибка при парсинге шаблона: ' + er.message, er);
+               Env.IoC.resolve('ILogger').error('Template', 'Ошибка при парсинге шаблона: ' + er.message, er);
             };
 
             var finalSync = '',
@@ -93,7 +93,7 @@ define('View/Builder/Tmpl', [
                   tmplFunc = tmpl.func(traversed, config);
 
                   if (!tmplFunc) {
-                     IoC.resolve('ILogger').error('Template', 'Шаблон не может быть построен. Не загружены зависимости. Шаблон: ' + text);
+                     Env.IoC.resolve('ILogger').error('Template', 'Шаблон не может быть построен. Не загружены зависимости. Шаблон: ' + text);
                   }
 
                   var templateFunctionStr = tmplFunc.toString();
@@ -185,7 +185,7 @@ define('View/Builder/Tmpl', [
                   return 'tmpl!' + path;
                },
                errback = function (er) {
-                  IoC.resolve('ILogger').error('Template', 'Ошибка при парсинге шаблона: ' + er.message, er);
+                  Env.IoC.resolve('ILogger').error('Template', 'Ошибка при парсинге шаблона: ' + er.message, er);
                };
             tmpl.template(html, resolverControls, {config: configModule}).handle(function (traversed) {
                try {
@@ -203,7 +203,7 @@ define('View/Builder/Tmpl', [
             }, errback);
 
             if (!synchFunction) {
-               IoC.resolve('ILogger').error('Template', 'Шаблон не может быть построен. Не загружены зависимости. Шаблон: ' + html);
+               Env.IoC.resolve('ILogger').error('Template', 'Шаблон не может быть построен. Не загружены зависимости. Шаблон: ' + html);
             }
             return synchFunction;
          }

@@ -2,9 +2,9 @@
 define('Types/_formatter/date', [
     'require',
     'exports',
-    'Core/helpers/i18n/locales',
-    'Types/_formatter/numberRoman'
-], function (require, exports, locales, numberRoman_1) {
+    'Types/_formatter/numberRoman',
+    'Core/helpers/i18n/locales'
+], function (require, exports, numberRoman_1, locales) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });    /**
      * Преобразует дату в строку указанного формата.
@@ -18,15 +18,18 @@ define('Types/_formatter/date', [
      * {String} Дата в указанном формате.
      *
      * @remark
-     * <h2>Доступные константы (следует использовать для вывода дат {@link http://axure.tensor.ru/standarts/v7/%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82%D1%8B_%D0%B4%D0%B0%D1%82_01.html по стандарту} с учетом локализации).</h2>
+     * <h2>Доступные константы (следует использовать для вывода дат
+     * {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации).</h2>
      * <ul>
      *    <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
      *    <li>FULL_DATE_DOW: полная дата с днем недели, "DD MMMMlo'YY, ddddl" для "Ru-ru";</li>
      *    <li>FULL_DATE_FULL_MONTH: полная дата с полным названием месяца, "DD MMMMlo'YY" для "Ru-ru";</li>
-     *    <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для "Ru-ru";</li>
+     *    <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для
+     *        "Ru-ru";</li>
      *    <li>FULL_DATE_FULL_YEAR: полная дата с полным годом, "DD.MM.YYYY" для "Ru-ru";</li>
      *    <li>FULL_DATE_SHORT_MONTH: полная дата с кратким названием месяца, "DD MMMl'YY" для "Ru-ru";</li>
-     *    <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для "Ru-ru";</li>
+     *    <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для
+     *        "Ru-ru";</li>
      *    <li>FULL_DATETIME: полный формат даты и времени, "DD MMM'YY HH:mm" для "Ru-ru";</li>
      *    <li>FULL_HALF_YEAR: полное полугодие и год, "YYYYhr 'YY" для "Ru-ru";</li>
      *    <li>FULL_MONTH: полное название месяца и год, "MMMM'YY" для "Ru-ru";</li>
@@ -82,8 +85,10 @@ define('Types/_formatter/date', [
      *    <li>ddl: краткое название дня недели в текущей локали в нижнем регистре (например, 'пн' или 'mo');</li>
      *    <li>ddd: сокращенное название дня недели в текущей локали с заглавной буквы (например, 'Пнд' или 'Mon');</li>
      *    <li>dddl: сокращенное название дня недели в текущей локали в нижнем регистре (например, 'пнд' или 'mon');</li>
-     *    <li>dddd: полное название дня недели в текущей локали с заглавной буквы (например, 'Понедельник' или 'Monday');</li>
-     *    <li>ddddl: полное название дня недели в текущей локали в нижнем регистре (например, 'понедельник' или 'monday');</li>
+     *    <li>dddd: полное название дня недели в текущей локали с заглавной буквы (например, 'Понедельник' или 'Monday');
+     *    </li>
+     *    <li>ddddl: полное название дня недели в текущей локали в нижнем регистре (например, 'понедельник' или 'monday');
+     *    </li>
      *    <li>M: порядковый номер месяца;</li>
      *    <li>MM: порядковый номер месяца с лидирующим нулем;</li>
      *    <li>MMM: сокращенное название месяца в текущей локали (например, 'Янв' или 'Jan');</li>
@@ -91,15 +96,21 @@ define('Types/_formatter/date', [
      *    <li>MMMM: полное название месяца в текущей локали (например, 'Январь' или 'January');</li>
      *    <li>MMMMl: полное название месяца в текущей локали в нижнем регистре (например, 'январь' или 'january');</li>
      *    <li>MMMMo: полное название месяца в текущей локали в плюральной форме (например, 'Января' или 'January');</li>
-     *    <li>MMMMlo: полное название месяца в текущей локали в плюральной форме и нижнем регистре (например, 'января' или 'january');</li>
+     *    <li>MMMMlo: полное название месяца в текущей локали в плюральной форме и нижнем регистре (например, 'января' или
+     *        'january');</li>
      *    <li>Y: двузначный номер года;</li>
      *    <li>YY: двузначный номер года с лидирующим нулем;</li>
      *    <li>YYYY: четырехзначный номер года;</li>
-     *    <li>YYhr: номер полугодия в римской нотации и полугодие в текущей локали в краткой форме (например, 'I по' или 'I hy');</li>
-     *    <li>YYYYhr: номер полугодия в римской нотации и полугодие в текущей локали в полной форме (например, 'I полугодие' или 'I half year');</li>
-     *    <li>QQr: номер квартала в римской нотации и квартал в текущей локали в краткой форме (например, 'I кв' или 'I qt');</li>
-     *    <li>QQQr: номер квартала в римской нотации и квартал в текущей локали в сокращенной форме (например, 'I квр' или 'I qtr');</li>
-     *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или 'I quarter').</li>
+     *    <li>YYhr: номер полугодия в римской нотации и полугодие в текущей локали в краткой форме (например, 'I по' или
+     *        'I hy');</li>
+     *    <li>YYYYhr: номер полугодия в римской нотации и полугодие в текущей локали в полной форме (например, 'I полугодие'
+     *        или 'I half year');</li>
+     *    <li>QQr: номер квартала в римской нотации и квартал в текущей локали в краткой форме (например, 'I кв' или
+     *        'I qt');</li>
+     *    <li>QQQr: номер квартала в римской нотации и квартал в текущей локали в сокращенной форме (например, 'I квр' или
+     *        'I qtr');</li>
+     *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или
+     *        'I quarter').</li>
      * </ul>
      *
      * <h2>Примеры использования масок.</h2>
@@ -135,15 +146,18 @@ define('Types/_formatter/date', [
      * {String} Дата в указанном формате.
      *
      * @remark
-     * <h2>Доступные константы (следует использовать для вывода дат {@link http://axure.tensor.ru/standarts/v7/%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82%D1%8B_%D0%B4%D0%B0%D1%82_01.html по стандарту} с учетом локализации).</h2>
+     * <h2>Доступные константы (следует использовать для вывода дат
+     * {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации).</h2>
      * <ul>
      *    <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
      *    <li>FULL_DATE_DOW: полная дата с днем недели, "DD MMMMlo'YY, ddddl" для "Ru-ru";</li>
      *    <li>FULL_DATE_FULL_MONTH: полная дата с полным названием месяца, "DD MMMMlo'YY" для "Ru-ru";</li>
-     *    <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для "Ru-ru";</li>
+     *    <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для
+     *        "Ru-ru";</li>
      *    <li>FULL_DATE_FULL_YEAR: полная дата с полным годом, "DD.MM.YYYY" для "Ru-ru";</li>
      *    <li>FULL_DATE_SHORT_MONTH: полная дата с кратким названием месяца, "DD MMMl'YY" для "Ru-ru";</li>
-     *    <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для "Ru-ru";</li>
+     *    <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для
+     *        "Ru-ru";</li>
      *    <li>FULL_DATETIME: полный формат даты и времени, "DD MMM'YY HH:mm" для "Ru-ru";</li>
      *    <li>FULL_HALF_YEAR: полное полугодие и год, "YYYYhr 'YY" для "Ru-ru";</li>
      *    <li>FULL_MONTH: полное название месяца и год, "MMMM'YY" для "Ru-ru";</li>
@@ -199,8 +213,10 @@ define('Types/_formatter/date', [
      *    <li>ddl: краткое название дня недели в текущей локали в нижнем регистре (например, 'пн' или 'mo');</li>
      *    <li>ddd: сокращенное название дня недели в текущей локали с заглавной буквы (например, 'Пнд' или 'Mon');</li>
      *    <li>dddl: сокращенное название дня недели в текущей локали в нижнем регистре (например, 'пнд' или 'mon');</li>
-     *    <li>dddd: полное название дня недели в текущей локали с заглавной буквы (например, 'Понедельник' или 'Monday');</li>
-     *    <li>ddddl: полное название дня недели в текущей локали в нижнем регистре (например, 'понедельник' или 'monday');</li>
+     *    <li>dddd: полное название дня недели в текущей локали с заглавной буквы (например, 'Понедельник' или 'Monday');
+     *    </li>
+     *    <li>ddddl: полное название дня недели в текущей локали в нижнем регистре (например, 'понедельник' или 'monday');
+     *    </li>
      *    <li>M: порядковый номер месяца;</li>
      *    <li>MM: порядковый номер месяца с лидирующим нулем;</li>
      *    <li>MMM: сокращенное название месяца в текущей локали (например, 'Янв' или 'Jan');</li>
@@ -208,15 +224,21 @@ define('Types/_formatter/date', [
      *    <li>MMMM: полное название месяца в текущей локали (например, 'Январь' или 'January');</li>
      *    <li>MMMMl: полное название месяца в текущей локали в нижнем регистре (например, 'январь' или 'january');</li>
      *    <li>MMMMo: полное название месяца в текущей локали в плюральной форме (например, 'Января' или 'January');</li>
-     *    <li>MMMMlo: полное название месяца в текущей локали в плюральной форме и нижнем регистре (например, 'января' или 'january');</li>
+     *    <li>MMMMlo: полное название месяца в текущей локали в плюральной форме и нижнем регистре (например, 'января' или
+     *        'january');</li>
      *    <li>Y: двузначный номер года;</li>
      *    <li>YY: двузначный номер года с лидирующим нулем;</li>
      *    <li>YYYY: четырехзначный номер года;</li>
-     *    <li>YYhr: номер полугодия в римской нотации и полугодие в текущей локали в краткой форме (например, 'I по' или 'I hy');</li>
-     *    <li>YYYYhr: номер полугодия в римской нотации и полугодие в текущей локали в полной форме (например, 'I полугодие' или 'I half year');</li>
-     *    <li>QQr: номер квартала в римской нотации и квартал в текущей локали в краткой форме (например, 'I кв' или 'I qt');</li>
-     *    <li>QQQr: номер квартала в римской нотации и квартал в текущей локали в сокращенной форме (например, 'I квр' или 'I qtr');</li>
-     *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или 'I quarter').</li>
+     *    <li>YYhr: номер полугодия в римской нотации и полугодие в текущей локали в краткой форме (например, 'I по' или
+     *        'I hy');</li>
+     *    <li>YYYYhr: номер полугодия в римской нотации и полугодие в текущей локали в полной форме (например, 'I полугодие'
+     *        или 'I half year');</li>
+     *    <li>QQr: номер квартала в римской нотации и квартал в текущей локали в краткой форме (например, 'I кв' или
+     *        'I qt');</li>
+     *    <li>QQQr: номер квартала в римской нотации и квартал в текущей локали в сокращенной форме (например, 'I квр' или
+     *        'I qtr');</li>
+     *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или
+     *        'I quarter').</li>
      * </ul>
      *
      * <h2>Примеры использования масок.</h2>
@@ -498,8 +520,8 @@ define('Types/_formatter/date', [
     function getTokensRegex() {
         if (tokensRegex) {
             return tokensRegex;
-        }    //More longer must match first
-        //More longer must match first
+        }    // More longer must match first
+        // More longer must match first
         var expr = Object.keys(tokens).sort(function (a, b) {
             return b.length - a.length;
         });
@@ -556,8 +578,8 @@ define('Types/_formatter/date', [
             result = result.toLowerCase();
         }
         return result;
-    }    //Time tokens
-    //Time tokens
+    }    // Time tokens
+    // Time tokens
     addToken('SSS', 'getMilliseconds');
     addToken('s', 'getSeconds');
     addToken('ss', 'getSeconds', { lead: 2 });
@@ -567,8 +589,8 @@ define('Types/_formatter/date', [
     addToken('hh', getTwelveHours, { lead: 2 });
     addToken('H', 'getHours');
     addToken('HH', 'getHours', { lead: 2 });
-    addToken('a', getAmPm);    //Date tokens
-    //Date tokens
+    addToken('a', getAmPm);    // Date tokens
+    // Date tokens
     addToken('D', 'getDate');
     addToken('DD', 'getDate', { lead: 2 });
     addToken('dd', getDayOfWeekMin);
@@ -606,15 +628,15 @@ define('Types/_formatter/date', [
      * @param {String} format Format string
      * @return {String} Date as string
      */
-    var format = function (date, format) {
+    function format(date, format) {
         return String(format).replace(getTokensRegex(), function (token) {
-            //Check if to be escaped
+            // Check if to be escaped
             if (token[0] === '[' && token[token.length - 1] === ']') {
                 return token.substr(1, token.length - 2);
             }
             return formatByToken(date, tokens[token][0], tokens[token][1]);
         });
-    };    /**
+    }    /**
      * Constants with predefined formats
      */
     /**

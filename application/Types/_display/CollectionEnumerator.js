@@ -23,7 +23,9 @@ define('Types/_display/CollectionEnumerator', [
     function (_super) {
         tslib_1.__extends(CollectionEnumerator, _super);
         function CollectionEnumerator(options) {
-            var _this = _super.call(this) || this;    /**
+            var _this = _super.call(this) || this;    // region IEnumerator
+            // region IEnumerator
+            _this['[Types/_collection/IEnumerator]'] = true;    /**
              * @cfg {Array.<Types/_display/CollectionItem>|Function} Элементы проекции
              * @name Types/_display/CollectionEnumerator#items
              */
@@ -53,9 +55,7 @@ define('Types/_display/CollectionEnumerator', [
             /**
              * Индекс элемента проекции -> Порядковый индекс
              */
-            _this._sourceToInternal = [];    //region IEnumerator
-            //region IEnumerator
-            _this['[Types/_collection/IEnumerator]'] = true;
+            _this._sourceToInternal = [];
             entity_1.OptionsToPropertyMixin.call(_this, options);
             collection_1.IndexedEnumeratorMixin.constructor.call(_this);
             if (!(_this._$items instanceof Array) && !(_this._$items instanceof Function)) {
@@ -78,7 +78,37 @@ define('Types/_display/CollectionEnumerator', [
             },
             enumerable: true,
             configurable: true
-        });
+        });    // endregion
+               // region Statics
+               /**
+         * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
+         * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
+         * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
+         * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
+         * @public
+         * @static
+         */
+        // endregion
+        // region Statics
+        /**
+         * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
+         * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
+         * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
+         * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
+         * @public
+         * @static
+         */
+        CollectionEnumerator.getAssociativeMap = function (sortMap, filterMap) {
+            var result = [];
+            var index;
+            for (var i = 0; i < sortMap.length; i++) {
+                index = sortMap[i];
+                if (filterMap[index]) {
+                    result.push(index);
+                }
+            }
+            return result;
+        };
         CollectionEnumerator.prototype.getCurrent = function () {
             return this._current;
         };
@@ -89,10 +119,10 @@ define('Types/_display/CollectionEnumerator', [
             this._itemsCache = null;
             this._position = -1;
             this._setCurrentByPosition();
-        };    //endregion
-              //region IndexedEnumeratorMixin
-        //endregion
-        //region IndexedEnumeratorMixin
+        };    // endregion
+              // region IndexedEnumeratorMixin
+        // endregion
+        // region IndexedEnumeratorMixin
         CollectionEnumerator.prototype.reIndex = function (action, start, count) {
             collection_1.IndexedEnumeratorMixin.reIndex.call(this, action, start, count);
             this._itemsCache = null;
@@ -109,16 +139,16 @@ define('Types/_display/CollectionEnumerator', [
             collection_1.IndexedEnumeratorMixin._createIndex.call(this, property);
             this._position = savedPosition;
             this._current = savedCurrent;
-        };    //endregion
-              //region Public methods
+        };    // endregion
+              // region Public methods
               /**
          * Возвращает элемент по индексу
          * @param {Number} index Индекс
          * @return {Types/_display/CollectionItem}
          * @state mutable
          */
-        //endregion
-        //region Public methods
+        // endregion
+        // region Public methods
         /**
          * Возвращает элемент по индексу
          * @param {Number} index Индекс
@@ -247,14 +277,14 @@ define('Types/_display/CollectionEnumerator', [
             }
             this._initInternalMap();
             return this._internalToSource[internal];
-        };    //endregion
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Инициализирует массив соответствия позиций проекции и исходной коллекции
          * @protected
          */
-        //endregion
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Инициализирует массив соответствия позиций проекции и исходной коллекции
          * @protected
@@ -303,55 +333,19 @@ define('Types/_display/CollectionEnumerator', [
             } else {
                 this._current = undefined;
             }
-        };    //endregion
-              //region Statics
-              /**
-         * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
-         * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
-         * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
-         * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
-         * @public
-         * @static
-         */
-        //endregion
-        //region Statics
-        /**
-         * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
-         * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
-         * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
-         * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
-         * @public
-         * @static
-         */
-        CollectionEnumerator.getAssociativeMap = function (sortMap, filterMap) {
-            var result = [];
-            var index;
-            for (var i = 0; i < sortMap.length; i++) {
-                index = sortMap[i];
-                if (filterMap[index]) {
-                    result.push(index);
-                }
-            }
-            return result;
         };
         return CollectionEnumerator;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, collection_1.IndexedEnumeratorMixin));
     exports.default = CollectionEnumerator;
-    CollectionEnumerator.prototype['[Types/_display/CollectionEnumerator]'] = true;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._$items = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._$filterMap = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._$sortMap = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._itemsCache = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._position = -1;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._current = undefined;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._internalToSource = null;    // @ts-ignore
-    // @ts-ignore
-    CollectionEnumerator.prototype._sourceToInternal = null;
+    Object.assign(CollectionEnumerator.prototype, {
+        '[Types/_display/CollectionEnumerator]': true,
+        _$items: null,
+        _$filterMap: null,
+        _$sortMap: null,
+        _itemsCache: null,
+        _position: -1,
+        _current: undefined,
+        _internalToSource: null,
+        _sourceToInternal: null
+    });
 });

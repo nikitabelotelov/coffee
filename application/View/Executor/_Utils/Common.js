@@ -2,13 +2,12 @@
 define('View/Executor/_Utils/Common', [
     'require',
     'exports',
-    'Core/constants',
     'Core/RightsManager',
     'Core/helpers/Object/isPlainObject',
-    'Core/IoC',
+    'Env/Env',
     'View/Executor/Expressions',
     'View/Executor/_Utils/RequireHelper'
-], function (require, exports, constants, RightsManager, isPlainObject, IoC, Expressions_1, RequireHelper) {
+], function (require, exports, RightsManager, isPlainObject, Env_1, Expressions_1, RequireHelper) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var isProtoSupported = function isProtoSupproted() {
@@ -59,7 +58,7 @@ define('View/Executor/_Utils/Common', [
                 if (typeof object['data-access-min-level'] !== 'undefined') {
                     minAccessLevel = object['data-access-min-level'];
                 } else if (typeof object['dataAccessMinLevel'] !== 'undefined') {
-                    IoC.resolve('ILogger').info('entityHelpers', 'Для задания минимального уровня доступа для опции, используйте data-access-min-level вместо dataAccessMinLevel.');
+                    Env_1.IoC.resolve('ILogger').info('entityHelpers', 'Для задания минимального уровня доступа для опции, используйте data-access-min-level вместо dataAccessMinLevel.');
                     minAccessLevel = object['dataAccessMinLevel'];
                 }
                 if (typeof minAccessLevel === 'string') {
@@ -80,7 +79,7 @@ define('View/Executor/_Utils/Common', [
                 if (typeof object['data-access'] !== 'undefined') {
                     accessString = object['data-access'];
                 } else if (typeof object['dataAccess'] !== 'undefined') {
-                    IoC.resolve('ILogger').info('entityHelpers', 'Для задания зоны доступа для опции, используйте data-access вместо dataAccess.');
+                    Env_1.IoC.resolve('ILogger').info('entityHelpers', 'Для задания зоны доступа для опции, используйте data-access вместо dataAccess.');
                     accessString = object['dataAccess'];
                 }
                 if (typeof accessString === 'string') {
@@ -414,7 +413,7 @@ define('View/Executor/_Utils/Common', [
              // если ПП, то в любом случае false
         // опция isVdom. если true - будет строить vdom.
         // если ПП, то в любом случае false
-        argArr[3] = argArr[3] && !constants.isBuildOnServer;
+        argArr[3] = argArr[3] && !Env_1.constants.isBuildOnServer;
         argArr.push(value);
         return argArr;
     }
@@ -656,7 +655,7 @@ define('View/Executor/_Utils/Common', [
     }
     exports.isNewControl = isNewControl;
     function asyncRenderErrorLog(err) {
-        IoC.resolve('ILogger').error('ASYNC RENDER ERROR', err ? err.toString() : err, err);
+        Env_1.IoC.resolve('ILogger').error('ASYNC RENDER ERROR', err ? err.toString() : err, err);
     }
     exports.asyncRenderErrorLog = asyncRenderErrorLog;    /**
      * Если результат с optional === false, попробуем без optional!
@@ -686,11 +685,11 @@ define('View/Executor/_Utils/Common', [
     }
     exports.getNamespace = getNamespace;
     function isCompat() {
-        if (constants.isNodePlatform) {
+        if (Env_1.constants.isNodePlatform) {
             // @ts-ignore
             return !process.domain || process.domain.req && process.domain.req.compatible !== false;
         } else {
-            return constants.compat;
+            return Env_1.constants.compat;
         }
     }
     exports.isCompat = isCompat;

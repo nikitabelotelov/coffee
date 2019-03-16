@@ -1,12 +1,10 @@
 define('Core/xslt-async', [
-   'Core/constants',
-   'Core/detection',
+   'Env/Env',
    'Core/core-extend',
-   'Core/IoC',
    'Core/helpers/axo',
    'Core/Deferred',
    'Core/ParallelDeferred'
-], function(constants, detection, coreExtend, ioc, axo, Deferred, ParallelDeferred) {
+], function(Env, coreExtend, axo, Deferred, ParallelDeferred) {
 
    var XSLTCaps = {
       TRANSFORM_TO_TEXT: 1,
@@ -115,7 +113,7 @@ define('Core/xslt-async', [
          this._xmlDoc = null;
          this._xslDoc = null;
 
-         if(detection.webkit || detection.chrome) {
+         if(Env.detection.webkit || Env.detection.chrome) {
             this._nsResolver = function(ns) {
                switch(ns) {
                   case 'xsl':
@@ -147,12 +145,12 @@ define('Core/xslt-async', [
          self._mainDef.done().getResult().addCallback(function (res) {
             self._xmlDoc = self._xmlDoc || res[0];
             self._xslDoc = self._xslDoc || res[1];
-            if (detection.webkit || detection.chrome) {
+            if (Env.detection.webkit || Env.detection.chrome) {
                self._chromeWorkaround().addCallback(function () {
                   def.callback(self);
                });
             } else {
-               if (detection.firefox) {
+               if (Env.detection.firefox) {
                   self._xslDoc = self.preparseIncludeNames(self._xslDoc);
                }
                def.callback();
@@ -449,8 +447,8 @@ define('Core/xslt-async', [
              * пути до ресурсов.
              */
             if (window.location.origin) {
-               if (constants.resourceRoot) {
-                  path = window.location.origin + path.replace('resources/', constants.resourceRoot);
+               if (Env.constants.resourceRoot) {
+                  path = window.location.origin + path.replace('resources/', Env.constants.resourceRoot);
                }
             } else {
                path = mainPath + '/' + path;
@@ -464,8 +462,8 @@ define('Core/xslt-async', [
              *  If absolute path has no information of resources root
              *  we should react to that kind of differences in document url
              */
-            if (constants.resourceRoot && path.indexOf(constants.resourceRoot) === -1) {
-               path = path.replace('/resources/', constants.resourceRoot);
+            if (Env.constants.resourceRoot && path.indexOf(Env.constants.resourceRoot) === -1) {
+               path = path.replace('/resources/', Env.constants.resourceRoot);
             }
          }
          return path;
@@ -536,7 +534,7 @@ define('Core/xslt-async', [
              imports,
              importsCount,
              self = this;
-         if (detection.isMac) {
+         if (Env.detection.isMac) {
             imports = docXSL.getElementsByTagName('xsl:import');
          } else {
             imports = docXSL.getElementsByTagName('import');
@@ -560,7 +558,7 @@ define('Core/xslt-async', [
                                  var n = child.getAttribute('name');
                                  var numDups = docXSL.evaluate("count(//xsl:template[@name='" + n + "'])", docXSL, self._nsResolver, XPathResult.NUMBER_TYPE, null);
                                  if(numDups && numDups.numberValue > 0) {
-                                    ioc.resolve('ILogger').log("xslt", "Ignored duplicate named template: " + n);
+                                    Env.IoC.resolve('ILogger').log("xslt", "Ignored duplicate named template: " + n);
                                     continue; // If template with same name is already declared - ignore it
                                  }
                               }
@@ -711,7 +709,7 @@ define('Core/xslt-async', [
          var resDef = new Deferred(),
             transformedDoc;
          //Проверка на ИЕ вставлена специально (koshelevav). Теоретически в девятке должно работать, НО падает. Насильно запущено по второй ветке
-         if(window.XMLSerializer && (!detection.isIE || detection.isIE12)) {
+         if(window.XMLSerializer && (!Env.detection.isIE || Env.detection.isIE12)) {
             transformedDoc = this.transformToDocument(params);
 
             this.includeCss(transformedDoc, function (doc) {
@@ -796,8 +794,13 @@ define('Core/xslt-async', [
       transformToDocument: function(params) {
          if(window.XSLTProcessor) {
             var xsltProcessor = new XSLTProcessor();
-            for(var p in params){
-               xsltProcessor.setParameter(null, p, params[p]);
+            for(var p in params) {
+               /*
+                  Null-value parameter throws exception in some browsers
+                */
+               if (params[p] !== null) {
+                  xsltProcessor.setParameter(null, p, params[p]);
+               }
             }
             if(xsltProcessor.transformToDocument) {
                xsltProcessor.importStylesheet(this._xslDoc);
@@ -896,7 +899,7 @@ define('Core/xslt-async', [
     * Создаем XMLDocument через ioc, чтобы подменять реализации на сервере на другую
     */
    var XMLDocument = function(config) {
-      return ioc.resolve('IXMLDocument', config);
+      return Env.IoC.resolve('IXMLDocument', config);
    };
 
    /**
@@ -1005,7 +1008,7 @@ define('Core/xslt-async', [
          // https://code.google.com/p/chromium/issues/detail?id=570622
          //Если сервер возвращает код 304, то из кеша может прийти пустая строка вместо закешированного значения
          //Приходится для Хрома отключать кеширование
-         if (detection.chrome && /\.(xml|xsl)$/.test(url)) {
+         if (Env.detection.chrome && /\.(xml|xsl)$/.test(url)) {
             url += '?_=' + Math.random();
          }
          xhttp.open("GET", url, true);
@@ -1086,8 +1089,8 @@ define('Core/xslt-async', [
       }
    });
 
-   ioc.bind('IXMLDocument', ClientXMLDocument);
-   constants.XSLTCaps = XSLTCaps;
+   Env.IoC.bind('IXMLDocument', ClientXMLDocument);
+   Env.constants.XSLTCaps = XSLTCaps;
 
    return XSLTransform;
 });

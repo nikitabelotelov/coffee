@@ -35,7 +35,7 @@ define('Types/_collection/EventRaisingMixin', [
         constructor: function () {
             this._publish('onEventRaisingChange');
         },
-        //region Public methods
+        // region Public methods
         /**
          * Включает/выключает генерацию событий об изменении коллекции
          * @param {Boolean} enabled Включить или выключить генерацию событий
@@ -97,8 +97,8 @@ define('Types/_collection/EventRaisingMixin', [
         isEventRaising: function () {
             return this._eventRaising;
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion Public methods
+        // region Protected methods
         /**
          * Запускает серию обновлений
          * @return {Object}
@@ -204,8 +204,8 @@ define('Types/_collection/EventRaisingMixin', [
          */
         _isNeedNotifyCollectionChange: function () {
             return this._eventRaising && this.hasEventHandlers('onCollectionChange');
-        }    //endregion Protected methods
+        }    // endregion Protected methods
     };
-    //endregion Protected methods
+    // endregion Protected methods
     exports.default = EventRaisingMixin;
 });

@@ -31,6 +31,9 @@ define('Types/_chain/SortedEnumerator', [
             _this.compareFunction = compareFunction || SortedEnumerator.defaultCompare;
             return _this;
         }
+        SortedEnumerator.defaultCompare = function (a, b) {
+            return a === b ? 0 : a > b ? 1 : -1;
+        };
         SortedEnumerator.prototype._getItems = function () {
             if (!this._items) {
                 var shouldSaveIndices_1 = this.previous.shouldSaveIndices;
@@ -48,12 +51,8 @@ define('Types/_chain/SortedEnumerator', [
             }
             return this._items;
         };
-        SortedEnumerator.defaultCompare = function (a, b) {
-            return a === b ? 0 : a > b ? 1 : -1;
-        };
         return SortedEnumerator;
     }(IndexedEnumerator_1.default);
-    exports.default = SortedEnumerator;    // @ts-ignore
-    // @ts-ignore
-    SortedEnumerator.prototype.compareFunction = null;
+    exports.default = SortedEnumerator;
+    Object.assign(SortedEnumerator.prototype, { compareFunction: null });
 });

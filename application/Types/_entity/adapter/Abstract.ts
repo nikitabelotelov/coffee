@@ -16,10 +16,14 @@ import ITable from './ITable';
 import IRecord from './IRecord';
 import SerializableMixin from '../SerializableMixin';
 import {mixin} from '../../util';
-import toSql, {MODE as toSqlMode} from '../date/toSql';
+import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
-const serializer = (function() {
-   let serialize = function(data) {
+const serialize = (() => {
+   interface ISerializableObject extends Object {
+      getRawData?: Function;
+   }
+
+   function serializeAny(data: any): any {
       if (data instanceof Array) {
          return serializeArray(data);
       } else if (data && typeof data === 'object') {
@@ -27,34 +31,31 @@ const serializer = (function() {
       } else {
          return data;
       }
-   };
+   }
 
-   let serializeArray = function(arr) {
-      return arr.map(function(item) {
-         return serialize(item);
-      });
-   };
+   function serializeArray(arr: any[]): any[] {
+      return arr.map((item) => serializeAny(item));
+   }
 
-   let serializeObject = function(obj) {
-      if (typeof obj.getRawData === 'function') {
-         //Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
-         return obj.getRawData(true);
+   function serializeObject(obj: ISerializableObject | ExtendDate): object | string {
+      if (typeof (obj as ISerializableObject).getRawData === 'function') {
+         // Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
+         return (obj as ISerializableObject).getRawData(true);
       } else if (obj instanceof Date) {
-         let mode = toSqlMode.DATETIME;
-         obj = <ExtendDate>obj;
-         if (obj.getSQLSerializationMode) {
+         let mode = TO_SQL_MODE.DATETIME;
+         if ((obj as ExtendDate).getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
-               case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATE:
-                  mode = toSqlMode.DATE;
+               case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
+                  mode = TO_SQL_MODE.DATE;
                   break;
-               case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_TIME:
-                  mode = toSqlMode.TIME;
+               case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
+                  mode = TO_SQL_MODE.TIME;
                   break;
             }
          }
-         return toSql(obj, mode);
+         return dateToSql(obj, mode);
       } else {
-         //Check if 'obj' is a scalar value wrapper
+         // Check if 'obj' is a scalar value wrapper
          if (obj.valueOf) {
             obj = obj.valueOf();
          }
@@ -63,28 +64,26 @@ const serializer = (function() {
          }
          return obj;
       }
-   };
+   }
 
-   let serializePlainObject = function(obj) {
-      let result = {};
+   function serializePlainObject(obj: object): object {
+      const result = {};
 
-      let proto = Object.getPrototypeOf(obj);
+      const proto = Object.getPrototypeOf(obj);
       if (proto !== null && proto !== Object.prototype) {
          throw new TypeError('Unsupported object type. Only plain objects can be serialized.');
       }
 
-      let keys = Object.keys(obj);
+      const keys = Object.keys(obj);
       let key;
       for (let i = 0; i < keys.length; i++) {
          key = keys[i];
-         result[key] = serialize(obj[key]);
+         result[key] = serializeAny(obj[key]);
       }
       return result;
-   };
+   }
 
-   return {
-      serialize: serialize
-   };
+   return serializeAny;
 })();
 
 export default abstract class Abstract extends mixin(
@@ -104,7 +103,7 @@ export default abstract class Abstract extends mixin(
 
    getProperty(data: any, property: string): any {
       property = property || '';
-      let parts = property.split(this._pathSeparator);
+      const parts = property.split(this._pathSeparator);
       let result;
       for (let i = 0; i < parts.length; i++) {
          result = i
@@ -114,12 +113,12 @@ export default abstract class Abstract extends mixin(
       return result;
    }
 
-   setProperty(data: any, property: string, value: any) {
+   setProperty(data: any, property: string, value: any): void {
       if (!data || !(data instanceof Object)) {
          return;
       }
       property = property || '';
-      let parts = property.split(this._pathSeparator);
+      const parts = property.split(this._pathSeparator);
       let current = data;
       for (let i = 0, max = parts.length - 1; i <= max; i++) {
          if (i === max) {
@@ -134,10 +133,10 @@ export default abstract class Abstract extends mixin(
    }
 
    serialize(data: any): any {
-      return serializer.serialize(data);
+      return serialize(data);
    }
 
-   forRecord(data: any, tableData?): IRecord {
+   forRecord(data: any, tableData?: any): IRecord {
       throw new Error('Method must be implemented');
    }
 
@@ -150,7 +149,8 @@ export default abstract class Abstract extends mixin(
    }
 }
 
-Abstract.prototype['[Types/_entity/adapter/Abstract]'] = true;
-// @ts-ignore
-Abstract.prototype['[Types/_entity/adapter/IAdapter]'] = true;
-Abstract.prototype._pathSeparator = '.';
+Object.assign(Abstract.prototype, {
+   '[Types/_entity/adapter/Abstract]': true,
+   '[Types/_entity/adapter/IAdapter]': true,
+   _pathSeparator: '.'
+});

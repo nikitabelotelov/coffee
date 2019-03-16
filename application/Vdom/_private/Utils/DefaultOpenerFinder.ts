@@ -27,7 +27,7 @@ Controls/Popup/Opener/Sticky
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 // @ts-ignore
-import * as IoC from 'Core/IoC';
+import { IoC } from 'Env/Env';
 import DOMEnvironment from '../Synchronizer/resources/DOMEnvironment';
 
 const goUpByControlTree = DOMEnvironment._goUpByControlTree;

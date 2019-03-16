@@ -45,8 +45,9 @@ define('Types/_chain/Concatenated', [
         return Concatenated;
     }(Abstract_1.default);
     exports.default = Concatenated;
-    Concatenated.prototype['[Types/_chain/Concatenated]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Concatenated.prototype._items = null;
+    Object.assign(Concatenated.prototype, {
+        '[Types/_chain/Concatenated]': true,
+        _items: null
+    });
     Object.defineProperty(Concatenated.prototype, 'shouldSaveIndices', { value: false });
 });

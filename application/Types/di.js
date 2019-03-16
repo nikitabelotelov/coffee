@@ -9,6 +9,7 @@ define('Types/di', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
+    var SINGLETONE_MAP_INDEX = 2;
     var map = {};    /**
      * Проверяет валидность названия зависимости
      * @param {String} alias Название зависимости
@@ -239,7 +240,11 @@ define('Types/di', [
      * </pre>
      */
     function resolve(alias, options) {
-        var aliasType = typeof alias, Factory, config, singleInst;
+        var _a;
+        var aliasType = typeof alias;
+        var Factory;
+        var config;
+        var singleInst;
         switch (aliasType) {
         case 'function':
             Factory = alias;
@@ -252,9 +257,7 @@ define('Types/di', [
             if (!isRegistered(alias)) {
                 throw new ReferenceError('Alias "' + alias + '" does not registered');
             }
-            Factory = map[alias][0];
-            config = map[alias][1];
-            singleInst = map[alias][2];
+            _a = map[alias], Factory = _a[0], config = _a[1], singleInst = _a[2];
         }
         if (config) {
             if (config.instantiate === false) {
@@ -262,7 +265,7 @@ define('Types/di', [
             }
             if (config.single === true) {
                 if (singleInst === undefined) {
-                    singleInst = map[alias][2] = new Factory(options);
+                    singleInst = map[alias][SINGLETONE_MAP_INDEX] = new Factory(options);
                 }
                 return singleInst;
             }

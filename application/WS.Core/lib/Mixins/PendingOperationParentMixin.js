@@ -7,9 +7,8 @@ define('Lib/Mixins/PendingOperationParentMixin', [
    'Lib/Mixins/PendingOperationProducerMixin',
    'Core/CommandDispatcher',
    'Core/Deferred',
-   'Core/core-debug',
-   'Core/IoC'
-], function(callBefore, callNext, arrayFindIndex, cMerge, cClone, ProducerMixin, CommandDispatcher, Deferred, cDebug, IoC) {
+   'Env/Env'
+], function(callBefore, callNext, arrayFindIndex, cMerge, cClone, ProducerMixin, CommandDispatcher, Deferred, Env) {
    //todo: зачем здесь genHelpers и funcHelpers
    function removeOperation(operation, array) {
       var  idx = arrayFindIndex(array, function(op) { return op === operation; });
@@ -21,7 +20,7 @@ define('Lib/Mixins/PendingOperationParentMixin', [
    }
 
    var
-      logger = IoC.resolve('ILogger'),
+      logger = Env.IoC.resolve('ILogger'),
       Producer = cClone(ProducerMixin),
       ProducerFuncs = ProducerMixin.$protected,
       ParentMixin = /** @lends Lib/Mixins/PendingOperationParentMixin.prototype */ cMerge(Producer, {
@@ -67,7 +66,7 @@ define('Lib/Mixins/PendingOperationParentMixin', [
                if (childOps.length === 0) {
                   allChildrenPendingOperation = this._allChildrenPendingOperation;
                   this._allChildrenPendingOperation = null;
-                  cDebug.checkAssertion(!!allChildrenPendingOperation);
+                  Env.coreDebug.checkAssertion(!!allChildrenPendingOperation);
 
                   this._unregisterPendingOperation(allChildrenPendingOperation);
                }

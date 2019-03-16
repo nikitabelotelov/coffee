@@ -24,8 +24,7 @@ define('Types/_entity/format/Field', [
     'Types/object'
 ], function (require, exports, tslib_1, util_1, DestroyableMixin_1, OptionsToPropertyMixin_1, SerializableMixin_1, CloneableMixin_1, object_1) {
     'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });    // @ts-ignore
-    // @ts-ignore
+    Object.defineProperty(exports, '__esModule', { value: true });
     var Field = /** @class */
     function (_super) {
         tslib_1.__extends(Field, _super);
@@ -34,12 +33,14 @@ define('Types/_entity/format/Field', [
             OptionsToPropertyMixin_1.default.call(_this, options);
             return _this;
         }    /**
-         * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
+         * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable.
+         * Для полей со словарем - словарь.
          * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
          * @return {Boolean}
          */
         /**
-         * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
+         * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable.
+         * Для полей со словарем - словарь.
          * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
          * @return {Boolean}
          */
@@ -50,14 +51,14 @@ define('Types/_entity/format/Field', [
             var selfProto = Object.getPrototypeOf(this);
             var toProto = Object.getPrototypeOf(to);
             return selfProto === toProto && this.getName() === to.getName() && object_1.isEqual(this.getDefaultValue(), to.getDefaultValue()) && this.isNullable() === to.isNullable();
-        };    //endregion Types/_entity/IEquatable
-              //region Public methods
+        };    // endregion
+              // region Public methods
               /**
          * Возвращает модуль, который является конструктором значения поля
          * @return {String|Function}
          */
-        //endregion Types/_entity/IEquatable
-        //region Public methods
+        // endregion
+        // region Public methods
         /**
          * Возвращает модуль, который является конструктором значения поля
          * @return {String|Function}

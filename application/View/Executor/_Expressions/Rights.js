@@ -4,8 +4,8 @@ define('View/Executor/_Expressions/Rights', [
     'exports',
     'Core/RightsManager',
     'Core/helpers/Object/isPlainObject',
-    'Core/IoC'
-], function (require, exports, RightsManager, isPlainObject, IoC) {
+    'Env/Env'
+], function (require, exports, RightsManager, isPlainObject, Env_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var entityRightsHandlers = {
@@ -15,7 +15,7 @@ define('View/Executor/_Expressions/Rights', [
                 if (typeof object['data-access-min-level'] !== 'undefined') {
                     minAccessLevel = object['data-access-min-level'];
                 } else if (typeof object['dataAccessMinLevel'] !== 'undefined') {
-                    IoC.resolve('ILogger').info('entityHelpers', 'Для задания минимального уровня доступа для опции, используйте data-access-min-level вместо dataAccessMinLevel.');
+                    Env_1.IoC.resolve('ILogger').info('entityHelpers', 'Для задания минимального уровня доступа для опции, используйте data-access-min-level вместо dataAccessMinLevel.');
                     minAccessLevel = object['dataAccessMinLevel'];
                 }
                 if (typeof minAccessLevel === 'string') {
@@ -36,7 +36,7 @@ define('View/Executor/_Expressions/Rights', [
                 if (typeof object['data-access'] !== 'undefined') {
                     accessString = object['data-access'];
                 } else if (typeof object['dataAccess'] !== 'undefined') {
-                    IoC.resolve('ILogger').info('entityHelpers', 'Для задания зоны доступа для опции, используйте data-access вместо dataAccess.');
+                    Env_1.IoC.resolve('ILogger').info('entityHelpers', 'Для задания зоны доступа для опции, используйте data-access вместо dataAccess.');
                     accessString = object['dataAccess'];
                 }
                 if (typeof accessString === 'string') {

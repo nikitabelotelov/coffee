@@ -68,8 +68,9 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
             return controlNode.id;
         });
     }
-    var _rootNodes = [], _environments = [], _controlNodes = {}, _dirties = {};
+    var mountedProcess, _rootNodes = [], _environments = [], _dirties = {};
     var VDomSynchronizer = {
+        _controlNodes: {},
         _rebuild: function () {
             function doRebuild(timeMeasureFn) {
                 var dirties = _dirties;
@@ -86,7 +87,7 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                 _dirties = {};
                 _rootNodes.splice(_environments.length);
                 var oldRoots = _rootNodes, rootsRebuild = Monad.mapM(oldRoots, function rebuildOneRootNode(node, i) {
-                        node.requestDirtyCheck = requestDirtyCheck.bind(node);
+                        node.requestDirtyCheck = requestDirtyCheck;
                         return DirtyChecking_1.rebuildNode(_environments[i], dirties, node, undefined, true);
                     }, DirtyChecking_1.RebuildResultWriter, this);
                 if (rootsRebuild.then) {
@@ -120,17 +121,20 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                         }
                         rebuildChangesIds = uniqueArray(rebuildChangesIds);
                         var applyNewVNode = function (env, i) {
-                            return newRoots[i] && newRoots[i].fullMarkup ? env.applyNewVNode(newRoots[i].fullMarkup, rebuildChangesIds, newRoots[i]) : null;
+                            /*Запускать генерацию можно только у нод, которых эта генерация запущена
+                            * через rebuildRequest
+                            * Все случайно попавшие ноды игнорируются до следующего тика*/
+                            return newRoots[i] && newRoots[i].environment && newRoots[i].environment._haveRebuildRequest && newRoots[i].fullMarkup ? env.applyNewVNode(newRoots[i].fullMarkup, rebuildChangesIds, newRoots[i]) : null;
                         };
                         if (timeMeasureFn) {
                             applyNewVNode = timeMeasureFn(applyNewVNode);
                         }
                         rebuildChanges.createdNodes.forEach(function (node) {
-                            node.requestDirtyCheck = requestDirtyCheck.bind(node);
-                            _controlNodes[node.id] = node;
+                            node.requestDirtyCheck = requestDirtyCheck;
+                            this._controlNodes[node.id] = node;
                         }, this);
                         rebuildChanges.destroyedNodes.forEach(function (node) {
-                            delete _controlNodes[node.id];
+                            delete this._controlNodes[node.id];
                         }, this);
                         applyResults = _environments.map(applyNewVNode);    // controls which contain async controls and were created by using createControl method have different
                                                                             // set of closured _rootNodes, so if newRoots have less controls than it should have, we will update
@@ -150,7 +154,7 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                             rebuildChanges: rebuildChanges,
                             applyResults: applyResults
                         };
-                    }, function (err) {
+                    }.bind(this), function (err) {
                         Utils_1.Common.asyncRenderErrorLog(err);
                         return err;
                     });
@@ -185,17 +189,20 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                     }
                     rebuildChangesIds = uniqueArray(rebuildChangesIds);
                     var applyNewVNode = function (env, i) {
-                        return newRoots[i] && newRoots[i].fullMarkup ? env.applyNewVNode(newRoots[i].fullMarkup, rebuildChangesIds, newRoots[i]) : null;
+                        /*Запускать генерацию можно только у нод, которых эта генерация запущена
+                        * через rebuildRequest
+                        * Все случайно попавшие ноды игнорируются до следующего тика*/
+                        return newRoots[i] && newRoots[i].environment && newRoots[i].environment._haveRebuildRequest && newRoots[i].fullMarkup ? env.applyNewVNode(newRoots[i].fullMarkup, rebuildChangesIds, newRoots[i]) : null;
                     };
                     if (timeMeasureFn) {
                         applyNewVNode = timeMeasureFn(applyNewVNode);
                     }
                     rebuildChanges.createdNodes.forEach(function (node) {
-                        node.requestDirtyCheck = requestDirtyCheck.bind(node);
-                        _controlNodes[node.id] = node;
+                        node.requestDirtyCheck = requestDirtyCheck;
+                        this._controlNodes[node.id] = node;
                     }, this);
                     rebuildChanges.destroyedNodes.forEach(function (node) {
-                        delete _controlNodes[node.id];
+                        delete this._controlNodes[node.id];
                     }, this);
                     applyResults = _environments.map(applyNewVNode);
                     _rootNodes = newRoots;
@@ -246,7 +253,7 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
             }
         },
         controlStateChangedCallback: function (controlId) {
-            VDomSynchronizer.requestRebuild(controlId);
+            VDomSynchronizer.requestRebuild(controlId, false);
         },
         mountControlToDOM: function (control, controlClass, options, domElement, attributes) {
             domElement = domElement[0] ? domElement[0] : domElement;
@@ -259,11 +266,11 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                 var controlNode, environment, state, Slr = new Serializer();
                 environment = new DOMEnvironment_1.default(domElement, this.controlStateChangedCallback, rootAttrs, serializedId);
                 controlNode = DirtyChecking_1.createNode(control, { user: options }, undefined, environment, null, state);
-                controlNode.requestDirtyCheck = requestDirtyCheck.bind(controlNode);
+                controlNode.requestDirtyCheck = requestDirtyCheck;
                 if (rootAttrs) {
                     controlNode.attributes = rootAttrs;
                 }
-                _controlNodes[controlNode.id] = controlNode;
+                this._controlNodes[controlNode.id] = controlNode;
                 _environments.push(environment);
                 _rootNodes.push(controlNode);    // храним в рутовом виртуальном компоненте ссылку на environment,
                                                  // иначе до него не докопаться, только после ребилда, а это слишком поздно для системы фокусов
@@ -303,14 +310,14 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                 if (carrier) {
                     carrier.then(function asyncRenderCallback(receivedState) {
                         controlNode.receivedState = receivedState;
-                        this.requestRebuild(controlNode.id);
+                        this.requestRebuild(controlNode.id, true);
                         return receivedState;
                     }.bind(this), function asyncRenderErrback(error) {
                         Utils_1.Common.asyncRenderErrorLog(error);
                         return error;
                     });
                 } else {
-                    this.requestRebuild(controlNode.id);
+                    this.requestRebuild(controlNode.id, true);
                 }
             }.bind(this);
             hasMountedComponent = _environments.some(function (env) {
@@ -319,11 +326,38 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
             if (hasMountedComponent) {
                 throw new Error('На этом DOM-элементе уже есть смонтированный корневой компонент');
             }
+            var startResolveAfterMount = function (control, resolve) {
+                    var baseAM = control._afterMount;
+                    control._afterMount = function () {
+                        baseAM.apply(this, arguments);
+                        setTimeout(function () {
+                            resolve();
+                        });
+                    };
+                },
+                //глобальная переменная mountedProcess контроллирует
+                //текущий запущенный процесс маунтинга
+                //процесс заканчивается, когда у контрола стреляет _afterMount
+                //упорядочиваем маунты, чтобы они не конфликтовали друг с другом
+                doMountQueue = function () {
+                    var currentMountProcess = mountedProcess;
+                    mountedProcess = new Promise(function (resolve) {
+                        if (currentMountProcess) {
+                            currentMountProcess.then(function () {
+                                startResolveAfterMount(control, resolve);
+                                doMount();
+                            });
+                        } else {
+                            startResolveAfterMount(control, resolve);
+                            doMount();
+                        }
+                    });
+                };
             if (jsModules && jsModules.length > 0) {
                 // @ts-ignore
-                require(jsModules, doMount);
+                require(jsModules, doMountQueue);
             } else {
-                doMount();
+                doMountQueue();
             }
         },
         cleanControlDomLink: function (node) {
@@ -334,7 +368,7 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
             if (domElement.controlNodes) {
                 for (var i = 0; i < domElement.controlNodes.length; i++) {
                     if (!domElement.controlNodes[i].control || domElement.controlNodes[i].control._destroyed) {
-                        delete _controlNodes[domElement.controlNodes[i].id];
+                        delete this._controlNodes[domElement.controlNodes[i].id];
                         if (domElement.controlNodes.length > 0) {
                             /* We should remove all controls nodes link to destroy Environment in root node*/
                             if (domElement.controlNodes.length > 1 || !domElement.controlNodes[0].parent) {
@@ -359,9 +393,9 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                 // environments as well.
                 if (domElement === rootDOMNode && _rootNodes[i].environment._canDestroy(control) || !rootDOMNode) {
                     var nodeId = _rootNodes[i].id, env = _environments.splice(i, 1)[0];
-                    if (_controlNodes[nodeId]) {
-                        foundControlNode = _controlNodes[nodeId];
-                        delete _controlNodes[nodeId];
+                    if (this._controlNodes[nodeId]) {
+                        foundControlNode = this._controlNodes[nodeId];
+                        delete this._controlNodes[nodeId];
                     }
                     _rootNodes.splice(i, 1);    // Control's environment was found, remember it to destroy after loop
                     // Control's environment was found, remember it to destroy after loop
@@ -397,12 +431,63 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
             }
         },
         queue: null,
-        requestRebuild: function (controlId) {
+        requestRebuild: function (controlId, mountProcess) {
             //контрол здесь точно должен найтись, или быть корневым - 2 варианта попадания сюда:
             //    из конструктора компонента (тогда его нет, но тогда синхронизация активна) - тогда не нужно с ним ничего делать
             //    из внутреннего события компонента, меняющего его состояние, и вызывающего requestRebuild
-            var controlNode = _controlNodes[controlId], dirties = _dirties, self = this;
-            if (controlNode && !controlNode.environment._rebuildRequestStarted) {
+            var controlNode = this._controlNodes[controlId], dirties = _dirties, pushed = false, self = this;
+            var canUpdate = controlNode && !controlNode.environment._rebuildRequestStarted;
+            if (!mountProcess) {
+                canUpdate = canUpdate && !_rootNodes.some(function (el) {
+                    if (el.environment !== controlNode.environment && !controlNode.environment._haveRebuildRequest) {
+                        if (el.environment && (el.environment._rebuildRequestStarted || el.environment._haveRebuildRequest)) {
+                            /*нельзя даже помечать контрол ноды для обновлений,
+                            * пока хоть в одной корневой ноде начат процесс обновления
+                            * в некоторых интерфейсах все построено на _forceUpdate
+                            * что приводит к обновлениям кусков интерфейса
+                            * в центре уже обновляемого куска*/
+                            /*Добавить текущую ноду в очередь к какой-то обновляемой ноде
+                              ждем https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe*/
+                            if (!el.environment.queue) {
+                                el.environment.queue = [];
+                            }
+                            if (!el.environment.queueIds) {
+                                el.environment.queueIds = {};
+                            }
+                            pushed = true;
+                            if (!el.environment.queueIds[controlId]) {
+                                el.environment.queue.push(controlId);
+                            }
+                            el.environment.queueIds[controlId] = 1;    /*еще один кейс с несколькими корневыми нодами
+                            * одновременно могут начать обновляться несколько рутов, тогда первый контрол в очереди запустит
+                            * синхронизацию повторно, и если синхронизация с той нодой, которая только что закончила,
+                            * мы теряем все обновления, которые не входят
+                            * То есть, это очередь, которая может скапливаться только при разборе очереди
+                            * */
+                            /*еще один кейс с несколькими корневыми нодами
+                            * одновременно могут начать обновляться несколько рутов, тогда первый контрол в очереди запустит
+                            * синхронизацию повторно, и если синхронизация с той нодой, которая только что закончила,
+                            * мы теряем все обновления, которые не входят
+                            * То есть, это очередь, которая может скапливаться только при разборе очереди
+                            * */
+                            if (el.environment.activateSubQueue) {
+                                if (!el.environment.subQueue) {
+                                    el.environment.subQueue = [];
+                                }
+                                if (!el.environment.subQueueIds) {
+                                    el.environment.subQueueIds = {};
+                                }
+                                if (!el.environment.subQueueIds[controlId]) {
+                                    el.environment.subQueue.push(controlId);
+                                }
+                                el.environment.subQueueIds[controlId] = 1;
+                            }
+                            return true;
+                        }
+                    }
+                });
+            }
+            if (canUpdate) {
                 dirties[controlId] |= DirtyChecking_1.DirtyKind.DIRTY;
                 forEachNodeParents(controlNode, function (parent) {
                     dirties[parent.id] |= DirtyChecking_1.DirtyKind.CHILD_DIRTY;
@@ -410,6 +495,15 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                 if (!controlNode.environment._haveRebuildRequest) {
                     controlNode.environment._haveRebuildRequest = true;
                     runDelayedRebuild_1.default(function requestRebuildDelayed() {
+                        if (!controlNode.environment._haveRebuildRequest) {
+                            /*Если _haveRebuildRequest=false значит
+                            * циклы синхронизации смешались и в предыдущем тике у
+                            * всех контролов был вызван _afterUpdate
+                            * Такое может случиться только в слое совместимости,
+                            * когда динамически удаляются и добавляются контрол ноды
+                            * */
+                            return;
+                        }
                         controlNode.environment._rebuildRequestStarted = true;
                         if (this._savedActiveElement !== document.activeElement) {
                             var currentElement = document.activeElement;
@@ -448,7 +542,7 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
                         }
                     }.bind(this));
                 }
-            } else if (controlNode && controlNode.environment) {
+            } else if (controlNode && controlNode.environment && !pushed) {
                 if (!controlNode.environment.queue) {
                     controlNode.environment.queue = [];
                 }
@@ -465,8 +559,8 @@ define('Vdom/_private/Synchronizer/Synchronizer', [
             isDebug = val;
         }
     };
-    function requestDirtyCheck() {
-        VDomSynchronizer.requestRebuild(this.id);
+    function requestDirtyCheck(controlNode) {
+        VDomSynchronizer.requestRebuild(controlNode.id, false);
     }
     exports.default = VDomSynchronizer;
 });

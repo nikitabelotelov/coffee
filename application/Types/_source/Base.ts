@@ -21,8 +21,6 @@ import LazyMixin from './LazyMixin';
 import DataMixin, {IOptions as IDataOptions} from './DataMixin';
 import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter} from '../entity';
 import {logger, mixin} from '../util';
-//@ts-ignore
-import coreExtend = require('Core/core-extend');
 
 export interface IOptions extends IDefaultOptions, IDataOptions {
 }
@@ -31,7 +29,7 @@ export default abstract class Base extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, SourceOptionsMixin, LazyMixin, DataMixin
 ) implements IData /** @lends Types/_source/Base.prototype */{
    protected constructor(options?: IOptions) {
-      options = Object.assign({}, options || {});
+      options = {...(options || {})};
 
       super(options);
       SourceOptionsMixin.constructor.call(this, options);
@@ -53,16 +51,25 @@ export default abstract class Base extends mixin(
    setListModule: (listModule: Function | string) => void;
 
    // endregion
+
    /**
     * @deprecated
     */
-   static extend(mixinsList:any, classExtender:any) {
-      logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+   static extend(mixinsList: any, classExtender: any): Function {
+      logger.info('Types/_source/Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_source/Base::extend()" method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
-   };
+   }
 }
 
-Base.prototype._moduleName = 'Types/source:Base';
-Base.prototype['[Types/_source/Base]'] = true;
-// @ts-ignore
-Base.prototype['[Types/_source/IData]'] = true;
+Object.assign(Base.prototype, {
+   '[Types/_source/Base]': true,
+   '[Types/_source/IData]': true,
+   _moduleName: 'Types/source:Base'
+});

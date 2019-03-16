@@ -32,14 +32,24 @@ define('Types/_collection/Enum', [
             _this._publish('onChange');
             _this._checkIndex();
             return _this;
-        }
+        }    // endregion
+             // region IProducible
+        // endregion
+        // region IProducible
+        Enum.produceInstance = function (data, options) {
+            return new this({
+                dictionary: this.prototype._getDictionaryByFormat(options && options.format),
+                localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
+                index: data
+            });
+        };
         Enum.prototype.destroy = function () {
             entity_1.ManyToManyMixin.destroy.call(this);
             _super.prototype.destroy.call(this);
-        };    //endregion
-              //region IEnum
-        //endregion
-        //region IEnum
+        };    // endregion
+              // region IEnum
+        // endregion
+        // region IEnum
         Enum.prototype.get = function () {
             return this._$index;
         };
@@ -73,10 +83,10 @@ define('Types/_collection/Enum', [
             if (changed) {
                 this._notifyChange(index, value);
             }
-        };    //endregion
-              //region IEquatable
-        //endregion
-        //region IEquatable
+        };    // endregion
+              // region IEquatable
+        // endregion
+        // region IEquatable
         Enum.prototype.isEqual = function (to) {
             if (!(to instanceof Enum)) {
                 return false;
@@ -85,34 +95,24 @@ define('Types/_collection/Enum', [
                 return false;
             }
             return this.get() === to.get();
-        };    //endregion
-              //region IProducible
-        //endregion
-        //region IProducible
-        Enum.produceInstance = function (data, options) {
-            return new this({
-                dictionary: this.prototype._getDictionaryByFormat(options && options.format),
-                localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-                index: data
-            });
-        };    //endregion
-              //region Public methods
-        //endregion
-        //region Public methods
+        };    // endregion
+              // region Public methods
+        // endregion
+        // region Public methods
         Enum.prototype.valueOf = function () {
             return this.get();
         };
         Enum.prototype.toString = function () {
             var value = this.getAsValue();
             return value === undefined || value === null ? '' : String(value);
-        };    //endregion
-              //region Protected methods
+        };    // endregion
+              // region Protected methods
               /**
          * Converts key to the Number type
          * @protected
          */
-        //endregion
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Converts key to the Number type
          * @protected
@@ -144,22 +144,18 @@ define('Types/_collection/Enum', [
     }(Dictionary_1.default);
     exports.default = Enum;
     util_1.applyMixins(Enum, entity_1.ManyToManyMixin, entity_1.SerializableMixin, entity_1.CloneableMixin);
-    Enum.prototype['[Types/_collection/Enum]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype['[Types/_collection/IEnum]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype['[Types/_entity/ICloneable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype['[Types/_entity/IProducible]'] = true;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype._moduleName = 'Types/collection:Enum';    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype._$index = null;    // @ts-ignore
-    // @ts-ignore
-    Enum.prototype._type = 'enum';    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    Enum.prototype['[WS.Data/Type/Enum]'] = true;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Object.assign(Enum.prototype, {
+        '[Types/_collection/Enum]': true,
+        '[Types/_collection/IEnum]': true,
+        '[Types/_entity/ICloneable]': true,
+        '[Types/_entity/IProducible]': true,
+        _moduleName: 'Types/collection:Enum',
+        _$index: null,
+        _type: 'enum'
+    });    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    Enum.prototype['[WS.Data/Type/Enum]'] = true;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     Enum.prototype['[WS.Data/Entity/ICloneable]'] = true;
     di_1.register('Types/collection:Enum', Enum, { instantiate: false });
 });

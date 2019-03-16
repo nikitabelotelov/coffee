@@ -5,7 +5,10 @@ define('View/Executor/_Expressions/Event', [
 ], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var originDOMEventNames = { mozmousepixelscroll: 'MozMousePixelScroll' };
+    var originDOMEventNames = {
+        mozmousepixelscroll: 'MozMousePixelScroll',
+        domautocomplete: 'DOMAutoComplete'
+    };
     function isEvent(titleAttribute) {
         return /^(on:[A-z0-9])\w*$/.test(titleAttribute);
     }

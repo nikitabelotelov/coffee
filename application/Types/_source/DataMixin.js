@@ -8,16 +8,18 @@
 define('Types/_source/DataMixin', [
     'require',
     'exports',
+    'tslib',
     'Types/entity',
     'Types/di'
-], function (require, exports, entity_1, di_1) {
+], function (require, exports, tslib_1, entity_1, di_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var DataMixin = /** @lends Types/_source/DataMixin.prototype */
     {
         '[Types/_source/DataMixin]': true,
         /**
-         * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
+         * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
+         * По умолчанию {@link Types/_entity/adapter/Json}.
          * @name Types/_source/DataMixin#adapter
          * @see getAdapter
          * @see Types/_entity/adapter/IAdapter
@@ -46,7 +48,8 @@ define('Types/_source/DataMixin', [
          */
         _$adapter: 'Types/entity:adapter.Json',
         /**
-         * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
+         * @cfg {String|Function} Конструктор записей, порождаемых источником данных.
+         * По умолчанию {@link Types/_entity/Model}.
          * @name Types/_source/DataMixin#model
          * @see getModel
          * @see Types/_entity/Model
@@ -78,7 +81,8 @@ define('Types/_source/DataMixin', [
          */
         _$model: 'Types/entity:Model',
         /**
-         * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
+         * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных.
+         * По умолчанию {@link Types/_collection/RecordSet}.
          * @name Types/_source/DataMixin#listModule
          * @see getListModule
          * @see Types/_collection/RecordSet
@@ -142,15 +146,12 @@ define('Types/_source/DataMixin', [
                 this._dataSetMetaProperty = options.dataSetMetaProperty;
             }
         },
-        //region Public methods
+        // region Public methods
         getAdapter: function () {
             if (typeof this._$adapter === 'string') {
                 this._$adapter = di_1.create(this._$adapter);
             }
             return this._$adapter;
-        },
-        setAdapter: function () {
-            throw new Error(this._moduleName + '::setAdapter() - method has been removed in 3.17.300 as deprecated. You should inject adapter into constructor use "adapter" option.');
         },
         getModel: function () {
             return this._$model;
@@ -170,8 +171,8 @@ define('Types/_source/DataMixin', [
         setIdProperty: function (name) {
             this._$idProperty = name;
         },
-        //endregion Public methods
-        //region Protected methods
+        // endregion
+        // region Protected methods
         /**
          * Определяет название свойства с первичным ключом по данным
          * @param {*} data Сырые данные
@@ -203,7 +204,7 @@ define('Types/_source/DataMixin', [
          */
         _getDataSetInstance: function (cfg) {
             return di_1.create(// eslint-disable-line new-cap
-            this._dataSetModule, Object.assign({
+            this._dataSetModule, tslib_1.__assign({
                 writable: this._writable,
                 adapter: this.getAdapter(),
                 model: this.getModel(),
@@ -237,8 +238,8 @@ define('Types/_source/DataMixin', [
                 callback.call(context || this, tableAdapter.at(index), index);
             }
         },
-        //endregion Protected methods
-        //region Statics
+        // endregion Protected methods
+        // region Statics
         /**
          * Проверяет, что это экземпляр модели
          * @param {*} instance Экземпляр модели
@@ -256,8 +257,8 @@ define('Types/_source/DataMixin', [
          */
         isListInstance: function (instance) {
             return instance && instance['[Types/_collection/IList]'] && instance['[Types/_entity/FormattableMixin]'];
-        }    //endregion Statics
+        }    // endregion Statics
     };
-    //endregion Statics
+    // endregion Statics
     exports.default = DataMixin;
 });

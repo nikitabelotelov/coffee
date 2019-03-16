@@ -49,9 +49,8 @@ define('Types/_collection/List', [
     'Types/_collection/Indexer',
     'Types/entity',
     'Types/di',
-    'Types/util',
-    'Core/core-extend'
-], function (require, exports, tslib_1, IObservable_1, Arraywise_1, Indexer_1, entity_1, di_1, util_1, coreExtend) {
+    'Types/util'
+], function (require, exports, tslib_1, IObservable_1, Arraywise_1, Indexer_1, entity_1, di_1, util_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var List = /** @class */
@@ -71,7 +70,22 @@ define('Types/_collection/List', [
                 _this._addChild(_this._$items[i]);
             }
             return _this;
-        }
+        }    // endregion Protected methods
+             /**
+         * @deprecated
+         */
+        // endregion Protected methods
+        /**
+         * @deprecated
+         */
+        List.extend = function (mixinsList, classExtender) {
+            util_1.logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+            if (!require.defined('Core/core-extend')) {
+                throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
+            }
+            var coreExtend = require('Core/core-extend');
+            return coreExtend(this, mixinsList, classExtender);
+        };
         List.prototype.destroy = function () {
             this._$items = null;
             this._indexer = null;
@@ -91,7 +105,7 @@ define('Types/_collection/List', [
             return new Arraywise_1.default(this._$items);
         };
         List.prototype.each = function (callback, context) {
-            //It's faster than use getEnumerator()
+            // It's faster than use getEnumerator()
             for (var i = 0, count = this.getCount(); i < count; i++) {
                 callback.call(context || this, this.at(i), i, this);
             }
@@ -171,8 +185,8 @@ define('Types/_collection/List', [
             if (!this._isValidIndex(at)) {
                 throw new Error('Index is out of bounds');
             }
-            var oldItem = this._$items[at];    //Replace with itself has no effect
-            //Replace with itself has no effect
+            var oldItem = this._$items[at];    // Replace with itself has no effect
+            // Replace with itself has no effect
             if (oldItem === item) {
                 return;
             }
@@ -214,10 +228,10 @@ define('Types/_collection/List', [
         };
         List.prototype.getIndicesByValue = function (property, value) {
             return this._getIndexer().getIndicesByValue(property, value);
-        };    //endregion IIndexedCollection
-              //region IEquatable
-        //endregion IIndexedCollection
-        //region IEquatable
+        };    // endregion IIndexedCollection
+              // region IEquatable
+        // endregion IIndexedCollection
+        // region IEquatable
         List.prototype.isEqual = function (to) {
             if (to === this) {
                 return true;
@@ -234,9 +248,9 @@ define('Types/_collection/List', [
                 }
             }
             return true;
-        };    //endregion IVersionable
+        };    // endregion IVersionable
               // SerializableMixin
-        //endregion IVersionable
+        // endregion IVersionable
         // SerializableMixin
         List.prototype._getSerializableState = function (state) {
             return entity_1.SerializableMixin.prototype._getSerializableState.call(this, state);
@@ -248,14 +262,14 @@ define('Types/_collection/List', [
                 this._clearIndexer();
             };
         };    // SerializableMixin
-              //region Protected methods
+              // region Protected methods
               /**
          * Возвращает индексатор коллекции
          * @return {Types/_collection/Indexer}
          * @protected
          */
         // SerializableMixin
-        //region Protected methods
+        // region Protected methods
         /**
          * Возвращает индексатор коллекции
          * @return {Types/_collection/Indexer}
@@ -392,46 +406,27 @@ define('Types/_collection/List', [
             } else {
                 throw new TypeError('Argument "items" must be an instance of Array or implement Types/collection:IEnumerable.');
             }
-        };    //endregion Protected methods
-              /**
-         * @deprecated
-         */
-        //endregion Protected methods
-        /**
-         * @deprecated
-         */
-        List.extend = function (mixinsList, classExtender) {
-            util_1.logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-            return coreExtend(this, mixinsList, classExtender);
         };
-        ;
         return List;
     }(util_1.mixin(entity_1.DestroyableMixin, entity_1.OptionsToPropertyMixin, entity_1.ObservableMixin, entity_1.SerializableMixin, entity_1.CloneableMixin, entity_1.ManyToManyMixin, entity_1.ReadWriteMixin, entity_1.VersionableMixin));
     exports.default = List;
-    List.prototype._moduleName = 'Types/collection:List';    //Properties defaults
-    //Properties defaults
-    List.prototype['[Types/_collection/List]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype['[Types/_collection/IEnumerable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype['[Types/_collection/IIndexedCollection]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype['[Types/_collection/IList]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype['[Types/_entity/ICloneable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype['[Types/_entity/IEquatable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype['[Types/_entity/IVersionable]'] = true;    // @ts-ignore
-    // @ts-ignore
-    List.prototype._$items = null;    // @ts-ignore
-    // @ts-ignore
-    List.prototype._indexer = null;    //Aliases
-    //Aliases
-    List.prototype.forEach = List.prototype.each;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-    List.prototype['[WS.Data/Collection/List]'] = true;    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    Object.assign(List.prototype, {
+        '[Types/_collection/List]': true,
+        '[Types/_collection/IEnumerable]': true,
+        '[Types/_collection/IIndexedCollection]': true,
+        '[Types/_collection/IList]': true,
+        '[Types/_entity/ICloneable]': true,
+        '[Types/_entity/IEquatable]': true,
+        '[Types/_entity/IVersionable]': true,
+        _moduleName: 'Types/collection:List',
+        _$items: null,
+        _indexer: null
+    });    // Aliases
+    // Aliases
+    List.prototype.forEach = List.prototype.each;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+    List.prototype['[WS.Data/Collection/List]'] = true;    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
     List.prototype['[WS.Data/Collection/IEnumerable]'] = true;
     List.prototype['[WS.Data/Collection/IList]'] = true;
     List.prototype['[WS.Data/Collection/IIndexedCollection]'] = true;
