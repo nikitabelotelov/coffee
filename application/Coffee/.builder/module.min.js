@@ -1,1 +1,0 @@
-define('Coffee/.builder/module',[],function(){return {};});

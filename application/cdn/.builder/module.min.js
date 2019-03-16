@@ -1,1 +1,0 @@
-define('cdn/.builder/module',[],function(){return {};});

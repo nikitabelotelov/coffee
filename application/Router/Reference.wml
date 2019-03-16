@@ -1,4 +1,0 @@
-<ws:partial
-   template="{{ _options.content }}"
-   href="{{ _href || _state }}"
-   on:click="_clickHandler()" />

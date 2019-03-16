@@ -1,5 +1,0 @@
-<div class="input-number">
-   <div on:click="decrement()" class="input-number-button"><img class="input-button-icon" src="/Coffee/Images/minus.png" alt=""/></div>
-   <div name="input" type="text" class="number-value-field">{{inputValue}}</div>
-   <div on:click="increment()" class="input-number-button"><img class="input-button-icon" src="/Coffee/Images/plus.png" alt=""/></div>
-</div>
