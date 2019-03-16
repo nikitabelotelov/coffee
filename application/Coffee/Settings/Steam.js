@@ -19,6 +19,7 @@ define('Coffee/Settings/Steam', [
         }
         Steam.prototype._beforeMount = function (opts) {
             this.settingsModel = opts.settingsInfo;
+            this.updatePressureValue();
         };
         ;
         Steam.prototype._beforeUpdate = function () {
@@ -26,11 +27,11 @@ define('Coffee/Settings/Steam', [
         };
         ;
         Steam.prototype.updatePressureValue = function () {
-            this.pressureValue = this.settingsModel.getSetting('Паровой бойлер 2', 'Давление');
+            this.pressureValue = this.settingsModel.getSetting('Паровой бойлер', 'Давление');
         };
         ;
         Steam.prototype.pressureValueChanged = function (_, value) {
-            this.settingsModel.setSetting(value, 'Паровой бойлер 2', 'Давление', value);
+            this.settingsModel.setSetting(value, 'Паровой бойлер', 'Давление', value);
         };
         ;
         return Steam;

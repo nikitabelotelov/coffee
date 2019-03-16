@@ -14,17 +14,18 @@ class Steam extends Control {
     private pressureValue: string = '';
     protected _beforeMount(opts) {
         this.settingsModel = opts.settingsInfo;
+        this.updatePressureValue();
     };
     protected _beforeUpdate() {
         this.updatePressureValue();
     };
 
     private updatePressureValue() {
-        this.pressureValue = this.settingsModel.getSetting('Паровой бойлер 2', 'Давление');
+        this.pressureValue = this.settingsModel.getSetting('Паровой бойлер', 'Давление');
     };
 
     private pressureValueChanged(_, value) {
-        this.settingsModel.setSetting(value, 'Паровой бойлер 2', 'Давление', value);
+        this.settingsModel.setSetting(value, 'Паровой бойлер', 'Давление', value);
     };
 }
 

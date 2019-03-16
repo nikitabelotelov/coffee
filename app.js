@@ -164,7 +164,7 @@ function sendSettings(data) {
    global.SerialHelper.Transmit(data);
 }
 
-global.originRequire('../serial-helper/serialHelper.js');
+global.originRequire('./serial-helper/serialHelper.js');
 global.SerialHelper.SerialOpen();
 global.SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);
 
