@@ -1,0 +1,1 @@
+define('Inferno/.builder/module',[],function(){return {};});

@@ -1,0 +1,45 @@
+@import "../coffee.less";
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font-family: @default-font;
+  font-size: @default-font-size;
+}
+
+.router-Link.topMenu {
+  margin: 0 10px;
+  text-decoration: underline;
+  color: red;
+}
+
+.coffee-application {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.coffee-application-content {
+  width:100%;
+}
+
+.tile-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html {
+  height: 100%;
+  color: @default-font-color;
+  background-color: @default-background-color;
+}
+
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}

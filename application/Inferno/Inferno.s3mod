@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui_module id="951e1c80-ee24-4022-8349-96123fae8026" name="Inferno" package="WS" responsible="Изыгин Н.Р." required="1" version="1.00">
+
+  <description>Inferno vdom diff engine</description>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <preload/>
+
+</ui_module>

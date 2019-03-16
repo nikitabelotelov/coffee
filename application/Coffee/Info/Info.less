@@ -1,0 +1,46 @@
+@import "../coffee.less";
+@import "/Coffee/CoffeeApplication/CoffeeApplication.less";
+
+.info-list {
+   display: flex;
+   height: 100%;
+   flex-direction: column;
+   font-size: @info-font-size;
+   margin-right: 10px;
+}
+
+.info-page {
+   height: 100%;
+   font-size: @info-font-size;
+}
+
+.info-tile {
+   height: 230px;
+   width: 310px;
+   background: linear-gradient(30deg, @tile-color8, @tile-color8l);
+   //background-color: @tile-color3;
+   //border: solid 8px @tile-color3d;
+}
+
+.settings-button {
+   width: 90px;
+   height: 230px;
+   //background: @tile-color7 url("/Coffee/Images/Settings.png") no-repeat center center;
+   background: url("/Coffee/Images/Settings.png") no-repeat center center, linear-gradient(30deg, @tile-color7, @tile-color7l);
+   //border: solid 8px @tile-color7d;
+}
+
+.info-list-item {
+   padding: 12px;
+   display: flex;
+   &-name {
+      margin-right: 8px;
+   }
+   &-state {
+      font-weight: bold;
+   }
+}
+
+.page-navigator-container {
+   width: 80px;
+}
